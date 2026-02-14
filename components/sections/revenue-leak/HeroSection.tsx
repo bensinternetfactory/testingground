@@ -64,7 +64,7 @@ export function HeroSection() {
   return (
     <section id="hero" className="relative bg-white pt-[72px]">
       {/* Arc area */}
-      <div className="relative flex min-h-[328px] items-end justify-center overflow-hidden mb-6 sm:mb-8 md:mb-8 md:min-h-[416px] lg:mb-12 lg:min-h-[544px]">
+      <div className="relative flex min-h-[280px] items-end justify-center overflow-hidden mb-0 md:mb-4 md:min-h-[416px] lg:mb-8 lg:min-h-[544px]">
         {/* Thumbnails container - centered */}
         <div
           className="thumbnails pointer-events-none absolute left-1/2 mt-4 md:mt-6 lg:mt-12"
@@ -105,7 +105,7 @@ export function HeroSection() {
         />
 
         {/* Centered content */}
-        <div className="relative z-[2] mx-auto mb-5 flex w-full max-w-[25rem] flex-col items-center px-6 text-center md:mb-8 md:max-w-[38rem]">
+        <div className="relative z-[2] mx-auto mb-5 flex w-full flex-col items-center px-6 text-center md:mb-8 md:max-w-[38rem]">
           <h1 className="mb-1 text-[0.75rem] leading-4 font-normal text-[#545454] md:text-[0.875rem] md:leading-5 lg:text-[1.25rem] lg:leading-7">
             Easy Tow Truck Financing
           </h1>
@@ -130,19 +130,20 @@ export function HeroSection() {
           </div>
 
           {/* CTA button */}
-          <div className="mt-6 lg:mt-10">
+          <div className="mt-4 self-stretch md:self-center lg:mt-10">
             <a
               href="#pre-approve"
-              className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 sm:w-auto"
+              className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:inline-flex md:h-[4.5rem] md:w-auto"
             >
               See what I qualify for
             </a>
           </div>
         </div>
+
       </div>
 
       {/* CTA Tile Cards */}
-      <div className="mx-auto max-w-[75rem] px-6 py-8 md:px-8 md:py-12">
+      <div className="mx-auto max-w-[75rem] px-6 py-4 md:px-8 md:py-12">
         <div className="grid grid-cols-1 gap-4 md:grid-flow-col md:auto-cols-fr lg:gap-6">
           {CTA_TILES.map((tile) => (
             <a
