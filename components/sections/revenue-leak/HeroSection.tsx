@@ -130,10 +130,10 @@ export function HeroSection() {
           </div>
 
           {/* CTA button */}
-          <div className="mt-4 self-stretch md:self-center lg:mt-10">
+          <div className="mt-4 self-stretch min-[470px]:self-center lg:mt-10">
             <a
               href="#pre-approve"
-              className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:inline-flex md:h-[4.5rem] md:w-auto"
+              className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 min-[470px]:inline-flex min-[470px]:h-[4.5rem] min-[470px]:w-auto"
             >
               See what I qualify for
             </a>
