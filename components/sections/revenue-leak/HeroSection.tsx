@@ -106,7 +106,7 @@ export function HeroSection() {
 
         {/* Centered content */}
         <div className="relative z-[2] mx-auto mb-5 flex w-full max-w-[25rem] flex-col items-center px-6 text-center md:mb-8 md:max-w-[38rem]">
-          <h1 className="mb-1 text-[0.75rem] font-normal text-[#545454] md:text-[0.875rem] lg:text-[1.25rem]">
+          <h1 className="mb-1 text-[0.75rem] leading-4 font-normal text-[#545454] md:text-[0.875rem] md:leading-5 lg:text-[1.25rem] lg:leading-7">
             Easy Tow Truck Financing
           </h1>
 
@@ -133,7 +133,7 @@ export function HeroSection() {
           <div className="mt-6 lg:mt-10">
             <a
               href="#pre-approve"
-              className="inline-flex h-14 items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+              className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 sm:w-auto"
             >
               See what I qualify for
             </a>
@@ -142,15 +142,15 @@ export function HeroSection() {
       </div>
 
       {/* CTA Tile Cards */}
-      <div className="mx-auto max-w-[75rem] px-4 py-8 sm:px-6 md:py-12">
+      <div className="mx-auto max-w-[75rem] px-6 py-8 md:px-8 md:py-12">
         <div className="grid grid-cols-1 gap-4 md:grid-flow-col md:auto-cols-fr lg:gap-6">
           {CTA_TILES.map((tile) => (
             <a
               key={tile.label}
               href={tile.href}
-              className="group flex items-center justify-between rounded-[1rem] border border-[#E5E5E5] bg-white p-4 transition-shadow duration-200 hover:shadow-lg md:p-6 lg:rounded-[1.25rem]"
+              className="group flex h-14 items-center justify-between rounded-[1rem] border border-[#E5E5E5] bg-white p-4 transition-shadow duration-200 hover:shadow-lg md:h-[108px] md:p-6 lg:h-[116px] lg:rounded-[1.25rem]"
             >
-              <span className="text-base font-medium text-[#111111]">
+              <span className="text-base font-normal text-[#111111] lg:text-2xl lg:leading-8">
                 {tile.label}
               </span>
 
