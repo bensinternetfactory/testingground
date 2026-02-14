@@ -1,0 +1,4 @@
+[     625ms] [WARNING] CTA Card List Filter Carousel: Required elements not found @ https://www.rocketmortgage.com/rktmsc-assets/ssrscripts.f9032052d3a817fd.js:0
+[    1299ms] [ERROR] Access to XMLHttpRequest at 'https://configs.knotch.com/v2/2731ad2a-58a0-486a-b65f-d6a91e266f0c' from origin 'https://www.rocketmortgage.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://www.rocketmortgage.com/:0
+[    1299ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://configs.knotch.com/v2/2731ad2a-58a0-486a-b65f-d6a91e266f0c:0
+[    2256ms] [WARNING] [Meta Pixel] - You are attempting to send an unverified event. The event was suppressed. Go to Events Manager to learn more. @ https://connect.facebook.net/en_US/fbevents.js:173
