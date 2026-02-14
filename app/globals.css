@@ -24,3 +24,57 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Arc hero rotation animations */
+@keyframes arc-rotate {
+  0% {
+    transform: rotate(var(--start-rotation));
+  }
+  100% {
+    transform: rotate(calc(var(--start-rotation) + 360deg));
+  }
+}
+
+@keyframes arc-counter-rotate {
+  0% {
+    transform: rotate(calc(var(--start-rotation) * -1)) scale(1.5);
+  }
+  100% {
+    transform: rotate(calc((var(--start-rotation) + 360deg) * -1)) scale(1.5);
+  }
+}
+
+/* Arc hero responsive transform-origin and positioning */
+.arc-thumbnail {
+  top: 50%;
+  left: calc(50% - 1.75rem);
+  transform-origin: 1.75rem 315px;
+}
+
+@media (min-width: 480px) {
+  .arc-thumbnail {
+    left: calc(50% - 2.5rem);
+    transform-origin: 2.5rem 460px;
+  }
+}
+
+@media (min-width: 768px) {
+  .arc-thumbnail {
+    left: calc(50% - 3.0625rem);
+    transform-origin: 3.0625rem 550px;
+  }
+}
+
+@media (min-width: 1080px) {
+  .arc-thumbnail {
+    left: calc(50% - 4.75rem);
+    transform-origin: 4.75rem 820px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-thumbnail,
+  .arc-thumbnail-inner {
+    animation: none !important;
+  }
+}
