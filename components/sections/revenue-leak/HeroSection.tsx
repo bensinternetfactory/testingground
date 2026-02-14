@@ -135,8 +135,11 @@ export function HeroSection() {
               href="#pre-approve"
               className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 min-[470px]:inline-flex min-[470px]:h-[4.5rem] min-[470px]:w-auto"
             >
-              See what I qualify for
+              See my payment
             </a>
+            <p className="mt-2 text-xs text-[#777]">
+              Get pre-approved in less than 30 seconds. No credit check
+            </p>
           </div>
         </div>
 
