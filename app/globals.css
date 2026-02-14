@@ -44,31 +44,32 @@ body {
   }
 }
 
-/* Arc hero responsive transform-origin and positioning */
+/* Arc hero responsive transform-origin and positioning — 3-tier system matching RM */
 .arc-thumbnail {
   top: 50%;
-  left: calc(50% - 1.75rem);
-  transform-origin: 1.75rem 315px;
-}
-
-@media (min-width: 480px) {
-  .arc-thumbnail {
-    left: calc(50% - 2.5rem);
-    transform-origin: 2.5rem 460px;
-  }
+  width: 3.5rem;                     /* 56px */
+  height: 3.5rem;
+  border-radius: 0.5rem;            /* 8px */
+  left: calc(50% - 1.75rem);        /* -28px = half of 56px */
+  transform-origin: 1.75rem 315px;  /* 28px 315px */
 }
 
 @media (min-width: 768px) {
   .arc-thumbnail {
-    left: calc(50% - 3.0625rem);
-    transform-origin: 3.0625rem 550px;
+    width: 6.125rem;                   /* 98px */
+    height: 6.125rem;
+    border-radius: 0.75rem;            /* 12px */
+    left: calc(50% - 3.0625rem);       /* -49px = half of 98px */
+    transform-origin: 3.0625rem 550px; /* 49px 550px */
   }
 }
 
 @media (min-width: 1080px) {
   .arc-thumbnail {
-    left: calc(50% - 4.75rem);
-    transform-origin: 4.75rem 820px;
+    width: 9.5rem;                   /* 152px */
+    height: 9.5rem;
+    left: calc(50% - 4.75rem);       /* -76px = half of 152px */
+    transform-origin: 4.75rem 820px; /* 76px 820px */
   }
 }
 

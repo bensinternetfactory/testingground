@@ -74,7 +74,7 @@ export function HeroSection() {
           {allImages.map((img, i) => (
             <div
               key={i}
-              className="arc-thumbnail absolute h-[3.5rem] w-[3.5rem] overflow-hidden rounded-[0.5rem] sm:h-[5rem] sm:w-[5rem] md:h-[6.125rem] md:w-[6.125rem] md:rounded-[0.75rem] lg:h-[9.5rem] lg:w-[9.5rem]"
+              className="arc-thumbnail absolute overflow-hidden"
               style={getThumbnailStyle(i)}
             >
               <div
