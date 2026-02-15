@@ -72,7 +72,7 @@ const ICON_MAP: Record<NavCardItem["icon"], React.ReactNode> = {
 
 function DropdownCard({ item }: { item: NavCardItem }) {
   return (
-    <a
+    <Link
       href={item.href}
       className="flex items-start gap-3 rounded-2xl border border-[#E9E9E9] p-4 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.02)] transition-[background-color] duration-150 ease-in-out hover:bg-[var(--card-tint)]"
       style={{ "--card-tint": item.tint ?? "#F5F5F5" } as React.CSSProperties}
@@ -88,7 +88,7 @@ function DropdownCard({ item }: { item: NavCardItem }) {
           {item.description}
         </p>
       </div>
-    </a>
+    </Link>
   );
 }
 
