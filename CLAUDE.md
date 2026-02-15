@@ -31,3 +31,14 @@ This is a Next.js 16 landing page using the App Router architecture with React 1
 - TypeScript strict mode enabled
 - ESLint uses Next.js core-web-vitals and TypeScript rules
 - `next.config.ts` is empty - add Next.js config options there as needed
+
+## Custom Agents
+
+This project has custom audit agents in `.claude/agents/`:
+
+- **legend-manager** -- Orchestrates all three legend agents for full audits. Use for: "audit my code", "review everything", "pre-deploy check"
+- **next-legend** -- Next.js best practices audit (11 categories). Use for: "check my Next.js code", "review server components"
+- **react-legend** -- React performance audit (57 Vercel rules, 8 categories). Use for: "check React performance", "review re-renders"
+- **web-legend** -- Web interface guidelines audit (13 categories). Use for: "check accessibility", "review my UI"
+
+When the user asks for an audit, code review, or best-practices check, delegate to the appropriate agent(s).
