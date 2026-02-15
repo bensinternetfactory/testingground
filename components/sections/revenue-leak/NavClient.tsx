@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import Link from "next/link";
+import Image from "next/image";
 import type { NavSection, NavCardItem } from "./nav-data";
 
 /* ------------------------------------------------------------------ */
@@ -180,8 +181,14 @@ export function NavClient({ sections }: NavClientProps) {
         <div className="mx-auto flex h-[var(--nav-height)] max-w-7xl items-center justify-between px-6">
           {/* Left cluster: Logo + Desktop Nav */}
           <div className="flex items-center gap-8">
-            <Link href="/revenue-leak" className="text-xl font-medium text-[#DE3341]">
-              TowCap
+            <Link href="/revenue-leak">
+              <Image
+                src="/towloansdark.svg"
+                alt="TowLoans"
+                width={191}
+                height={28}
+                priority
+              />
             </Link>
 
             {/* Desktop navigation — hover-triggered dropdowns */}
