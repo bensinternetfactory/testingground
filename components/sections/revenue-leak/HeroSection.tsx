@@ -258,7 +258,7 @@ export function HeroSection({
   } = arcConfig ?? {};
 
   return (
-    <section id="hero" className="relative bg-white pt-[72px]">
+    <section id="hero" className="relative bg-white pt-[var(--nav-height)]">
       {/* Arc area */}
       <div className="relative flex min-h-[280px] items-end justify-center overflow-hidden mb-0 md:mb-4 md:min-h-[416px] lg:mb-8 lg:min-h-[544px]">
         <ArcThumbnails

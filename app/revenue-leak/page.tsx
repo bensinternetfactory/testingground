@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { StickyNav } from "@/components/sections/revenue-leak/StickyNav";
 import {
-  StickyNav,
   HeroSection,
   FinancingCards,
   GuideBuilder,
