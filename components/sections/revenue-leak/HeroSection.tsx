@@ -4,181 +4,291 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 
-import truck1 from "@/public/truck-1.jpg";
-import truck2 from "@/public/truck-2.jpg";
-import truck3 from "@/public/truck-3.jpg";
-import truck4 from "@/public/truck-4.jpg";
-import truck5 from "@/public/truck-5.jpg";
-import truck6 from "@/public/truck-6.jpg";
-import truck7 from "@/public/truck-7.jpg";
-import truck8 from "@/public/truck-8.jpg";
-import truck9 from "@/public/truck-9.jpg";
-import truck10 from "@/public/truck-10.jpg";
-import truck11 from "@/public/truck-11.jpg";
-import truck12 from "@/public/truck-12.jpg";
-import truck13 from "@/public/truck-13.jpg";
-import truck14 from "@/public/truck-14.jpg";
-import truck15 from "@/public/truck-15.jpg";
+/* ------------------------------------------------------------------ */
+/*  Types                                                              */
+/* ------------------------------------------------------------------ */
 
-// 20 thumbnails: 15 unique + 5 duplicates for full circular spacing
-const HERO_IMAGES: StaticImageData[] = [
-  truck1, truck2, truck3, truck4, truck5,
-  truck6, truck7, truck8, truck9, truck10,
-  truck11, truck12, truck13, truck14, truck15,
-  truck6, truck7, truck8, truck9, truck10,
-];
+type HeroImage = StaticImageData | string;
 
-const ROTATING_PHRASES = ["lower payments", "faster funding", "better experience"];
+interface HeroSectionProps {
+  images: readonly HeroImage[];
+  headline: string;
+  phrases: readonly string[];
+  cta: { label: string; href: string; subtext?: string };
+  footer?: React.ReactNode;
+  arcConfig?: {
+    spacing?: number;
+    startOffset?: number;
+    duration?: number;
+    priorityCount?: number;
+    sizes?: string;
+  };
+  phraseInterval?: number;
+}
 
-const CTA_TILES = [
-  { label: "Rollback Financing", href: "/rollback" },
-  { label: "Wrecker Financing", href: "/wrecker" },
-  { label: "Rotator Financing", href: "/rotator" },
-];
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
 
-// 20 thumbnails, each spaced 18deg apart, starting at -90deg
-const START_OFFSET = -90;
-const SPACING = 18;
+/**
+ * HeroSection — Reusable hero with rotating image arc, animated phrases, and CTA.
+ *
+ * @example Basic usage
+ * ```tsx
+ * import { HeroSection } from "@/components/sections/revenue-leak/HeroSection";
+ * import { HeroTile } from "@/components/sections/revenue-leak/HeroTile";
+ * import img1 from "@/public/hero-1.jpg";
+ * import img2 from "@/public/hero-2.jpg";
+ *
+ * <HeroSection
+ *   images={[img1, img2]}
+ *   headline="Your Headline"
+ *   phrases={["phrase one", "phrase two", "phrase three"]}
+ *   cta={{ label: "Get Started", href: "#signup" }}
+ *   footer={
+ *     <>
+ *       <HeroTile label="Option A" href="/a" />
+ *       <HeroTile label="Option B" href="/b" />
+ *     </>
+ *   }
+ * />
+ * ```
+ *
+ * @example Using the existing site config
+ * ```tsx
+ * import { HeroSection } from "@/components/sections/revenue-leak/HeroSection";
+ * import { HERO_CONFIG } from "@/components/sections/revenue-leak/hero-config";
+ * import { HERO_FOOTER } from "@/components/sections/revenue-leak/hero-footer";
+ *
+ * <HeroSection {...HERO_CONFIG} footer={HERO_FOOTER} />
+ * ```
+ *
+ * @remarks
+ * - `images` accepts static imports (blur placeholder included) or URL strings (no blur).
+ *   The component repeats images internally to fill 360° — only pass unique images.
+ *   Empty array = no arc rendered (headline/phrases/CTA still render).
+ *   Remote string URLs require `images.remotePatterns` in `next.config.ts`.
+ * - `phrases` with a single entry renders statically (no animation, no timer).
+ * - `footer` is a ReactNode slot. Use `HeroTile` for the default tile card, or pass
+ *   any custom markup. Omit to hide the section.
+ * - The arc is decorative (`aria-hidden`). If a consumer makes thumbnails interactive,
+ *   they must remove `aria-hidden` and provide alt text + keyboard nav.
+ *
+ * @see {@link ./hero-config.ts} for the revenue-leak page's data config (server-safe).
+ * @see {@link ./hero-footer.tsx} for the revenue-leak page's footer JSX (client module).
+ * @see {@link ./HeroTile.tsx} for the default footer tile component.
+ */
 
-function getThumbnailStyle(index: number): React.CSSProperties {
-  const startRotation = START_OFFSET + index * SPACING;
+function buildArcImages(images: readonly HeroImage[], spacing: number): HeroImage[] {
+  if (!images?.length) return [];
+  const totalSlots = Math.ceil(360 / spacing);
+  return Array.from({ length: totalSlots }, (_, i) => images[i % images.length]);
+}
+
+function getThumbnailStyle(
+  index: number,
+  startOffset: number,
+  spacing: number,
+  duration: number,
+): React.CSSProperties {
+  const startRotation = startOffset + index * spacing;
   return {
     "--start-rotation": `${startRotation}deg`,
-    animation: "arc-rotate 300s linear infinite",
+    animation: `arc-rotate ${duration}s linear infinite`,
     willChange: "transform",
     backfaceVisibility: "hidden",
   } as React.CSSProperties;
 }
 
-export function HeroSection() {
+/* ------------------------------------------------------------------ */
+/*  Internal sub-components                                            */
+/* ------------------------------------------------------------------ */
+
+function ArcThumbnails({
+  images,
+  spacing,
+  startOffset,
+  duration,
+  priorityCount,
+  sizes,
+}: {
+  images: readonly HeroImage[];
+  spacing: number;
+  startOffset: number;
+  duration: number;
+  priorityCount: number;
+  sizes: string;
+}) {
+  const arcImages = buildArcImages(images, spacing);
+  const eagerCount = Math.max(0, Math.min(priorityCount, arcImages.length));
+
+  if (!arcImages.length) return null;
+
+  return (
+    <div
+      className="thumbnails pointer-events-none absolute left-1/2 mt-4 md:mt-6 lg:mt-12"
+      aria-hidden="true"
+      style={{ top: 0, transform: "translate(-50%, -50%)" }}
+    >
+      {arcImages.map((img, i) => {
+        const isStatic = typeof img !== "string";
+        return (
+          <div
+            key={i}
+            className="arc-thumbnail absolute overflow-hidden bg-[#E8E4DE]"
+            style={getThumbnailStyle(i, startOffset, spacing, duration)}
+          >
+            <div className="arc-thumbnail-inner relative h-full w-full">
+              <Image
+                src={img}
+                fill
+                placeholder={isStatic ? "blur" : "empty"}
+                alt=""
+                sizes={sizes}
+                priority={i < eagerCount}
+                style={{ objectFit: "cover", objectPosition: "center" }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function GradientOverlays() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 z-[1] hidden h-[6.25rem] w-[15%] md:block lg:w-[20%]"
+        style={{ background: "linear-gradient(transparent, white)" }}
+      />
+      <div
+        className="pointer-events-none absolute right-0 bottom-0 z-[1] hidden h-[6.25rem] w-[15%] md:block lg:w-[20%]"
+        style={{ background: "linear-gradient(transparent, white)" }}
+      />
+    </>
+  );
+}
+
+function RotatingPhrases({
+  phrases,
+  interval,
+}: {
+  phrases: readonly string[];
+  interval: number;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    if (phrases.length < 2) return;
+    setActiveIndex(0);
+    const id = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % phrases.length);
+    }, interval);
+    return () => clearInterval(id);
+  }, [phrases, interval]);
+
+  if (phrases.length === 1) {
+    return (
+      <div className="relative h-[2.5rem] w-full overflow-hidden md:mb-4 md:h-[3rem] lg:h-[4rem]">
+        <span className="absolute inset-x-0 top-0 text-center text-[2rem] font-medium leading-[2.5rem] text-[#111111] md:text-[2.5rem] md:leading-[3rem] lg:text-[3.5rem] lg:leading-[4rem]">
+          {phrases[0]}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="relative h-[2.5rem] w-full overflow-hidden md:mb-4 md:h-[3rem] lg:h-[4rem]"
+      aria-live="polite"
+    >
+      <AnimatePresence>
+        <motion.span
+          key={phrases[activeIndex]}
+          initial={{ y: "100%", opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: "-100%", opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="absolute inset-x-0 top-0 text-center text-[2rem] font-medium leading-[2.5rem] text-[#111111] md:text-[2.5rem] md:leading-[3rem] lg:text-[3.5rem] lg:leading-[4rem]"
+        >
+          {phrases[activeIndex]}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function HeroCTA({ cta }: { cta: HeroSectionProps["cta"] }) {
+  return (
+    <div className="mt-4 self-stretch min-[470px]:self-center lg:mt-10">
+      <a
+        href={cta.href}
+        className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 min-[470px]:inline-flex min-[470px]:h-[4.5rem] min-[470px]:w-auto"
+      >
+        {cta.label}
+      </a>
+      {cta.subtext && (
+        <p className="mt-2 text-xs text-[#777]">{cta.subtext}</p>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main component                                                     */
+/* ------------------------------------------------------------------ */
+
+export function HeroSection({
+  images,
+  headline,
+  phrases,
+  cta,
+  footer,
+  arcConfig,
+  phraseInterval = 4000,
+}: HeroSectionProps) {
+  const {
+    spacing = 18,
+    startOffset = -90,
+    duration = 300,
+    priorityCount = 5,
+    sizes = "(min-width: 1080px) 152px, (min-width: 768px) 98px, 56px",
+  } = arcConfig ?? {};
 
   return (
     <section id="hero" className="relative bg-white pt-[72px]">
       {/* Arc area */}
       <div className="relative flex min-h-[280px] items-end justify-center overflow-hidden mb-0 md:mb-4 md:min-h-[416px] lg:mb-8 lg:min-h-[544px]">
-        {/* Thumbnails container - centered */}
-        <div
-          className="thumbnails pointer-events-none absolute left-1/2 mt-4 md:mt-6 lg:mt-12"
-          aria-hidden="true"
-          style={{ top: 0, transform: 'translate(-50%, -50%)' }}
-        >
-          {HERO_IMAGES.map((img, i) => (
-            <div
-              key={i}
-              className="arc-thumbnail absolute overflow-hidden bg-[#E8E4DE]"
-              style={getThumbnailStyle(i)}
-            >
-              <div className="arc-thumbnail-inner relative h-full w-full">
-                <Image
-                  src={img}
-                  fill
-                  placeholder="blur"
-                  alt=""
-                  sizes="(min-width: 1080px) 152px, (min-width: 768px) 98px, 56px"
-                  priority={i < 5}
-                  style={{ objectFit: "cover", objectPosition: "center" }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Gradient overlays — desktop only */}
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 z-[1] hidden h-[6.25rem] w-[15%] md:block lg:w-[20%]"
-          style={{
-            background: "linear-gradient(transparent, white)",
-          }}
+        <ArcThumbnails
+          images={images}
+          spacing={spacing}
+          startOffset={startOffset}
+          duration={duration}
+          priorityCount={priorityCount}
+          sizes={sizes}
         />
-        <div
-          className="pointer-events-none absolute right-0 bottom-0 z-[1] hidden h-[6.25rem] w-[15%] md:block lg:w-[20%]"
-          style={{
-            background: "linear-gradient(transparent, white)",
-          }}
-        />
+        <GradientOverlays />
 
         {/* Centered content */}
         <div className="relative z-[2] mx-auto mb-5 flex w-full flex-col items-center px-6 text-center md:mb-8 md:max-w-[38rem]">
           <h1 className="mb-1 text-[0.75rem] leading-4 font-normal text-[#545454] md:text-[0.875rem] md:leading-5 lg:text-[1.25rem] lg:leading-7">
-            Easy Tow Truck Financing
+            {headline}
           </h1>
-
-          {/* Rotating phrases */}
-          <div
-            className="relative h-[2.5rem] w-full overflow-hidden md:mb-4 md:h-[3rem] lg:h-[4rem]"
-            aria-live="polite"
-          >
-            <AnimatePresence>
-              <motion.span
-                key={ROTATING_PHRASES[activeIndex]}
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="absolute inset-x-0 top-0 text-center text-[2rem] font-medium leading-[2.5rem] text-[#111111] md:text-[2.5rem] md:leading-[3rem] lg:text-[3.5rem] lg:leading-[4rem]"
-              >
-                {ROTATING_PHRASES[activeIndex]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-
-          {/* CTA button */}
-          <div className="mt-4 self-stretch min-[470px]:self-center lg:mt-10">
-            <a
-              href="#pre-approve"
-              className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 min-[470px]:inline-flex min-[470px]:h-[4.5rem] min-[470px]:w-auto"
-            >
-              See my payment
-            </a>
-            <p className="mt-2 text-xs text-[#777]">
-              Get pre-approved in less than 30 seconds. No credit check
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      {/* CTA Tile Cards */}
-      <div className="mx-auto max-w-[75rem] px-6 py-4 md:px-8 md:py-12">
-        <div className="grid grid-cols-1 gap-4 md:grid-flow-col md:auto-cols-fr lg:gap-6">
-          {CTA_TILES.map((tile) => (
-            <a
-              key={tile.label}
-              href={tile.href}
-              className="group flex h-14 items-center justify-between rounded-[1rem] border border-[#E5E5E5] bg-white p-4 transition-shadow duration-200 hover:shadow-lg md:h-[108px] md:p-6 lg:h-[116px] lg:rounded-[1.25rem]"
-            >
-              <span className="text-base font-normal text-[#111111] lg:text-2xl lg:leading-8">
-                {tile.label}
-              </span>
-
-              {/* Arrow */}
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                className="shrink-0 text-[#999] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#111111]"
-              >
-                <path
-                  d="M7.5 5L12.5 10L7.5 15"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
-          ))}
+          <RotatingPhrases phrases={phrases} interval={phraseInterval} />
+          <HeroCTA cta={cta} />
         </div>
       </div>
+
+      {/* Footer slot */}
+      {footer && (
+        <div className="mx-auto max-w-[75rem] px-6 py-4 md:px-8 md:py-12">
+          <div className="grid grid-cols-1 gap-4 md:grid-flow-col md:auto-cols-fr lg:gap-6">
+            {footer}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

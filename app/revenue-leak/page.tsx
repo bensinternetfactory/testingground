@@ -11,6 +11,8 @@ import {
   LegalSection,
   FooterSection,
 } from "@/components/sections/revenue-leak";
+import { HERO_CONFIG } from "@/components/sections/revenue-leak/hero-config";
+import { HeroTile } from "@/components/sections/revenue-leak/HeroTile";
 
 export const metadata: Metadata = {
   title: "Tow Truck Financing | Stop Turning Down Calls | TowCap",
@@ -19,6 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default function RevenueLeakPage() {
+  const { tiles, ...heroProps } = HERO_CONFIG;
+
   return (
     <div className="min-h-screen bg-white font-sans">
       <a
@@ -29,7 +33,12 @@ export default function RevenueLeakPage() {
       </a>
       <StickyNav />
       <main>
-        <HeroSection />
+        <HeroSection
+          {...heroProps}
+          footer={tiles.map((tile) => (
+            <HeroTile key={tile.label} {...tile} />
+          ))}
+        />
         <FinancingCards />
         <GuideBuilder />
         <FeaturedPrograms />
