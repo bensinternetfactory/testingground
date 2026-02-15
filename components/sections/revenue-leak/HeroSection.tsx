@@ -2,18 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image, { StaticImageData } from "next/image";
 
-const HERO_IMAGES = [
-  { src: "/placeholder-1.jpg", alt: "Tow truck 1" },
-  { src: "/placeholder-2.jpg", alt: "Tow truck 2" },
-  { src: "/placeholder-3.jpg", alt: "Tow truck 3" },
-  { src: "/placeholder-4.jpg", alt: "Tow truck 4" },
-  { src: "/placeholder-5.jpg", alt: "Tow truck 5" },
-  { src: "/placeholder-6.jpg", alt: "Tow truck 6" },
-  { src: "/placeholder-7.jpg", alt: "Tow truck 7" },
-  { src: "/placeholder-8.jpg", alt: "Tow truck 8" },
-  { src: "/placeholder-9.jpg", alt: "Tow truck 9" },
-  { src: "/placeholder-10.jpg", alt: "Tow truck 10" },
+import truck1 from "@/public/truck-1.jpg";
+import truck2 from "@/public/truck-2.jpg";
+import truck3 from "@/public/truck-3.jpg";
+import truck4 from "@/public/truck-4.jpg";
+import truck5 from "@/public/truck-5.jpg";
+import truck6 from "@/public/truck-6.jpg";
+import truck7 from "@/public/truck-7.jpg";
+import truck8 from "@/public/truck-8.jpg";
+import truck9 from "@/public/truck-9.jpg";
+import truck10 from "@/public/truck-10.jpg";
+import truck11 from "@/public/truck-11.jpg";
+import truck12 from "@/public/truck-12.jpg";
+import truck13 from "@/public/truck-13.jpg";
+import truck14 from "@/public/truck-14.jpg";
+import truck15 from "@/public/truck-15.jpg";
+
+// 20 thumbnails: 15 unique + 5 duplicates for full circular spacing
+const HERO_IMAGES: StaticImageData[] = [
+  truck1, truck2, truck3, truck4, truck5,
+  truck6, truck7, truck8, truck9, truck10,
+  truck11, truck12, truck13, truck14, truck15,
+  truck6, truck7, truck8, truck9, truck10,
 ];
 
 const ROTATING_PHRASES = ["lower payments", "faster funding", "better experience"];
@@ -38,16 +50,6 @@ function getThumbnailStyle(index: number): React.CSSProperties {
   } as React.CSSProperties;
 }
 
-function getImageStyle(index: number): React.CSSProperties {
-  const startRotation = START_OFFSET + index * SPACING;
-  return {
-    "--start-rotation": `${startRotation}deg`,
-    animation: "arc-counter-rotate 300s linear infinite",
-    willChange: "transform",
-    backfaceVisibility: "hidden" as const,
-  } as React.CSSProperties;
-}
-
 export function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -57,9 +59,6 @@ export function HeroSection() {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
-
-  // Duplicate images to get 20 thumbnails
-  const allImages = [...HERO_IMAGES, ...HERO_IMAGES];
 
   return (
     <section id="hero" className="relative bg-white pt-[72px]">
@@ -71,20 +70,22 @@ export function HeroSection() {
           aria-hidden="true"
           style={{ top: 0, transform: 'translate(-50%, -50%)' }}
         >
-          {allImages.map((img, i) => (
+          {HERO_IMAGES.map((img, i) => (
             <div
               key={i}
-              className="arc-thumbnail absolute overflow-hidden"
+              className="arc-thumbnail absolute overflow-hidden bg-[#E8E4DE]"
               style={getThumbnailStyle(i)}
             >
-              <div
-                className="arc-thumbnail-inner h-full w-full bg-[#E8E4DE]"
-                style={getImageStyle(i)}
-              >
-                {/* Placeholder — swap for <Image> when real photos are ready */}
-                <div className="flex h-full w-full items-center justify-center text-[0.5rem] text-[#999] sm:text-xs">
-                  {i + 1}
-                </div>
+              <div className="arc-thumbnail-inner relative h-full w-full">
+                <Image
+                  src={img}
+                  fill
+                  placeholder="blur"
+                  alt=""
+                  sizes="(min-width: 1080px) 152px, (min-width: 768px) 98px, 56px"
+                  priority={i < 5}
+                  style={{ objectFit: "cover", objectPosition: "center" }}
+                />
               </div>
             </div>
           ))}

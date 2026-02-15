@@ -35,15 +35,6 @@ body {
   }
 }
 
-@keyframes arc-counter-rotate {
-  0% {
-    transform: rotate(calc(var(--start-rotation) * -1)) scale(1.5);
-  }
-  100% {
-    transform: rotate(calc((var(--start-rotation) + 360deg) * -1)) scale(1.5);
-  }
-}
-
 /* Arc hero responsive transform-origin and positioning — 3-tier system matching RM */
 .arc-thumbnail {
   top: 50%;
