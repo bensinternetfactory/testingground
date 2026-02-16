@@ -22,7 +22,7 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
       <div
         role="group"
         aria-label="Equipment types"
-        className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+        className="grid grid-cols-2 gap-3"
       >
         {tiles.map((tile) => (
           <EquipmentTile
@@ -37,7 +37,7 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
       {/* Screen reader announcement for tile selection */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {selectedTile
-          ? `${selectedTile} selected. The Check Your Options button will include this equipment type.`
+          ? `${tiles.find((t) => t.id === selectedTile)?.label} selected. The Check Your Options button will include this equipment type.`
           : ""}
       </div>
 
