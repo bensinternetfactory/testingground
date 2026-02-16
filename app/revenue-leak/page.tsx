@@ -36,14 +36,15 @@ export default async function RevenueLeakPage({ searchParams }: Props) {
   let heroConfig = HERO_QUOTE_START_CONFIG;
   let angle: number | undefined;
   let variant: number | undefined;
-  let currentHero: "quote-start" | "carousel" = "quote-start";
+  let currentHero: "quote-start" | "carousel" = "carousel";
 
   if (process.env.NODE_ENV === "development") {
     const { angle: rawAngle, variant: rawVariant, hero: heroParam } = await searchParams;
 
     if (heroParam === "carousel") {
       currentHero = "carousel";
-    } else {
+    } else if (heroParam === "quote-start" || rawAngle || rawVariant) {
+      currentHero = "quote-start";
       const parsedAngle = rawAngle ? Number(rawAngle) : undefined;
       const parsedVariant = rawVariant ? Number(rawVariant) : undefined;
 
@@ -73,7 +74,9 @@ export default async function RevenueLeakPage({ searchParams }: Props) {
       </a>
       <StickyNav />
       <main>
-        {currentHero === "carousel" ? (
+        {currentHero === "quote-start" ? (
+          <HeroQuoteStart config={heroConfig} />
+        ) : (
           <HeroSection
             images={HERO_CONFIG.images}
             headline={HERO_CONFIG.headline}
@@ -87,8 +90,6 @@ export default async function RevenueLeakPage({ searchParams }: Props) {
               </>
             }
           />
-        ) : (
-          <HeroQuoteStart config={heroConfig} />
         )}
         <FinancingCards />
         <GuideBuilder />

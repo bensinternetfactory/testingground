@@ -57,9 +57,9 @@ export default function DevVariantPanel({
   function selectHero(hero: "quote-start" | "carousel") {
     startTransition(() => {
       if (hero === "carousel") {
-        router.replace(`${pathname}?hero=carousel`);
-      } else {
         router.replace(pathname);
+      } else {
+        router.replace(`${pathname}?hero=${hero}`);
       }
     });
   }
@@ -67,6 +67,7 @@ export default function DevVariantPanel({
   function selectVariant(angle: number, variant: number | null) {
     startTransition(() => {
       const params = new URLSearchParams();
+      params.set("hero", "quote-start");
       if (variant !== null) {
         params.set("angle", String(angle));
         params.set("variant", String(variant));
@@ -121,7 +122,7 @@ export default function DevVariantPanel({
       <div className="border-b border-gray-100 px-4 py-2">
         <span className="mb-1 block text-xs text-gray-500">Layout</span>
         <div className="flex gap-1">
-          {(["quote-start", "carousel"] as const).map((hero) => (
+          {(["carousel", "quote-start"] as const).map((hero) => (
             <button
               key={hero}
               onClick={() => selectHero(hero)}
@@ -131,7 +132,7 @@ export default function DevVariantPanel({
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               } ${isPending ? "opacity-60" : ""}`}
             >
-              {hero === "quote-start" ? "Quote Start" : "Carousel"}
+              {hero === "carousel" ? "Carousel" : "Quote Start"}
             </button>
           ))}
         </div>
