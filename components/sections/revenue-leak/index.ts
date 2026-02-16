@@ -1,5 +1,7 @@
 export { StickyNav } from "./StickyNav";
 export { HeroSection } from "./HeroSection";
+export { HeroQuoteStart } from "./HeroQuoteStart";
+export { TileSelector } from "./TileSelector";
 
 export { FinancingCards } from "./FinancingCards";
 export { GuideBuilder } from "./GuideBuilder";

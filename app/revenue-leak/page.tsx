@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { StickyNav } from "@/components/sections/revenue-leak/StickyNav";
 import {
-  HeroSection,
   FinancingCards,
   GuideBuilder,
   FeaturedPrograms,
@@ -11,8 +10,8 @@ import {
   LegalSection,
   FooterSection,
 } from "@/components/sections/revenue-leak";
-import { HERO_CONFIG } from "@/components/sections/revenue-leak/hero-config";
-import { HeroTile } from "@/components/sections/revenue-leak/HeroTile";
+import { HeroQuoteStart } from "@/components/sections/revenue-leak/HeroQuoteStart";
+import { HERO_QUOTE_START_CONFIG } from "@/components/sections/revenue-leak/hero-quote-start-config";
 
 export const metadata: Metadata = {
   title: "Tow Truck Financing | Stop Turning Down Calls | TowCap",
@@ -21,8 +20,6 @@ export const metadata: Metadata = {
 };
 
 export default function RevenueLeakPage() {
-  const { tiles, ...heroProps } = HERO_CONFIG;
-
   return (
     <div className="min-h-screen bg-white font-sans">
       <a
@@ -33,12 +30,7 @@ export default function RevenueLeakPage() {
       </a>
       <StickyNav />
       <main>
-        <HeroSection
-          {...heroProps}
-          footer={tiles.map((tile) => (
-            <HeroTile key={tile.label} {...tile} />
-          ))}
-        />
+        <HeroQuoteStart config={HERO_QUOTE_START_CONFIG} />
         <FinancingCards />
         <GuideBuilder />
         <FeaturedPrograms />
