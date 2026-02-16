@@ -131,6 +131,9 @@ function MobileAccordion({
         <div className="accordion-content space-y-3 px-6 pb-4">
           {section.items.map((item) => (
             <div key={item.title} onClick={onLinkClick}>
+              {item.dividerBefore && (
+                <hr className="mt-0 mb-3 border-t border-[#E9E9E9]" />
+              )}
               <DropdownCard item={item} />
             </div>
           ))}
@@ -215,6 +218,9 @@ export function NavClient({ sections }: NavClientProps) {
                         <ul className="grid w-[340px] gap-3 p-4 md:w-[420px] md:grid-cols-1">
                           {section.items.map((item) => (
                             <li key={item.title}>
+                              {item.dividerBefore && (
+                                <hr className="mt-0 mb-3 border-t border-[#E9E9E9]" />
+                              )}
                               <NavigationMenuLink asChild>
                                 <DropdownCard item={item} />
                               </NavigationMenuLink>

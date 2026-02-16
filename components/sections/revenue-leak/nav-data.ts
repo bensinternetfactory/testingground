@@ -11,6 +11,7 @@ export interface NavCardItem {
   href: string;
   icon: "lightning" | "truck" | "chart" | "clock" | "shield" | "calculator" | "book" | "phone" | "star";
   tint?: string;
+  dividerBefore?: boolean;
 }
 
 export interface NavSection {
@@ -21,48 +22,56 @@ export interface NavSection {
 
 export const FINANCING_ITEMS: readonly NavCardItem[] = [
   {
-    title: "New Equipment Financing",
-    description: "Competitive rates on brand-new rollbacks, wreckers, and rotators",
-    href: "#!",
+    title: "Rollback Financing",
+    description: "The most common flatbed — competitive rates, fast approval",
+    href: "/rollback-financing",
     icon: "truck",
     tint: "#FBF0F6",
   },
   {
-    title: "Used Equipment Financing",
-    description: "Flexible terms for pre-owned tow trucks and recovery vehicles",
-    href: "#!",
+    title: "Wrecker Financing",
+    description: "Light, medium, and heavy duty — terms built for operators",
+    href: "/wrecker-financing",
     icon: "shield",
     tint: "#F3EEE7",
   },
   {
-    title: "Refinancing",
-    description: "Lower your monthly payment on an existing truck loan",
-    href: "#!",
-    icon: "chart",
+    title: "Rotator Financing",
+    description: "Finance $200K–$1.3M rotators with towing-specific terms",
+    href: "/rotator-financing",
+    icon: "star",
     tint: "#EDF1FF",
+  },
+  {
+    title: "Used Tow Truck Financing",
+    description: "Any age, any seller — private party, auction, Marketplace",
+    href: "#!",
+    icon: "lightning",
+    tint: "#FBF0F6",
+    dividerBefore: true,
   },
 ] as const;
 
 export const PROGRAMS_ITEMS: readonly NavCardItem[] = [
   {
-    title: "First-Time Buyer Program",
-    description: "Get approved with limited credit history or time in business",
-    href: "#!",
-    icon: "star",
+    title: "Fleet Upgrade",
+    description: "Special rates when you're adding your next truck",
+    href: "/fleet-financing",
+    icon: "chart",
     tint: "#EDF1FF",
   },
   {
-    title: "Fleet Expansion",
-    description: "Special rates when you're adding a second, third, or tenth truck",
-    href: "#!",
-    icon: "chart",
+    title: "Zero Down",
+    description: "Add equipment without draining your bank account",
+    href: "/zero-down-tow-truck-financing",
+    icon: "star",
     tint: "#FBF0F6",
   },
   {
-    title: "Credit Recovery",
-    description: "Programs designed for operators rebuilding their credit",
-    href: "#!",
-    icon: "shield",
+    title: "Deferred Payments",
+    description: "$99 touch payments for up to 180 days while your truck ramps up",
+    href: "/deferred-payment-tow-truck-financing",
+    icon: "clock",
     tint: "#F3EEE7",
   },
 ] as const;
