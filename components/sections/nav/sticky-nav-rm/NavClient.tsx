@@ -1,5 +1,7 @@
 "use client";
 
+import "./sticky-nav.css";
+
 import { useState, useCallback, useEffect } from "react";
 import {
   NavigationMenu,

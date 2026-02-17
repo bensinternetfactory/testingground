@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
+import "./hero-showcase.css";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -10,7 +11,7 @@ import Image, { StaticImageData } from "next/image";
 
 type HeroImage = StaticImageData | string;
 
-interface HeroSectionProps {
+export interface HeroShowcaseProps {
   images: readonly HeroImage[];
   headline: string;
   phrases: readonly string[];
@@ -31,24 +32,24 @@ interface HeroSectionProps {
 /* ------------------------------------------------------------------ */
 
 /**
- * HeroSection — Reusable hero with rotating image arc, animated phrases, and CTA.
+ * HeroShowcase — Reusable hero with rotating image arc, animated phrases, and CTA.
  *
  * @example Basic usage
  * ```tsx
- * import { HeroSection } from "@/components/sections/revenue-leak/HeroSection";
- * import { HeroTile } from "@/components/sections/revenue-leak/HeroTile";
+ * import { HeroShowcase } from "@/components/sections/heroes/hero-showcase-rm";
+ * import { NavTile } from "@/components/sections/heroes/hero-showcase-rm";
  * import img1 from "@/public/hero-1.jpg";
  * import img2 from "@/public/hero-2.jpg";
  *
- * <HeroSection
+ * <HeroShowcase
  *   images={[img1, img2]}
  *   headline="Your Headline"
  *   phrases={["phrase one", "phrase two", "phrase three"]}
  *   cta={{ label: "Get Started", href: "#signup" }}
  *   footer={
  *     <>
- *       <HeroTile label="Option A" href="/a" />
- *       <HeroTile label="Option B" href="/b" />
+ *       <NavTile label="Option A" href="/a" />
+ *       <NavTile label="Option B" href="/b" />
  *     </>
  *   }
  * />
@@ -56,27 +57,24 @@ interface HeroSectionProps {
  *
  * @example Using the existing site config
  * ```tsx
- * import { HeroSection } from "@/components/sections/revenue-leak/HeroSection";
- * import { HERO_CONFIG } from "@/components/sections/revenue-leak/hero-config";
- * import { HERO_FOOTER } from "@/components/sections/revenue-leak/hero-footer";
+ * import { HeroShowcase, HERO_CONFIG } from "@/components/sections/heroes/hero-showcase-rm";
  *
- * <HeroSection {...HERO_CONFIG} footer={HERO_FOOTER} />
+ * <HeroShowcase {...HERO_CONFIG} footer={<YourFooter />} />
  * ```
  *
  * @remarks
  * - `images` accepts static imports (blur placeholder included) or URL strings (no blur).
- *   The component repeats images internally to fill 360° — only pass unique images.
+ *   The component repeats images internally to fill 360deg — only pass unique images.
  *   Empty array = no arc rendered (headline/phrases/CTA still render).
  *   Remote string URLs require `images.remotePatterns` in `next.config.ts`.
  * - `phrases` with a single entry renders statically (no animation, no timer).
- * - `footer` is a ReactNode slot. Use `HeroTile` for the default tile card, or pass
+ * - `footer` is a ReactNode slot. Use `NavTile` for the default tile card, or pass
  *   any custom markup. Omit to hide the section.
  * - The arc is decorative (`aria-hidden`). If a consumer makes thumbnails interactive,
  *   they must remove `aria-hidden` and provide alt text + keyboard nav.
  *
- * @see {@link ./hero-config.ts} for the revenue-leak page's data config (server-safe).
- * @see {@link ./hero-footer.tsx} for the revenue-leak page's footer JSX (client module).
- * @see {@link ./HeroTile.tsx} for the default footer tile component.
+ * @see {@link ./config.ts} for the revenue-leak page's data config (server-safe).
+ * @see {@link ./NavTile.tsx} for the default footer tile component.
  */
 
 function buildArcImages(images: readonly HeroImage[], spacing: number): HeroImage[] {
@@ -220,7 +218,7 @@ function RotatingPhrases({
   );
 }
 
-function HeroCTA({ cta }: { cta: HeroSectionProps["cta"] }) {
+function HeroCTA({ cta }: { cta: HeroShowcaseProps["cta"] }) {
   return (
     <div className="mt-4 self-stretch min-[470px]:self-center lg:mt-10">
       <a
@@ -240,7 +238,7 @@ function HeroCTA({ cta }: { cta: HeroSectionProps["cta"] }) {
 /*  Main component                                                     */
 /* ------------------------------------------------------------------ */
 
-export function HeroSection({
+export function HeroShowcase({
   images,
   headline,
   phrases,
@@ -248,7 +246,7 @@ export function HeroSection({
   footer,
   arcConfig,
   phraseInterval = 4000,
-}: HeroSectionProps) {
+}: HeroShowcaseProps) {
   const {
     spacing = 18,
     startOffset = -90,

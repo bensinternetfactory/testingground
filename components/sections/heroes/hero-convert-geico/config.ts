@@ -1,19 +1,21 @@
 import truck1 from "@/public/truck-1.jpg";
 import type { StaticImageData } from "next/image";
+import type { ReactNode } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-export interface EquipmentTileData {
+export interface SelectionTileData {
   id: string;
   label: string;
+  icon?: ReactNode;
 }
 
-export interface HeroQuoteStartConfig {
+export interface HeroConvertConfig {
   headline: string;
   bodyCopy: string;
-  tiles: EquipmentTileData[];
+  tiles: SelectionTileData[];
   cta: { label: string; href: string };
   tertiaryLinks: { label: string; href: string }[];
   viewAllLink: string;
@@ -27,7 +29,7 @@ export interface HeroQuoteStartConfig {
 /*  Config                                                             */
 /* ------------------------------------------------------------------ */
 
-export const HERO_QUOTE_START_CONFIG: HeroQuoteStartConfig = {
+export const HERO_CONVERT_CONFIG: HeroConvertConfig = {
   headline: "Tow Truck Financing Built for Your Business",
   bodyCopy: "See what you may qualify for\u2026",
   tiles: [

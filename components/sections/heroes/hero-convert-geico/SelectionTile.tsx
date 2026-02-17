@@ -1,32 +1,21 @@
 import { memo } from "react";
 import { cn } from "@/lib/utils";
-import { RollbackIcon } from "@/app/truckicons/RollbackIcon";
-import { WreckerIcon } from "@/app/truckicons/WreckerIcon";
-import { HeavyWreckerIcon } from "@/app/truckicons/HeavyWreckerIcon";
-import { RotatorIcon } from "@/app/truckicons/RotatorIcon";
 
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  rollback: RollbackIcon,
-  wrecker: WreckerIcon,
-  "heavy-wrecker": HeavyWreckerIcon,
-  rotator: RotatorIcon,
-};
-
-interface EquipmentTileProps {
+export interface SelectionTileProps {
   id: string;
   label: string;
+  icon?: React.ReactNode;
   selected: boolean;
   onSelect: (id: string) => void;
 }
 
-export const EquipmentTile = memo(function EquipmentTile({
+export const SelectionTile = memo(function SelectionTile({
   id,
   label,
+  icon,
   selected,
   onSelect,
-}: EquipmentTileProps) {
-  const Icon = ICON_MAP[id];
-
+}: SelectionTileProps) {
   return (
     <button
       aria-pressed={selected}
@@ -41,11 +30,7 @@ export const EquipmentTile = memo(function EquipmentTile({
           : "border-[#E9E9E9]"
       )}
     >
-      {Icon && (
-        <span className="shrink-0">
-          <Icon className="w-20" />
-        </span>
-      )}
+      {icon && <span className="shrink-0">{icon}</span>}
       <span className="text-sm font-medium text-[#111111]">{label}</span>
     </button>
   );

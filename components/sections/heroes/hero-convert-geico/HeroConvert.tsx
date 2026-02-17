@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { TileSelector } from "./TileSelector";
-import type { HeroQuoteStartConfig } from "./hero-quote-start-config";
+import type { HeroConvertConfig } from "./config";
 
-export function HeroQuoteStart({ config }: { config: HeroQuoteStartConfig }) {
+export function HeroConvert({ config }: { config: HeroConvertConfig }) {
   return (
     <section id="hero" className="bg-white pt-[var(--nav-height)]">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-2 lg:py-20">

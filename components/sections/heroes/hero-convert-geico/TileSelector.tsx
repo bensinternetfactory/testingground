@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { EquipmentTile } from "./EquipmentTile";
-import type { EquipmentTileData } from "./hero-quote-start-config";
+import { SelectionTile } from "./SelectionTile";
+import type { SelectionTileData } from "./config";
 
 interface TileSelectorProps {
-  tiles: EquipmentTileData[];
+  tiles: SelectionTileData[];
   cta: { label: string; href: string };
   viewAllLink: string;
 }
@@ -25,7 +25,7 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
         className="grid grid-cols-2 gap-3"
       >
         {tiles.map((tile) => (
-          <EquipmentTile
+          <SelectionTile
             key={tile.id}
             {...tile}
             selected={selectedTile === tile.id}

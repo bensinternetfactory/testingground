@@ -1,7 +1,7 @@
 "use client";
 
-/** A default tile card for use in the HeroSection footer slot. */
-export function HeroTile({ label, href }: { label: string; href: string }) {
+/** A default tile card for use in the HeroShowcase footer slot. */
+export function NavTile({ label, href }: { label: string; href: string }) {
   return (
     <a
       href={href}

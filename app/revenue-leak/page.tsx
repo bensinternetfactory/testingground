@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { StickyNav } from "@/components/sections/revenue-leak/StickyNav";
-import { HeroQuoteStart } from "@/components/sections/revenue-leak/HeroQuoteStart";
-import { HERO_QUOTE_START_CONFIG } from "@/components/sections/revenue-leak/hero-quote-start-config";
+import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
+import { HeroConvert, HERO_CONVERT_CONFIG } from "@/components/sections/heroes/hero-convert-geico";
+import { HeroShowcase, NavTile, HERO_CONFIG } from "@/components/sections/heroes/hero-showcase-rm";
 import { FinancingCards } from "@/components/sections/revenue-leak/FinancingCards";
 import { GuideBuilder } from "@/components/sections/revenue-leak/GuideBuilder";
 import { FeaturedPrograms } from "@/components/sections/revenue-leak/FeaturedPrograms";
@@ -11,11 +11,10 @@ import { TestimonialsSection } from "@/components/sections/revenue-leak/Testimon
 import { FinalCTA } from "@/components/sections/revenue-leak/FinalCTA";
 import { LegalSection } from "@/components/sections/revenue-leak/LegalSection";
 import { FooterSection } from "@/components/sections/revenue-leak/FooterSection";
-import { heroVariantsByAngle } from "@/components/sections/revenue-leak/hero-variants";
-import { resolveHeroConfig } from "@/lib/resolve-hero-config";
-import { HeroSection } from "@/components/sections/revenue-leak/HeroSection";
-import { HERO_CONFIG } from "@/components/sections/revenue-leak/hero-config";
-import { HeroTile } from "@/components/sections/revenue-leak/HeroTile";
+import { RollbackIcon } from "@/app/truckicons/RollbackIcon";
+import { WreckerIcon } from "@/app/truckicons/WreckerIcon";
+import { HeavyWreckerIcon } from "@/app/truckicons/HeavyWreckerIcon";
+import { RotatorIcon } from "@/app/truckicons/RotatorIcon";
 
 const DevVariantPanel =
   process.env.NODE_ENV === "development"
@@ -28,39 +27,36 @@ export const metadata: Metadata = {
     "Every call you can\u2019t cover is cash driving to your competitor. Get pre-approved for tow truck financing in 30 seconds. No hard credit pull. No obligation.",
 };
 
+/* ------------------------------------------------------------------ */
+/*  Icon map — injected at the page level to keep heroes icon-agnostic */
+/* ------------------------------------------------------------------ */
+
+const TILE_ICONS: Record<string, React.ReactNode> = {
+  rollback: <RollbackIcon className="w-20" />,
+  wrecker: <WreckerIcon className="w-20" />,
+  "heavy-wrecker": <HeavyWreckerIcon className="w-20" />,
+  rotator: <RotatorIcon className="w-20" />,
+};
+
+const heroConvertConfig = {
+  ...HERO_CONVERT_CONFIG,
+  tiles: HERO_CONVERT_CONFIG.tiles.map((tile) => ({
+    ...tile,
+    icon: TILE_ICONS[tile.id],
+  })),
+};
+
 type Props = {
-  searchParams: Promise<{ angle?: string; variant?: string; hero?: string }>;
+  searchParams: Promise<{ hero?: string }>;
 };
 
 export default async function RevenueLeakPage({ searchParams }: Props) {
-  let heroConfig = HERO_QUOTE_START_CONFIG;
-  let angle: number | undefined;
-  let variant: number | undefined;
   let currentHero: "quote-start" | "carousel" = "carousel";
 
   if (process.env.NODE_ENV === "development") {
-    const { angle: rawAngle, variant: rawVariant, hero: heroParam } = await searchParams;
-
-    if (heroParam === "carousel") {
-      currentHero = "carousel";
-    } else if (heroParam === "quote-start" || rawAngle || rawVariant) {
+    const { hero: heroParam } = await searchParams;
+    if (heroParam === "quote-start") {
       currentHero = "quote-start";
-      const parsedAngle = rawAngle ? Number(rawAngle) : undefined;
-      const parsedVariant = rawVariant ? Number(rawVariant) : undefined;
-
-      if (parsedAngle !== undefined && parsedVariant !== undefined) {
-        const angleVariants =
-          heroVariantsByAngle[
-            parsedAngle as keyof typeof heroVariantsByAngle
-          ];
-        const override = angleVariants?.[parsedVariant];
-
-        if (override) {
-          heroConfig = resolveHeroConfig(HERO_QUOTE_START_CONFIG, override);
-          angle = parsedAngle;
-          variant = parsedVariant;
-        }
-      }
     }
   }
 
@@ -75,9 +71,9 @@ export default async function RevenueLeakPage({ searchParams }: Props) {
       <StickyNav />
       <main>
         {currentHero === "quote-start" ? (
-          <HeroQuoteStart config={heroConfig} />
+          <HeroConvert config={heroConvertConfig} />
         ) : (
-          <HeroSection
+          <HeroShowcase
             images={HERO_CONFIG.images}
             headline={HERO_CONFIG.headline}
             phrases={HERO_CONFIG.phrases}
@@ -85,7 +81,7 @@ export default async function RevenueLeakPage({ searchParams }: Props) {
             footer={
               <>
                 {HERO_CONFIG.tiles.map((tile) => (
-                  <HeroTile key={tile.label} label={tile.label} href={tile.href} />
+                  <NavTile key={tile.label} label={tile.label} href={tile.href} />
                 ))}
               </>
             }
@@ -100,13 +96,7 @@ export default async function RevenueLeakPage({ searchParams }: Props) {
       </main>
       <LegalSection />
       <FooterSection />
-      <DevVariantPanel
-        variantsByAngle={heroVariantsByAngle}
-        defaultHeadline={HERO_QUOTE_START_CONFIG.headline}
-        currentAngle={angle}
-        currentVariant={variant}
-        currentHero={currentHero}
-      />
+      <DevVariantPanel currentHero={currentHero} />
     </div>
   );
 }

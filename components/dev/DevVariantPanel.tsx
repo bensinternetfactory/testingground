@@ -2,19 +2,12 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import type { heroVariantsByAngle } from "@/components/sections/revenue-leak/hero-variants";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-type VariantsByAngle = typeof heroVariantsByAngle;
-
 interface DevVariantPanelProps {
-  variantsByAngle: VariantsByAngle;
-  defaultHeadline: string;
-  currentAngle: number | undefined;
-  currentVariant: number | undefined;
   currentHero: "quote-start" | "carousel";
 }
 
@@ -23,10 +16,6 @@ interface DevVariantPanelProps {
 /* ------------------------------------------------------------------ */
 
 export default function DevVariantPanel({
-  variantsByAngle,
-  defaultHeadline,
-  currentAngle,
-  currentVariant,
   currentHero,
 }: DevVariantPanelProps) {
   const router = useRouter();
@@ -34,11 +23,6 @@ export default function DevVariantPanel({
   const [isPending, startTransition] = useTransition();
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
-
-  const angleIds = Object.keys(variantsByAngle).map(Number);
-  const activeAngle = currentAngle ?? angleIds[0] ?? 2;
-  const variants =
-    variantsByAngle[activeAngle as keyof VariantsByAngle] ?? [];
 
   /* ------ Escape key dismiss ------ */
   useEffect(() => {
@@ -64,19 +48,6 @@ export default function DevVariantPanel({
     });
   }
 
-  function selectVariant(angle: number, variant: number | null) {
-    startTransition(() => {
-      const params = new URLSearchParams();
-      params.set("hero", "quote-start");
-      if (variant !== null) {
-        params.set("angle", String(angle));
-        params.set("variant", String(variant));
-      }
-      const search = params.toString();
-      router.replace(search ? `${pathname}?${search}` : pathname);
-    });
-  }
-
   /* ------ Collapsed pill ------ */
   if (!isExpanded) {
     return (
@@ -85,7 +56,7 @@ export default function DevVariantPanel({
         onClick={() => setIsExpanded(true)}
         className="fixed right-4 bottom-4 z-[9999] rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg touch-action-manipulation focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 motion-safe:transition-transform motion-safe:hover:scale-105"
       >
-        DEV: Hero Variants
+        DEV: Hero Layout
       </button>
     );
   }
@@ -96,7 +67,7 @@ export default function DevVariantPanel({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
         <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-          Hero Variants
+          Hero Layout
         </span>
         <button
           ref={toggleRef}
@@ -119,8 +90,8 @@ export default function DevVariantPanel({
       </div>
 
       {/* Hero layout toggle */}
-      <div className="border-b border-gray-100 px-4 py-2">
-        <span className="mb-1 block text-xs text-gray-500">Layout</span>
+      <div className="px-4 py-3">
+        <span className="mb-2 block text-xs text-gray-500">Layout</span>
         <div className="flex gap-1">
           {(["carousel", "quote-start"] as const).map((hero) => (
             <button
@@ -138,84 +109,10 @@ export default function DevVariantPanel({
         </div>
       </div>
 
-      {/* Angle selector */}
-      {currentHero === "quote-start" && angleIds.length > 1 && (
-        <div className="border-b border-gray-100 px-4 py-2">
-          <label className="flex items-center gap-2 text-xs text-gray-500">
-            Angle
-            <select
-              value={activeAngle}
-              onChange={(e) => selectVariant(Number(e.target.value), null)}
-              className="rounded border border-gray-200 bg-white px-2 py-1 text-xs focus-visible:ring-2 focus-visible:ring-blue-500"
-            >
-              {angleIds.map((id) => (
-                <option key={id} value={id}>
-                  Angle {id}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      )}
-
-      {/* Variant list (quote-start only) */}
-      {currentHero === "quote-start" && (
-        <div
-          role="radiogroup"
-          aria-label="Hero copy variants"
-          className="max-h-72 overflow-y-auto p-2"
-        >
-          {/* Default option */}
-          <button
-            role="radio"
-            aria-checked={currentVariant === undefined}
-            onClick={() => selectVariant(activeAngle, null)}
-            className={`flex w-full flex-col gap-0.5 rounded-lg px-3 py-2 text-left touch-action-manipulation focus-visible:ring-2 focus-visible:ring-blue-500 ${
-              currentVariant === undefined
-                ? "bg-black text-white"
-                : "hover:bg-gray-50"
-            } ${isPending ? "opacity-60" : ""}`}
-          >
-            <span className="text-xs font-medium">Default (Current)</span>
-            <span
-              className={`min-w-0 truncate text-xs ${
-                currentVariant === undefined ? "text-gray-300" : "text-gray-400"
-              }`}
-            >
-              {defaultHeadline}
-            </span>
-          </button>
-
-          {/* Variant options */}
-          {variants.map((v, i) => (
-            <button
-              key={i}
-              role="radio"
-              aria-checked={currentVariant === i}
-              onClick={() => selectVariant(activeAngle, i)}
-              className={`mt-1 flex w-full flex-col gap-0.5 rounded-lg px-3 py-2 text-left touch-action-manipulation focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                currentVariant === i
-                  ? "bg-black text-white"
-                  : "hover:bg-gray-50"
-              } ${isPending ? "opacity-60" : ""}`}
-            >
-              <span className="text-xs font-medium">{v.name}</span>
-              <span
-                className={`min-w-0 truncate text-xs ${
-                  currentVariant === i ? "text-gray-300" : "text-gray-400"
-                }`}
-              >
-                {v.headline}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Pending indicator */}
       {isPending && (
         <div className="border-t border-gray-100 px-4 py-2 text-center text-xs text-gray-400">
-          Loading variant\u2026
+          Loading\u2026
         </div>
       )}
     </div>

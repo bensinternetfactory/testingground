@@ -1,364 +1,434 @@
-# StickyNav Component Update Spec
+# Hero Copy Variant System — Specification
+## Tow Loans Revenue-Leak Page | Angle 2 (Niche Specialist)
 
-**Component location:** `/components/sections/revenue-leak/StickyNav.tsx`
-**Related page:** `app/revenue-leak/page.tsx`
+This is the authoritative spec for the hero copy variant preview system. It covers both the copy generation brief and the technical implementation, consolidating all decisions from the planning interview.
 
 ---
 
-## 1. Component Architecture (Server/Client Split)
+# Part 1: Copy Generation Brief
 
-**Requirement:** The StickyNav must be split into a server component shell and a thin client interactive wrapper to keep the client bundle lean.
+## 1. Reference Documents
 
-### File structure
+Agents must read these before generating any copy:
 
-| File | Directive | Purpose |
-|------|-----------|---------|
-| `StickyNav.tsx` | Server component (no directive) | Renders static nav content, dropdown card markup, icons, and placeholder text |
-| `NavClient.tsx` | `'use client'` | Thin interactive shell — hover/focus state, mobile toggle, Radix NavigationMenu root |
-| `nav-data.ts` | Server-safe module | Plain data arrays for dropdown card content (titles, descriptions, icons, hrefs) |
+| Document | Path | Focus |
+|----------|------|-------|
+| Positioning Strategy | `@testingground/docs/sitemap/positioning-angles.md` | Angle 2 — The Niche Specialist |
+| Brand Voice Profile | `@testingground/docs/brandvoice.md` | Full voice profile |
+| Target Component | `@testingground/components/sections/revenue-leak/HeroQuoteStart.tsx` | Structure context (read-only) |
 
-### Why
-Converting the entire StickyNav to `'use client'` would ship all dropdown card content, SVG icons, and placeholder text in the client JS bundle. Instead, the `'use client'` boundary is pushed down to the smallest interactive wrapper.
+**Angle 2 — The Niche Specialist (Specificity Angle)**
+Core idea: Tow Loans finances tow trucks specifically. Not general equipment. We understand towing operations. This is the default/foundational angle.
+
+Ignore other angles unless lightly supportive.
+
+---
+
+## 2. Objective
+
+Generate **10 hero copy variants** designed to increase:
+
+- Quote-start clicks
+- Trust in specialization
+- Perceived industry understanding
+- Clarity of eligibility and fit
+
+Primary SEO keyword: **tow truck financing**
+
+- Exact phrase must appear naturally in headline OR bodyCopy in **7+ of 10 variants**
+- Remaining 3 may use close semantic variations ("financing for tow trucks", "tow truck loans")
+
+---
+
+## 3. Agent Skill Requirement
+
+Agents must use the **direct-response-copy** skill. This means:
+
+- Conversion-focused messaging
+- Clear benefit communication
+- Objection-aware language
+- Respectful urgency (not pressure)
+- Specificity over cleverness
+
+Avoid: generic branding copy, corporate finance tone, startup hype language, empty slogans.
+
+---
+
+## 4. Audience Context
+
+**Primary audience:** Established towing companies
+
+- 2+ years operating
+- Expanding fleets OR replacing aging trucks
+- Cash-flow conscious
+- Likely frustrated with traditional lenders
+
+**Emotional realities:**
+
+- Time pressure
+- Equipment costs
+- Skepticism toward lenders
+- Pride in trade professionalism
+
+---
+
+## 5. Messaging Anchors (Angle 2 Specific)
+
+Emphasize:
+
+- Tow-truck-only financing specialization
+- Understanding used trucks / private-party deals
+- Familiarity with towing operations
+- Straight answers, minimal runaround
+- Industry respect
+
+Implicit contrast with banks allowed. Direct bank-bashing not allowed.
+
+---
+
+## 6. Brand Voice Guardrails
+
+**DO:**
+
+- Speak plainly
+- Sound industry fluent
+- Keep sentences tight
+- Respect reader intelligence
+- Lead with their reality, not company intro
+
+**DO NOT:**
+
+- Promise guaranteed approval
+- Use corporate buzzwords
+- Over-explain financing mechanics
+- Sound desperate for business
+- Use exaggerated urgency
+
+If copy sounds like a bank, fintech startup, or generic equipment lender — rewrite.
+
+---
+
+## 7. Hero Copy Constraints
+
+This is first-contact copy:
+
+- Signal specialization fast
+- Build trust quickly
+- Do not explain everything
+- Keep scannable for mobile readers
+- Use Unicode curly quotes (`\u2018` `\u2019` `\u201C` `\u201D`) and proper ellipsis (`\u2026`), not ASCII equivalents — match existing config patterns
+
+Headline ideal length: **~6–12 words preferred.**
+
+---
+
+## 8. Specificity Test (Mandatory)
+
+Each variant must pass:
+
+**Replacement Test:** If "tow truck" can be replaced with "excavator" or "forklift" and the copy still works — rewrite.
+
+Purpose: Protect niche positioning.
+
+---
+
+## 9. Emotional Outcome Requirement
+
+After reading the hero, operators should feel:
+
+- "They get my business."
+- "This won't waste my time."
+- "These are specialists."
+
+If not — revise.
+
+---
+
+## 10. CTA Rules
+
+CTAs must feel conversational, not pushy.
+
+**Preferred examples:**
+
+- See what you qualify for
+- Get a straight answer
+- Talk to us
+
+**Avoid:**
+
+- Apply Now
+- Get Started
+- Limited Time urgency language
+
+---
+
+## 11. Quality Rejection Criteria
+
+Reject any variant if:
+
+- Could belong to a general equipment lender
+- Sounds corporate or hype-driven
+- Leads with Tow Loans instead of operator reality
+- Overuses marketing clichés
+- Implies unrealistic ease or approval guarantees
+
+---
+
+# Part 2: Technical Implementation
+
+## 12. Architecture Overview
+
+- `HeroQuoteStart.tsx` remains a **server component** — unchanged in every way (props, exports, DOM structure, file location)
+- Variant data lives in a **TypeScript data module** with `as const satisfies`
+- Config resolution happens **server-side** in `page.tsx` via URL search params
+- Dev panel is a **separate `"use client"` component**, dynamically imported
+- Dev panel is **fully stripped from production builds** via `NODE_ENV` gating + dynamic import
+
+---
+
+## 13. File Map
+
+| Action | File | Role | Server/Client |
+|--------|------|------|---------------|
+| Create | `components/sections/revenue-leak/hero-variants.ts` | Types + variant data + angle map | Server (data module) |
+| Create | `lib/resolve-hero-config.ts` | Pure merge function (override → full config) | Server (utility) |
+| Create | `components/dev/DevVariantPanel.tsx` | Floating dev panel UI | Client |
+| Create | `app/revenue-leak/error.tsx` | Route-level error boundary | Client |
+| Modify | `app/revenue-leak/page.tsx` | Read params, resolve config, render panel, convert barrel imports to direct imports | Server |
+| **No change** | `components/sections/revenue-leak/HeroQuoteStart.tsx` | — | Server |
+| **No change** | `components/sections/revenue-leak/hero-quote-start-config.ts` | Default config stays untouched | Server |
+
+---
+
+## 14. Variant Data Format
+
+TypeScript data module at `hero-variants.ts`. NOT JSON.
+
+```
+HeroVariantOverride {
+  name: string                          // Display name in panel (e.g. "Specialist Authority")
+  headline: string                      // Required — always overrides
+  bodyCopy: string                      // Required — always overrides
+  cta: { label: string }                // Required — always overrides (href inherited from default)
+  microcopy?: string                    // Optional — falls back to default
+  disclaimer?: string                   // Optional — falls back to default
+  tertiaryLinks?: { label: string }[]   // Optional — positional label override, hrefs inherited
+  viewAllLink?: string                  // Optional — falls back to default
+  heroImageAlt?: string                 // Optional — falls back to default
+}
+```
+
+**Never overridden by variants:** `tiles`, `heroImage`, `cta.href`
+
+Variants organized in a map keyed by angle:
+
+```
+heroVariantsByAngle = {
+  2: [ ...10 Angle 2 variants... ],
+  // Future: 1: [...], 3: [...], etc.
+} as const satisfies HeroVariantsByAngle
+```
+
+`AngleId` is a `1 | 2 | 3 | 4 | 5` union type matching `positioning-angles.md`.
+
+---
+
+## 15. Toggle Mechanism
+
+### URL Search Params (Server-Side)
+
+- `?angle=2&variant=3` — both params supported from day one
+- `page.tsx` becomes an `async` function to read params (Next.js 16 async pattern)
+- Exact required signature:
 
 ```tsx
-// StickyNav.tsx (server component — NO 'use client')
-import { NavClient } from "./NavClient";
-import { NAV_ITEMS } from "./nav-data";
+type Props = {
+  searchParams: Promise<{ angle?: string; variant?: string }>;
+};
 
-export function StickyNav() {
-  return (
-    <NavClient>
-      {/* Server-rendered dropdown content passed as children/slots */}
-    </NavClient>
-  );
-}
-
-// NavClient.tsx ('use client' — thin interactive shell)
-"use client";
-import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-
-export function NavClient({ children }: { children: React.ReactNode }) {
-  // Only hover/focus state, mobile toggle, and animation logic here
-  return <NavigationMenu.Root>{children}</NavigationMenu.Root>;
+export default async function RevenueLeakPage({ searchParams }: Props) {
+  const { angle, variant } = await searchParams;
+  // ...
 }
 ```
 
-### Import pattern
-Import StickyNav **directly from its file path** in `page.tsx` — do NOT import from the barrel file `components/sections/revenue-leak/index.ts`. The barrel re-exports all 10 revenue-leak components, and after adding Radix NavigationMenu, importing from the barrel pulls all Radix deps into any page that only needs one component.
+- Calls `resolveHeroConfig(defaults, override)` to produce the final config
+- Passes resolved config to `<HeroQuoteStart config={heroConfig} />`
+
+### Barrel Import Cleanup (Required)
+
+When modifying `page.tsx`, convert the existing barrel import to direct imports to avoid pulling the entire module into the bundle:
 
 ```tsx
-// app/revenue-leak/page.tsx — CORRECT
-import { StickyNav } from "@/components/sections/revenue-leak/StickyNav";
+// BEFORE (loads all 12 components via barrel)
+import { FinancingCards, GuideBuilder, ... } from "@/components/sections/revenue-leak";
 
-// WRONG — barrel file anti-pattern
-import { StickyNav } from "@/components/sections/revenue-leak";
+// AFTER (loads only what is used)
+import { FinancingCards } from "@/components/sections/revenue-leak/FinancingCards";
+import { GuideBuilder } from "@/components/sections/revenue-leak/GuideBuilder";
+import { FeaturedPrograms } from "@/components/sections/revenue-leak/FeaturedPrograms";
+import { CalculatorCTA } from "@/components/sections/revenue-leak/CalculatorCTA";
+import { TestimonialsSection } from "@/components/sections/revenue-leak/TestimonialsSection";
+import { FinalCTA } from "@/components/sections/revenue-leak/FinalCTA";
+import { LegalSection } from "@/components/sections/revenue-leak/LegalSection";
+import { FooterSection } from "@/components/sections/revenue-leak/FooterSection";
 ```
 
----
+Existing direct imports (`HeroQuoteStart`, `StickyNav`) are already correct.
 
-## 2. Desktop Navigation Spacing Adjustment
+### Dev-Only Gating
 
-**Current state:** The nav bar uses `justify-between` across the full width, creating excessive space between the TowCap logo and navigation items.
+- All param reading wrapped in `if (process.env.NODE_ENV === "development")`
+- In production: params are ignored, hero always receives `HERO_QUOTE_START_CONFIG`
+- Build-time dead code elimination strips the entire dev block from production
 
-**Required change:**
-- Group the logo and navigation items as a **left-aligned cluster** — they should sit close together on the left side
-- The gap between nav items and the CTA/phone section on the right stays **unchanged**
-- The visual gap shifts to the middle (between nav items and the right CTA section)
+### Floating Dev Panel
 
----
-
-## 3. Rename "Calculator" to "Resources"
-
-- Rename the "Calculator" nav item label to **"Resources"**
-- Update the href from `#calculator` to `#` (placeholder — page doesn't exist yet)
-
----
-
-## 4. Update All Navigation Hrefs
-
-**All navigation links will point to pages (not section anchors).** Pages do not exist yet.
-
-| Nav Item    | Current href    | New href |
-|-------------|-----------------|----------|
-| Financing   | `#financing`    | `#`      |
-| Programs    | `#programs`     | `#`      |
-| Resources   | `#calculator`   | `#`      |
-| About       | `#about`        | `#`      |
-
-> These will be updated to real page routes (e.g., `/revenue-leak/financing`) in a future task.
-
-**Placeholder href handling:** Do NOT use bare `#` — it causes scroll-to-top and pollutes the URL. For items with dropdowns (Financing, Programs, Resources), Radix `NavigationMenu.Trigger` renders as a `<button>` so no href is needed. For About (simple link with no dropdown), use `href="#!"` or `event.preventDefault()` until a real route exists.
-
----
-
-## 5. Install shadcn and NavigationMenu Component
-
-### Setup
-- Run `npx shadcn@latest add navigation-menu`
-- Map shadcn's CSS variable system to the **full Rocket Mortgage brand palette** using HSL format
-- Color mapping reference: `docs/rocket-mortgage-style-guide.md`
-  - Convert all brand hex colors to HSL for shadcn tokens (`--primary`, `--secondary`, `--accent`, `--muted`, etc.)
-
-### CSS variable format migration (CRITICAL)
-The existing `globals.css` defines `--background` and `--foreground` using hex values. shadcn expects HSL space-separated values (e.g., `--primary: 355 73% 54%`) used as `hsl(var(--primary))`. **These formats are incompatible.**
-
-**Required:** When adding shadcn tokens, convert ALL existing `:root` CSS variables from hex to HSL format. Also update the `@media (prefers-color-scheme: dark)` block in tandem so dark mode doesn't produce mismatched colors.
-
-```css
-:root {
-  /* Convert existing vars to HSL */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 7%;
-
-  /* shadcn tokens */
-  --primary: 355 73% 54%;
-  --primary-foreground: 0 0% 100%;
-  /* ... */
-}
-```
-
-### Critical constraint
-- shadcn installation and CSS variable additions **must not alter** the visual styling of the `HeroSection` component
-- The rotating image arc, framer-motion animations, and all arc-thumbnail CSS in `globals.css` must remain unaffected
-- After installation, visually verify the HeroSection is unchanged
-
----
-
-## 6. Desktop Dropdown Menus (hover-triggered)
-
-### Which items get dropdowns
-- **Financing** — dropdown with rich card layout
-- **Programs** — dropdown with rich card layout
-- **Resources** — dropdown with rich card layout
-- **About** — NO dropdown, remains a simple link (`#!`)
-
-### Trigger behavior
-- **Hover to open** (shadcn/Radix default behavior)
-- Clicking the trigger label does NOT navigate anywhere — it only opens the dropdown
-- Dropdowns close on hover-away or click outside
-- Dropdowns **stay open** during page scroll (Radix default)
-
-### Dropdown panel design
-- **Width:** Content-driven — each dropdown sizes itself based on its items
-- **Background:** Distinct elevated card — own white background, `shadow-elevated` (`0 10px 30px rgba(0,0,0,0.10)`), rounded corners
-- **Arrow:** Small triangular **caret arrow** pointing up toward the trigger nav item — use a **CSS triangle** (`border` trick or `clip-path`), NOT an SVG
-- **Content layout:** Rich card grid — each item is a card with icon, title, and short description
-  - Similar visual pattern to the existing `FinancingCards` component
-  - Cards follow brand styling: `rounded-2xl`, border, inset shadow
-  - Card titles: use `text-wrap: balance` to prevent orphaned words
-  - Card descriptions: use `line-clamp-2` with `min-w-0` on flex children to prevent layout breaks on overflow
-- **Card hover state:** Background tint on hover (use brand tint colors: `#FBF0F6`, `#F3EEE7`, or `#EDF1FF`). Use specific transition properties (`transition: background-color 150ms ease`) — **never** `transition: all`
-- **CTA section:** Desktop dropdowns do NOT overlay the right-side CTA/phone — they stay beneath the nav items only
-
-### Transition between dropdowns
-- **Use Radix's built-in CSS viewport animations** — do NOT use Framer Motion for dropdown transitions
-- Radix NavigationMenu supports `data-state` and `data-motion` attributes on `NavigationMenu.Viewport` natively
-- Animation speed: **~150ms** (snappy, Vercel-style)
-
-```css
-/* globals.css — Radix viewport animations */
-.NavigationMenuViewport[data-state="open"] {
-  animation: scaleIn 150ms ease;
-}
-.NavigationMenuViewport[data-state="closed"] {
-  animation: scaleOut 100ms ease;
-}
-.NavigationMenuViewport[data-motion="from-start"] {
-  animation: enterFromLeft 150ms ease;
-}
-.NavigationMenuViewport[data-motion="from-end"] {
-  animation: enterFromRight 150ms ease;
-}
-.NavigationMenuViewport[data-motion="to-start"] {
-  animation: exitToLeft 100ms ease;
-}
-.NavigationMenuViewport[data-motion="to-end"] {
-  animation: exitToRight 100ms ease;
-}
-```
-
-### Placeholder content
-- Use **smart placeholders** — realistic sub-links based on what a tow truck financing company would offer
-- Structure: grid of 2-3 cards per dropdown with icon, title, and 1-line description
-- All card links point to `#!` for now
-- **Hoist dropdown card data to module scope** in `nav-data.ts` — do NOT define data arrays inline in JSX (inline arrays create new references on every render and break memoization)
-
-### Z-index
-- Let shadcn/Radix handle z-index and portal behavior by default
-- Only adjust if conflicts arise with the HeroSection (nav is currently `z-50`)
-
-### Accessibility
-- Preserve **full Radix a11y defaults**: keyboard navigation (Tab/Arrow keys), Escape to close, ARIA attributes, focus management
-
----
-
-## 7. Mobile Navigation
-
-### Breakpoint
-- **md (768px)** — matches the existing nav breakpoint
-- Below md: show hamburger + mobile overlay
-- At md and above: show desktop nav with hover dropdowns
-
-### Hamburger icon
-- **Vercel-style two-bar toggle:**
-  - Two horizontal bars stacked vertically
-  - On open: top bar rotates 45°, bottom bar rotates -45° → forms an X
-  - On close: bars animate back to horizontal
-  - Smooth CSS transition (not icon swap)
-- **Color:** `#545454` (muted text color)
-- Uses `data-expanded` attribute for state
-- `aria-label`: "Open menu" / "Close menu"
-- **Focus styling:** `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2` — must match existing nav link focus styles
-- Add `touch-action: manipulation` to eliminate 300ms tap delay on mobile Safari
-
-### Mobile overlay
-- **Full-screen overlay** that fades in over the page
-- **Solid white background** (`#FFFFFF`)
-- **Scroll lock:** Use `overscroll-behavior: contain` on the overlay element combined with `position: fixed; inset: 0`. Do NOT toggle `overflow: hidden` on `<body>` — it causes layout shift from scrollbar removal. If `overflow: hidden` is absolutely necessary, compensate with `padding-right` on `<body>`.
-- **Overlay itself scrolls** if the menu content exceeds viewport height
-- Overlay appears below the nav bar (nav bar stays fixed and visible)
+- **Position:** Fixed bottom-right, `z-[9999]`
+- **Default state:** Collapsed — small pill button reading "DEV: Hero Variants"
+- **Expanded/collapsed state:** Managed via local `useState` only — toggling the panel does NOT trigger URL updates or server re-renders
+- **Expanded state:**
+  - Angle dropdown (only angles with data appear)
+  - Scrollable variant list using `role="radiogroup"` with `aria-label="Hero copy variants"`
+  - Each variant button uses `role="radio"` with `aria-checked` reflecting active state
+  - Each button shows: variant `name` + truncated `headline` preview (use `truncate` with `min-w-0` on flex children)
+  - "Default (Current)" always first option, shows current default headline
+  - Active variant highlighted (black bg, white text)
+- **Accessibility:**
+  - All interactive elements (pill toggle, variant buttons, angle dropdown) must have visible `focus-visible:ring-2` indicators
+  - Escape key dismisses the expanded panel and returns focus to the pill toggle
+  - `touch-action: manipulation` on pill toggle and variant buttons
+- **Keyboard dismiss pattern:**
 
 ```tsx
-// Mobile overlay wrapper
-<div
-  className="fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-white"
-  style={{ top: "var(--nav-height)" }}
->
-  {/* accordion content */}
-</div>
+useEffect(() => {
+  if (!isExpanded) return;
+  const handler = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setIsExpanded(false);
+      toggleRef.current?.focus();
+    }
+  };
+  document.addEventListener("keydown", handler);
+  return () => document.removeEventListener("keydown", handler);
+}, [isExpanded]);
 ```
 
-### Mobile overlay content
-- **Navigation sections** as **tap-to-expand accordions**
-  - Financing (accordion) → expands to show same items as desktop dropdown
-  - Programs (accordion) → expands to show same items as desktop dropdown
-  - Resources (accordion) → expands to show same items as desktop dropdown
-  - About → simple link (no accordion)
-- Add `touch-action: manipulation` to accordion triggers and mobile nav links
-- **CTA section at the bottom:**
-  - Phone number: `(888) 555-0199`
-  - "Get Pre-Approved" button — **black background** (`#111111`), matching desktop style
-- When a link is tapped → overlay closes automatically
+- **Navigation:** `useRouter().replace()` wrapped in `useTransition` — keeps panel responsive during server re-render, provides visual pending state
 
----
+```tsx
+const [isPending, startTransition] = useTransition();
 
-## 8. Nav Height (CSS Variable)
-
-- Define a **CSS variable** for nav height — single source of truth:
-
-```css
-:root {
-  --nav-height: 72px;
+function selectVariant(angle: number, variant: number | null) {
+  startTransition(() => {
+    const params = new URLSearchParams();
+    if (variant !== null) {
+      params.set("angle", String(angle));
+      params.set("variant", String(variant));
+    }
+    const search = params.toString();
+    router.replace(search ? `?${search}` : pathname);
+  });
 }
 ```
 
-- **StickyNav:** `h-[var(--nav-height)]`
-- **HeroSection:** `pt-[var(--nav-height)]`
-- **Allowed flex:** Adjust `--nav-height` between **72–80px** if needed to accommodate dropdown trigger chevrons — both nav and hero update automatically
-- Do NOT use hardcoded `72px` or `pt-[72px]` in either component
+- **Animation:** Any expand/collapse transitions must use `motion-safe:` / `motion-reduce:` variants to respect `prefers-reduced-motion`
+- **Props:** Panel receives `variantsByAngle`, `defaultHeadline` (string only — do NOT pass the full config object to avoid serializing `StaticImageData` + base64 blur data to the client), `currentAngle`, and `currentVariant` from the server parent. No `useSearchParams()` needed — avoids Suspense bail-out.
+
+```tsx
+<DevVariantPanel
+  variantsByAngle={heroVariantsByAngle}
+  defaultHeadline={HERO_QUOTE_START_CONFIG.headline}
+  currentAngle={angle}
+  currentVariant={variant}
+/>
+```
+
+### Production Stripping
+
+```tsx
+import dynamic from "next/dynamic";
+
+// ssr: false is intentional — DevVariantPanel uses useRouter and useState,
+// and must only render on the client to avoid hydration mismatches.
+const DevVariantPanel = process.env.NODE_ENV === "development"
+  ? dynamic(() => import("@/components/dev/DevVariantPanel"), { ssr: false })
+  : () => null;
+```
+
+Build-time ternary. Production takes the `() => null` branch. The `import()` is unreachable, so `DevVariantPanel.tsx` and all its dependencies are tree-shaken from the production bundle entirely.
 
 ---
 
-## 9. Reduced Motion
+## 16. Config Resolution Logic
 
-**All new animations must respect `prefers-reduced-motion: reduce`.**
+Pure function in `lib/resolve-hero-config.ts`:
 
-The existing codebase correctly handles reduced motion for the arc animation in `globals.css`. Extend this to all new motion:
+- Spreads default config
+- Overlays required fields: `headline`, `bodyCopy`, `cta.label`
+- Conditionally overlays optional fields only when defined (not `undefined`)
+- `tertiaryLinks`: positional label override — preserves `href` from default config
+- `tiles`, `heroImage`, `cta.href`: always from defaults, never overridden
 
-- Hamburger bar rotation
-- Mobile overlay fade-in
-- Accordion expand/collapse
-- Dropdown slide transitions
+---
 
-```css
-@media (prefers-reduced-motion: reduce) {
-  .hamburger-bar,
-  .mobile-overlay,
-  .accordion-content,
-  .NavigationMenuViewport {
-    animation: none !important;
-    transition: none !important;
-  }
+## 17. Type Safety
+
+- TypeScript with `as const satisfies` — no runtime validation needed
+- `HeroVariantOverride` is a purpose-built interface (not `Partial<HeroQuoteStartConfig>`) to prevent accidental override of structural fields
+- Build-time enforcement only — no zod, no runtime checks
+- Typos in variant data fail the build
+
+---
+
+## 18. Variant Output Format (For Copy Generation)
+
+Each variant in the data module:
+
+```
+{
+  name: "Display Name",
+  headline: "6-12 word headline with tow truck financing keyword",
+  bodyCopy: "1-2 sentence supporting copy",
+  cta: { label: "Conversational CTA text" },
+  // Optional overrides only when they genuinely strengthen the variant
 }
 ```
 
-When reduced motion is preferred, replace slide/rotate animations with instant state changes (opacity 0→1, duration 0) or remove them entirely.
+---
+
+## 19. Implementation Sequence
+
+1. **Types + data module** — `hero-variants.ts` with 2 placeholder variants
+2. **Config resolver** — `lib/resolve-hero-config.ts`
+3. **Page wiring** — `page.tsx`: convert barrel imports to direct imports, add async searchParams with `Promise<...>` typing, resolve config, render panel with slim props (`defaultHeadline`, `currentAngle`, `currentVariant`)
+4. **Error boundary** — `app/revenue-leak/error.tsx` (`'use client'`) for graceful degradation
+5. **Dev panel** — `components/dev/DevVariantPanel.tsx` with ARIA radiogroup, focus-visible rings, Escape dismiss, useTransition navigation, reduced-motion support
+6. **Copy generation** — Invoke `/direct-response-copy` skill, populate all 10 variants
+7. **Spec rewrite** — This file (already done)
 
 ---
 
-## 10. Brand Style Consistency
+## 20. Verification Checklist
 
-### Color system (HSL conversion)
-All brand colors must be converted to HSL and mapped to shadcn CSS variable tokens:
-
-| Brand Color  | Hex       | HSL (approx)       | shadcn Token   |
-|-------------|-----------|---------------------|----------------|
-| Primary Red | `#DE3341` | `355 73% 54%`      | `--primary`    |
-| Foreground  | `#111111` | `0 0% 7%`          | `--foreground` |
-| Muted Text  | `#545454` | `0 0% 33%`         | `--muted-foreground` |
-| Border      | `#E9E9E9` | `0 0% 91%`         | `--border`     |
-| Background  | `#FFFFFF` | `0 0% 100%`        | `--background` |
-| Pink Tint   | `#FBF0F6` | `320 58% 96%`      | (surface tint) |
-| Beige Tint  | `#F3EEE7` | `35 30% 93%`       | (surface tint) |
-| Blue Tint   | `#EDF1FF` | `226 100% 96%`     | (surface tint) |
-
-### shadcn customization level
-- **Light touch:** Keep shadcn's default animation/structure
-- Swap in brand colors, fonts, and shadow values
-- Override specific styles where needed to match brand guide
-
-### Style guide reference
-- Full style guide: `docs/rocket-mortgage-style-guide.md`
-- Card patterns: `rounded-2xl`, border, inset shadow
-- Elevated shadows: `0 10px 30px rgba(0,0,0,0.10)`
-- Font: Geist Sans (already loaded)
-
-### Mobile browser theming
-- Add `<meta name="theme-color" content="#FFFFFF">` in the root layout to match nav background in mobile browser chrome
+- [ ] `npm run dev` → panel pill appears bottom-right on `/revenue-leak`
+- [ ] Expand panel → Angle 2 shows "Default (Current)" + 10 variants
+- [ ] Click variant → URL updates → hero text changes → panel shows pending state during transition
+- [ ] Click "Default" → params removed → original hero restores
+- [ ] Escape key dismisses expanded panel and returns focus to pill toggle
+- [ ] Tab through panel → all buttons show visible focus-visible ring
+- [ ] Panel expand/collapse does NOT trigger URL change or server re-render
+- [ ] Barrel imports removed — `page.tsx` uses direct component imports only
+- [ ] `npm run build` → no type errors
+- [ ] Production build → `?angle=2&variant=3` ignored, default hero shows, no panel visible
+- [ ] Production bundle → no `DevVariantPanel` code present
 
 ---
 
-## 11. Verification Checklist
+## 21. Future Expansion
 
-After implementation, verify:
+- **Additional angles:** Add keys to `heroVariantsByAngle` (e.g., `1: [...]`, `3: [...]`)
+- **Additional pages:** Import `DevVariantPanel` with page-specific variant data
+- **Production A/B testing:** Out of scope. Can be layered on later without changing the data format — variant IDs and the `heroVariantsByAngle` structure support it
 
-**Architecture**
-- [ ] StickyNav is a server component with a thin `NavClient` (`'use client'`) wrapper
-- [ ] Dropdown card data is hoisted to module scope in `nav-data.ts`
-- [ ] StickyNav is imported directly (not from barrel file)
-
-**Desktop Nav**
-- [ ] Logo and nav items are grouped as a left-aligned cluster
-- [ ] "Calculator" is renamed to "Resources"
-- [ ] All nav hrefs use `#!` or button (no bare `#`)
-- [ ] shadcn navigation-menu is installed and functional
-- [ ] Hover opens dropdowns on desktop with rich card content
-- [ ] Horizontal slide transition via Radix CSS `data-motion` (~150ms) — no Framer Motion
-- [ ] CSS triangle caret arrow on dropdown panels
-- [ ] Card hover states use `transition: background-color` (not `transition: all`)
-- [ ] Card titles use `text-wrap: balance`, descriptions use `line-clamp`
-- [ ] Desktop CTA/phone remains visible when dropdown is open
-
-**Mobile Nav**
-- [ ] Hamburger icon appears below md breakpoint (two-bar Vercel style)
-- [ ] Hamburger animates to X on open
-- [ ] Hamburger has `focus-visible` ring and `touch-action: manipulation`
-- [ ] Mobile overlay uses `overscroll-behavior: contain` (not `overflow: hidden` on body)
-- [ ] Accordion sections work in mobile overlay
-- [ ] Mobile overlay includes CTA (black) and phone at bottom
-- [ ] Accordion triggers and links have `touch-action: manipulation`
-
-**Styling & Theming**
-- [ ] Existing `globals.css` variables converted from hex to HSL
-- [ ] shadcn CSS variables mapped to brand HSL colors
-- [ ] Dark mode `prefers-color-scheme` block updated with HSL values
-- [ ] `<meta name="theme-color">` added to root layout
-- [ ] No style conflicts with existing components
-
-**Performance & Accessibility**
-- [ ] HeroSection is visually UNCHANGED (arc animation, images, layout)
-- [ ] Nav height uses `--nav-height` CSS variable (72–80px)
-- [ ] HeroSection uses `pt-[var(--nav-height)]` (not hardcoded)
-- [ ] All new animations respect `prefers-reduced-motion: reduce`
-- [ ] All Radix a11y keyboard navigation works
-- [ ] Client bundle does not contain static dropdown content (server-rendered)
+---
