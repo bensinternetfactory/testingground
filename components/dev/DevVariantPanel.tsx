@@ -40,7 +40,7 @@ export default function DevVariantPanel({
   /* ------ Navigation ------ */
   function selectHero(hero: "quote-start" | "carousel") {
     startTransition(() => {
-      if (hero === "carousel") {
+      if (hero === "quote-start") {
         router.replace(pathname);
       } else {
         router.replace(`${pathname}?hero=${hero}`);

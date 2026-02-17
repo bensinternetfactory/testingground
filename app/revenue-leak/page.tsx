@@ -51,12 +51,12 @@ type Props = {
 };
 
 export default async function RevenueLeakPage({ searchParams }: Props) {
-  let currentHero: "quote-start" | "carousel" = "carousel";
+  let currentHero: "quote-start" | "carousel" = "quote-start";
 
   if (process.env.NODE_ENV === "development") {
     const { hero: heroParam } = await searchParams;
-    if (heroParam === "quote-start") {
-      currentHero = "quote-start";
+    if (heroParam === "carousel") {
+      currentHero = "carousel";
     }
   }
 
