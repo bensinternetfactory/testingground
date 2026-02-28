@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/hero-lead-gen";
 import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/page/equipment-cards";
+import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-it-works";
 import { FAQ } from "./FAQ";
 
 /* ------------------------------------------------------------------ */
@@ -209,79 +211,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §3 — HOW IT WORKS (Process)                        bg: white */}
         {/* ============================================================ */}
-        <section id="how-it-works" className="bg-white py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                From Application to Keys in{" "}
-                <span className="text-[#22C55E]">3&nbsp;Steps</span>
-              </h2>
-            </div>
-
-            <ol className="mt-16 grid gap-6 md:grid-cols-3">
-              <li className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <span className="text-sm font-medium text-[#22C55E]">
-                  Step 01
-                </span>
-                <h3 className="mt-3 text-xl font-medium text-[#101820]">
-                  Tell Us What You Need
-                </h3>
-                <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                  Pick your truck type, new or used, and your budget. Takes
-                  30&nbsp;seconds.
-                </p>
-              </li>
-
-              <li className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <span className="text-sm font-medium text-[#22C55E]">
-                  Step 02
-                </span>
-                <h3 className="mt-3 text-xl font-medium text-[#101820]">
-                  Get Your Payment Range
-                </h3>
-                <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                  Pre-approved in 30 seconds. No credit check. See real
-                  payments.
-                </p>
-              </li>
-
-              <li className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <span className="text-sm font-medium text-[#22C55E]">
-                  Step 03
-                </span>
-                <h3 className="mt-3 text-xl font-medium text-[#101820]">
-                  Drive Your Truck Home
-                </h3>
-                <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                  We fund the dealer direct. You pick up your truck.
-                </p>
-              </li>
-            </ol>
-
-            <div className="mt-12 text-center">
-              <a
-                href="/tow-truck-calculator"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-              >
-                See Your Payment First
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </section>
+        <HowItWorks config={HOW_IT_WORKS_CONFIG} />
 
         {/* ============================================================ */}
         {/* §4 — REVENUE PROOF (The Money Section)           bg: #F0FDF4 */}
@@ -1240,9 +1170,9 @@ export default function Homepage01() {
         <div className="mx-auto max-w-7xl px-6">
           {/* Logo */}
           <div className="mb-12">
-            <a href="/" className="text-xl font-medium text-white">
+            <Link href="/" className="text-xl font-medium text-white">
               TowLoans
-            </a>
+            </Link>
           </div>
 
           {/* Columns */}
