@@ -14,7 +14,19 @@ import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/
 
 | Prop | Type | Description |
 |---|---|---|
-| `config` | `HeroLeadGenConfig` | Full config object (see `config.ts` for shape) |
+| `config` | `HeroLeadGenConfig` | Full config object (see below or `config.ts`) |
+
+### `HeroLeadGenConfig`
+
+| Property | Type | Required | Description |
+|---|---|---|---|
+| `headline` | `string` | yes | Primary heading text |
+| `subheadline` | `string` | yes | Supporting text below headline |
+| `cta` | `{ label, href }` | yes | Primary call-to-action button |
+| `phone` | `{ display, href }` | no | Optional phone number link below CTA |
+| `trustBadges` | `TrustBadgeData[]` | yes | Array of trust badges shown below CTA |
+| `heroImage` | `string` | yes | Path to hero image |
+| `heroImageAlt` | `string` | yes | Alt text for hero image |
 
 ## Props — `TrustBadge`
 
