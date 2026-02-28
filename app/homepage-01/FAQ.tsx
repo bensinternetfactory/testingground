@@ -27,12 +27,12 @@ function AccordionItem({
         onClick={onClick}
         aria-expanded={isOpen}
       >
-        <span className="pr-4 text-lg font-medium text-[#111111]">
+        <span className="pr-4 text-lg font-medium text-[#101820]">
           {question}
         </span>
         <span
           className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors ${
-            isOpen ? "bg-[#DE3341] text-white" : "bg-[#F7F7F7] text-[#545454]"
+            isOpen ? "bg-[#22C55E] text-white" : "bg-[#F5F5F5] text-[#545454]"
           }`}
         >
           <svg

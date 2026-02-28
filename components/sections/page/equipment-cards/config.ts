@@ -47,9 +47,9 @@ export const EQUIPMENT_CARDS_CONFIG: EquipmentCardsConfig = {
     {
       id: "used",
       title: "Used Tow Trucks",
-      description: "New & used. Any source.",
+      description: "Any age. Any milage. Any source.",
       icon: null,
-      linkText: "Used Truck Financing",
+      linkText: "Used Tow Truck Financing",
       linkHref: "/used-tow-truck-financing",
     },
   ],
