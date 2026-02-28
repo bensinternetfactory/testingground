@@ -51,6 +51,7 @@ export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
             src={config.heroImage}
             alt={config.heroImageAlt}
             fill
+            sizes="(max-width: 1023px) 0px, 40vw"
             className="object-cover"
             priority
           />
