@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
+import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/hero-lead-gen";
 import { FAQ } from "./FAQ";
 
 /* ------------------------------------------------------------------ */
@@ -26,7 +27,7 @@ const faqs = [
         payments. Use our{" "}
         <a
           href="/tow-truck-calculator"
-          className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
         >
           tow truck calculator
         </a>{" "}
@@ -48,7 +49,7 @@ const faqs = [
         the full breakdown in our{" "}
         <a
           href="/resources/tow-truck-roi"
-          className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
         >
           tow truck ROI guide
         </a>
@@ -68,14 +69,14 @@ const faqs = [
         That\u2019s exactly what financing solves. With{" "}
         <a
           href="/zero-down-tow-truck-financing"
-          className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
         >
           zero down financing
         </a>{" "}
         and{" "}
         <a
           href="/deferred-payment-tow-truck-financing"
-          className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
         >
           deferred payment programs
         </a>
@@ -91,7 +92,7 @@ const faqs = [
         capital needed. Read our complete{" "}
         <a
           href="/resources/how-to-start-a-towing-business"
-          className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
         >
           guide to starting a towing business
         </a>{" "}
@@ -128,7 +129,7 @@ export default function Homepage01() {
       />
       <a
         href="#hero"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-[#DE3341] focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-[#22C55E] focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
       >
         Skip to main content
       </a>
@@ -140,95 +141,17 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §1 — HERO                                          bg: white */}
         {/* ============================================================ */}
-        <section id="hero" className="bg-white pt-[var(--nav-height)]">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-5 lg:py-20">
-            {/* Left column (60%) */}
-            <div className="flex flex-col gap-6 lg:col-span-3">
-              <p className="text-sm font-medium tracking-wide text-[#DE3341] uppercase">
-                Tow Truck Financing Companies
-              </p>
-
-              <h1
-                className="text-[2.5rem] font-medium leading-[1.1] text-[#111111] md:text-5xl lg:text-[3.5rem]"
-                style={{ textWrap: "balance" }}
-              >
-                Get Your Tow Truck Financed. Start Earning Tomorrow.
-              </h1>
-
-              <p className="text-lg text-[#545454]">
-                Pre-approved in 30 seconds. No credit check. New&nbsp;&amp;
-                used. $0&nbsp;down available.
-              </p>
-
-              {/* Primary CTA */}
-              <a
-                href="#pre-approve"
-                className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[#111111] text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 sm:w-auto sm:px-10"
-              >
-                Get Pre-Approved
-              </a>
-
-              <p className="text-sm text-[#545454]">
-                Or call us:{" "}
-                <a
-                  href="tel:+18885550199"
-                  className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
-                >
-                  (888)&nbsp;555-0199
-                </a>
-              </p>
-
-              {/* Trust bar */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#E9E9E9] pt-6">
-                <div className="text-center">
-                  <p className="text-xl font-medium text-[#111111]">$2.8M+</p>
-                  <p className="text-xs text-[#545454]">Financed</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xl font-medium text-[#111111]">340+</p>
-                  <p className="text-xs text-[#545454]">Operators</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xl font-medium text-[#111111]">24hr</p>
-                  <p className="text-xs text-[#545454]">Approval</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right column (40%) — hero image */}
-            <div className="hidden items-center justify-center rounded-3xl bg-[#F7F7F7] lg:col-span-2 lg:flex">
-              <div className="p-12 text-center">
-                <svg
-                  className="mx-auto h-32 w-32 text-[#111111]/20"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-                  />
-                </svg>
-                <p className="mt-4 text-sm text-[#545454]">
-                  Hero image placeholder
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <HeroLeadGen config={HERO_LEAD_GEN_CONFIG} />
 
         {/* ============================================================ */}
-        {/* §2 — EQUIPMENT CARDS (Intent Router)              bg: #F7F7F7 */}
+        {/* §2 — EQUIPMENT CARDS (Intent Router)              bg: #F5F5F5 */}
         {/* ============================================================ */}
-        <section id="equipment" className="bg-[#F7F7F7] py-20 md:py-28">
+        <section id="equipment" className="bg-[#F5F5F5] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Finance Any Tow Truck.{" "}
-                <span className="text-[#DE3341]">
+                <span className="text-[#22C55E]">
                   From Rollbacks to Rotators.
                 </span>
               </h2>
@@ -240,12 +163,12 @@ export default function Homepage01() {
             <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {/* Rollback */}
               <div className="group relative flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <span className="absolute top-4 right-4 rounded-full bg-[#DE3341] px-3 py-1 text-xs font-medium text-white">
+                <span className="absolute top-4 right-4 rounded-full bg-[#22C55E] px-3 py-1 text-xs font-medium text-white">
                   Most Popular
                 </span>
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7F7F7]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
                   <svg
-                    className="h-8 w-8 text-[#111111]"
+                    className="h-8 w-8 text-[#101820]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -259,18 +182,18 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   Rollback / Flatbed
                 </h3>
                 <p className="mt-2 text-sm text-[#545454]">
                   Most popular first truck
                 </p>
-                <p className="mt-4 text-lg font-medium text-[#111111]">
+                <p className="mt-4 text-lg font-medium text-[#101820]">
                   From $650/mo
                 </p>
                 <a
                   href="/rollback-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   See Rollback Financing
                   <svg
@@ -292,9 +215,9 @@ export default function Homepage01() {
 
               {/* Wrecker */}
               <div className="group flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7F7F7]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
                   <svg
-                    className="h-8 w-8 text-[#111111]"
+                    className="h-8 w-8 text-[#101820]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -314,18 +237,18 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   Wrecker
                 </h3>
                 <p className="mt-2 text-sm text-[#545454]">
                   Light, medium &amp; heavy
                 </p>
-                <p className="mt-4 text-lg font-medium text-[#111111]">
+                <p className="mt-4 text-lg font-medium text-[#101820]">
                   From $850/mo
                 </p>
                 <a
                   href="/wrecker-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   See Wrecker Financing
                   <svg
@@ -347,9 +270,9 @@ export default function Homepage01() {
 
               {/* Rotator */}
               <div className="group flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7F7F7]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
                   <svg
-                    className="h-8 w-8 text-[#111111]"
+                    className="h-8 w-8 text-[#101820]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -369,18 +292,18 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   Rotator
                 </h3>
                 <p className="mt-2 text-sm text-[#545454]">
                   50-75 ton heavy recovery
                 </p>
-                <p className="mt-4 text-lg font-medium text-[#111111]">
+                <p className="mt-4 text-lg font-medium text-[#101820]">
                   From $3,200/mo
                 </p>
                 <a
                   href="/rotator-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   See Rotator Financing
                   <svg
@@ -402,9 +325,9 @@ export default function Homepage01() {
 
               {/* Used Tow Trucks */}
               <div className="group flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7F7F7]">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
                   <svg
-                    className="h-8 w-8 text-[#111111]"
+                    className="h-8 w-8 text-[#101820]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -418,18 +341,18 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   Used Tow Trucks
                 </h3>
                 <p className="mt-2 text-sm text-[#545454]">
                   New &amp; used. Any source.
                 </p>
-                <p className="mt-4 text-lg font-medium text-[#111111]">
+                <p className="mt-4 text-lg font-medium text-[#101820]">
                   From $450/mo
                 </p>
                 <a
                   href="/used-tow-truck-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   Used Truck Financing
                   <svg
@@ -458,18 +381,18 @@ export default function Homepage01() {
         <section id="how-it-works" className="bg-white py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 From Application to Keys in{" "}
-                <span className="text-[#DE3341]">3&nbsp;Steps</span>
+                <span className="text-[#22C55E]">3&nbsp;Steps</span>
               </h2>
             </div>
 
             <ol className="mt-16 grid gap-6 md:grid-cols-3">
-              <li className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <span className="text-sm font-medium text-[#DE3341]">
+              <li className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <span className="text-sm font-medium text-[#22C55E]">
                   Step 01
                 </span>
-                <h3 className="mt-3 text-xl font-medium text-[#111111]">
+                <h3 className="mt-3 text-xl font-medium text-[#101820]">
                   Tell Us What You Need
                 </h3>
                 <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -478,11 +401,11 @@ export default function Homepage01() {
                 </p>
               </li>
 
-              <li className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <span className="text-sm font-medium text-[#DE3341]">
+              <li className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <span className="text-sm font-medium text-[#22C55E]">
                   Step 02
                 </span>
-                <h3 className="mt-3 text-xl font-medium text-[#111111]">
+                <h3 className="mt-3 text-xl font-medium text-[#101820]">
                   Get Your Payment Range
                 </h3>
                 <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -491,11 +414,11 @@ export default function Homepage01() {
                 </p>
               </li>
 
-              <li className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <span className="text-sm font-medium text-[#DE3341]">
+              <li className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <span className="text-sm font-medium text-[#22C55E]">
                   Step 03
                 </span>
-                <h3 className="mt-3 text-xl font-medium text-[#111111]">
+                <h3 className="mt-3 text-xl font-medium text-[#101820]">
                   Drive Your Truck Home
                 </h3>
                 <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -507,7 +430,7 @@ export default function Homepage01() {
             <div className="mt-12 text-center">
               <a
                 href="/tow-truck-calculator"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
               >
                 See Your Payment First
                 <svg
@@ -530,14 +453,14 @@ export default function Homepage01() {
         </section>
 
         {/* ============================================================ */}
-        {/* §4 — REVENUE PROOF (The Money Section)           bg: #FBF0F6 */}
+        {/* §4 — REVENUE PROOF (The Money Section)           bg: #F0FDF4 */}
         {/* ============================================================ */}
-        <section id="revenue" className="bg-[#FBF0F6] py-20 md:py-28">
+        <section id="revenue" className="bg-[#F0FDF4] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Your Tow Truck{" "}
-                <span className="text-[#DE3341]">Pays for Itself.</span>
+                <span className="text-[#22C55E]">Pays for Itself.</span>
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-[#545454]">
                 Typical operators report covering their monthly payment within
@@ -550,7 +473,7 @@ export default function Homepage01() {
               <div className="grid items-center gap-8 p-8 md:grid-cols-2 md:p-12">
                 <div className="text-center">
                   <svg
-                    className="mx-auto h-16 w-16 text-[#111111]/40"
+                    className="mx-auto h-16 w-16 text-[#101820]/40"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -563,13 +486,13 @@ export default function Homepage01() {
                       d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
                     />
                   </svg>
-                  <p className="mt-4 text-lg font-medium text-[#111111]">
+                  <p className="mt-4 text-lg font-medium text-[#101820]">
                     A few calls covers your monthly payment.
                   </p>
                 </div>
                 <div className="text-center">
                   <svg
-                    className="mx-auto h-16 w-16 text-[#0B5E36]/40"
+                    className="mx-auto h-16 w-16 text-[#15803D]/40"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -582,7 +505,7 @@ export default function Homepage01() {
                       d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                     />
                   </svg>
-                  <p className="mt-4 text-lg font-medium text-[#111111]">
+                  <p className="mt-4 text-lg font-medium text-[#101820]">
                     The rest of the month? That&rsquo;s revenue in your pocket.
                   </p>
                 </div>
@@ -596,7 +519,7 @@ export default function Homepage01() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
               <a
                 href="/tow-truck-calculator"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
               >
                 Calculate YOUR Payment
                 <svg
@@ -616,7 +539,7 @@ export default function Homepage01() {
               </a>
               <a
                 href="/resources/tow-truck-roi"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
               >
                 See Full ROI Breakdown
                 <svg
@@ -644,18 +567,18 @@ export default function Homepage01() {
         <section id="programs" className="bg-white py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Programs Built for How Towing Operators{" "}
-                <span className="text-[#DE3341]">Actually Buy Trucks</span>
+                <span className="text-[#22C55E]">Actually Buy Trucks</span>
               </h2>
             </div>
 
             <ul className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {/* $0 Down Financing */}
               <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#F3EEE7]">
+                <div className="flex h-32 items-center justify-center bg-[#F0FDF4]">
                   <svg
-                    className="h-12 w-12 text-[#111111]/60"
+                    className="h-12 w-12 text-[#101820]/60"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -670,7 +593,7 @@ export default function Homepage01() {
                   </svg>
                 </div>
                 <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#111111]">
+                  <h3 className="text-xl font-medium text-[#101820]">
                     $0 Down Financing
                   </h3>
                   <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -679,7 +602,7 @@ export default function Homepage01() {
                   </p>
                   <a
                     href="/zero-down-tow-truck-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                   >
                     See Zero Down
                     <svg
@@ -702,9 +625,9 @@ export default function Homepage01() {
 
               {/* Fleet Upgrade */}
               <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#EDF1FF]">
+                <div className="flex h-32 items-center justify-center bg-[#DCFCE7]">
                   <svg
-                    className="h-12 w-12 text-[#111111]/60"
+                    className="h-12 w-12 text-[#101820]/60"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -719,7 +642,7 @@ export default function Homepage01() {
                   </svg>
                 </div>
                 <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#111111]">
+                  <h3 className="text-xl font-medium text-[#101820]">
                     Fleet Upgrade
                   </h3>
                   <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -728,7 +651,7 @@ export default function Homepage01() {
                   </p>
                   <a
                     href="/fleet-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                   >
                     Fleet Programs
                     <svg
@@ -751,9 +674,9 @@ export default function Homepage01() {
 
               {/* Deferred Payment */}
               <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#FBF0F6]">
+                <div className="flex h-32 items-center justify-center bg-[#F0FDF4]">
                   <svg
-                    className="h-12 w-12 text-[#111111]/60"
+                    className="h-12 w-12 text-[#101820]/60"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -768,7 +691,7 @@ export default function Homepage01() {
                   </svg>
                 </div>
                 <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#111111]">
+                  <h3 className="text-xl font-medium text-[#101820]">
                     Deferred Payment
                   </h3>
                   <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -777,7 +700,7 @@ export default function Homepage01() {
                   </p>
                   <a
                     href="/deferred-payment-tow-truck-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                   >
                     See Deferred Options
                     <svg
@@ -800,9 +723,9 @@ export default function Homepage01() {
 
               {/* Private Party Sales */}
               <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#F7F7F7]">
+                <div className="flex h-32 items-center justify-center bg-[#F5F5F5]">
                   <svg
-                    className="h-12 w-12 text-[#111111]/60"
+                    className="h-12 w-12 text-[#101820]/60"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -817,7 +740,7 @@ export default function Homepage01() {
                   </svg>
                 </div>
                 <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#111111]">
+                  <h3 className="text-xl font-medium text-[#101820]">
                     Private Party Sales
                   </h3>
                   <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
@@ -826,7 +749,7 @@ export default function Homepage01() {
                   </p>
                   <a
                     href="/private-party-tow-truck-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                   >
                     Private Party Financing
                     <svg
@@ -851,14 +774,14 @@ export default function Homepage01() {
         </section>
 
         {/* ============================================================ */}
-        {/* §6 — REQUIREMENTS (Objection Killer)             bg: #F7F7F7 */}
+        {/* §6 — REQUIREMENTS (Objection Killer)             bg: #F5F5F5 */}
         {/* ============================================================ */}
-        <section id="requirements" className="bg-[#F7F7F7] py-20 md:py-28">
+        <section id="requirements" className="bg-[#F5F5F5] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 What You Need.{" "}
-                <span className="text-[#DE3341]">
+                <span className="text-[#22C55E]">
                   And What You Don&rsquo;t.
                 </span>
               </h2>
@@ -867,7 +790,7 @@ export default function Homepage01() {
             <div className="mx-auto mt-16 grid max-w-4xl gap-6 md:grid-cols-2">
               {/* What we look at */}
               <div className="rounded-3xl bg-[#EFF7F3] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <h3 className="text-lg font-medium text-[#0B5E36]">
+                <h3 className="text-lg font-medium text-[#15803D]">
                   What We Look At
                 </h3>
                 <ul className="mt-6 space-y-4">
@@ -879,7 +802,7 @@ export default function Homepage01() {
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <svg
-                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#0B5E36]"
+                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#15803D]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -892,15 +815,15 @@ export default function Homepage01() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span className="text-base text-[#111111]">{item}</span>
+                      <span className="text-base text-[#101820]">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* What you DON'T need */}
-              <div className="rounded-3xl bg-[#FBF0F6] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <h3 className="text-lg font-medium text-[#DE3341]">
+              <div className="rounded-3xl bg-[#F0FDF4] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <h3 className="text-lg font-medium text-[#22C55E]">
                   What You DON&rsquo;T Need
                 </h3>
                 <ul className="mt-6 space-y-4">
@@ -913,7 +836,7 @@ export default function Homepage01() {
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <svg
-                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#DE3341]"
+                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#22C55E]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -933,7 +856,7 @@ export default function Homepage01() {
               </div>
             </div>
 
-            <p className="mt-10 text-center text-lg font-medium text-[#111111]">
+            <p className="mt-10 text-center text-lg font-medium text-[#101820]">
               We pre-approve most operators in 30 seconds with NO hard credit
               pull.
             </p>
@@ -941,13 +864,13 @@ export default function Homepage01() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
               <a
                 href="#pre-approve"
-                className="inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-8 text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                className="inline-flex h-12 items-center justify-center rounded-full bg-[#101820] px-8 text-base font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
               >
                 Check If You Qualify
               </a>
               <a
                 href="/resources/how-to-qualify"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
               >
                 See Full Requirements
                 <svg
@@ -975,9 +898,9 @@ export default function Homepage01() {
         <section id="testimonials" className="bg-white py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Trusted by Towing Operators{" "}
-                <span className="text-[#DE3341]">Across the Country</span>
+                <span className="text-[#22C55E]">Across the Country</span>
               </h2>
             </div>
 
@@ -990,7 +913,7 @@ export default function Homepage01() {
                 { value: "4.9/5", label: "Rating" },
               ].map((stat) => (
                 <li key={stat.label} className="text-center">
-                  <p className="text-3xl font-medium text-[#111111] [font-variant-numeric:tabular-nums]">
+                  <p className="text-3xl font-medium text-[#101820] [font-variant-numeric:tabular-nums]">
                     {stat.value}
                   </p>
                   <p className="mt-2 text-sm text-[#545454]">{stat.label}</p>
@@ -1022,26 +945,26 @@ export default function Homepage01() {
               ].map((t) => (
                 <div
                   key={t.name}
-                  className="rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]"
+                  className="rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]"
                 >
                   <div
-                    className="font-serif text-5xl leading-none text-[#DE3341]/20"
+                    className="font-serif text-5xl leading-none text-[#22C55E]/20"
                     aria-hidden="true"
                   >
                     &ldquo;
                   </div>
-                  <blockquote className="mt-2 text-lg font-medium leading-relaxed text-[#111111]">
+                  <blockquote className="mt-2 text-lg font-medium leading-relaxed text-[#101820]">
                     &ldquo;{t.quote}&rdquo;
                   </blockquote>
                   <footer className="mt-6 flex items-center gap-4">
                     <div
-                      className="flex h-11 w-11 items-center justify-center rounded-full bg-[#111111] text-sm font-medium text-white"
+                      className="flex h-11 w-11 items-center justify-center rounded-full bg-[#101820] text-sm font-medium text-white"
                       aria-hidden="true"
                     >
                       {t.name.charAt(0)}
                     </div>
                     <div>
-                      <cite className="not-italic text-base font-medium text-[#111111]">
+                      <cite className="not-italic text-base font-medium text-[#101820]">
                         {t.name}
                       </cite>
                       <p className="text-sm text-[#545454]">{t.detail}</p>
@@ -1068,16 +991,16 @@ export default function Homepage01() {
         </section>
 
         {/* ============================================================ */}
-        {/* §8 — CALCULATOR TEASER                           bg: #F3EEE7 */}
+        {/* §8 — CALCULATOR TEASER                           bg: #F0FDF4 */}
         {/* ============================================================ */}
-        <section id="calculator" className="bg-[#F3EEE7] py-20 md:py-28">
+        <section id="calculator" className="bg-[#F0FDF4] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid items-center gap-12 md:grid-cols-2">
               {/* Left: copy */}
               <div>
-                <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+                <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                   See Your Payment{" "}
-                  <span className="text-[#DE3341]">Before You Apply</span>
+                  <span className="text-[#22C55E]">Before You Apply</span>
                 </h2>
 
                 <p className="mt-6 text-lg leading-relaxed text-[#545454]">
@@ -1089,7 +1012,7 @@ export default function Homepage01() {
                 <div className="mt-8">
                   <a
                     href="/tow-truck-calculator"
-                    className="inline-flex h-12 items-center justify-center rounded-full bg-[#111111] px-8 text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                    className="inline-flex h-12 items-center justify-center rounded-full bg-[#101820] px-8 text-base font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                   >
                     Calculate Your Payment
                   </a>
@@ -1104,19 +1027,19 @@ export default function Homepage01() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between border-b border-[#E9E9E9] pb-4">
                     <span className="text-sm text-[#545454]">Equipment</span>
-                    <span className="font-medium text-[#111111]">
+                    <span className="font-medium text-[#101820]">
                       Rollback
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-b border-[#E9E9E9] pb-4">
                     <span className="text-sm text-[#545454]">Amount</span>
-                    <span className="font-medium text-[#111111]">$65,000</span>
+                    <span className="font-medium text-[#101820]">$65,000</span>
                   </div>
                   <div className="flex items-center justify-between border-b border-[#E9E9E9] pb-4">
                     <span className="text-sm text-[#545454]">
                       Est. Payment
                     </span>
-                    <span className="text-xl font-medium text-[#DE3341]">
+                    <span className="text-xl font-medium text-[#22C55E]">
                       $1,050/mo
                     </span>
                   </div>
@@ -1124,7 +1047,7 @@ export default function Homepage01() {
                     <span className="text-sm text-[#545454]">
                       Tow calls to cover
                     </span>
-                    <span className="font-medium text-[#0B5E36]">
+                    <span className="font-medium text-[#15803D]">
                       ~5 calls
                     </span>
                   </div>
@@ -1140,9 +1063,9 @@ export default function Homepage01() {
         <section id="resources" className="bg-white py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Tow Truck Financing{" "}
-                <span className="text-[#DE3341]">Resources</span>
+                <span className="text-[#22C55E]">Resources</span>
               </h2>
               <p className="mt-4 text-lg text-[#545454]">
                 Everything you need to make a smart decision.
@@ -1151,9 +1074,9 @@ export default function Homepage01() {
 
             <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {/* Cost Guide */}
-              <div className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
                 <svg
-                  className="h-8 w-8 text-[#111111]"
+                  className="h-8 w-8 text-[#101820]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1166,7 +1089,7 @@ export default function Homepage01() {
                     d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                   />
                 </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#111111]">
+                <h3 className="mt-6 text-lg font-medium text-[#101820]">
                   How Much Does a Tow Truck Cost? (2026 Guide)
                 </h3>
                 <p className="mt-2 flex-1 text-sm text-[#545454]">
@@ -1174,7 +1097,7 @@ export default function Homepage01() {
                 </p>
                 <a
                   href="/resources/how-much-does-a-tow-truck-cost"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   Read the Guide
                   <svg
@@ -1195,9 +1118,9 @@ export default function Homepage01() {
               </div>
 
               {/* ROI Guide */}
-              <div className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
                 <svg
-                  className="h-8 w-8 text-[#111111]"
+                  className="h-8 w-8 text-[#101820]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1210,7 +1133,7 @@ export default function Homepage01() {
                     d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                   />
                 </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#111111]">
+                <h3 className="mt-6 text-lg font-medium text-[#101820]">
                   Tow Truck ROI: How Fast Does It Pay for Itself?
                 </h3>
                 <p className="mt-2 flex-1 text-sm text-[#545454]">
@@ -1218,7 +1141,7 @@ export default function Homepage01() {
                 </p>
                 <a
                   href="/resources/tow-truck-roi"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   See the Math
                   <svg
@@ -1239,9 +1162,9 @@ export default function Homepage01() {
               </div>
 
               {/* How to Qualify */}
-              <div className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
                 <svg
-                  className="h-8 w-8 text-[#111111]"
+                  className="h-8 w-8 text-[#101820]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1254,7 +1177,7 @@ export default function Homepage01() {
                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#111111]">
+                <h3 className="mt-6 text-lg font-medium text-[#101820]">
                   How to Qualify for Tow Truck Financing
                 </h3>
                 <p className="mt-2 flex-1 text-sm text-[#545454]">
@@ -1262,7 +1185,7 @@ export default function Homepage01() {
                 </p>
                 <a
                   href="/resources/how-to-qualify"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   Check Requirements
                   <svg
@@ -1283,9 +1206,9 @@ export default function Homepage01() {
               </div>
 
               {/* Lease vs Loan */}
-              <div className="flex flex-col rounded-3xl bg-[#F7F7F7] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
+              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
                 <svg
-                  className="h-8 w-8 text-[#111111]"
+                  className="h-8 w-8 text-[#101820]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1298,7 +1221,7 @@ export default function Homepage01() {
                     d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
                   />
                 </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#111111]">
+                <h3 className="mt-6 text-lg font-medium text-[#101820]">
                   Lease vs. Loan: Which Is Right for You?
                 </h3>
                 <p className="mt-2 flex-1 text-sm text-[#545454]">
@@ -1306,7 +1229,7 @@ export default function Homepage01() {
                 </p>
                 <a
                   href="/resources/tow-truck-lease-vs-loan"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#111111] transition-colors hover:text-[#DE3341] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
                 >
                   Compare Options
                   <svg
@@ -1333,7 +1256,7 @@ export default function Homepage01() {
                 Prefer to lease instead of buy?{" "}
                 <a
                   href="/tow-truck-leasing"
-                  className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
                 >
                   Explore tow truck leasing options.
                 </a>
@@ -1342,7 +1265,7 @@ export default function Homepage01() {
                 Planning to start a towing business?{" "}
                 <a
                   href="/resources/how-to-start-a-towing-business"
-                  className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
                 >
                   Read our startup guide.
                 </a>
@@ -1351,7 +1274,7 @@ export default function Homepage01() {
                 Buying before year-end?{" "}
                 <a
                   href="/resources/section-179-tow-truck"
-                  className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
                 >
                   Learn about Section 179 tax deductions.
                 </a>
@@ -1361,14 +1284,14 @@ export default function Homepage01() {
         </section>
 
         {/* ============================================================ */}
-        {/* §10 — FAQ (SEO + Objection Cleanup)              bg: #F7F7F7 */}
+        {/* §10 — FAQ (SEO + Objection Cleanup)              bg: #F5F5F5 */}
         {/* ============================================================ */}
-        <section id="faq" className="bg-[#F7F7F7] py-20 md:py-28">
+        <section id="faq" className="bg-[#F5F5F5] py-20 md:py-28">
           <div className="mx-auto max-w-3xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Tow Truck Financing{" "}
-                <span className="text-[#DE3341]">FAQ</span>
+                <span className="text-[#22C55E]">FAQ</span>
               </h2>
             </div>
             <FAQ faqs={faqs} />
@@ -1376,21 +1299,21 @@ export default function Homepage01() {
         </section>
 
         {/* ============================================================ */}
-        {/* §11 — FINAL CTA (Value Recap + Close)            bg: #FBF0F6 */}
+        {/* §11 — FINAL CTA (Value Recap + Close)            bg: #F0FDF4 */}
         {/* ============================================================ */}
-        <section id="final-cta" className="bg-[#FBF0F6] py-20 md:py-28">
+        <section id="final-cta" className="bg-[#F0FDF4] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
-              <h2 className="text-3xl font-medium tracking-tight text-[#111111] sm:text-5xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Ready to Add Revenue to{" "}
-                <span className="text-[#DE3341]">Your Fleet?</span>
+                <span className="text-[#22C55E]">Your Fleet?</span>
               </h2>
             </div>
 
             {/* Value props */}
             <ul className="mt-16 grid gap-8 md:grid-cols-3">
               <li className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#111111] shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#101820] shadow-[inset_0_0_0_1px_#E9E9E9]">
                   <svg
                     className="h-7 w-7"
                     fill="none"
@@ -1406,12 +1329,12 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   Pre-approved in 30 secs
                 </h3>
               </li>
               <li className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#111111] shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#101820] shadow-[inset_0_0_0_1px_#E9E9E9]">
                   <svg
                     className="h-7 w-7"
                     fill="none"
@@ -1427,12 +1350,12 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   No hard credit pull required
                 </h3>
               </li>
               <li className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#111111] shadow-[inset_0_0_0_1px_#E9E9E9]">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-[#101820] shadow-[inset_0_0_0_1px_#E9E9E9]">
                   <svg
                     className="h-7 w-7"
                     fill="none"
@@ -1448,7 +1371,7 @@ export default function Homepage01() {
                     />
                   </svg>
                 </div>
-                <h3 className="mt-6 text-xl font-medium text-[#111111]">
+                <h3 className="mt-6 text-xl font-medium text-[#101820]">
                   New, used, any equipment type
                 </h3>
               </li>
@@ -1458,7 +1381,7 @@ export default function Homepage01() {
             <div className="mt-16 text-center">
               <a
                 href="#pre-approve"
-                className="inline-flex h-14 items-center justify-center rounded-full bg-[#111111] px-10 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                className="inline-flex h-14 items-center justify-center rounded-full bg-[#101820] px-10 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
               >
                 Get Pre-Approved &mdash; It Takes 30&nbsp;Seconds
               </a>
@@ -1466,7 +1389,7 @@ export default function Homepage01() {
                 Or call us now:{" "}
                 <a
                   href="tel:+18885550199"
-                  className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
+                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
                 >
                   (888)&nbsp;555-0199
                 </a>
@@ -1480,9 +1403,9 @@ export default function Homepage01() {
       </main>
 
       {/* ============================================================ */}
-      {/* §12 — FOOTER                                      bg: #111111 */}
+      {/* §12 — FOOTER                                      bg: #101820 */}
       {/* ============================================================ */}
-      <footer className="bg-[#111111] pt-16 pb-8">
+      <footer className="bg-[#101820] pt-16 pb-8">
         <div className="mx-auto max-w-7xl px-6">
           {/* Logo */}
           <div className="mb-12">
@@ -1509,7 +1432,7 @@ export default function Homepage01() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
                     >
                       {link.label}
                     </a>
@@ -1532,7 +1455,7 @@ export default function Homepage01() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
                     >
                       {link.label}
                     </a>
@@ -1563,7 +1486,7 @@ export default function Homepage01() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
                     >
                       {link.label}
                     </a>
@@ -1595,7 +1518,7 @@ export default function Homepage01() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
                     >
                       {link.label}
                     </a>
@@ -1625,13 +1548,13 @@ export default function Homepage01() {
             <div className="flex items-center gap-6">
               <a
                 href="tel:+18885550199"
-                className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
               >
                 (888)&nbsp;555-0199
               </a>
               <a
                 href="mailto:info@towloans.com"
-                className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
               >
                 info@towloans.com
               </a>
@@ -1644,7 +1567,7 @@ export default function Homepage01() {
               <a
                 key={link}
                 href="#"
-                className="text-xs text-white/40 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE3341] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+                className="text-xs text-white/40 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
               >
                 {link}
               </a>
