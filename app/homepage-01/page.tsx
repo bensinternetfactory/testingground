@@ -1,7 +1,65 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/hero-lead-gen";
+import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/page/equipment-cards";
 import { FAQ } from "./FAQ";
+
+/* ------------------------------------------------------------------ */
+/*  Equipment card icons (injected at page level)                      */
+/* ------------------------------------------------------------------ */
+
+const CARD_ICONS: Record<string, React.ReactNode> = {
+  rollback: (
+    <Image
+      src="/brand-assets/truck-icons/rollback/rollback-green.svg"
+      alt="Rollback truck"
+      width={150}
+      height={43}
+      className="h-6 w-auto"
+    />
+  ),
+  wrecker: (
+    <Image
+      src="/brand-assets/truck-icons/wrecker/wrecker-green.svg"
+      alt="Wrecker truck"
+      width={150}
+      height={43}
+      className="h-6 w-auto"
+    />
+  ),
+  rotator: (
+    <Image
+      src="/brand-assets/truck-icons/rotator/rotator-green.svg"
+      alt="Rotator truck"
+      width={150}
+      height={43}
+      className="h-6 w-auto"
+    />
+  ),
+  used: (
+    <Image
+      src="/brand-assets/benefit-icons/terms/terms-dark.svg"
+      alt="Used tow truck"
+      width={60}
+      height={81}
+      className="h-10 w-auto"
+    />
+  ),
+};
+
+const CARD_ICON_CLASSES: Record<string, string> = {
+  used: "!w-auto",
+};
+
+const equipmentConfig = {
+  ...EQUIPMENT_CARDS_CONFIG,
+  cards: EQUIPMENT_CARDS_CONFIG.cards.map((card) => ({
+    ...card,
+    icon: CARD_ICONS[card.id],
+    iconClassName: CARD_ICON_CLASSES[card.id],
+  })),
+};
 
 /* ------------------------------------------------------------------ */
 /*  SEO metadata                                                       */
@@ -146,234 +204,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §2 — EQUIPMENT CARDS (Intent Router)              bg: #F5F5F5 */}
         {/* ============================================================ */}
-        <section id="equipment" className="bg-[#F5F5F5] py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Finance Any Tow Truck.{" "}
-                <span className="text-[#22C55E]">
-                  From Rollbacks to Rotators.
-                </span>
-              </h2>
-              <p className="mt-4 text-lg text-[#545454]">
-                Pick your equipment. We&rsquo;ll handle the rest.
-              </p>
-            </div>
-
-            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {/* Rollback */}
-              <div className="group relative flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <span className="absolute top-4 right-4 rounded-full bg-[#22C55E] px-3 py-1 text-xs font-medium text-white">
-                  Most Popular
-                </span>
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
-                  <svg
-                    className="h-8 w-8 text-[#101820]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-                    />
-                  </svg>
-                </div>
-                <h3 className="mt-6 text-xl font-medium text-[#101820]">
-                  Rollback / Flatbed
-                </h3>
-                <p className="mt-2 text-sm text-[#545454]">
-                  Most popular first truck
-                </p>
-                <p className="mt-4 text-lg font-medium text-[#101820]">
-                  From $650/mo
-                </p>
-                <a
-                  href="/rollback-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  See Rollback Financing
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-
-              {/* Wrecker */}
-              <div className="group flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
-                  <svg
-                    className="h-8 w-8 text-[#101820]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"
-                    />
-                  </svg>
-                </div>
-                <h3 className="mt-6 text-xl font-medium text-[#101820]">
-                  Wrecker
-                </h3>
-                <p className="mt-2 text-sm text-[#545454]">
-                  Light, medium &amp; heavy
-                </p>
-                <p className="mt-4 text-lg font-medium text-[#101820]">
-                  From $850/mo
-                </p>
-                <a
-                  href="/wrecker-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  See Wrecker Financing
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-
-              {/* Rotator */}
-              <div className="group flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
-                  <svg
-                    className="h-8 w-8 text-[#101820]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="mt-6 text-xl font-medium text-[#101820]">
-                  Rotator
-                </h3>
-                <p className="mt-2 text-sm text-[#545454]">
-                  50-75 ton heavy recovery
-                </p>
-                <p className="mt-4 text-lg font-medium text-[#101820]">
-                  From $3,200/mo
-                </p>
-                <a
-                  href="/rotator-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  See Rotator Financing
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-
-              {/* Used Tow Trucks */}
-              <div className="group flex flex-col rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F5F5F5]">
-                  <svg
-                    className="h-8 w-8 text-[#101820]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="mt-6 text-xl font-medium text-[#101820]">
-                  Used Tow Trucks
-                </h3>
-                <p className="mt-2 text-sm text-[#545454]">
-                  New &amp; used. Any source.
-                </p>
-                <p className="mt-4 text-lg font-medium text-[#101820]">
-                  From $450/mo
-                </p>
-                <a
-                  href="/used-tow-truck-financing"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  Used Truck Financing
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+        <EquipmentCards config={equipmentConfig} />
 
         {/* ============================================================ */}
         {/* §3 — HOW IT WORKS (Process)                        bg: white */}
