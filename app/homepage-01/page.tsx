@@ -41,7 +41,7 @@ const CARD_ICONS: Record<string, React.ReactNode> = {
   ),
   used: (
     <Image
-      src="/brand-assets/benefit-icons/terms/terms-dark.svg"
+      src="/brand-assets/benefit-icons/miles/miles-dark.svg"
       alt="Used tow truck"
       width={60}
       height={81}
