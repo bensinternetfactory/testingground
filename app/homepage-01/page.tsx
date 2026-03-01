@@ -6,6 +6,7 @@ import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/
 import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/page/equipment-cards";
 import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-it-works";
 import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/truck-gallery";
+import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
 import { FAQ } from "./FAQ";
 
 /* ------------------------------------------------------------------ */
@@ -61,6 +62,57 @@ const equipmentConfig = {
     ...card,
     icon: CARD_ICONS[card.id],
     iconClassName: CARD_ICON_CLASSES[card.id],
+  })),
+};
+
+/* ------------------------------------------------------------------ */
+/*  Program card icons (injected at page level)                        */
+/* ------------------------------------------------------------------ */
+
+const PROGRAM_ICONS: Record<string, React.ReactNode> = {
+  "zero-down": (
+    <Image
+      src="/brand-assets/benefit-icons/zero-down/no-money-down-dark.svg"
+      alt="$0 down financing"
+      width={60}
+      height={60}
+      className="h-10 sm:h-12 w-auto"
+    />
+  ),
+  fleet: (
+    <Image
+      src="/brand-assets/benefit-icons/terms/terms-dark.svg"
+      alt="Fleet upgrade"
+      width={60}
+      height={60}
+      className="h-10 sm:h-12 w-auto"
+    />
+  ),
+  deferred: (
+    <Image
+      src="/brand-assets/benefit-icons/deferment/deferment-180-dark.svg"
+      alt="Deferred payment"
+      width={60}
+      height={60}
+      className="h-10 sm:h-12 w-auto"
+    />
+  ),
+  "private-party": (
+    <Image
+      src="/brand-assets/benefit-icons/hook/hook-dark.svg"
+      alt="Private party sales"
+      width={60}
+      height={60}
+      className="h-10 sm:h-12 w-auto"
+    />
+  ),
+};
+
+const programCardsConfig = {
+  ...PROGRAM_CARDS_CONFIG,
+  cards: PROGRAM_CARDS_CONFIG.cards.map((card) => ({
+    ...card,
+    icon: PROGRAM_ICONS[card.id],
   })),
 };
 
@@ -217,214 +269,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §5 — PROGRAMS (Differentiation Cards)              bg: white */}
         {/* ============================================================ */}
-        <section id="programs" className="bg-white py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Programs Built for How Towing Operators{" "}
-                <span className="text-[#22C55E]">Actually Buy Trucks</span>
-              </h2>
-            </div>
-
-            <ul className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {/* $0 Down Financing */}
-              <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#F0FDF4]">
-                  <svg
-                    className="h-12 w-12 text-[#101820]/60"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#101820]">
-                    $0 Down Financing
-                  </h3>
-                  <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                    Keep your cash. Start earning from day one. Qualify with
-                    strong business history.
-                  </p>
-                  <a
-                    href="/zero-down-tow-truck-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                  >
-                    See Zero Down
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </li>
-
-              {/* Fleet Upgrade */}
-              <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#DCFCE7]">
-                  <svg
-                    className="h-12 w-12 text-[#101820]/60"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                    />
-                  </svg>
-                </div>
-                <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#101820]">
-                    Fleet Upgrade
-                  </h3>
-                  <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                    Special rates when you&rsquo;re adding truck #2, #3, or #10
-                    to your fleet.
-                  </p>
-                  <a
-                    href="/fleet-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                  >
-                    Fleet Programs
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </li>
-
-              {/* Deferred Payment */}
-              <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#F0FDF4]">
-                  <svg
-                    className="h-12 w-12 text-[#101820]/60"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#101820]">
-                    Deferred Payment
-                  </h3>
-                  <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                    $99 touch payments for up to 180 days while your truck ramps
-                    up.
-                  </p>
-                  <a
-                    href="/deferred-payment-tow-truck-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                  >
-                    See Deferred Options
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </li>
-
-              {/* Private Party Sales */}
-              <li className="group flex flex-col overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.10)]">
-                <div className="flex h-32 items-center justify-center bg-[#F5F5F5]">
-                  <svg
-                    className="h-12 w-12 text-[#101820]/60"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </div>
-                <div className="flex flex-1 flex-col bg-white p-8">
-                  <h3 className="text-xl font-medium text-[#101820]">
-                    Private Party Sales
-                  </h3>
-                  <p className="mt-3 flex-1 text-base leading-relaxed text-[#545454]">
-                    Finance trucks from Facebook Marketplace, auctions, or
-                    private sellers.
-                  </p>
-                  <a
-                    href="/private-party-tow-truck-financing"
-                    className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                  >
-                    Private Party Financing
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </section>
+        <ProgramCards config={programCardsConfig} />
 
         {/* ============================================================ */}
         {/* §3 — HOW IT WORKS (Process)                        bg: white */}
