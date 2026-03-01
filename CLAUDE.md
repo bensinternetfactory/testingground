@@ -29,6 +29,7 @@ This is a Next.js 16 landing page using the App Router architecture with React 1
 ## Conventions
 
 - **Internal links must use `next/link`** — never use a raw `<a>` tag for internal routes. `Link` enables client-side navigation and prefetching. Only use `<a>` for external URLs.
+- **Every reusable component directory must include a `CLAUDE.md`** with: one-line description, usage snippet, props/config table, server/client boundary notes, and dependencies.
 
 ## Configuration
 
