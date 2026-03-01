@@ -7,6 +7,7 @@ import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/pa
 import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-it-works";
 import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/truck-gallery";
 import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
+import { BrandMarquee } from "@/components/sections/page/brand-marquee";
 import { FAQ } from "./FAQ";
 
 /* ------------------------------------------------------------------ */
@@ -270,6 +271,11 @@ export default function Homepage01() {
         {/* §5 — PROGRAMS (Differentiation Cards)              bg: white */}
         {/* ============================================================ */}
         <ProgramCards config={programCardsConfig} />
+
+        {/* ============================================================ */}
+        {/* §5b — BRAND MARQUEE (Trust strip)              bg: #F5F5F5   */}
+        {/* ============================================================ */}
+        <BrandMarquee />
 
         {/* ============================================================ */}
         {/* §3 — HOW IT WORKS (Process)                        bg: white */}

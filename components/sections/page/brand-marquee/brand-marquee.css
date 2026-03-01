@@ -1,0 +1,42 @@
+/* ------------------------------------------------------------------ */
+/*  Brand marquee scroll animation                                     */
+/* ------------------------------------------------------------------ */
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  will-change: transform;
+}
+
+.marquee-track.marquee-animate {
+  animation: marquee-scroll 57s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Per-logo responsive dimensions via CSS custom properties */
+.logo-box {
+  width: var(--logo-w-mobile);
+  height: var(--logo-h-mobile);
+}
+@media (min-width: 768px) {
+  .logo-box {
+    width: var(--logo-w);
+    height: var(--logo-h);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track.marquee-animate {
+    animation: none;
+  }
+}
