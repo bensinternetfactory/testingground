@@ -209,120 +209,6 @@ export default function Homepage01() {
         <EquipmentCards config={equipmentConfig} />
 
         {/* ============================================================ */}
-        {/* §3 — HOW IT WORKS (Process)                        bg: white */}
-        {/* ============================================================ */}
-        <HowItWorks config={HOW_IT_WORKS_CONFIG} />
-
-        {/* ============================================================ */}
-        {/* §4 — REVENUE PROOF (The Money Section)           bg: #F0FDF4 */}
-        {/* ============================================================ */}
-        <section id="revenue" className="bg-[#F0FDF4] py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Your Tow Truck{" "}
-                <span className="text-[#22C55E]">Pays for Itself.</span>
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#545454]">
-                Typical operators report covering their monthly payment within
-                the first week of calls, depending on market and call volume.
-              </p>
-            </div>
-
-            {/* Revenue visual */}
-            <div className="mx-auto mt-16 max-w-4xl overflow-hidden rounded-3xl bg-white shadow-[inset_0_0_0_1px_#E9E9E9]">
-              <div className="grid items-center gap-8 p-8 md:grid-cols-2 md:p-12">
-                <div className="text-center">
-                  <svg
-                    className="mx-auto h-16 w-16 text-[#101820]/40"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-                    />
-                  </svg>
-                  <p className="mt-4 text-lg font-medium text-[#101820]">
-                    A few calls covers your monthly payment.
-                  </p>
-                </div>
-                <div className="text-center">
-                  <svg
-                    className="mx-auto h-16 w-16 text-[#15803D]/40"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                    />
-                  </svg>
-                  <p className="mt-4 text-lg font-medium text-[#101820]">
-                    The rest of the month? That&rsquo;s revenue in your pocket.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-6 text-center text-sm text-[#545454]">
-              Results vary by market, call volume, and equipment type.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
-              <a
-                href="/tow-truck-calculator"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-              >
-                Calculate YOUR Payment
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </a>
-              <a
-                href="/resources/tow-truck-roi"
-                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-              >
-                See Full ROI Breakdown
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================================ */}
         {/* §5 — PROGRAMS (Differentiation Cards)              bg: white */}
         {/* ============================================================ */}
         <section id="programs" className="bg-white py-20 md:py-28">
@@ -531,6 +417,120 @@ export default function Homepage01() {
                 </div>
               </li>
             </ul>
+          </div>
+        </section>
+
+        {/* ============================================================ */}
+        {/* §3 — HOW IT WORKS (Process)                        bg: white */}
+        {/* ============================================================ */}
+        <HowItWorks config={HOW_IT_WORKS_CONFIG} />
+
+        {/* ============================================================ */}
+        {/* §4 — REVENUE PROOF (The Money Section)           bg: #F0FDF4 */}
+        {/* ============================================================ */}
+        <section id="revenue" className="bg-[#F0FDF4] py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
+                Your Tow Truck{" "}
+                <span className="text-[#22C55E]">Pays for Itself.</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#545454]">
+                Typical operators report covering their monthly payment within
+                the first week of calls, depending on market and call volume.
+              </p>
+            </div>
+
+            {/* Revenue visual */}
+            <div className="mx-auto mt-16 max-w-4xl overflow-hidden rounded-3xl bg-white shadow-[inset_0_0_0_1px_#E9E9E9]">
+              <div className="grid items-center gap-8 p-8 md:grid-cols-2 md:p-12">
+                <div className="text-center">
+                  <svg
+                    className="mx-auto h-16 w-16 text-[#101820]/40"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+                    />
+                  </svg>
+                  <p className="mt-4 text-lg font-medium text-[#101820]">
+                    A few calls covers your monthly payment.
+                  </p>
+                </div>
+                <div className="text-center">
+                  <svg
+                    className="mx-auto h-16 w-16 text-[#15803D]/40"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    />
+                  </svg>
+                  <p className="mt-4 text-lg font-medium text-[#101820]">
+                    The rest of the month? That&rsquo;s revenue in your pocket.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-6 text-center text-sm text-[#545454]">
+              Results vary by market, call volume, and equipment type.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
+              <a
+                href="/tow-truck-calculator"
+                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
+              >
+                Calculate YOUR Payment
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+              <a
+                href="/resources/tow-truck-roi"
+                className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
+              >
+                See Full ROI Breakdown
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
           </div>
         </section>
 
