@@ -26,6 +26,10 @@ This is a Next.js 16 landing page using the App Router architecture with React 1
 
 **Path alias:** `@/*` maps to the project root
 
+## Conventions
+
+- **Internal links must use `next/link`** — never use a raw `<a>` tag for internal routes. `Link` enables client-side navigation and prefetching. Only use `<a>` for external URLs.
+
 ## Configuration
 
 - TypeScript strict mode enabled

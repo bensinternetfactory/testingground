@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 /** A default tile card for use in the HeroShowcase footer slot. */
 export function NavTile({ label, href }: { label: string; href: string }) {
   return (
-    <a
+    <Link
       href={href}
       className="group flex h-14 items-center justify-between rounded-[1rem] border border-[#E5E5E5] bg-white p-4 transition-shadow duration-200 hover:shadow-lg md:h-[108px] md:p-6 lg:h-[116px] lg:rounded-[1.25rem]"
     >
@@ -11,7 +13,7 @@ export function NavTile({ label, href }: { label: string; href: string }) {
         {label}
       </span>
       <TileArrow />
-    </a>
+    </Link>
   );
 }
 

@@ -5,6 +5,7 @@ import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/hero-lead-gen";
 import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/page/equipment-cards";
 import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-it-works";
+import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/truck-gallery";
 import { FAQ } from "./FAQ";
 
 /* ------------------------------------------------------------------ */
@@ -18,7 +19,7 @@ const CARD_ICONS: Record<string, React.ReactNode> = {
       alt="Rollback truck"
       width={150}
       height={43}
-      className="h-6 w-auto"
+      className="h-6 sm:h-10 w-auto"
     />
   ),
   wrecker: (
@@ -27,7 +28,7 @@ const CARD_ICONS: Record<string, React.ReactNode> = {
       alt="Wrecker truck"
       width={150}
       height={43}
-      className="h-6 w-auto"
+      className="h-6 sm:h-10 w-auto"
     />
   ),
   rotator: (
@@ -36,7 +37,7 @@ const CARD_ICONS: Record<string, React.ReactNode> = {
       alt="Rotator truck"
       width={150}
       height={43}
-      className="h-6 w-auto"
+      className="h-6 sm:h-10 w-auto"
     />
   ),
   used: (
@@ -45,7 +46,7 @@ const CARD_ICONS: Record<string, React.ReactNode> = {
       alt="Used tow truck"
       width={60}
       height={81}
-      className="h-10 w-auto"
+      className="h-6 sm:h-10 w-auto"
     />
   ),
 };
@@ -207,6 +208,11 @@ export default function Homepage01() {
         {/* §2 — EQUIPMENT CARDS (Intent Router)              bg: #F5F5F5 */}
         {/* ============================================================ */}
         <EquipmentCards config={equipmentConfig} />
+
+        {/* ============================================================ */}
+        {/* §2b — TRUCK GALLERY (mobile-only visual break)               */}
+        {/* ============================================================ */}
+        <TruckGallery config={TRUCK_GALLERY_CONFIG} />
 
         {/* ============================================================ */}
         {/* §5 — PROGRAMS (Differentiation Cards)              bg: white */}

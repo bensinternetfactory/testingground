@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { TrustBadge } from "./TrustBadge";
 import type { HeroLeadGenConfig } from "./config";
 
@@ -18,12 +19,12 @@ export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
           <p className="text-lg text-[#545454]">{config.subheadline}</p>
 
           {/* Primary CTA */}
-          <a
+          <Link
             href={config.cta.href}
             className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[#101820] text-lg font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2 sm:w-auto sm:self-start sm:px-10"
           >
             {config.cta.label}
-          </a>
+          </Link>
 
           {config.phone && (
             <p className="text-sm text-[#545454]">

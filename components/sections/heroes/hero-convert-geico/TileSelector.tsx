@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { SelectionTile } from "./SelectionTile";
 import type { SelectionTileData } from "./config";
 
@@ -43,18 +44,18 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
 
       {/* View all link */}
       <div className="mt-3">
-        <a href="#" className="text-sm text-[#545454] underline">
+        <Link href="#" className="text-sm text-[#545454] underline">
           {viewAllLink}
-        </a>
+        </Link>
       </div>
 
       {/* Primary CTA */}
-      <a
+      <Link
         href={href}
         className="mt-4 block w-full rounded-full bg-[#111111] px-8 py-4 text-center text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 sm:w-auto sm:inline-block"
       >
         {cta.label}
-      </a>
+      </Link>
     </>
   );
 }

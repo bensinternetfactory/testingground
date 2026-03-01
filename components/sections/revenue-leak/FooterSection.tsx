@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const columns = [
   {
     title: "Company",
@@ -52,9 +54,9 @@ export function FooterSection() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Logo */}
         <div className="mb-12">
-          <a href="/revenue-leak" className="text-xl font-medium text-white">
+          <Link href="/revenue-leak" className="text-xl font-medium text-white">
             TowCap
-          </a>
+          </Link>
         </div>
 
         {/* Columns */}

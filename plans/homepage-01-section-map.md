@@ -18,20 +18,6 @@ This page is the **Homepage Pillar** targeting "tow truck financing" (~980 month
 
 ---
 
-### §2 — EQUIPMENT CARDS (lines 226–453) | `id="equipment"` | bg: #F5F5F5
-**Purpose:** Intent router — sends visitors to equipment-specific pages.
-
-| Card | Current href | SEO Target Anchor Text | Status |
-|------|-------------|----------------------|--------|
-| Rollback / Flatbed | `/rollback-financing` | "Rollback & flatbed financing" | OK (text differs slightly) |
-| Wrecker | `/wrecker-financing` | "Wrecker financing" | OK |
-| Rotator | `/rotator-financing` | "Rotator financing" | OK |
-| Used Tow Trucks | `/used-tow-truck-financing` | "Used tow truck financing" | OK |
-
-**All 4 links match SEO plan destinations.**
-
----
-
 ### §3 — HOW IT WORKS (lines 458–530) | `id="how-it-works"` | bg: white
 **Purpose:** 3-step process. Build trust, reduce friction.
 
