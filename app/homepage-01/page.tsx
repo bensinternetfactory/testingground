@@ -1027,8 +1027,13 @@ export default function Homepage01() {
         <div className="mx-auto max-w-7xl px-6">
           {/* Logo */}
           <div className="mb-12">
-            <Link href="/" className="text-xl font-medium text-white">
-              TowLoans
+            <Link href="/">
+              <Image
+                src="/brand-assets/logo/towloans-light-logo.svg"
+                alt="TowLoans"
+                width={191}
+                height={28}
+              />
             </Link>
           </div>
 
