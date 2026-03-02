@@ -23,7 +23,7 @@ export const HOW_IT_WORKS_CONFIG: HowItWorksConfig = {
       number: "Step 02",
       title: "Get Your Payment Range",
       description:
-        "Pre-approved in 30 seconds. No credit check. See real payments.",
+        "Pre-approved in 30\u00a0seconds. No credit check. See real payments.",
     },
     {
       number: "Step 03",

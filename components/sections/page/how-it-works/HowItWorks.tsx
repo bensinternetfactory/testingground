@@ -1,5 +1,10 @@
+import dynamic from "next/dynamic";
 import type { HowItWorksConfig } from "./config";
-import { HowItWorksAccordion, RippleButton } from "./HowItWorksAccordion";
+import { RippleButton } from "./RippleButton";
+
+const HowItWorksAccordion = dynamic(() =>
+  import("./HowItWorksAccordion").then((m) => m.HowItWorksAccordion)
+);
 
 const ArrowIcon = (
   <svg
@@ -18,9 +23,34 @@ const ArrowIcon = (
   </svg>
 );
 
+function HowToSchema({ config }: { config: HowItWorksConfig }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: config.headline,
+    step: config.steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.title,
+      text: step.description,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
 export function HowItWorks({ config }: { config: HowItWorksConfig }) {
   return (
-    <section id="how-it-works" className="bg-white py-20 md:py-28">
+    <section
+      id="how-it-works"
+      className="scroll-mt-20 bg-white py-20 md:py-28"
+    >
+      <HowToSchema config={config} />
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <h2 className="text-2xl font-semibold tracking-tight text-[#101820] min-[375px]:text-3xl sm:text-5xl">
@@ -50,7 +80,7 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
         <HowItWorksAccordion steps={config.steps} />
 
         <div className="mt-12 text-center">
-          <RippleButton>
+          <RippleButton href={config.cta.href}>
             {config.cta.label}
             {ArrowIcon}
           </RippleButton>
