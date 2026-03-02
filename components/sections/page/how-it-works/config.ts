@@ -11,7 +11,7 @@ export interface HowItWorksConfig {
 }
 
 export const HOW_IT_WORKS_CONFIG: HowItWorksConfig = {
-  headline: "From Application to Keys in 3\u00a0Steps",
+  headline: "Faster Tow Truck Financing",
   steps: [
     {
       number: "Step 01",

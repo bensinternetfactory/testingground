@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { HowItWorksConfig } from "./config";
+import { HowItWorksAccordion, RippleButton } from "./HowItWorksAccordion";
 
 const ArrowIcon = (
   <svg
@@ -23,12 +23,12 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
     <section id="how-it-works" className="bg-white py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
+          <h2 className="text-2xl font-semibold tracking-tight text-[#101820] min-[375px]:text-3xl sm:text-5xl">
             {config.headline}
           </h2>
         </div>
 
-        <ol className="mt-16 grid gap-6 md:grid-cols-3">
+        <ol className="mt-16 hidden gap-6 md:grid md:grid-cols-3">
           {config.steps.map((step) => (
             <li
               key={step.number}
@@ -47,14 +47,13 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
           ))}
         </ol>
 
+        <HowItWorksAccordion steps={config.steps} />
+
         <div className="mt-12 text-center">
-          <Link
-            href={config.cta.href}
-            className="inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-          >
+          <RippleButton>
             {config.cta.label}
             {ArrowIcon}
-          </Link>
+          </RippleButton>
         </div>
       </div>
     </section>
