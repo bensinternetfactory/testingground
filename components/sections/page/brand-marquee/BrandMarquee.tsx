@@ -23,7 +23,7 @@ export function BrandMarquee() {
   }, []);
 
   const logoGroup = BRAND_LOGOS.map((logo, i) => {
-    const h = logo.height ?? 44;
+    const h = logo.height ?? 66;
     const hMobile = Math.round(h * 0.75);
     return (
     <div
@@ -35,6 +35,7 @@ export function BrandMarquee() {
           "--logo-w-mobile": `${Math.round(logo.width * 0.75)}px`,
           "--logo-h": `${h}px`,
           "--logo-h-mobile": `${hMobile}px`,
+          opacity: logo.opacity ?? 1,
         } as React.CSSProperties
       }
     >
@@ -43,17 +44,17 @@ export function BrandMarquee() {
         alt={logo.name}
         fill
         sizes={`${logo.width}px`}
-        className={`object-contain ${logo.filter === "black" ? "brightness-0" : "grayscale"}`}
+        className={`object-contain ${logo.native ? "" : "brightness-0 invert"}`}
       />
     </div>
     );
   });
 
   return (
-    <section ref={sectionRef} className="bg-[#F5F5F5] py-12 md:py-16">
+    <section ref={sectionRef} className="bg-[#101820] py-6 md:py-8">
       {/* Headline — constrained width */}
       <div className="mx-auto max-w-7xl px-6">
-        <p className="mb-8 text-center text-lg font-medium text-[#545454] md:text-xl">
+        <p className="mb-4 text-center text-lg font-medium text-white md:text-xl">
           We finance all major brands
         </p>
       </div>

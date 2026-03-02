@@ -1,6 +1,6 @@
 # brand-marquee
 
-Infinite-scroll logo strip with per-logo sizing and filter control.
+Dark ribbon with infinite-scroll white logos, per-logo sizing, and opacity control.
 
 ## Usage
 
@@ -19,8 +19,16 @@ No props — the component reads `BRAND_LOGOS` from `config.ts` internally.
 | `name` | `string` | Brand name (used as `alt` text) |
 | `src` | `string` | Image path (relative to `public/`) |
 | `width` | `number` | Desktop bounding-box width (px) |
-| `height?` | `number` | Desktop bounding-box height (px); default `44` |
-| `filter?` | `"black"` | Default is `grayscale`; `"black"` applies `brightness-0` |
+| `height?` | `number` | Desktop bounding-box height (px); default `66` |
+| `opacity?` | `number` | 0–1, default `1`; fine-tune visual weight at white |
+| `native?` | `boolean` | `true` = SVG is already white, skip CSS filter |
+
+## Visual Treatment
+
+- Dark background (`#101820`) with tight padding (`py-6 md:py-8`)
+- Most logos rendered white via `brightness-0 invert` CSS filter
+- Multi-color logos (Peterbilt, International) use pre-made white SVG variants (`*-white.svg`) with `native: true` to skip the filter — the filter destroys internal detail on multi-color SVGs
+- Per-logo `opacity` for fine-tuning visual weight
 
 ## Per-Logo Sizing
 
