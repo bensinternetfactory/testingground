@@ -3,6 +3,7 @@
 import { useState, useCallback, type ReactNode, type MouseEvent } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { useWebHaptics } from "web-haptics/react";
 
 const MotionLink = motion.create(Link);
 
@@ -25,9 +26,11 @@ export function RippleButton({
 }) {
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const shouldReduceMotion = useReducedMotion();
+  const { trigger } = useWebHaptics();
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLAnchorElement>) => {
+      trigger([{ duration: 35 }], { intensity: 1 });
       if (shouldReduceMotion) return;
       const rect = e.currentTarget.getBoundingClientRect();
       setRipples((prev) => [
@@ -35,7 +38,7 @@ export function RippleButton({
         { x: e.clientX - rect.left, y: e.clientY - rect.top, id: ++rippleId },
       ]);
     },
-    [shouldReduceMotion]
+    [shouldReduceMotion, trigger]
   );
 
   const removeRipple = useCallback((id: number) => {

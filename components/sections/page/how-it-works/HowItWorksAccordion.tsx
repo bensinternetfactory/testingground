@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useWebHaptics } from "web-haptics/react";
 import type { HowItWorksStep } from "./config";
 
 const contentVariants = {
@@ -37,6 +38,7 @@ const tapSpring = { type: "spring" as const, stiffness: 600, damping: 30 };
 export function HowItWorksAccordion({ steps }: { steps: HowItWorksStep[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const shouldReduceMotion = useReducedMotion();
+  const { trigger } = useWebHaptics();
 
   return (
     <ol className="mt-16 flex flex-col gap-3 md:hidden">
@@ -51,7 +53,10 @@ export function HowItWorksAccordion({ steps }: { steps: HowItWorksStep[] }) {
             <motion.button
               type="button"
               aria-expanded={isOpen}
-              onClick={() => setOpenIndex(isOpen ? null : i)}
+              onClick={() => {
+                trigger([{ duration: 35 }], { intensity: 1 });
+                setOpenIndex(isOpen ? null : i);
+              }}
               whileTap={
                 shouldReduceMotion
                   ? undefined
