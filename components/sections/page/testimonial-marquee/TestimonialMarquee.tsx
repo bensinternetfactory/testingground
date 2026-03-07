@@ -224,7 +224,7 @@ export function TestimonialMarquee() {
     <section
       ref={sectionRef}
       id="testimonials"
-      className="bg-gray-50 py-20 md:py-28"
+      className="bg-gray-50 py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden"
     >
       {/* Skip link */}
       <a
