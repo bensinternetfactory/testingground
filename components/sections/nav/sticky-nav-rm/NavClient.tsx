@@ -10,7 +10,6 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   NavigationMenuLink,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import Link from "next/link";

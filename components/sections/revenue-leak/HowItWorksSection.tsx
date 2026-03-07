@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const steps = [
   {
     number: "01",
@@ -19,12 +21,12 @@ const steps = [
         A financing advisor who knows the towing industry reviews your deal.
         They&rsquo;ll call within 2&nbsp;business hours. Works for dealer
         purchases,{" "}
-        <a
+        <Link
           href="/"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           private party tow truck financing
-        </a>
+        </Link>
         , and auction buys.
       </>
     ),

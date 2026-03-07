@@ -181,7 +181,6 @@ function RotatingPhrases({
 
   useEffect(() => {
     if (phrases.length < 2) return;
-    setActiveIndex(0);
     const id = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % phrases.length);
     }, interval);

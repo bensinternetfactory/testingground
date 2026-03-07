@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 export interface HomepageFaq {
@@ -18,12 +19,12 @@ export const homepageFaqs: HomepageFaq[] = [
         Yes. No age or mileage restrictions. Early 2000s trucks, high-mileage
         equipment\u00a0\u2014 if it runs and has value, we can finance it. Learn
         more about{" "}
-        <a
+        <Link
           href="/used-tow-truck-financing"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           used tow truck financing
-        </a>
+        </Link>
         .
       </>
     ),
@@ -40,12 +41,12 @@ export const homepageFaqs: HomepageFaq[] = [
         Yes\u00a0\u2014 this is one of our biggest differentiators. Facebook
         Marketplace, Craigslist, auction houses, direct from another operator.
         We handle the payoff, title transfer, and wiring. See how{" "}
-        <a
+        <Link
           href="/"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           private party tow truck financing
-        </a>{" "}
+        </Link>{" "}
         works.
       </>
     ),
@@ -61,12 +62,12 @@ export const homepageFaqs: HomepageFaq[] = [
     answer: (
       <>
         Not always.{" "}
-        <a
+        <Link
           href="/zero-down-tow-truck-financing"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           Zero down tow truck financing
-        </a>{" "}
+        </Link>{" "}
         is available for qualified operators. A down payment can lower your
         monthly payment, but it\u2019s not required to get started.
       </>
@@ -77,19 +78,19 @@ export const homepageFaqs: HomepageFaq[] = [
     answer: (
       <>
         All of them.{" "}
-        <a
+        <Link
           href="/rollback-financing"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           Rollback financing
-        </a>
+        </Link>
         , wheel-lift wreckers, integrated wreckers,{" "}
-        <a
+        <Link
           href="/rotator-financing"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           rotator financing
-        </a>
+        </Link>
         , Landoll trailers, and specialty equipment. New or used, any
         manufacturer.
       </>
@@ -105,12 +106,12 @@ export const homepageFaqs: HomepageFaq[] = [
     answer: (
       <>
         With our{" "}
-        <a
+        <Link
           href="/deferred-payment-tow-truck-financing"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           deferred payment financing
-        </a>
+        </Link>
         , you make $99 touch payments for up to 180&nbsp;days while your new
         truck ramps up and starts generating revenue. After the deferral period,
         regular payments begin.
