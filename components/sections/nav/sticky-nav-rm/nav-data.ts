@@ -101,7 +101,7 @@ export const PROGRAMS_ITEMS: readonly NavCardItem[] = [
   {
     title: "Private Party",
     description: "Finance trucks from Facebook Marketplace, auctions, or private sellers",
-    href: "/private-party-tow-truck-financing",
+    href: "/",
     icon: "truck",
     tint: "#FBF0F6",
   },

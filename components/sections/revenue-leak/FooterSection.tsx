@@ -54,7 +54,7 @@ export function FooterSection() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Logo */}
         <div className="mb-12">
-          <Link href="/revenue-leak" className="text-xl font-medium text-white">
+          <Link href="/" className="text-xl font-medium text-white">
             TowCap
           </Link>
         </div>

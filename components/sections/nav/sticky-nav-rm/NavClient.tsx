@@ -186,7 +186,7 @@ export function NavClient({ sections }: NavClientProps) {
         <div className="mx-auto flex h-[var(--nav-height)] max-w-7xl items-center justify-between px-6">
           {/* Left cluster: Logo + Desktop Nav */}
           <div className="flex items-center gap-8">
-            <Link href="/revenue-leak">
+            <Link href="/">
               <Image
                 src="/towloansdark.svg"
                 alt="TowLoans"

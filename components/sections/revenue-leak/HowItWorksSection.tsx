@@ -20,7 +20,7 @@ const steps = [
         They&rsquo;ll call within 2&nbsp;business hours. Works for dealer
         purchases,{" "}
         <a
-          href="/private-party-tow-truck-financing"
+          href="/"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           private party tow truck financing

@@ -41,7 +41,7 @@ export const homepageFaqs: HomepageFaq[] = [
         Marketplace, Craigslist, auction houses, direct from another operator.
         We handle the payoff, title transfer, and wiring. See how{" "}
         <a
-          href="/private-party-tow-truck-financing"
+          href="/"
           className="font-medium text-[#111111] underline underline-offset-4 transition-colors hover:text-[#DE3341]"
         >
           private party tow truck financing
