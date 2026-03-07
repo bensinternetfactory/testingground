@@ -7,6 +7,7 @@ import {
   type ReactNode,
   type MouseEvent,
   type KeyboardEvent,
+  type TouchEvent,
 } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
@@ -52,7 +53,8 @@ export interface RippleCtaLinkProps {
 }
 
 const sizeClasses = {
-  sm: "px-3 py-2.5 text-sm gap-1.5",
+  // Keep minimum 44px hit area on mobile for accessibility.
+  sm: "px-4 py-3 text-sm gap-1.5",
   md: "px-6 py-4 text-base gap-2",
   lg: "px-8 py-5 text-lg gap-2.5",
 } as const;
@@ -87,6 +89,8 @@ export function RippleCtaLink({
   const { trigger } = useWebHaptics();
   const lastTapRef = useRef(0);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const pendingModalityRef = useRef<"touch" | "keyboard" | null>(null);
+  const ignoreNextClickRef = useRef(false);
 
   const fireAnalytics = useCallback(
     (modality: "touch" | "mouse" | "keyboard") => {
@@ -114,30 +118,48 @@ export function RippleCtaLink({
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLAnchorElement>) => {
-      // Double-tap guard
-      const now = Date.now();
-      if (now - lastTapRef.current < 250) {
+      if (ignoreNextClickRef.current) {
+        ignoreNextClickRef.current = false;
+        pendingModalityRef.current = null;
         e.preventDefault();
         return;
       }
-      lastTapRef.current = now;
 
-      // Haptics: lower intensity under reduced motion
-      trigger(
-        [{ duration: 35 }],
-        { intensity: shouldReduceMotion ? 0.4 : 1 }
-      );
+      const modality = pendingModalityRef.current ?? "mouse";
+      pendingModalityRef.current = null;
 
-      const rect = e.currentTarget.getBoundingClientRect();
-      spawnRipple(e.clientX - rect.left, e.clientY - rect.top);
+      if (modality !== "keyboard") {
+        // Double-tap guard for pointer/touch activations
+        const now = Date.now();
+        if (now - lastTapRef.current < 250) {
+          e.preventDefault();
+          return;
+        }
+        lastTapRef.current = now;
 
-      fireAnalytics("mouse");
+        // Haptics: lower intensity under reduced motion
+        trigger(
+          [{ duration: 35 }],
+          { intensity: shouldReduceMotion ? 0.4 : 1 }
+        );
+      }
+
+      if (!shouldReduceMotion) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        if (modality === "keyboard") {
+          spawnRipple(rect.width / 2, rect.height / 2);
+        } else {
+          spawnRipple(e.clientX - rect.left, e.clientY - rect.top);
+        }
+      }
+
+      fireAnalytics(modality);
     },
     [shouldReduceMotion, trigger, spawnRipple, fireAnalytics]
   );
 
   const handleTouchStart = useCallback(
-    (e: React.TouchEvent<HTMLAnchorElement>) => {
+    (e: TouchEvent<HTMLAnchorElement>) => {
       const touch = e.touches[0];
       touchStartRef.current = { x: touch.clientX, y: touch.clientY };
     },
@@ -145,7 +167,7 @@ export function RippleCtaLink({
   );
 
   const handleTouchEnd = useCallback(
-    (e: React.TouchEvent<HTMLAnchorElement>) => {
+    (e: TouchEvent<HTMLAnchorElement>) => {
       const start = touchStartRef.current;
       if (!start) return;
       const touch = e.changedTouches[0];
@@ -153,28 +175,26 @@ export function RippleCtaLink({
       const dy = Math.abs(touch.clientY - start.y);
       if (dx > SWIPE_THRESHOLD || dy > SWIPE_THRESHOLD) {
         // Swiping, not tapping — suppress CTA effects
+        ignoreNextClickRef.current = true;
+        pendingModalityRef.current = null;
         e.preventDefault();
         touchStartRef.current = null;
         return;
       }
       touchStartRef.current = null;
-      fireAnalytics("touch");
+      pendingModalityRef.current = "touch";
     },
-    [fireAnalytics]
+    []
   );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLAnchorElement>) => {
-      if (e.key === "Enter" || e.key === " ") {
-        // No haptic on keyboard activation per spec
-        if (!shouldReduceMotion) {
-          const rect = e.currentTarget.getBoundingClientRect();
-          spawnRipple(rect.width / 2, rect.height / 2);
-        }
-        fireAnalytics("keyboard");
+      // Anchor activation is Enter only; Space should not emit activation effects.
+      if (e.key === "Enter") {
+        pendingModalityRef.current = "keyboard";
       }
     },
-    [shouldReduceMotion, spawnRipple, fireAnalytics]
+    []
   );
 
   const removeRipple = useCallback(() => {
@@ -192,7 +212,7 @@ export function RippleCtaLink({
     </span>
   ) : null;
 
-  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center overflow-hidden rounded-full bg-[#111111] font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation ${sizeClasses[size]} ${className ?? ""}`;
+  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center overflow-hidden rounded-full bg-[#111111] font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${className ?? ""}`;
 
   const content = (
     <>

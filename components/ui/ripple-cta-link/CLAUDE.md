@@ -44,7 +44,7 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 - Ripple cap: max 1 active ripple per instance
 - Double-tap guard: ignores duplicate activation within 250ms
 - Swipe guard: in scroll containers, suppresses tap effects when movement exceeds 10px threshold
-- Keyboard: `Enter`/`Space` trigger center-origin ripple; no haptic on keyboard
+- Keyboard: `Enter` triggers center-origin ripple; no haptic on keyboard
 - Desktop: icon nudge on hover/focus
 
 ## Server/Client Boundary
