@@ -29,6 +29,19 @@ This is a Next.js 16 landing page using the App Router architecture with React 1
 ## Conventions
 
 - **Internal links must use `next/link`** — never use a raw `<a>` tag for internal routes. `Link` enables client-side navigation and prefetching. Only use `<a>` for external URLs.
+- **Reusable CTA rule (`RippleCtaLink`)** — use `RippleCtaLink` for **primary internal CTA button-links** (high-intent conversion actions visually presented as buttons).
+  - Use standard `Link`/`<a>` for inline text links in paragraph content, including FAQ answer links.
+  - Keep semantic form actions as `<button type="submit">` (do not replace with CTA link components).
+  - Keep specialized third-party/native controls when `RippleCtaLink` would break semantics or behavior.
+  - External destinations should use native `<a>` patterns unless intentionally using `RippleCtaLink`'s external-anchor behavior.
+
+```tsx
+// Do: primary internal button-style CTA
+<RippleCtaLink href="/rollback-financing" label="See Rollback Financing" />
+
+// Don't: inline FAQ/body copy link
+<Link href="/tow-truck-calculator">tow truck calculator</Link>
+```
 - **Every reusable component directory must include a `CLAUDE.md`** with: one-line description, usage snippet, props/config table, server/client boundary notes, and dependencies.
 
 ## Configuration
