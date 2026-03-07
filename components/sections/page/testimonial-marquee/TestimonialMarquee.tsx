@@ -91,7 +91,7 @@ function ReviewCard({
   }, [isClone, review.body, review.title]);
 
   return (
-    <article className="w-80 shrink-0 rounded-xl border border-gray-200 bg-white p-5">
+    <article className="flex w-80 shrink-0 flex-col rounded-xl border border-gray-200 bg-white p-5">
       {/* Stars */}
       <div className="flex gap-0.5" aria-hidden="true">
         {Array.from({ length: 5 }, (_, i) => (
@@ -129,7 +129,7 @@ function ReviewCard({
         <button
           onClick={onToggle}
           tabIndex={-1}
-          className="mt-1 text-xs font-medium text-[#22C55E] hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2"
+          className="mt-1 cursor-pointer self-start text-xs font-medium text-[#22C55E] hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2"
           aria-label={
             isExpanded
               ? `Collapse review by ${review.author}`
@@ -141,11 +141,10 @@ function ReviewCard({
       )}
 
       {/* Footer */}
-      <div className="mt-3 flex min-w-0 items-center gap-1.5 text-sm text-[#545454]">
+      <div className="mt-auto flex min-w-0 items-center gap-1.5 pt-3 text-sm text-[#545454]">
         <span className="min-w-0 flex-1 truncate font-medium text-[#101820]">
           {review.author}
         </span>
-        <span aria-hidden="true">&middot;</span>
         <GoogleIcon />
       </div>
     </article>
@@ -265,13 +264,13 @@ export function TestimonialMarquee() {
         onTouchCancel={() => setIsHovered(false)}
       >
         {/* Row 1: left-to-right */}
-        <div className="testimonial-track marquee-row-1 flex w-max gap-6">
+        <div className="testimonial-track marquee-row-1 flex w-max items-stretch gap-6">
           {renderRow(ROW_1)}
           {renderClones(ROW_1)}
         </div>
 
         {/* Row 2: right-to-left */}
-        <div className="testimonial-track marquee-row-2 mt-6 flex w-max gap-6">
+        <div className="testimonial-track marquee-row-2 mt-6 flex w-max items-stretch gap-6">
           {renderRow(ROW_2)}
           {renderClones(ROW_2)}
         </div>
