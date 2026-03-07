@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import type { HowItWorksConfig } from "./config";
-import { RippleButton } from "./RippleButton";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 
 const HowItWorksAccordion = dynamic(() =>
   import("./HowItWorksAccordion").then((m) => m.HowItWorksAccordion)
@@ -12,7 +12,6 @@ const ArrowIcon = (
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
-    aria-hidden="true"
   >
     <path
       strokeLinecap="round"
@@ -80,10 +79,12 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
         <HowItWorksAccordion steps={config.steps} />
 
         <div className="mt-12 text-center">
-          <RippleButton href={config.cta.href}>
-            {config.cta.label}
-            {ArrowIcon}
-          </RippleButton>
+          <RippleCtaLink
+            href={config.cta.href}
+            label={config.cta.label}
+            icon={ArrowIcon}
+            section="how-it-works"
+          />
         </div>
       </div>
     </section>

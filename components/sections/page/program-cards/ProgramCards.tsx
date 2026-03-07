@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ProgramCardsConfig } from "./config";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 
 const ArrowIcon = (
   <svg
@@ -7,7 +7,6 @@ const ArrowIcon = (
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
-    aria-hidden="true"
   >
     <path
       strokeLinecap="round"
@@ -48,13 +47,17 @@ export function ProgramCards({ config }: { config: ProgramCardsConfig }) {
               <p className="mt-2 text-sm text-[#545454]">
                 {card.description}
               </p>
-              <Link
-                href={card.linkHref}
-                className="mt-auto pt-6 inline-flex items-center gap-2 text-sm sm:text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-              >
-                {card.linkText}
-                {ArrowIcon}
-              </Link>
+              <div className="mt-auto pt-6">
+                <RippleCtaLink
+                  href={card.linkHref}
+                  label={card.linkText}
+                  icon={ArrowIcon}
+                  size="sm"
+                  section="program-cards"
+                  cardId={card.id}
+                  className="w-full justify-center"
+                />
+              </div>
             </div>
           ))}
         </div>

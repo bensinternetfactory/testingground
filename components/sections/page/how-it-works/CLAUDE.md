@@ -10,19 +10,19 @@ import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-
 <HowItWorks config={HOW_IT_WORKS_CONFIG} />
 ```
 
-## Props — `HowItWorks`
+## Props -- `HowItWorks`
 
 | Prop | Type | Description |
 |---|---|---|
 | `config` | `HowItWorksConfig` | Full config object (see `config.ts` for shape) |
 
-## Props — `HowItWorksAccordion`
+## Props -- `HowItWorksAccordion`
 
 | Prop | Type | Description |
 |---|---|---|
 | `steps` | `HowItWorksStep[]` | Array of process steps |
 
-## Config Shape — `HowItWorksConfig`
+## Config Shape -- `HowItWorksConfig`
 
 | Field | Type | Description |
 |---|---|---|
@@ -30,7 +30,7 @@ import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-
 | `steps` | `HowItWorksStep[]` | Array of process steps |
 | `cta` | `{ label: string; href: string }` | CTA link below the steps |
 
-## Config Shape — `HowItWorksStep`
+## Config Shape -- `HowItWorksStep`
 
 | Field | Type | Description |
 |---|---|---|
@@ -38,21 +38,14 @@ import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-
 | `title` | `string` | Step heading |
 | `description` | `string` | Step body text |
 
-## Props — `RippleButton`
-
-| Prop | Type | Description |
-|---|---|---|
-| `children` | `ReactNode` | Button label and icon passed as children |
-| `href` | `string` | Navigation target — renders as a `next/link` `<Link>` |
-
 ## Server/Client Boundary
 
-- `HowItWorks.tsx` — server component (no `"use client"`)
-- `HowItWorksAccordion.tsx` — **client component** (`"use client"`) for Framer Motion accordion on mobile; dynamically imported via `next/dynamic` for code-splitting into a separate chunk
-- `RippleButton.tsx` — **client component** (`"use client"`) for ripple animation + `next/link` navigation; statically imported (used on all viewports)
-- `config.ts` — server-safe data (can be imported anywhere)
+- `HowItWorks.tsx` -- server component (no `"use client"`)
+- `HowItWorksAccordion.tsx` -- **client component** (`"use client"`) for Framer Motion accordion on mobile; dynamically imported via `next/dynamic` for code-splitting into a separate chunk
+- CTA uses shared `RippleCtaLink` from `@/components/ui/ripple-cta-link` (client component)
+- `config.ts` -- server-safe data (can be imported anywhere)
 
-Desktop grid is server-rendered. The accordion is client-only (lazy-loaded on mobile). `RippleButton` is always hydrated.
+Desktop grid is server-rendered. The accordion is client-only (lazy-loaded on mobile). CTA is always hydrated.
 
 ## Mobile Accordion Behavior
 
@@ -60,39 +53,24 @@ Desktop grid is server-rendered. The accordion is client-only (lazy-loaded on mo
 - **Toggle**: single-open (opening one closes the other)
 - **Default state**: all collapsed
 - **Animation**: Framer Motion `height: "auto"` with `AnimatePresence`; respects `prefers-reduced-motion` via `useReducedMotion()` (instant transitions when enabled)
-- **Tap feedback**: `motion.button` with `whileTap={{ scale: 0.97 }}` — skipped when reduced motion is preferred
+- **Tap feedback**: `motion.button` with `whileTap={{ scale: 0.97 }}` -- skipped when reduced motion is preferred
 - **Touch**: `touch-action-manipulation` on buttons to eliminate 300ms delay
 - **Accessibility**: `aria-expanded`, native `<button>`, `focus-visible` ring with matching `rounded-xl`, `<ol>`/`<li>` semantics
 - **Badge contrast**: `bg-[#15803D]` (green-700) with white text (~4.6:1 ratio, WCAG AA compliant)
 
-## RippleButton
+## CTA
 
-- Renders as a `next/link` `<Link>` (client-side navigation) via `motion.create(Link)`
-- Dark pill CTA matching hero button style (`bg-[#111111]`, `rounded-full`, `px-6 py-4`, white text)
-- Stroke arrow icon inline after label (no circle wrapper)
-- Hover: subtle opacity fade (`hover:bg-[#111111]/90`)
-- Touch-point ripple effect using Framer Motion `motion.span` emanating from click/tap coordinates
-- `whileTap={{ scale: 0.96 }}` for press feedback — skipped when reduced motion is preferred
-- Ripple animation skipped entirely when reduced motion is preferred
-- `touch-action-manipulation` to eliminate 300ms delay
-- Focus ring: `focus-visible:ring-2` with `focus-visible:rounded-full` matching pill shape
-- Ripple spans are `pointer-events-none` and `aria-hidden`
+Uses shared `RippleCtaLink` component. See `components/ui/ripple-cta-link/CLAUDE.md` for interaction details (ripple, haptics, double-tap guard, swipe guard, reduced motion behavior).
 
 ## SEO
 
 - `HowTo` JSON-LD structured data generated from `config.steps` at build time (server component, zero client JS)
 - `scroll-mt-20` on section for correct anchor scroll offset under sticky nav
+- CTA renders as a real `<a>` with crawlable `href`
 
 ## Dependencies
 
 - `framer-motion` (v12+)
 - `next/link`
 - `next/dynamic`
-
-## Vercel React Best Practices
-
-- `rendering-hoist-jsx` — `ArrowIcon` is hoisted at module level (avoids re-creation)
-- `server-serialization` — desktop grid is a pure server component, no client JS shipped
-- `rendering-svg-precision` — arrow and chevron SVGs use integer coordinates
-- `bundle-dynamic-import` — accordion is lazy-loaded via `next/dynamic` (separate chunk)
-- CTA uses `RippleButton` (client component) rendered from server parent — valid RSC pattern
+- `@/components/ui/ripple-cta-link`
