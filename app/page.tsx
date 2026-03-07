@@ -9,6 +9,7 @@ import { MiniROI, MINI_ROI_CONFIG } from "@/components/sections/page/mini-roi";
 import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/truck-gallery";
 import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
+import { TestimonialMarquee } from "@/components/sections/page/testimonial-marquee";
 import { FAQ } from "@/app/FAQ";
 
 /* ------------------------------------------------------------------ */
@@ -284,174 +285,14 @@ export default function Homepage01() {
         <HowItWorks config={HOW_IT_WORKS_CONFIG} />
 
         {/* ============================================================ */}
+        {/* §7 — SOCIAL PROOF (Testimonial Marquee)          bg: gray-50 */}
+        {/* ============================================================ */}
+        <TestimonialMarquee />
+
+        {/* ============================================================ */}
         {/* §4 — REVENUE PROOF (Mini ROI Calculator)         bg: #F0FDF4 */}
         {/* ============================================================ */}
         <MiniROI config={MINI_ROI_CONFIG} />
-
-        {/* ============================================================ */}
-        {/* §7 — SOCIAL PROOF (Testimonials + Stats)           bg: white */}
-        {/* ============================================================ */}
-        <section id="testimonials" className="bg-white py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Trusted by Towing Operators{" "}
-                <span className="text-[#22C55E]">Across the Country</span>
-              </h2>
-            </div>
-
-            {/* Stats bar */}
-            <ul className="mt-16 grid grid-cols-2 gap-8 md:grid-cols-4">
-              {[
-                { value: "$2.8M+", label: "Financed" },
-                { value: "340+", label: "Operators Funded" },
-                { value: "24 hrs", label: "Average Approval" },
-                { value: "4.9/5", label: "Rating" },
-              ].map((stat) => (
-                <li key={stat.label} className="text-center">
-                  <p className="text-3xl font-medium text-[#101820] [font-variant-numeric:tabular-nums]">
-                    {stat.value}
-                  </p>
-                  <p className="mt-2 text-sm text-[#545454]">{stat.label}</p>
-                </li>
-              ))}
-            </ul>
-
-            {/* Testimonials */}
-            <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  quote:
-                    "Got approved on Friday, had the truck Monday. Already booked 4 calls.",
-                  name: "Mike R.",
-                  detail: "3-truck fleet, TX",
-                },
-                {
-                  quote:
-                    "Other lenders wanted 3 years of tax returns. TL approved me in a day.",
-                  name: "Carlos D.",
-                  detail: "First truck, FL",
-                },
-                {
-                  quote:
-                    "The deferred payment let me earn for 90 days before my first bill.",
-                  name: "James W.",
-                  detail: "2-truck fleet, GA",
-                },
-              ].map((t) => (
-                <div
-                  key={t.name}
-                  className="rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]"
-                >
-                  <div
-                    className="font-serif text-5xl leading-none text-[#22C55E]/20"
-                    aria-hidden="true"
-                  >
-                    &ldquo;
-                  </div>
-                  <blockquote className="mt-2 text-lg font-medium leading-relaxed text-[#101820]">
-                    &ldquo;{t.quote}&rdquo;
-                  </blockquote>
-                  <footer className="mt-6 flex items-center gap-4">
-                    <div
-                      className="flex h-11 w-11 items-center justify-center rounded-full bg-[#101820] text-sm font-medium text-white"
-                      aria-hidden="true"
-                    >
-                      {t.name.charAt(0)}
-                    </div>
-                    <div>
-                      <cite className="not-italic text-base font-medium text-[#101820]">
-                        {t.name}
-                      </cite>
-                      <p className="text-sm text-[#545454]">{t.detail}</p>
-                    </div>
-                  </footer>
-                </div>
-              ))}
-            </div>
-
-            {/* Partner logos */}
-            <div className="mt-16 flex flex-wrap items-center justify-center gap-8">
-              {["Jerr-Dan", "Miller", "Century", "Chevron", "Dynamic"].map(
-                (brand) => (
-                  <span
-                    key={brand}
-                    className="rounded-full border border-[#E9E9E9] px-6 py-3 text-sm font-medium text-[#545454]"
-                  >
-                    {brand}
-                  </span>
-                ),
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================================ */}
-        {/* §8 — CALCULATOR TEASER                           bg: #F0FDF4 */}
-        {/* ============================================================ */}
-        <section id="calculator" className="bg-[#F0FDF4] py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="grid items-center gap-12 md:grid-cols-2">
-              {/* Left: copy */}
-              <div>
-                <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                  See Your Payment{" "}
-                  <span className="text-[#22C55E]">Before You Apply</span>
-                </h2>
-
-                <p className="mt-6 text-lg leading-relaxed text-[#545454]">
-                  Know exactly what you&rsquo;ll pay before any commitment. Our
-                  calculator shows your monthly payment AND how many tow calls
-                  cover it.
-                </p>
-
-                <div className="mt-8">
-                  <a
-                    href="/tow-truck-calculator"
-                    className="inline-flex h-12 items-center justify-center rounded-full bg-[#101820] px-8 text-base font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                  >
-                    Calculate Your Payment
-                  </a>
-                </div>
-              </div>
-
-              {/* Right: calculator preview mock */}
-              <div className="rounded-2xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <p className="mb-6 text-sm font-medium tracking-wide text-[#545454] uppercase">
-                  Calculator Preview
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#E9E9E9] pb-4">
-                    <span className="text-sm text-[#545454]">Equipment</span>
-                    <span className="font-medium text-[#101820]">
-                      Rollback
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-[#E9E9E9] pb-4">
-                    <span className="text-sm text-[#545454]">Amount</span>
-                    <span className="font-medium text-[#101820]">$65,000</span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-[#E9E9E9] pb-4">
-                    <span className="text-sm text-[#545454]">
-                      Est. Payment
-                    </span>
-                    <span className="text-xl font-medium text-[#22C55E]">
-                      $1,050/mo
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-[#545454]">
-                      Tow calls to cover
-                    </span>
-                    <span className="font-medium text-[#15803D]">
-                      ~5 calls
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* ============================================================ */}
         {/* §9 — RESOURCE HUB (Content Links for SEO)          bg: white */}
