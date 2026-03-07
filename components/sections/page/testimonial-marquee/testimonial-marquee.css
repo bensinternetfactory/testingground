@@ -1,0 +1,78 @@
+/* ------------------------------------------------------------------ */
+/*  Testimonial marquee scroll animations                              */
+/* ------------------------------------------------------------------ */
+
+@keyframes marquee-scroll-ltr {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-scroll-rtl {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.testimonial-marquee-container {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.testimonial-track {
+  will-change: transform;
+  animation-play-state: paused;
+}
+
+.testimonial-track.marquee-row-1 {
+  animation: marquee-scroll-ltr 150s linear infinite;
+}
+
+.testimonial-track.marquee-row-2 {
+  animation: marquee-scroll-rtl 180s linear infinite;
+}
+
+/* Visible + not paused → running */
+.testimonial-track.marquee-visible {
+  animation-play-state: running;
+}
+
+/* Pause both rows via data attribute (React state) */
+[data-paused="true"] .testimonial-track {
+  animation-play-state: paused;
+}
+
+/* Pause both rows on container hover (CSS fallback) */
+.testimonial-marquee-container:hover .testimonial-track {
+  animation-play-state: paused;
+}
+
+/* Pause both rows when any interactive child has keyboard focus */
+.testimonial-marquee-container:focus-within .testimonial-track {
+  animation-play-state: paused;
+}
+
+/* Mobile: slower speeds (1.5x multiplier) */
+@media (max-width: 767px) {
+  .testimonial-track.marquee-row-1 {
+    animation-duration: 225s;
+  }
+  .testimonial-track.marquee-row-2 {
+    animation-duration: 270s;
+  }
+}
+
+/* Reduced motion: static scrollable strip */
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-track {
+    animation: none !important;
+    overflow-x: auto;
+    width: auto;
+  }
+}
