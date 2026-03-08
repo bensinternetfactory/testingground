@@ -68,16 +68,7 @@ This page is the **Homepage Pillar** targeting "tow truck financing" (~980 month
 |---------|-------------|-------|
 | (none) | — | No links in this section. SEO plan doesn't specify any here. |
 
----
 
-### §8 — CALCULATOR TEASER (lines 1073–1135) | `id="calculator"` | bg: #F0FDF4
-**Purpose:** Push visitors to the calculator tool page.
-
-| Element | Current href | SEO Target | Status |
-|---------|-------------|------------|--------|
-| "Calculate Your Payment" button | `/tow-truck-calculator` | `/tow-truck-calculator` | OK |
-
----
 
 ### §9 — RESOURCE HUB (lines 1140–1361) | `id="resources"` | bg: white
 **Purpose:** SEO content links. Drive internal linking to resource pages.

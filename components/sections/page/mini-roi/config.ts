@@ -9,10 +9,6 @@ export interface MiniROIConfig {
     defaultValue: number;
   };
   assumptions: {
-    purchasePrice: number;
-    downPayment: number;
-    interestRate: number;
-    termMonths: number;
     towsPerDay: number;
     daysPerMonth: number;
   };
@@ -29,16 +25,12 @@ export const MINI_ROI_CONFIG: MiniROIConfig = {
     "Enter what you charge per tow and see your projected profit instantly. Then build a full plan in our calculator.",
   slider: {
     label: "What do you charge per tow?",
-    min: 100,
+    min: 30,
     max: 500,
-    step: 25,
+    step: 10,
     defaultValue: 200,
   },
   assumptions: {
-    purchasePrice: 65_000,
-    downPayment: 6_500,
-    interestRate: 8.5,
-    termMonths: 60,
     towsPerDay: 3,
     daysPerMonth: 22,
   },
