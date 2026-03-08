@@ -5,7 +5,7 @@ import type { HeroLeadGenConfig } from "./config";
 
 export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
   return (
-    <section id="hero" className="bg-white pt-[var(--nav-height)]">
+    <section id="hero" className="bg-white pt-[var(--nav-height)] 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-5 lg:py-20">
         {/* Left column (60%) */}
         <div className="flex flex-col gap-6 lg:col-span-3">

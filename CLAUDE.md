@@ -42,6 +42,11 @@ This is a Next.js 16 landing page using the App Router architecture with React 1
 // Don't: inline FAQ/body copy link
 <Link href="/tow-truck-calculator">tow truck calculator</Link>
 ```
+- **2xl section containment** — every `<section>` and `<footer>` on the page (excluding the navbar) must include these Tailwind classes on its outermost element:
+  ```
+  2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden
+  ```
+  This caps section width at 1536px, centers it, adds subtle left/right borders, and clips overflow. The body background is white, so flanking space is white. The navbar is excluded — it stays full-width.
 - **Every reusable component directory must include a `CLAUDE.md`** with: one-line description, usage snippet, props/config table, server/client boundary notes, and dependencies.
 
 ## Configuration

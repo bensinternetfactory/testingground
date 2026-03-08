@@ -19,7 +19,7 @@ const ArrowIcon = (
 
 export function ProgramCards({ config }: { config: ProgramCardsConfig }) {
   return (
-    <section id="programs" className="bg-white py-20 md:py-28">
+    <section id="programs" className="bg-white py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">

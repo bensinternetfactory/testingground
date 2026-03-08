@@ -51,7 +51,7 @@ export function BrandMarquee() {
   });
 
   return (
-    <section ref={sectionRef} className="bg-[#101820] py-6 md:py-8">
+    <section ref={sectionRef} className="bg-[#101820] py-6 md:py-8 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
       {/* Headline — constrained width */}
       <div className="mx-auto max-w-7xl px-6">
         <p className="mb-4 text-center text-lg font-medium text-white md:text-xl">

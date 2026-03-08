@@ -29,7 +29,7 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
   );
 
   return (
-    <section id="revenue" className="bg-[#F0FDF4] py-20 md:py-28">
+    <section id="revenue" className="bg-[#F0FDF4] py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
       <div className="mx-auto max-w-7xl px-6">
         {/* Headline */}
         <h2 className="text-center text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">

@@ -3,7 +3,7 @@ import type { TruckGalleryConfig } from "./config";
 
 export function TruckGallery({ config }: { config: TruckGalleryConfig }) {
   return (
-    <section id="truck-gallery" aria-label="Tow truck photo gallery" className="md:hidden">
+    <section id="truck-gallery" aria-label="Tow truck photo gallery" className="md:hidden 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
       <div className="grid aspect-[5/3] grid-cols-[50fr_25fr_25fr] grid-rows-2">
         <div className="relative row-span-2">
           <Image

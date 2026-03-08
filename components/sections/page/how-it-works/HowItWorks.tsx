@@ -47,7 +47,7 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
   return (
     <section
       id="how-it-works"
-      className="scroll-mt-20 bg-white py-20 md:py-28"
+      className="scroll-mt-20 bg-white py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden"
     >
       <HowToSchema config={config} />
       <div className="mx-auto max-w-7xl px-6">

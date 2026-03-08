@@ -297,7 +297,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §9 — RESOURCE HUB (Content Links for SEO)          bg: white */}
         {/* ============================================================ */}
-        <section id="resources" className="bg-white py-20 md:py-28">
+        <section id="resources" className="bg-white py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
               <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
@@ -523,7 +523,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §10 — FAQ (SEO + Objection Cleanup)              bg: #F5F5F5 */}
         {/* ============================================================ */}
-        <section id="faq" className="bg-[#F5F5F5] py-20 md:py-28">
+        <section id="faq" className="bg-[#F5F5F5] py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
           <div className="mx-auto max-w-3xl px-6">
             <div className="text-center">
               <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
@@ -538,7 +538,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §11 — FINAL CTA (Value Recap + Close)            bg: #F0FDF4 */}
         {/* ============================================================ */}
-        <section id="final-cta" className="bg-[#F0FDF4] py-20 md:py-28">
+        <section id="final-cta" className="bg-[#F0FDF4] py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
           <div className="mx-auto max-w-7xl px-6">
             <div className="text-center">
               <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
@@ -642,7 +642,7 @@ export default function Homepage01() {
       {/* ============================================================ */}
       {/* §12 — FOOTER                                      bg: #101820 */}
       {/* ============================================================ */}
-      <footer className="bg-[#101820] pt-16 pb-8">
+      <footer className="bg-[#101820] pt-16 pb-8 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
         <div className="mx-auto max-w-7xl px-6">
           {/* Logo */}
           <div className="mb-12">
