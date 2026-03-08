@@ -1,18 +1,45 @@
 import Image from "next/image";
 import type { TruckGalleryConfig } from "./config";
+import { normalizeGridImages } from "./utils";
 
 interface TruckGalleryProps {
   config: TruckGalleryConfig;
   layoutVariant?: "hero-left" | "hero-right";
   sectionId?: string;
+  decorative?: boolean;
   ariaLabel?: string;
+  heroLoading?: "lazy" | "eager";
 }
+
+interface TruckGalleryVariantProps {
+  config: TruckGalleryConfig;
+  sectionId?: string;
+  decorative?: boolean;
+  ariaLabel?: string;
+  heroLoading?: "lazy" | "eager";
+}
+
+const HERO_LEFT_TILE_CLASSES = [
+  "col-start-2 row-start-1",
+  "col-start-3 row-start-1",
+  "col-start-2 row-start-2",
+  "col-start-3 row-start-2",
+] as const;
+
+const HERO_RIGHT_TILE_CLASSES = [
+  "col-start-1 row-start-1",
+  "col-start-2 row-start-1",
+  "col-start-1 row-start-2",
+  "col-start-2 row-start-2",
+] as const;
 
 export function TruckGallery({
   config,
   layoutVariant = "hero-left",
-  sectionId = "truck-gallery",
-  ariaLabel = "Tow truck photo gallery",
+  sectionId,
+  decorative = false,
+  ariaLabel,
+  heroLoading = "lazy",
 }: TruckGalleryProps) {
   const isHeroRight = layoutVariant === "hero-right";
   const gridColsClass = isHeroRight
@@ -22,40 +49,36 @@ export function TruckGallery({
     ? "col-start-3 row-start-1"
     : "col-start-1 row-start-1";
   const smallTileClasses = isHeroRight
-    ? [
-        "col-start-1 row-start-1",
-        "col-start-2 row-start-1",
-        "col-start-1 row-start-2",
-        "col-start-2 row-start-2",
-      ]
-    : [
-        "col-start-2 row-start-1",
-        "col-start-3 row-start-1",
-        "col-start-2 row-start-2",
-        "col-start-3 row-start-2",
-      ];
+    ? HERO_RIGHT_TILE_CLASSES
+    : HERO_LEFT_TILE_CLASSES;
+  const gridImages = normalizeGridImages(config.grid);
 
   return (
-    <section id={sectionId} aria-label={ariaLabel} className="md:hidden 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
+    <section
+      id={sectionId}
+      aria-hidden={decorative ? true : undefined}
+      aria-label={decorative ? undefined : ariaLabel}
+      className="md:hidden"
+    >
       <div className={`grid aspect-[5/3] ${gridColsClass} grid-rows-2`}>
         <div className={`relative row-span-2 ${heroPlacementClass}`}>
           <Image
             src={config.hero.src}
-            alt={config.hero.alt}
+            alt={decorative ? "" : config.hero.alt}
             fill
             sizes="50vw"
-            loading="lazy"
+            loading={heroLoading}
             className="object-cover"
           />
         </div>
-        {config.grid.map((img, index) => (
+        {gridImages.map((img, index) => (
           <div
-            key={img.src}
+            key={`${img.src}-${index}`}
             className={`relative ${smallTileClasses[index]}`}
           >
             <Image
               src={img.src}
-              alt={img.alt}
+              alt={decorative ? "" : img.alt}
               fill
               sizes="25vw"
               loading="lazy"
@@ -65,5 +88,43 @@ export function TruckGallery({
         ))}
       </div>
     </section>
+  );
+}
+
+export function TruckGalleryHeroLeft({
+  config,
+  sectionId = "truck-gallery-hero-left",
+  decorative = true,
+  ariaLabel,
+  heroLoading = "lazy",
+}: TruckGalleryVariantProps) {
+  return (
+    <TruckGallery
+      config={config}
+      layoutVariant="hero-left"
+      sectionId={sectionId}
+      decorative={decorative}
+      ariaLabel={ariaLabel}
+      heroLoading={heroLoading}
+    />
+  );
+}
+
+export function TruckGalleryHeroRight({
+  config,
+  sectionId = "truck-gallery-hero-right",
+  decorative = true,
+  ariaLabel,
+  heroLoading = "lazy",
+}: TruckGalleryVariantProps) {
+  return (
+    <TruckGallery
+      config={config}
+      layoutVariant="hero-right"
+      sectionId={sectionId}
+      decorative={decorative}
+      ariaLabel={ariaLabel}
+      heroLoading={heroLoading}
+    />
   );
 }

@@ -32,14 +32,8 @@
 - Run standard project checks first (`npm run lint`, `npm run build`, and any feature-specific checks), then run MCP validations last.
 
 ### Required MCP validations
-- Playwright MCP validation is mandatory for user-facing behavior and critical flows.
 - Chrome DevTools MCP validation is mandatory for runtime quality checks (console errors, failed network requests, and obvious page/runtime issues).
-- A feature is not considered complete until both MCP validations pass.
-
-### Playwright MCP skill requirement
-- When using Playwright MCP, load and follow the local skill at `.claude/skills/playwright-cli/SKILL.md`.
-- If the MCP client supports skill listing/activation, confirm the Playwright skill is loaded before running Playwright MCP actions.
-- Use the skill’s command patterns and workflow for snapshots/interactions/verification rather than ad-hoc command usage.
+- A feature is not considered complete until Chrome DevTools MCP validation passes as the final gate.
 
 ## Commit & Pull Request Guidelines
 - Follow the repository’s commit style: concise, imperative subjects (for example `Add ...`, `Fix ...`, `Update ...`).

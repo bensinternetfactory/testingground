@@ -7,10 +7,13 @@ import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/pa
 import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-it-works";
 import { MiniROI, MINI_ROI_CONFIG } from "@/components/sections/page/mini-roi";
 import {
-  TruckGallery,
   TRUCK_GALLERY_CONFIG,
   TRUCK_GALLERY_CONFIG_ALT,
-} from "@/components/sections/page/truck-gallery";
+} from "@/components/sections/page/truck-gallery/config";
+import {
+  TruckGalleryHeroLeft,
+  TruckGalleryHeroRight,
+} from "@/components/sections/page/truck-gallery/TruckGallery";
 import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
 import { TestimonialMarquee } from "@/components/sections/page/testimonial-marquee";
@@ -271,11 +274,9 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §2b — TRUCK GALLERY (mobile-only visual break)               */}
         {/* ============================================================ */}
-        <TruckGallery
+        <TruckGalleryHeroLeft
           config={TRUCK_GALLERY_CONFIG}
           sectionId="truck-gallery-top"
-          ariaLabel="Tow truck photo gallery near equipment section"
-          layoutVariant="hero-left"
         />
 
         {/* ============================================================ */}
@@ -306,11 +307,9 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §4b — TRUCK GALLERY (mobile-only visual break)               */}
         {/* ============================================================ */}
-        <TruckGallery
+        <TruckGalleryHeroRight
           config={TRUCK_GALLERY_CONFIG_ALT}
           sectionId="truck-gallery-after-miniroi"
-          ariaLabel="Tow truck photo gallery after mini ROI section"
-          layoutVariant="hero-right"
         />
 
         {/* ============================================================ */}

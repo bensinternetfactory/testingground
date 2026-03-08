@@ -6,13 +6,14 @@ Mobile-only mosaic gallery of tow truck photos. Acts as a visual break between E
 
 ```tsx
 import {
-  TruckGallery,
+  TruckGalleryHeroLeft,
+  TruckGalleryHeroRight,
   TRUCK_GALLERY_CONFIG,
   TRUCK_GALLERY_CONFIG_ALT,
 } from "@/components/sections/page/truck-gallery";
 
-<TruckGallery config={TRUCK_GALLERY_CONFIG} />
-<TruckGallery config={TRUCK_GALLERY_CONFIG_ALT} layoutVariant="hero-right" />
+<TruckGalleryHeroLeft config={TRUCK_GALLERY_CONFIG} sectionId="truck-gallery-top" />
+<TruckGalleryHeroRight config={TRUCK_GALLERY_CONFIG_ALT} sectionId="truck-gallery-after-miniroi" />
 ```
 
 ## Props — `TruckGallery`
@@ -21,8 +22,17 @@ import {
 |---|---|---|
 | `config` | `TruckGalleryConfig` | Full config object (see `config.ts` for shape) |
 | `layoutVariant` | `"hero-left" \| "hero-right"` | Controls where the large hero image appears. Default: `"hero-left"` |
-| `sectionId` | `string` | Section id for unique in-page semantics. Default: `"truck-gallery"` |
-| `ariaLabel` | `string` | Landmark label for screen readers. Default: `"Tow truck photo gallery"` |
+| `sectionId` | `string` | Optional section id for in-page semantics. No default id is injected. |
+| `decorative` | `boolean` | If `true`, section is hidden from assistive tech and all image alt text is forced to empty. Default: `false` |
+| `ariaLabel` | `string` | Landmark label for contentful mode (`decorative={false}` only). |
+| `heroLoading` | `"lazy" \| "eager"` | Loading strategy for the hero image. Default: `"lazy"` |
+
+## Variant Wrappers
+
+| Component | Defaults |
+|---|---|
+| `TruckGalleryHeroLeft` | `layoutVariant="hero-left"`, `decorative={true}`, `sectionId="truck-gallery-hero-left"` |
+| `TruckGalleryHeroRight` | `layoutVariant="hero-right"`, `decorative={true}`, `sectionId="truck-gallery-hero-right"` |
 
 ## Config Shape — `TruckGalleryConfig`
 
@@ -59,5 +69,6 @@ import {
 
 - `TruckGallery.tsx` — server component (no `"use client"`)
 - `config.ts` — server-safe data (can be imported anywhere)
+- `utils.ts` — runtime guards (safe normalization for grid data)
 
 No client boundary needed — the component is entirely static with no interactivity.
