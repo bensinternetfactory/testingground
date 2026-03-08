@@ -4,9 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 interface PaymentFieldProps {
   value: number;
-  isManual: boolean;
   onCommit: (value: number) => void;
-  onReset: () => void;
 }
 
 function fmtDollars(n: number): string {
@@ -22,9 +20,7 @@ function parseDollars(raw: string, fallback: number): number {
 
 export function PaymentField({
   value,
-  isManual,
   onCommit,
-  onReset,
 }: PaymentFieldProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
@@ -63,13 +59,12 @@ export function PaymentField({
     <div className="flex min-w-[170px] flex-col items-start gap-1.5">
       <div className="flex items-center gap-1">
         <span className="text-xs font-medium text-[#545454]">Payment:</span>
-        <div className="relative h-6 min-w-[112px]">
-          <span
-            className={`absolute inset-0 cursor-pointer border-b border-dashed border-gray-400 text-sm font-semibold text-[#101820] [font-variant-numeric:tabular-nums] hover:border-[#22C55E] hover:text-[#15803D] ${
+        <div className="relative min-h-8">
+          <button
+            type="button"
+            className={`inline-flex min-h-8 cursor-pointer items-center px-1 ${
               editing ? "pointer-events-none opacity-0" : "opacity-100"
             }`}
-            role="button"
-            tabIndex={0}
             onClick={openEdit}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -79,11 +74,13 @@ export function PaymentField({
             }}
             aria-label={`Monthly payment ${fmtDollars(value)}. Click to edit.`}
           >
-            {fmtDollars(value)}/mo
-          </span>
+            <span className="border-b border-dashed border-gray-400 text-sm font-semibold text-[#101820] [font-variant-numeric:tabular-nums] hover:border-[#22C55E] hover:text-[#15803D]">
+              {fmtDollars(value)}/mo
+            </span>
+          </button>
 
           <form
-            className={`absolute inset-0 ${
+            className={`absolute inset-0 flex items-center px-1 ${
               editing ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
             onSubmit={(e) => {
@@ -92,7 +89,7 @@ export function PaymentField({
               inputRef.current?.blur();
             }}
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <span className="text-lg font-semibold leading-none text-[#101820]">
                 $
               </span>
@@ -124,7 +121,7 @@ export function PaymentField({
                   }
                   if (e.key === "Escape") cancelEdit();
                 }}
-                className="w-20 rounded-lg border border-gray-300 bg-white px-2 py-0.5 text-center text-sm font-semibold text-[#101820] [font-variant-numeric:tabular-nums] focus:border-[#22C55E] focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30"
+                className="w-24 rounded-lg border border-gray-300 bg-white px-2 py-1 text-center text-base font-semibold text-[#101820] [font-variant-numeric:tabular-nums] focus:border-[#22C55E] focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30 md:w-20 md:py-0.5 md:text-sm"
                 aria-label="Monthly payment amount"
               />
               <span className="text-sm text-[#545454]">/mo</span>
@@ -133,17 +130,6 @@ export function PaymentField({
         </div>
       </div>
 
-      <div className="h-4">
-        <button
-          type="button"
-          onClick={onReset}
-          className={`text-xs text-[#545454] underline decoration-dotted underline-offset-2 hover:text-[#101820] ${
-            isManual ? "" : "pointer-events-none invisible"
-          }`}
-        >
-          Use estimated payment
-        </button>
-      </div>
     </div>
   );
 }

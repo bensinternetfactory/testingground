@@ -39,5 +39,5 @@ export const MINI_ROI_CONFIG: MiniROIConfig = {
     basePath: "/tow-truck-calculator",
   },
   disclaimer:
-    "Estimates only. Actual results vary by market, call volume, and equipment type. Does not include operating expenses beyond the loan payment.",
+    "Estimates only. Click through to create a full truck profit and loss statement.",
 };

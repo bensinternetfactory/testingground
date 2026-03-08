@@ -58,7 +58,7 @@ export function TowRateField({ value, onCommit }: TowRateFieldProps) {
         <button
           type="button"
           onClick={openEdit}
-          className={`group absolute inset-0 flex items-center justify-center gap-2 ${
+          className={`group absolute inset-0 flex cursor-default items-center justify-center gap-2 md:cursor-pointer ${
             editing ? "pointer-events-none opacity-0" : "opacity-100"
           }`}
           aria-label={`Revenue per tow ${fmtDollars(value)}. Click to edit.`}
@@ -67,7 +67,7 @@ export function TowRateField({ value, onCommit }: TowRateFieldProps) {
             {fmtDollars(value)}
           </span>
           <svg
-            className="h-5 w-5 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100"
+            className="h-4 w-4 text-gray-400 opacity-50 transition-opacity md:h-5 md:w-5 md:opacity-100"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

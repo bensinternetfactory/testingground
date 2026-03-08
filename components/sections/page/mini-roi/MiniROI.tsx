@@ -17,7 +17,6 @@ const SLIDER_THUMB_SIZE = 28;
 export function MiniROI({ config }: { config: MiniROIConfig }) {
   const { slider, assumptions } = config;
   const [revenuePerTow, setRevenuePerTow] = useState(slider.defaultValue);
-  const [isManual, setIsManual] = useState(true);
   const [manualPmt, setManualPmt] = useState(1200);
   // --- Custom slider state ---
   const trackRef = useRef<HTMLDivElement>(null);
@@ -109,9 +108,7 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
       ? 100
       : Math.min((r.breakevenTows / r.monthlyCalls) * 100, 100);
 
-  const ctaHref = isManual
-    ? `${config.cta.basePath}?rev=${revenuePerTow}&pmt=${manualPmt}&known=true`
-    : `${config.cta.basePath}?rev=${revenuePerTow}`;
+  const ctaHref = `${config.cta.basePath}?rev=${revenuePerTow}&pmt=${manualPmt}&known=true`;
 
   if (process.env.NODE_ENV !== "production") {
     console.debug("[MiniROI]", {
@@ -247,12 +244,7 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
             <div className="mt-1.5 flex justify-between text-xs text-[#545454]">
               <PaymentField
                 value={manualPmt}
-                isManual={isManual}
-                onCommit={(v) => {
-                  setManualPmt(v);
-                  setIsManual(true);
-                }}
-                onReset={() => setIsManual(false)}
+                onCommit={setManualPmt}
               />
               <span className="[font-variant-numeric:tabular-nums]">
                 {r.monthlyCalls} tows/month
