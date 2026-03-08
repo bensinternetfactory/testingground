@@ -32,3 +32,28 @@ export const TRUCK_GALLERY_CONFIG: TruckGalleryConfig = {
     },
   ],
 };
+
+export const TRUCK_GALLERY_CONFIG_ALT: TruckGalleryConfig = {
+  hero: {
+    src: "/truck-12.jpg",
+    alt: "White heavy wrecker parked near industrial bays",
+  },
+  grid: [
+    {
+      src: "/truck-1.jpg",
+      alt: "Blue rollback tow truck parked at curbside",
+    },
+    {
+      src: "/truck-4.jpg",
+      alt: "Black rollback truck staged beside service building",
+    },
+    {
+      src: "/truck-8.jpg",
+      alt: "Dual-axle red-and-black wrecker in lot",
+    },
+    {
+      src: "/truck-11.jpg",
+      alt: "Blue rollback truck with loading deck raised",
+    },
+  ],
+};

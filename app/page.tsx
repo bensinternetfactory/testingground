@@ -6,7 +6,11 @@ import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/
 import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/page/equipment-cards";
 import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-it-works";
 import { MiniROI, MINI_ROI_CONFIG } from "@/components/sections/page/mini-roi";
-import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/truck-gallery";
+import {
+  TruckGallery,
+  TRUCK_GALLERY_CONFIG,
+  TRUCK_GALLERY_CONFIG_ALT,
+} from "@/components/sections/page/truck-gallery";
 import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
 import { TestimonialMarquee } from "@/components/sections/page/testimonial-marquee";
@@ -267,7 +271,12 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §2b — TRUCK GALLERY (mobile-only visual break)               */}
         {/* ============================================================ */}
-        <TruckGallery config={TRUCK_GALLERY_CONFIG} />
+        <TruckGallery
+          config={TRUCK_GALLERY_CONFIG}
+          sectionId="truck-gallery-top"
+          ariaLabel="Tow truck photo gallery near equipment section"
+          layoutVariant="hero-left"
+        />
 
         {/* ============================================================ */}
         {/* §5 — PROGRAMS (Differentiation Cards)              bg: white */}
@@ -293,6 +302,16 @@ export default function Homepage01() {
         {/* §4 — REVENUE PROOF (Mini ROI Calculator)         bg: #F0FDF4 */}
         {/* ============================================================ */}
         <MiniROI config={MINI_ROI_CONFIG} />
+
+        {/* ============================================================ */}
+        {/* §4b — TRUCK GALLERY (mobile-only visual break)               */}
+        {/* ============================================================ */}
+        <TruckGallery
+          config={TRUCK_GALLERY_CONFIG_ALT}
+          sectionId="truck-gallery-after-miniroi"
+          ariaLabel="Tow truck photo gallery after mini ROI section"
+          layoutVariant="hero-right"
+        />
 
         {/* ============================================================ */}
         {/* §9 — RESOURCE HUB (Content Links for SEO)          bg: white */}

@@ -5,9 +5,14 @@ Mobile-only mosaic gallery of tow truck photos. Acts as a visual break between E
 ## Usage
 
 ```tsx
-import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/truck-gallery";
+import {
+  TruckGallery,
+  TRUCK_GALLERY_CONFIG,
+  TRUCK_GALLERY_CONFIG_ALT,
+} from "@/components/sections/page/truck-gallery";
 
 <TruckGallery config={TRUCK_GALLERY_CONFIG} />
+<TruckGallery config={TRUCK_GALLERY_CONFIG_ALT} layoutVariant="hero-right" />
 ```
 
 ## Props — `TruckGallery`
@@ -15,12 +20,15 @@ import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/t
 | Prop | Type | Description |
 |---|---|---|
 | `config` | `TruckGalleryConfig` | Full config object (see `config.ts` for shape) |
+| `layoutVariant` | `"hero-left" \| "hero-right"` | Controls where the large hero image appears. Default: `"hero-left"` |
+| `sectionId` | `string` | Section id for unique in-page semantics. Default: `"truck-gallery"` |
+| `ariaLabel` | `string` | Landmark label for screen readers. Default: `"Tow truck photo gallery"` |
 
 ## Config Shape — `TruckGalleryConfig`
 
 | Field | Type | Description |
 |---|---|---|
-| `hero` | `TruckGalleryImage` | Large left image (row-span-2) |
+| `hero` | `TruckGalleryImage` | Large feature image (left or right based on `layoutVariant`) |
 | `grid` | `[TruckGalleryImage, TruckGalleryImage, TruckGalleryImage, TruckGalleryImage]` | 4 smaller grid images |
 
 ## Config Shape — `TruckGalleryImage`
@@ -30,7 +38,7 @@ import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/t
 | `src` | `string` | Image path (relative to `public/`) |
 | `alt` | `string` | Alt text for accessibility |
 
-## Layout
+## Layout Variants
 
 ```
 +-------------------------+------------+------------+
@@ -40,9 +48,11 @@ import { TruckGallery, TRUCK_GALLERY_CONFIG } from "@/components/sections/page/t
 +-------------------------+------------+------------+
 ```
 
-- 3-column CSS Grid: `grid-cols-[50fr_25fr_25fr]`, 2 rows
+- `hero-left`: `grid-cols-[50fr_25fr_25fr]`
+- `hero-right`: `grid-cols-[25fr_25fr_50fr]`
+- 2 rows with the hero spanning both rows
 - `aspect-[5/3]` on the container
-- Hero image: `row-span-2` (full height of left column)
+- Hero image: `row-span-2`, placed left or right by variant
 - All images: `fill` + `object-cover`, no gaps, no rounded corners
 
 ## Server/Client Boundary
