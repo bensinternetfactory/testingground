@@ -13,6 +13,7 @@
 - `npm run build`: Build the production bundle (validates routes and types via Next.js).
 - `npm start`: Run the built app in production mode.
 - `npm run lint`: Run ESLint (`eslint.config.mjs` with Next core-web-vitals + TypeScript rules).
+- Agent rule: never start local validation/dev servers on port `3000`; use an alternate port (for example `3001+`) to avoid conflict with the user's active personal preview.
 
 ## Coding Style & Naming Conventions
 - Language: TypeScript (`strict` mode enabled).

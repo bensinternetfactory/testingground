@@ -15,6 +15,7 @@ import {
   TruckGalleryHeroRight,
 } from "@/components/sections/page/truck-gallery/TruckGallery";
 import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
+import { ResourceHub, RESOURCE_HUB_CONFIG } from "@/components/sections/page/resource-hub";
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
 import { TestimonialMarquee } from "@/components/sections/page/testimonial-marquee";
 import { FAQ } from "@/app/FAQ";
@@ -124,6 +125,10 @@ const programCardsConfig = {
     ...card,
     icon: PROGRAM_ICONS[card.id],
   })),
+};
+
+const resourceHubConfig = {
+  ...RESOURCE_HUB_CONFIG,
 };
 
 /* ------------------------------------------------------------------ */
@@ -315,228 +320,7 @@ export default function Homepage01() {
         {/* ============================================================ */}
         {/* §9 — RESOURCE HUB (Content Links for SEO)          bg: white */}
         {/* ============================================================ */}
-        <section id="resources" className="bg-white py-20 md:py-28 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Tow Truck Financing{" "}
-                <span className="text-[#22C55E]">Resources</span>
-              </h2>
-              <p className="mt-4 text-lg text-[#545454]">
-                Everything you need to make a smart decision.
-              </p>
-            </div>
-
-            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {/* Cost Guide */}
-              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <svg
-                  className="h-8 w-8 text-[#101820]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#101820]">
-                  How Much Does a Tow Truck Cost? (2026 Guide)
-                </h3>
-                <p className="mt-2 flex-1 text-sm text-[#545454]">
-                  New, used, by type. Real price ranges.
-                </p>
-                <a
-                  href="/resources/how-much-does-a-tow-truck-cost"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  Read the Guide
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-
-              {/* ROI Guide */}
-              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <svg
-                  className="h-8 w-8 text-[#101820]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#101820]">
-                  Tow Truck ROI: How Fast Does It Pay for Itself?
-                </h3>
-                <p className="mt-2 flex-1 text-sm text-[#545454]">
-                  Revenue math by equipment type.
-                </p>
-                <a
-                  href="/resources/tow-truck-roi"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  See the Math
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-
-              {/* How to Qualify */}
-              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <svg
-                  className="h-8 w-8 text-[#101820]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#101820]">
-                  How to Qualify for Tow Truck Financing
-                </h3>
-                <p className="mt-2 flex-1 text-sm text-[#545454]">
-                  Requirements, docs needed, credit ranges.
-                </p>
-                <a
-                  href="/resources/how-to-qualify"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  Check Requirements
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-
-              {/* Lease vs Loan */}
-              <div className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]">
-                <svg
-                  className="h-8 w-8 text-[#101820]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-                  />
-                </svg>
-                <h3 className="mt-6 text-lg font-medium text-[#101820]">
-                  Lease vs. Loan: Which Is Right for You?
-                </h3>
-                <p className="mt-2 flex-1 text-sm text-[#545454]">
-                  Side-by-side comparison guide.
-                </p>
-                <a
-                  href="/resources/tow-truck-lease-vs-loan"
-                  className="mt-6 inline-flex items-center gap-2 text-base font-medium text-[#101820] transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  Compare Options
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Inline links */}
-            <div className="mt-12 space-y-3 text-center text-base text-[#545454]">
-              <p>
-                Prefer to lease instead of buy?{" "}
-                <a
-                  href="/tow-truck-leasing"
-                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-                >
-                  Explore tow truck leasing options.
-                </a>
-              </p>
-              <p>
-                Planning to start a towing business?{" "}
-                <a
-                  href="/resources/how-to-start-a-towing-business"
-                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-                >
-                  Read our startup guide.
-                </a>
-              </p>
-              <p>
-                Buying before year-end?{" "}
-                <a
-                  href="/resources/section-179-tow-truck"
-                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-                >
-                  Learn about Section 179 tax deductions.
-                </a>
-              </p>
-            </div>
-          </div>
-        </section>
+        <ResourceHub config={resourceHubConfig} />
 
         {/* ============================================================ */}
         {/* §10 — FAQ (SEO + Objection Cleanup)              bg: #F5F5F5 */}
@@ -765,14 +549,17 @@ export default function Homepage01() {
                     label: "Cost Guide",
                     href: "/resources/how-much-does-a-tow-truck-cost",
                   },
-                  { label: "ROI Guide", href: "/resources/tow-truck-roi" },
                   {
-                    label: "How to Qualify",
-                    href: "/resources/how-to-qualify",
+                    label: "ROI + Payment Calculator",
+                    href: "/tow-truck-calculator?angle=roi",
                   },
                   {
-                    label: "Start a Towing Business",
-                    href: "/resources/how-to-start-a-towing-business",
+                    label: "Lease vs Loan",
+                    href: "/resources/tow-truck-lease-vs-loan",
+                  },
+                  {
+                    label: "Financing Companies",
+                    href: "/resources/tow-truck-financing-companies",
                   },
                 ].map((link) => (
                   <li key={link.label}>
