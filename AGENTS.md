@@ -27,6 +27,20 @@
 - Minimum pre-PR checks: `npm run lint` and `npm run build`.
 - If adding tests, place them near features as `*.test.ts` / `*.test.tsx` or in `__tests__/` and document the run command in `package.json`.
 
+## MCP Validation Gate (Final Step for New Features)
+- For every new feature, MCP validations are required and must be the last testing step before completion/PR readiness.
+- Run standard project checks first (`npm run lint`, `npm run build`, and any feature-specific checks), then run MCP validations last.
+
+### Required MCP validations
+- Playwright MCP validation is mandatory for user-facing behavior and critical flows.
+- Chrome DevTools MCP validation is mandatory for runtime quality checks (console errors, failed network requests, and obvious page/runtime issues).
+- A feature is not considered complete until both MCP validations pass.
+
+### Playwright MCP skill requirement
+- When using Playwright MCP, load and follow the local skill at `.claude/skills/playwright-cli/SKILL.md`.
+- If the MCP client supports skill listing/activation, confirm the Playwright skill is loaded before running Playwright MCP actions.
+- Use the skill’s command patterns and workflow for snapshots/interactions/verification rather than ad-hoc command usage.
+
 ## Commit & Pull Request Guidelines
 - Follow the repository’s commit style: concise, imperative subjects (for example `Add ...`, `Fix ...`, `Update ...`).
 - Keep commits focused by feature or fix; avoid mixing refactors with behavior changes.
