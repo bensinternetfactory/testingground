@@ -12,6 +12,8 @@ function fmtDollars(n: number): string {
   return "$" + Math.round(n).toLocaleString("en-US");
 }
 
+const SLIDER_THUMB_SIZE = 28;
+
 export function MiniROI({ config }: { config: MiniROIConfig }) {
   const { slider, assumptions } = config;
   const [revenuePerTow, setRevenuePerTow] = useState(slider.defaultValue);
@@ -27,7 +29,10 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
     (val: number) => {
       const clamped = Math.min(Math.max(val, slider.min), slider.max);
       const trackW = trackRef.current?.offsetWidth ?? 1;
-      return ((clamped - slider.min) / (slider.max - slider.min)) * trackW;
+      const usableW = Math.max(trackW - SLIDER_THUMB_SIZE, 1);
+      return (
+        ((clamped - slider.min) / (slider.max - slider.min)) * usableW
+      );
     },
     [slider.min, slider.max],
   );
@@ -35,7 +40,8 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
   const xToValue = useCallback(
     (x: number) => {
       const trackW = trackRef.current?.offsetWidth ?? 1;
-      const ratio = Math.min(Math.max(x / trackW, 0), 1);
+      const usableW = Math.max(trackW - SLIDER_THUMB_SIZE, 1);
+      const ratio = Math.min(Math.max(x / usableW, 0), 1);
       const raw = slider.min + ratio * (slider.max - slider.min);
       return Math.round(raw / slider.step) * slider.step;
     },
@@ -50,7 +56,8 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
   // Drag handler
   const handleDrag = useCallback(() => {
     const trackW = trackRef.current?.offsetWidth ?? 1;
-    const currentX = Math.min(Math.max(thumbX.get(), 0), trackW);
+    const usableW = Math.max(trackW - SLIDER_THUMB_SIZE, 1);
+    const currentX = Math.min(Math.max(thumbX.get(), 0), usableW);
     const snapped = xToValue(currentX);
 
     if (snapped !== lastSnappedRef.current) {
@@ -161,14 +168,11 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
           </div>
 
           {/* Custom drag slider */}
-          <div
-            className="relative mt-6 touch-none select-none"
-            style={{ height: 28, padding: "0 14px" }}
-          >
+          <div className="relative mt-6 touch-none select-none">
             {/* Track */}
             <div
               ref={trackRef}
-              className="absolute top-1/2 left-[14px] right-[14px] h-2 -translate-y-1/2 rounded-full bg-[#E5E7EB]"
+              className="relative h-3 w-full rounded-full bg-[#E5E7EB]"
             >
               {/* Fill */}
               <div
@@ -186,8 +190,8 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
               aria-valuemax={slider.max}
               aria-valuetext={`$${revenuePerTow} per tow`}
               aria-label="Revenue per tow"
-              className="absolute top-1/2 z-10 h-7 w-7 -translate-y-1/2 cursor-grab rounded-full bg-[#22C55E] shadow-lg active:cursor-grabbing"
-              style={{ x: thumbX, marginLeft: -14 }}
+              className="absolute top-1/2 left-0 z-10 h-7 w-7 -translate-y-1/2 cursor-grab rounded-full bg-[#22C55E] shadow-lg active:cursor-grabbing"
+              style={{ x: thumbX }}
               drag="x"
               dragConstraints={trackRef}
               dragElastic={0}
