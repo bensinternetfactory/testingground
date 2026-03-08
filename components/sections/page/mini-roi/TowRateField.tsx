@@ -1,56 +1,29 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { formatUSD, parseCurrencyInput } from "./currency";
+import { useInlineEditableNumber } from "./useInlineEditableNumber";
 
 interface TowRateFieldProps {
   value: number;
   onCommit: (value: number) => void;
 }
 
-function fmtDollars(n: number): string {
-  return "$" + Math.round(n).toLocaleString("en-US");
-}
-
 function parseTowRate(raw: string, fallback: number): number {
-  const cleaned = raw.replace(/[$,\s]/g, "");
-  const parsed = parseFloat(cleaned);
-  if (Number.isNaN(parsed) || parsed < 1) return fallback;
+  const parsed = parseCurrencyInput(raw);
+  if (parsed === null || parsed < 1) return fallback;
   return parsed;
 }
 
 export function TowRateField({ value, onCommit }: TowRateFieldProps) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const committedRef = useRef(false);
-
-  useEffect(() => {
-    if (editing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-      committedRef.current = false;
-    }
-  }, [editing]);
-
-  const openEdit = useCallback(() => {
-    setDraft(String(value));
-    setEditing(true);
-  }, [value]);
-
-  const commitDraft = useCallback(() => {
-    // Guard against double-commit (form submit + blur both fire)
-    if (committedRef.current) return;
-    committedRef.current = true;
-    const liveValue = inputRef.current?.value ?? draft;
-    const parsed = parseTowRate(liveValue, value);
-    onCommit(parsed);
-    setEditing(false);
-  }, [draft, value, onCommit]);
-
-  const cancelEdit = useCallback(() => {
-    committedRef.current = true; // prevent blur from committing
-    setEditing(false);
-  }, []);
+  const {
+    editing,
+    draft,
+    inputRef,
+    setDraft,
+    openEdit,
+    commitDraft,
+    cancelEdit,
+  } = useInlineEditableNumber({ value, onCommit, parse: parseTowRate });
 
   return (
     <div className="mx-auto mt-2 h-16 w-[230px]">
@@ -58,13 +31,13 @@ export function TowRateField({ value, onCommit }: TowRateFieldProps) {
         <button
           type="button"
           onClick={openEdit}
-          className={`group absolute inset-0 flex cursor-default items-center justify-center gap-2 md:cursor-pointer ${
+          className={`group absolute inset-0 flex cursor-default items-center justify-center gap-2 rounded-lg md:cursor-pointer ${
             editing ? "pointer-events-none opacity-0" : "opacity-100"
-          }`}
-          aria-label={`Revenue per tow ${fmtDollars(value)}. Click to edit.`}
+          } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]/40`}
+          aria-label={`Revenue per tow ${formatUSD(value)}. Click to edit.`}
         >
           <span className="text-5xl font-semibold leading-none text-[#101820] [font-variant-numeric:tabular-nums]">
-            {fmtDollars(value)}
+            {formatUSD(value)}
           </span>
           <svg
             className="h-4 w-4 text-gray-400 opacity-50 transition-opacity md:h-5 md:w-5 md:opacity-100"
@@ -124,7 +97,7 @@ export function TowRateField({ value, onCommit }: TowRateFieldProps) {
                 }
                 if (e.key === "Escape") cancelEdit();
               }}
-              className="w-32 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-center text-5xl font-semibold leading-none text-[#101820] [font-variant-numeric:tabular-nums] focus:border-[#22C55E] focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30"
+              className="w-32 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-center text-5xl font-semibold leading-none text-[#101820] [font-variant-numeric:tabular-nums] focus-visible:border-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]/30"
               aria-label="Revenue per tow"
             />
           </div>
@@ -133,3 +106,5 @@ export function TowRateField({ value, onCommit }: TowRateFieldProps) {
     </div>
   );
 }
+
+export { parseTowRate };

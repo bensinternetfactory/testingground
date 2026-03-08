@@ -1,6 +1,6 @@
 # mini-roi
 
-Interactive mini ROI calculator — shows how few tows cover a monthly truck payment, with custom drag slider, tappable tow rate, editable payment, and weak-state handling.
+Interactive mini ROI calculator that shows how many tows cover a monthly truck payment, with drag slider, editable tow rate, editable payment, and weak-state handling.
 
 ## Usage
 
@@ -21,11 +21,17 @@ import { MiniROI, MINI_ROI_CONFIG } from "@/components/sections/page/mini-roi";
 | Field | Type | Description |
 |---|---|---|
 | `headline` | `{ base: string; accent: string }` | Section heading |
-| `subheadline` | `string` | Descriptive text below heading |
-| `slider` | `{ label, min, max, step, defaultValue }` | Slider config (min=30, max=500, step=10) |
-| `assumptions` | `{ towsPerDay, daysPerMonth }` | Used by `miniRoiCalc` (3 × 22 = 66 calls) |
-| `cta` | `{ label: string; basePath: string }` | CTA button text and calculator path |
+| `subheadline` | `string` | Text below heading |
+| `slider` | `{ label, min, max, step, defaultValue }` | Slider config (default: min=30, max=500, step=10) |
+| `assumptions` | `{ towsPerDay, daysPerMonth }` | Used by `miniRoiCalc` |
+| `cta` | `{ label: string; basePath: string }` | CTA button text and destination path |
 | `disclaimer` | `string` | Fine print below card |
+
+## Value Semantics
+
+- Typed tow-rate value is authoritative for ROI math and CTA query params.
+- Slider remains bounded to configured min/max for drag, keyboard, fill, and ARIA semantics.
+- If typed tow-rate is outside slider range, UI keeps typed value while slider reflects nearest bound.
 
 ## Math Model (`calc.ts`)
 
@@ -38,41 +44,40 @@ annualProfit = monthlyProfit × 12
 isWeak = breakevenTows > monthlyCalls || revenuePerTow ≤ 0
 ```
 
-No external calculator dependencies. Pure function, tested in `__tests__/calc.test.ts`.
+Pure function with tests in `__tests__/calc.test.ts`.
 
 ## Sub-Components
 
 | Component | File | Description |
 |---|---|---|
-| `TowRateField` | `TowRateField.tsx` | Tap-to-edit field for tow rate. No upper bound. Decimals OK. Min $1. |
-| `PaymentField` | `PaymentField.tsx` | Tap-to-edit for payment. Form-wrapped for iOS Done key. Clamp $30–$5,000. |
+| `TowRateField` | `TowRateField.tsx` | Tap-to-edit tow rate. Min $1, no upper bound. |
+| `PaymentField` | `PaymentField.tsx` | Tap-to-edit monthly payment. Clamped to $30–$5,000. |
 
 ## Custom Slider
 
-Framer Motion `drag="x"` thumb on a track div. Features:
-- Snaps to `$step` increments, haptic feedback per step via `web-haptics`
-- `whileTap={{ scale: 1.3 }}` with spring animation
-- Keyboard: Arrow keys ±$step
-- Accessibility: `role="slider"`, `aria-valuenow/min/max/valuetext`
-- When tow rate is typed > slider max ($500), slider stays at max, typed value is authoritative
+Framer Motion `drag="x"` thumb on a track div.
+
+- Snaps to `step` increments
+- Keyboard: Arrow keys, Home, End
+- Accessibility: `role="slider"`, valid `aria-valuenow/min/max/valuetext`
+- Honors reduced motion preference for slider/tap animations
 
 ## CTA Query Handoff
 
-- Manual mode: `?rev={value}&pmt={manualPmt}&known=true`
-- Estimated mode: `?rev={value}`
+- Current mode: `?rev={value}&pmt={manualPmt}&known=true`
 
 ## Server / Client Boundary
 
-- `MiniROI.tsx` — **client** (`"use client"`) for slider state, drag, haptics
+- `MiniROI.tsx` — **client** (`"use client"`) for slider and inline interactions
 - `TowRateField.tsx` — **client** (`"use client"`) for inline edit state
 - `PaymentField.tsx` — **client** (`"use client"`) for inline edit state
 - `config.ts` — server-safe data
 - `calc.ts` — server-safe pure function
+- `currency.ts` / `math.ts` — shared utilities
 
 ## Dependencies
 
 | Dependency | Type |
 |---|---|
-| `framer-motion` | `motion`, `useMotionValue`, `useReducedMotion` for custom slider |
-| `web-haptics` | Haptic feedback on slider step changes |
+| `framer-motion` | `motion`, `useMotionValue`, `useReducedMotion` |
 | `RippleCtaLink` | Primary CTA button-link |
