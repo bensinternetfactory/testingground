@@ -8,14 +8,14 @@ import type { SelectionTileData } from "./config";
 interface TileSelectorProps {
   tiles: SelectionTileData[];
   cta: { label: string; href: string };
-  viewAllLink: string;
+  viewAllLink: { label: string; href: string };
 }
 
 export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
   // Initial value MUST be null (not read from URL/localStorage) to avoid hydration mismatch
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const href = selectedTile
-    ? `${cta.href}?equipment=${selectedTile}`
+    ? buildSelectedHref(cta.href, selectedTile)
     : cta.href;
 
   return (
@@ -38,14 +38,17 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
       {/* Screen reader announcement for tile selection */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {selectedTile
-          ? `${tiles.find((t) => t.id === selectedTile)?.label} selected. The Check Your Options button will include this equipment type.`
+          ? `${tiles.find((t) => t.id === selectedTile)?.label} selected. The ${cta.label} button will include this equipment type.`
           : ""}
       </div>
 
       {/* View all link */}
       <div className="mt-3">
-        <Link href="#" className="text-sm text-[#545454] underline">
-          {viewAllLink}
+        <Link
+          href={viewAllLink.href}
+          className="text-sm text-[#545454] underline"
+        >
+          {viewAllLink.label}
         </Link>
       </div>
 
@@ -58,4 +61,17 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
       </Link>
     </>
   );
+}
+
+function buildSelectedHref(baseHref: string, equipment: string) {
+  if (baseHref.startsWith("#")) {
+    return `?equipment=${equipment}${baseHref}`;
+  }
+
+  const [pathAndQuery, hash = ""] = baseHref.split("#");
+  const separator = pathAndQuery.includes("?") ? "&" : "?";
+
+  return `${pathAndQuery}${separator}equipment=${equipment}${
+    hash ? `#${hash}` : ""
+  }`;
 }

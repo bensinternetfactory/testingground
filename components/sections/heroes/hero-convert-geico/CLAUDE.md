@@ -45,6 +45,12 @@ Icons are **not** imported inside this component. Instead, the consumer page:
 
 This keeps the hero component portable across projects without coupling to specific icon sets.
 
+## Config Notes
+
+- `viewAllLink` is an object: `{ label, href }`
+- `tertiaryLinks` supports additional inline links below the main CTA
+- `tiles` can be any length; the current UI renders them in a two-column grid
+
 ## Server/Client Boundary
 
 - `HeroConvert.tsx` — server component (no "use client")

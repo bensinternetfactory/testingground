@@ -18,7 +18,7 @@ export interface HeroConvertConfig {
   tiles: SelectionTileData[];
   cta: { label: string; href: string };
   tertiaryLinks: { label: string; href: string }[];
-  viewAllLink: string;
+  viewAllLink: { label: string; href: string };
   microcopy: string;
   disclaimer: string;
   heroImage: StaticImageData;
@@ -43,7 +43,7 @@ export const HERO_CONVERT_CONFIG: HeroConvertConfig = {
     { label: "Continue Your Saved Application", href: "#saved" },
     { label: "Talk to a Specialist", href: "#specialist" },
   ],
-  viewAllLink: "View All Equipment Types",
+  viewAllLink: { label: "View All Equipment Types", href: "#" },
   microcopy: "Checking won\u2019t affect your credit score.",
   disclaimer:
     "Subject to credit review. All financing is subject to approval. Terms and conditions apply.",
