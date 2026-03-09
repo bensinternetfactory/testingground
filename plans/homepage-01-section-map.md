@@ -12,63 +12,9 @@ This page is the **Homepage Pillar** targeting "tow truck financing" (~980 month
 
 ## Sections
 
-### §0 — StickyNav (line 137)
-- Component: `<StickyNav />` from `@/components/sections/nav/sticky-nav-rm`
-- Not inline — links are defined in the nav component
+
 
 ---
-
-### §3 — HOW IT WORKS (lines 458–530) | `id="how-it-works"` | bg: white
-**Purpose:** 3-step process. Build trust, reduce friction.
-
-| Element | Current href | SEO Target | Status |
-|---------|-------------|------------|--------|
-| "See Your Payment First" link | `/tow-truck-calculator` | `/tow-truck-calculator` | OK |
-
----
-
-### §4 — REVENUE PROOF (lines 535–639) | `id="revenue"` | bg: #F0FDF4
-**Purpose:** ROI / profitability proof. Show the truck pays for itself.
-
-| Element | Current href | SEO Target Anchor Text | Status |
-|---------|-------------|----------------------|--------|
-| "Calculate YOUR Payment" | `/tow-truck-calculator` | "Calculate your payment" | OK |
-| "See Full ROI Breakdown" | `/resources/tow-truck-roi` | "See how fast a truck pays for itself" | OK (anchor text differs) |
-
----
-
-### §5 — PROGRAMS (lines 644–851) | `id="programs"` | bg: white
-**Purpose:** Differentiation cards showing financing programs.
-
-| Card | Current href | SEO Target Anchor Text | Status |
-|------|-------------|----------------------|--------|
-| $0 Down Financing | `/zero-down-tow-truck-financing` | "Zero down financing" | OK |
-| Fleet Upgrade | `/fleet-financing` | "Fleet expansion programs" | OK |
-| Deferred Payment | `/deferred-payment-tow-truck-financing` | "Deferred payment options" | OK |
-| Private Party Sales | `/private-party-tow-truck-financing` | "Private party & auction financing" | OK |
-
-**Missing per SEO plan:** No link to `/tow-truck-leasing` ("Tow truck leasing options") in this section. SEO spec says body/programs section should link to leasing.
-
----
-
-### §6 — REQUIREMENTS (lines 856–970) | `id="requirements"` | bg: #F5F5F5
-**Purpose:** Objection killer. Show what you need / don't need.
-
-| Element | Current href | SEO Target | Status |
-|---------|-------------|------------|--------|
-| "Check If You Qualify" button | `#pre-approve` | `#pre-approve` | OK |
-| "See Full Requirements" link | `/resources/how-to-qualify` | "See financing requirements" | OK |
-
----
-
-### §7 — SOCIAL PROOF (lines 975–1068) | `id="testimonials"` | bg: white
-**Purpose:** Testimonials + stats + partner logos. No outbound links.
-
-| Element | Current href | Notes |
-|---------|-------------|-------|
-| (none) | — | No links in this section. SEO plan doesn't specify any here. |
-
-
 
 ### §9 — RESOURCE HUB (lines 1140–1361) | `id="resources"` | bg: white
 **Purpose:** SEO content links. Drive internal linking to resource pages.
