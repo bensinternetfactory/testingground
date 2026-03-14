@@ -63,7 +63,7 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
               key={step.number}
               className="flex flex-col rounded-3xl bg-[#F5F5F5] p-8 shadow-[inset_0_0_0_1px_#E9E9E9]"
             >
-              <span className="text-sm font-medium text-[#22C55E]">
+              <span className="text-sm font-medium text-[#15803D]">
                 {step.number}
               </span>
               <h3 className="mt-3 text-xl font-medium text-[#101820]">

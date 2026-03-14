@@ -129,7 +129,7 @@ function ReviewCard({
         <button
           onClick={onToggle}
           tabIndex={-1}
-          className="mt-1 cursor-pointer self-start text-xs font-medium text-[#22C55E] hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2"
+          className="mt-1 cursor-pointer self-start text-xs font-medium text-[#15803D] hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2"
           aria-label={
             isExpanded
               ? `Collapse review by ${review.author}`

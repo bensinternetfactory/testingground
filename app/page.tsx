@@ -330,7 +330,7 @@ export default function Homepage01() {
             <div className="text-center">
               <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Tow Truck Financing{" "}
-                <span className="text-[#22C55E]">FAQ</span>
+                <span className="text-[#15803D]">FAQ</span>
               </h2>
             </div>
             <FAQ faqs={faqs} />
@@ -345,7 +345,7 @@ export default function Homepage01() {
             <div className="text-center">
               <h2 className="text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
                 Ready to Add Revenue to{" "}
-                <span className="text-[#22C55E]">Your Fleet?</span>
+                <span className="text-[#15803D]">Your Fleet?</span>
               </h2>
             </div>
 
@@ -590,7 +590,7 @@ export default function Homepage01() {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-8 flex flex-col items-center justify-between gap-4 text-sm text-white/40 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-between gap-4 text-sm text-white/60 sm:flex-row">
             <p>&copy; 2026 TowLoans. All rights reserved.</p>
             <div className="flex items-center gap-6">
               <a
@@ -614,7 +614,7 @@ export default function Homepage01() {
               <a
                 key={link}
                 href="#"
-                className="text-xs text-white/40 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
+                className="text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
               >
                 {link}
               </a>
