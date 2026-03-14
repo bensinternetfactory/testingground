@@ -39,6 +39,7 @@ export interface RippleCtaLinkAnalyticsPayload {
 export interface RippleCtaLinkProps {
   href: string;
   label: string;
+  children?: ReactNode;
   icon?: ReactNode;
   iconPosition?: "start" | "end";
   size?: "sm" | "md" | "lg";
@@ -46,6 +47,7 @@ export interface RippleCtaLinkProps {
   prefetch?: boolean;
   isPlaceholder?: boolean;
   onAnalyticsEvent?: (payload: RippleCtaLinkAnalyticsPayload) => void;
+  ariaLabel?: string;
   /** Section identifier for analytics */
   section?: string;
   /** Card identifier for analytics */
@@ -74,6 +76,7 @@ const SWIPE_THRESHOLD = 10;
 export function RippleCtaLink({
   href,
   label,
+  children,
   icon,
   iconPosition = "end",
   size = "md",
@@ -81,6 +84,7 @@ export function RippleCtaLink({
   prefetch,
   isPlaceholder = false,
   onAnalyticsEvent,
+  ariaLabel,
   section = "",
   cardId,
 }: RippleCtaLinkProps) {
@@ -217,7 +221,7 @@ export function RippleCtaLink({
   const content = (
     <>
       {iconPosition === "start" && iconElement}
-      {label}
+      {children ?? label}
       {iconPosition === "end" && iconElement}
       {ripple && (
         <motion.span
@@ -244,6 +248,7 @@ export function RippleCtaLink({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onKeyDown={handleKeyDown}
+        aria-label={ariaLabel}
         whileTap={
           shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
         }
@@ -263,6 +268,7 @@ export function RippleCtaLink({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
+      aria-label={ariaLabel}
       whileTap={
         shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
       }

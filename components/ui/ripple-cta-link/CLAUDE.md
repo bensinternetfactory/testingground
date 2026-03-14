@@ -20,7 +20,8 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `href` | `string` | required | Navigation target |
-| `label` | `string` | required | Visible CTA text |
+| `label` | `string` | required | Analytics label and fallback visible CTA text |
+| `children` | `ReactNode` | — | Optional custom CTA content rendered instead of `label` |
 | `icon` | `ReactNode` | — | Optional icon element |
 | `iconPosition` | `"start" \| "end"` | `"end"` | Icon placement relative to label |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | Size variant |
@@ -28,6 +29,7 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 | `prefetch` | `boolean` | — | Next.js prefetch (internal links only) |
 | `isPlaceholder` | `boolean` | `false` | Marks link as placeholder for analytics/QA |
 | `onAnalyticsEvent` | `(payload) => void` | — | Fire-and-forget analytics hook |
+| `ariaLabel` | `string` | — | Explicit accessible name when custom children should stay `aria-hidden` |
 | `section` | `string` | `""` | Section identifier for analytics |
 | `cardId` | `string` | — | Card identifier for analytics |
 
