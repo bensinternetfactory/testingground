@@ -375,7 +375,7 @@ Keep existing footer structure. No changes.
 5. `ProofBlock` — comparison table
 6. `TrustBridge` — step list
 
-### Phase 3: Page Assembly
+### Phase 3: Page Assembly ✅
 7. Rewrite `app/rollback-financing/page.tsx`:
    - Updated metadata + 3 JSON-LD schemas
    - Hero config with new copy, tiles, and drawer-triggering CTA

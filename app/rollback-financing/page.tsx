@@ -4,36 +4,48 @@ import Link from "next/link";
 import truck3 from "@/public/truck-3.jpg";
 import { HeroConvert } from "@/components/sections/heroes/hero-convert-geico";
 import type { HeroConvertConfig } from "@/components/sections/heroes/hero-convert-geico";
-import { HowItWorks } from "@/components/sections/page/how-it-works";
 import {
-  FAQ,
+  FaqSection,
   buildFaqSchema,
 } from "@/components/sections/page/faq";
-import type { FaqItemData } from "@/components/sections/page/faq";
-import type { HowItWorksConfig } from "@/components/sections/page/how-it-works";
+import type { FaqItemData, FaqSectionConfig } from "@/components/sections/page/faq";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { DrawerProvider, DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import { ProofBlock, PROOF_BLOCK_CONFIG } from "@/components/sections/page/proof-block";
+import { BrandMarquee } from "@/components/sections/page/brand-marquee";
+import { TrustBridge, TRUST_BRIDGE_CONFIG } from "@/components/sections/page/trust-bridge";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { Footer, FOOTER_CONFIG } from "@/components/sections/page/footer";
+
+/* ------------------------------------------------------------------ */
+/*  Metadata                                                          */
+/* ------------------------------------------------------------------ */
 
 export const metadata: Metadata = {
-  title: "Rollback & Flatbed Tow Truck Financing | TowLoans",
+  title: "Rollback Financing — Pre-Approved in 30 Seconds | TowLoans",
   description:
-    "Finance a rollback or flatbed tow truck with fast pre-approval, used and private-party deal support, and terms built for towing operators.",
+    "Finance any rollback tow truck — used, private seller, or auction. Pre-approved in 30 seconds with no credit check. Deferred payments up to 180 days. $0 down available.",
   openGraph: {
-    title: "Rollback & Flatbed Tow Truck Financing | TowLoans",
+    title: "Rollback Financing — Pre-Approved in 30 Seconds | TowLoans",
     description:
-      "Built for rollback deals: used trucks, private-party sellers, auctions, and fast pre-approval for tow operators.",
+      "Used trucks, private sellers, auction units. Pre-approved in 30 seconds with no credit check.",
     type: "website",
   },
 };
 
+/* ------------------------------------------------------------------ */
+/*  Hero                                                              */
+/* ------------------------------------------------------------------ */
+
 const heroConfig: HeroConvertConfig = {
-  headline: "Rollback financing built for real tow deals.",
+  headline: "Rollback Tow Truck Financing",
   bodyCopy:
-    "You run a tow business. We finance rollback deals all day. Used trucks, private sellers, auction units, and straight answers on what fits your payment before you waste time chasing a truck.",
+    "Used trucks, private sellers, auction units. We finance the deal as it actually exists — not how a bank wishes it looked. No credit check to get pre-approved. Defer your first payment up to 180 days.",
   tiles: [
     {
-      id: "rollback",
-      label: "Rollback",
+      id: "light-duty",
+      label: "Light Duty",
       icon: (
         <Image
           src="/brand-assets/truck-icons/rollback/rollback-light-green.svg"
@@ -46,8 +58,8 @@ const heroConfig: HeroConvertConfig = {
       ),
     },
     {
-      id: "flatbed",
-      label: "Flatbed",
+      id: "medium-heavy",
+      label: "Medium / Heavy Duty",
       icon: (
         <Image
           src="/brand-assets/truck-icons/rollback/rollback-green.svg"
@@ -60,100 +72,80 @@ const heroConfig: HeroConvertConfig = {
       ),
     },
   ],
-  cta: { label: "Get Pre-Approved for a Rollback", href: "#pre-approve" },
+  cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
   tertiaryLinks: [
     {
       label: "See Your Rollback Payment",
       href: "/tow-truck-calculator?type=rollback",
     },
     {
-      label: "Explore rollback leasing options",
+      label: "Explore rollback leasing",
       href: "/tow-truck-leasing",
     },
   ],
   viewAllLink: { label: "Tow truck financing", href: "/" },
   microcopy:
-    "Start with a soft pull and a straight answer on what your deal looks like.",
+    "No credit check for pre-approval. Approvals use a soft Experian inquiry — your score stays untouched.",
   disclaimer:
     "All financing is subject to credit review and approval. Terms vary by truck, seller, and business profile.",
   heroImage: truck3,
   heroImageAlt: "Rollback tow truck ready for financing",
 };
 
-const processConfig: HowItWorksConfig = {
-  headline: "How rollback financing works",
-  steps: [
-    {
-      number: "Step 01",
-      title: "Start with the truck or the payment",
-      description:
-        "Tell us whether you already found the rollback or just need a payment range that fits your business.",
-    },
-    {
-      number: "Step 02",
-      title: "We review the real deal",
-      description:
-        "Dealer, private seller, auction unit, older truck. We look at the actual deal instead of forcing you into a bank template.",
-    },
-    {
-      number: "Step 03",
-      title: "Move when the truck is ready",
-      description:
-        "Once the deal makes sense, we line up the paperwork and funding so you can get the truck on the road.",
-    },
-  ],
-  cta: {
-    label: "Start Pre-Approval",
-    href: "#pre-approve",
-  },
-};
+/* ------------------------------------------------------------------ */
+/*  FAQ                                                               */
+/* ------------------------------------------------------------------ */
 
 const faqItems: FaqItemData[] = [
   {
-    id: "used-rollback",
-    question: "Can you finance a used rollback tow truck?",
+    id: "credit-score",
+    question: "What credit score do I need for rollback financing?",
     answerText:
-      "Yes. We regularly finance used rollback trucks, including older inventory when the deal and business profile make sense.",
+      "Pre-approval requires no credit check. Full approval uses a soft Experian inquiry. TowLoans works with a range of credit profiles.",
     answerContent: [
       {
         type: "text",
         value:
-          "Yes. Used rollback deals are a big part of what we do. If you're looking at an older truck or trying to buy smart instead of buying new, start with our ",
-      },
-      {
-        type: "link",
-        value: "used tow truck financing",
-        href: "/used-tow-truck-financing",
-      },
-      {
-        type: "text",
-        value: " page, then we can look at the actual truck and seller.",
+          "Pre-approval doesn\u2019t check your credit at all. When you move to full approval, we pull Experian as a soft inquiry \u2014 it won\u2019t affect your score. We work with a range of credit profiles, including operators who\u2019ve been turned down elsewhere.",
       },
     ],
   },
   {
     id: "private-party-auction",
-    question: "Can you finance a rollback from a private seller or auction?",
+    question: "Can I finance a rollback from a private seller or auction?",
     answerText:
-      "Yes. Private-party and auction rollback deals are common here. The key is getting the right truck details, seller information, and transaction structure in front of us early so you get a straight answer fast.",
+      "Yes. TowLoans finances private-party and auction rollback deals when the truck details and transaction structure fit.",
     answerContent: [
       {
         type: "text",
         value:
-          "Yes. Private-party and auction rollback deals are common here. The key is getting the right truck details, seller information, and transaction structure in front of us early so you get a straight answer fast.",
+          "Yes. Private-party and auction rollback deals are common for us. Get the truck details and seller info in front of us early and you\u2019ll get a straight answer fast.",
+      },
+    ],
+  },
+  {
+    id: "pre-approval-speed",
+    question: "How fast can I get pre-approved for a rollback?",
+    answerText:
+      "Pre-approval takes approximately 30 seconds and returns a payment range with no hard credit pull.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "The pre-approval takes about 30 seconds. You\u2019ll see a payment range before you fill out a full application. No hard credit pull, no waiting for a callback.",
       },
     ],
   },
   {
     id: "down-payment",
-    question: "How much down do you need for a rollback?",
+    question: "How much down payment do I need for a rollback?",
     answerText:
-      "Down payment depends on the truck, deal structure, and business profile. Some qualified operators can get zero-down financing.",
+      "Down payment depends on the truck, deal structure, and business profile. Some qualified operators can finance with zero down.",
     answerContent: [
       {
         type: "text",
         value:
-          "It depends on the truck, the deal, and your business profile. Some operators qualify for ",
+          "It depends on the truck, deal structure, and your business profile. Some operators qualify for ",
       },
       {
         type: "link",
@@ -163,20 +155,77 @@ const faqItems: FaqItemData[] = [
       {
         type: "text",
         value:
-          ". Others may need money down to make the payment or structure work.",
+          ". Others may need money down to make the payment work.",
       },
     ],
   },
   {
-    id: "leasing",
-    question: "Can you lease a rollback tow truck?",
+    id: "deferred-payment",
+    question: "Can I defer my first payment on a rollback?",
     answerText:
-      "Yes. Leasing can be a better fit when lower payments or tax treatment matter more than ownership on day one.",
+      "Qualified buyers can defer their first rollback payment up to 180 days.",
     answerContent: [
       {
         type: "text",
         value:
-          "Yes. For some operators, leasing keeps the payment lower or fits their tax strategy better. Compare both paths in our ",
+          "Qualified buyers can defer their first payment up to 180 days. That gives you time to get the truck on the road and generating revenue before payments start.",
+      },
+    ],
+  },
+  {
+    id: "used-rollback",
+    question: "Do you finance used rollback tow trucks?",
+    answerText:
+      "Yes. TowLoans regularly finances used rollback trucks, including older inventory.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "Yes. Used rollback deals are a big part of what we do. If you\u2019re buying smart instead of buying new, check our ",
+      },
+      {
+        type: "link",
+        value: "used tow truck financing",
+        href: "/used-tow-truck-financing",
+      },
+      {
+        type: "text",
+        value: " page or start with pre-approval.",
+      },
+    ],
+  },
+  {
+    id: "rollback-cost",
+    question: "How much does a rollback tow truck cost?",
+    answerText:
+      "Light-duty rollbacks typically cost $40,000\u2013$120,000 and medium/heavy-duty rollbacks range $65,000\u2013$180,000+, depending on condition, chassis, and configuration.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "Light-duty rollbacks (Ford, Ram chassis) typically run $40,000\u2013$85,000 used, $70,000\u2013$120,000 new. Medium and heavy-duty (Hino, Kenworth, Peterbilt) range $65,000\u2013$180,000+ depending on age, bed, and configuration. Use our ",
+      },
+      {
+        type: "link",
+        value: "tow truck calculator",
+        href: "/tow-truck-calculator?type=rollback",
+      },
+      {
+        type: "text",
+        value: " to see what the payment looks like.",
+      },
+    ],
+  },
+  {
+    id: "lease-vs-buy",
+    question: "Should I lease or buy a rollback?",
+    answerText:
+      "Leasing offers lower payments and potential tax advantages. Buying builds equity. The right choice depends on business structure and goals.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "Depends on how you run your business. Leasing keeps payments lower and can work better for taxes. Buying builds equity. Compare both paths in our ",
       },
       {
         type: "link",
@@ -199,68 +248,102 @@ const faqItems: FaqItemData[] = [
     ],
   },
   {
-    id: "fit-payment",
-    question: "How do I know what payment fits my business?",
+    id: "rollback-vs-flatbed",
+    question: "What is the difference between a rollback and a flatbed?",
     answerText:
-      "Start with a rollback payment estimate, then compare the payment to your actual cash flow, call volume, and tax position before finalizing the deal.",
+      "Rollback and flatbed are interchangeable terms for a tow truck with a tilting flat carrier bed. TowLoans finances all variants.",
     answerContent: [
       {
         type: "text",
-        value: "Start with the ",
+        value:
+          'Same truck, different name. "Rollback" and "flatbed" both refer to a tow truck with a tilting flat bed that rolls back to load vehicles. The industry uses both terms. We finance them all.',
       },
-      {
-        type: "link",
-        value: "rollback payment calculator",
-        href: "/tow-truck-calculator?type=rollback",
-      },
+    ],
+  },
+  {
+    id: "section-179",
+    question: "Can I write off my rollback truck with Section 179?",
+    answerText:
+      "Section 179 may allow full deduction of a rollback purchase price in the year of acquisition. Consult a tax professional for specific eligibility.",
+    answerContent: [
       {
         type: "text",
-        value: ", then look at whether a deduction like ",
+        value:
+          "In many cases, yes. Section 179 lets you deduct the full purchase price of qualifying equipment in the year you buy it. Read our ",
       },
       {
         type: "link",
-        value: "Section 179",
+        value: "Section 179 tow truck guide",
         href: "/resources/section-179-tow-truck",
       },
       {
         type: "text",
         value:
-          " changes the picture. We can help you pressure-test the payment against how your business actually runs.",
+          " for details. Talk to your accountant for your specific situation.",
       },
     ],
   },
 ];
 
-const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "Rollback & Flatbed Tow Truck Financing",
-  description:
-    "Rollback financing built for tow operators buying used trucks, private-party units, or auction inventory.",
-  mainEntityOfPage: {
-    "@type": "WebPage",
-    "@id": "https://towloans.com/rollback-financing",
-  },
-  author: {
-    "@type": "Organization",
-    name: "TowLoans",
-  },
-  publisher: {
-    "@type": "Organization",
-    name: "TowLoans",
-  },
+const faqSectionConfig: FaqSectionConfig = {
+  eyebrow: "FAQ",
+  heading: "Rollback financing questions, straight answers.",
+  faqs: faqItems,
 };
 
+/* ------------------------------------------------------------------ */
+/*  JSON-LD Schemas                                                   */
+/* ------------------------------------------------------------------ */
+
 const faqSchema = buildFaqSchema(faqItems);
+
+const financialProductSchema = {
+  "@context": "https://schema.org",
+  "@type": "FinancialProduct",
+  name: "Rollback Tow Truck Financing",
+  description:
+    "Equipment financing for rollback and flatbed tow trucks. Used, private seller, and auction deals. Pre-approval with no credit check.",
+  provider: {
+    "@type": "Organization",
+    name: "TowLoans",
+    url: "https://towloans.com",
+  },
+  feesAndCommissionsSpecification:
+    "Subject to credit review and approval. Terms vary by deal.",
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://towloans.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Rollback Financing",
+      item: "https://towloans.com/rollback-financing",
+    },
+  ],
+};
+
+/* ------------------------------------------------------------------ */
+/*  Page                                                              */
+/* ------------------------------------------------------------------ */
 
 export default function RollbackFinancingPage() {
   return (
     <div className="min-h-screen bg-white font-sans">
-      <JsonLd data={articleSchema} />
       <JsonLd data={faqSchema} />
+      <JsonLd data={financialProductSchema} />
+      <JsonLd data={breadcrumbSchema} />
 
       <a
-        href="#hero"
+        href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-[#22C55E] focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
       >
         Skip to main content
@@ -268,393 +351,82 @@ export default function RollbackFinancingPage() {
 
       <StickyNav />
 
-      <main>
-        <HeroConvert config={heroConfig} />
+      <DrawerProvider>
+        <main id="main-content">
+          <HeroConvert config={heroConfig} />
+          <ProofBlock config={PROOF_BLOCK_CONFIG} />
+          <BrandMarquee />
+          <TrustBridge config={TRUST_BRIDGE_CONFIG} />
+          <FaqSection config={faqSectionConfig} />
 
-        <section className="bg-[#F5F5F5] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="max-w-3xl">
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#15803D]">
-                Why Operators Use Us
+          {/* Closing CTA — dark section */}
+          <section className="bg-[#101820] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
+            <div className="mx-auto max-w-5xl px-6 text-center">
+              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#22C55E]">
+                READY WHEN YOU ARE
               </p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Rollback deals don&apos;t fit a generic truck loan script.
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-5xl">
+                Ready to lock in your rollback?
               </h2>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#545454]">
-                Banks want clean, dealer-paper deals. Tow operators buy where
-                the right truck shows up. That&apos;s why we built this around
-                rollback reality instead of a generic equipment page.
-              </p>
-            </div>
-
-            <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              {[
-                {
-                  title: "Used rollback deals",
-                  body: "Buying smart matters. We regularly review used rollback trucks, including older inventory when the business is solid.",
-                },
-                {
-                  title: "Private-party sellers",
-                  body: "If the right truck is coming from a private seller instead of a dealer, that does not kill the conversation here.",
-                },
-                {
-                  title: "Auction and marketplace units",
-                  body: "We understand auction, online marketplace, and off-lot inventory moves where speed and clarity matter.",
-                },
-                {
-                  title: "Practical deal structure",
-                  body: "Zero down for qualified buyers, deferred starts when available, and terms built around real cash flow.",
-                },
-              ].map((item) => (
-                <article
-                  key={item.title}
-                  className="rounded-3xl bg-white p-8 shadow-[inset_0_0_0_1px_#E9E9E9]"
-                >
-                  <h3 className="text-xl font-medium text-[#101820]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 text-base leading-relaxed text-[#545454]">
-                    {item.body}
-                  </p>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-              <Link
-                href="/used-tow-truck-financing"
-                className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-              >
-                Financing a used rollback
-              </Link>
-              <Link
-                href="/zero-down-tow-truck-financing"
-                className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-              >
-                Zero down rollback financing
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <HowItWorks config={processConfig} />
-
-        <section className="bg-[#F0FDF4] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
-          <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#15803D]">
-                Payment Confidence
-              </p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Know the payment before you chase the truck.
-              </h2>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#545454]">
-                If you already know the truck you want, great. If you don&apos;t,
-                start with the payment. That keeps you from burning time on a
-                rollback that never made sense for your business in the first
-                place.
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/70">
+                You don&apos;t need corporate runaround. You need to know
+                whether the deal works and what the payment looks like.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/tow-truck-calculator?type=rollback"
-                  className="inline-flex h-14 items-center justify-center rounded-full bg-[#101820] px-8 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  See Your Rollback Payment
-                </Link>
-                <Link
-                  href="#pre-approve"
-                  className="inline-flex h-14 items-center justify-center rounded-full border border-[#101820] px-8 text-lg font-medium text-[#101820] transition-colors duration-200 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2"
-                >
-                  Get a Straight Answer
-                </Link>
+              <div className="mt-12">
+                <RippleCtaLink
+                  href={DRAWER_HASH}
+                  label="Get Pre-Approved"
+                  size="lg"
+                  section="closing-cta"
+                  className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"
+                />
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm">
-                <Link
-                  href="/resources/how-much-does-a-tow-truck-cost"
-                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+              <p className="mt-8 text-sm text-white/60">
+                Prefer to talk?{" "}
+                <a
+                  href="tel:+18885550199"
+                  className="font-medium text-white underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
                 >
-                  How much does a rollback cost?
-                </Link>
-                <Link
-                  href="/resources/tow-truck-lease-vs-loan"
-                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-                >
-                  Should you lease or finance your rollback?
-                </Link>
-                <Link
-                  href="/resources/section-179-tow-truck"
-                  className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-                >
-                  Write off your rollback this year
-                </Link>
-              </div>
-            </div>
-
-            <aside className="rounded-[2rem] bg-white p-8 shadow-[inset_0_0_0_1px_#D9F99D]">
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#15803D]">
-                Deal Fit
-              </p>
-              <ul className="mt-6 space-y-5 text-base leading-relaxed text-[#545454]">
-                <li>
-                  Used rollback on your radar? We can look at the actual unit.
-                </li>
-                <li>
-                  Private seller or auction buy? Get the details in front of us
-                  early and we&apos;ll tell you if the structure works.
-                </li>
-                <li>
-                  Need room upfront? Ask about zero down for qualified buyers
-                  and deferred-payment availability.
-                </li>
-              </ul>
-            </aside>
-          </div>
-        </section>
-
-        <section
-          id="faq"
-          className="bg-[#F5F5F5] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200"
-        >
-          <div className="mx-auto max-w-3xl px-6">
-            <div className="text-center">
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#15803D]">
-                FAQ
-              </p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
-                Rollback financing questions, answered straight.
-              </h2>
-            </div>
-            <FAQ faqs={faqItems} />
-          </div>
-        </section>
-
-        <section
-          id="pre-approve"
-          className="bg-[#101820] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200"
-        >
-          <div className="mx-auto max-w-5xl px-6 text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#22C55E]">
-              Ready When You Are
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-5xl">
-              Ready to add a rollback to your fleet?
-            </h2>
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-white/70">
-              You don&apos;t need corporate runaround. You need to know whether
-              the deal works, what the payment looks like, and how fast you can
-              move when the right truck shows up.
-            </p>
-
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {[
-                "Tow-truck-only financing focus",
-                "Used, private-party, and auction rollback deal support",
-                "Fast pre-approval with straight answers",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="rounded-3xl border border-white/10 bg-white/5 p-6 text-white/80"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12">
-              <a
-                href="tel:+18885550199"
-                className="inline-flex h-14 items-center justify-center rounded-full bg-[#22C55E] px-10 text-lg font-medium text-[#101820] transition-colors duration-200 hover:bg-[#86EFAC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-              >
-                Call (888) 555-0199
-              </a>
-              <p className="mt-5 text-sm text-white/60">
-                Mon-Fri 8am-6pm CT | Tow truck financing specialists
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-10 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-[#545454]">
-              <Link
-                href="/wrecker-financing"
-                className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-              >
-                Need a wrecker instead?
-              </Link>
-              <Link
-                href="/rotator-financing"
-                className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-              >
-                Looking at rotators?
-              </Link>
-              <Link
-                href="/"
-                className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-              >
-                Tow truck financing
-              </Link>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="bg-[#101820] pt-16 pb-8 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12">
-            <Link href="/">
-              <Image
-                src="/brand-assets/logo/towloans-light-logo.svg"
-                alt="TowLoans"
-                width={191}
-                height={28}
-              />
-            </Link>
-          </div>
-
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <h3 className="text-lg font-medium text-white">Financing</h3>
-              <ul className="mt-4 space-y-3">
-                {[
-                  { label: "Rollback", href: "/rollback-financing" },
-                  { label: "Wrecker", href: "/wrecker-financing" },
-                  { label: "Rotator", href: "/rotator-financing" },
-                  {
-                    label: "Used Trucks",
-                    href: "/used-tow-truck-financing",
-                  },
-                ].map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium text-white">Leasing</h3>
-              <ul className="mt-4 space-y-3">
-                {[
-                  { label: "Tow Truck Leasing", href: "/tow-truck-leasing" },
-                  {
-                    label: "Lease vs Loan",
-                    href: "/resources/tow-truck-lease-vs-loan",
-                  },
-                ].map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium text-white">Programs</h3>
-              <ul className="mt-4 space-y-3">
-                {[
-                  { label: "Fleet Expansion", href: "/fleet-financing" },
-                  {
-                    label: "Zero Down",
-                    href: "/zero-down-tow-truck-financing",
-                  },
-                  {
-                    label: "Deferred Pay",
-                    href: "/deferred-payment-tow-truck-financing",
-                  },
-                  {
-                    label: "Private Party",
-                    href: "/private-party-tow-truck-financing",
-                  },
-                ].map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium text-white">Resources</h3>
-              <ul className="mt-4 space-y-3">
-                {[
-                  { label: "Calculator", href: "/tow-truck-calculator" },
-                  {
-                    label: "Cost Guide",
-                    href: "/resources/how-much-does-a-tow-truck-cost",
-                  },
-                  {
-                    label: "Lease vs Loan",
-                    href: "/resources/tow-truck-lease-vs-loan",
-                  },
-                  {
-                    label: "Section 179",
-                    href: "/resources/section-179-tow-truck",
-                  },
-                ].map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-4 border-t border-white/10 pt-8">
-            {["BBB Accredited", "SSL Secured", "Built for tow operators"].map(
-              (badge) => (
-                <span
-                  key={badge}
-                  className="rounded-full border border-white/20 px-4 py-2 text-xs font-medium text-white/60"
-                >
-                  {badge}
+                  (888)&nbsp;555-0199
+                </a>
+                <span className="ml-2 text-white/40">
+                  Mon-Fri 8am-6pm CT
                 </span>
-              ),
-            )}
-          </div>
-
-          <div className="mt-8 flex flex-col items-center justify-between gap-4 text-sm text-white/40 sm:flex-row">
-            <p>&copy; 2026 TowLoans. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <a
-                href="tel:+18885550199"
-                className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-              >
-                (888)&nbsp;555-0199
-              </a>
-              <a
-                href="mailto:info@towloans.com"
-                className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820]"
-              >
-                info@towloans.com
-              </a>
+              </p>
             </div>
-          </div>
-        </div>
-      </footer>
+          </section>
+
+          {/* Related Links */}
+          <section className="bg-white py-10 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
+            <div className="mx-auto max-w-7xl px-6">
+              <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-[#545454]">
+                <Link
+                  href="/wrecker-financing"
+                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+                >
+                  Need a wrecker instead?
+                </Link>
+                <Link
+                  href="/rotator-financing"
+                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+                >
+                  Looking at rotators?
+                </Link>
+                <Link
+                  href="/"
+                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+                >
+                  Tow truck financing
+                </Link>
+              </div>
+            </div>
+          </section>
+        </main>
+      </DrawerProvider>
+
+      <Footer config={FOOTER_CONFIG} />
     </div>
   );
 }

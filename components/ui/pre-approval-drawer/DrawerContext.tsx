@@ -37,22 +37,37 @@ export function useDrawer(): DrawerContextValue {
 
 function DrawerHashListener({ open }: { open: () => void }) {
   useEffect(() => {
-    // Open on initial load if hash is present
+    // Open on initial load if hash is present (direct URL access)
     if (window.location.hash === DRAWER_HASH) {
       open();
       history.replaceState(null, "", window.location.pathname + window.location.search);
     }
 
+    // Fallback: native hashchange (browser back/forward, plain <a> tags)
     function handleHashChange() {
       if (window.location.hash === DRAWER_HASH) {
         open();
-        // Clear the hash so back button goes to previous page, not drawer-open state
         history.replaceState(null, "", window.location.pathname + window.location.search);
       }
     }
 
+    // Primary: intercept clicks on any link targeting DRAWER_HASH
+    function handleClick(e: MouseEvent) {
+      const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[href]");
+      if (!anchor) return;
+      const href = anchor.getAttribute("href") || "";
+      if (href === DRAWER_HASH || href.endsWith(DRAWER_HASH)) {
+        e.preventDefault();
+        open();
+      }
+    }
+
     window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
+    document.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+      document.removeEventListener("click", handleClick);
+    };
   }, [open]);
 
   return null;
