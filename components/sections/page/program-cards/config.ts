@@ -1,10 +1,8 @@
-import { ReactNode } from "react";
-
 export interface ProgramCardData {
   id: string;
   title: string;
   description: string;
-  icon: ReactNode;
+  iconId: "zero-down" | "fleet" | "deferred" | "private-party";
   iconClassName?: string;
   linkText: string;
   linkHref: string;
@@ -25,7 +23,7 @@ export const PROGRAM_CARDS_CONFIG: ProgramCardsConfig = {
       title: "$0 Down Financing",
       description:
         "Keep your cash. Start earning from day one. Qualify with strong business history.",
-      icon: null,
+      iconId: "zero-down",
       linkText: "See Zero Down",
       linkHref: "/zero-down-tow-truck-financing",
     },
@@ -34,7 +32,7 @@ export const PROGRAM_CARDS_CONFIG: ProgramCardsConfig = {
       title: "Fleet Upgrade",
       description:
         "Special rates when you\u2019re adding truck #2, #3, or #10 to your fleet.",
-      icon: null,
+      iconId: "fleet",
       linkText: "Fleet Programs",
       linkHref: "/fleet-financing",
     },
@@ -43,7 +41,7 @@ export const PROGRAM_CARDS_CONFIG: ProgramCardsConfig = {
       title: "Deferred Payment",
       description:
         "$99 touch payments for up to 180 days while your truck ramps up.",
-      icon: null,
+      iconId: "deferred",
       linkText: "See Deferred Options",
       linkHref: "/deferred-payment-tow-truck-financing",
     },
@@ -52,7 +50,7 @@ export const PROGRAM_CARDS_CONFIG: ProgramCardsConfig = {
       title: "Private Party Sales",
       description:
         "Finance trucks from Facebook Marketplace, auctions, or private sellers.",
-      icon: null,
+      iconId: "private-party",
       linkText: "Private Party Financing",
       linkHref: "/",
     },

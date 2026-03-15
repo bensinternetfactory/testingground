@@ -1,10 +1,8 @@
-import { ReactNode } from "react";
-
 export interface EquipmentCardData {
   id: string;
   title: string;
   description: string;
-  icon: ReactNode;
+  iconId: "rollback" | "wrecker" | "rotator" | "used";
   iconClassName?: string;
   linkText: string;
   linkHref: string;
@@ -24,7 +22,7 @@ export const EQUIPMENT_CARDS_CONFIG: EquipmentCardsConfig = {
       id: "rollback",
       title: "Rollback / Flatbed",
       description: "Most popular first truck",
-      icon: null,
+      iconId: "rollback",
       linkText: "See Rollback Financing",
       linkHref: "/rollback-financing",
     },
@@ -32,7 +30,7 @@ export const EQUIPMENT_CARDS_CONFIG: EquipmentCardsConfig = {
       id: "wrecker",
       title: "Wrecker",
       description: "Light, medium & heavy",
-      icon: null,
+      iconId: "wrecker",
       linkText: "See Wrecker Financing",
       linkHref: "/wrecker-financing",
     },
@@ -40,7 +38,7 @@ export const EQUIPMENT_CARDS_CONFIG: EquipmentCardsConfig = {
       id: "rotator",
       title: "Rotator",
       description: "50-75 ton heavy recovery",
-      icon: null,
+      iconId: "rotator",
       linkText: "See Rotator Financing",
       linkHref: "/rotator-financing",
     },
@@ -48,7 +46,8 @@ export const EQUIPMENT_CARDS_CONFIG: EquipmentCardsConfig = {
       id: "used",
       title: "Used Tow Trucks",
       description: "Any age. Any milage. Any source.",
-      icon: null,
+      iconId: "used",
+      iconClassName: "!w-auto",
       linkText: "Used Tow Truck Financing",
       linkHref: "/used-tow-truck-financing",
     },

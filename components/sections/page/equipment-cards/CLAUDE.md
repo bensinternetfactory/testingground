@@ -6,23 +6,8 @@ Grid of equipment category cards with icons, descriptions, and CTA button-links.
 
 ```tsx
 import { EquipmentCards, EQUIPMENT_CARDS_CONFIG } from "@/components/sections/page/equipment-cards";
-import Image from "next/image";
 
-// Icons are injected at the page level -- the component is icon-agnostic
-const CARD_ICONS: Record<string, React.ReactNode> = {
-  rollback: <Image src="/truck-icons/rollback.svg" alt="Rollback" width={150} height={43} className="h-6 w-auto" />,
-  // ...
-};
-
-const config = {
-  ...EQUIPMENT_CARDS_CONFIG,
-  cards: EQUIPMENT_CARDS_CONFIG.cards.map((card) => ({
-    ...card,
-    icon: CARD_ICONS[card.id],
-  })),
-};
-
-<EquipmentCards config={config} />
+<EquipmentCards config={EQUIPMENT_CARDS_CONFIG} />
 ```
 
 ## Props -- `EquipmentCards`
@@ -35,22 +20,18 @@ const config = {
 
 | Field | Type | Description |
 |---|---|---|
-| `id` | `string` | Unique card identifier (used for icon injection) |
+| `id` | `string` | Unique card identifier |
 | `title` | `string` | Card heading |
 | `description` | `string` | Short description text |
-| `icon` | `ReactNode` | Icon element (decoupled -- passed by consumer) |
+| `iconId` | union | Icon token resolved by the section |
 | `iconClassName` | `string?` | Optional extra classes on the icon wrapper |
 | `linkText` | `string` | CTA link label |
 | `linkHref` | `string` | CTA link destination |
 
-## Icon Decoupling Pattern
+## Icon Resolution
 
-Icons are **not** imported inside this component. Instead, the consumer page:
-1. Imports icon components (e.g., `next/image` with SVGs from `public/brand-assets/`)
-2. Creates a map: `{ rollback: <Image ... />, wrecker: <Image ... /> }`
-3. Spreads icons onto the config cards before passing to `<EquipmentCards>`
-
-This keeps the component portable without coupling to specific icon sets.
+Icons are resolved inside the section from `iconId`, so the author-facing config
+stays serializable and page components do not need to rewrite card data.
 
 ## Server/Client Boundary
 

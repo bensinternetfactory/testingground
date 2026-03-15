@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import truck3 from "@/public/truck-3.jpg";
-import { FAQ } from "@/app/FAQ";
 import { HeroConvert } from "@/components/sections/heroes/hero-convert-geico";
 import type { HeroConvertConfig } from "@/components/sections/heroes/hero-convert-geico";
 import { HowItWorks } from "@/components/sections/page/how-it-works";
+import {
+  FAQ,
+  buildFaqSchema,
+} from "@/components/sections/page/faq";
+import type { FaqItemData } from "@/components/sections/page/faq";
 import type { HowItWorksConfig } from "@/components/sections/page/how-it-works";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { JsonLd } from "@/components/shared/JsonLd";
@@ -104,94 +108,126 @@ const processConfig: HowItWorksConfig = {
   },
 };
 
-const faqItems = [
+const faqItems: FaqItemData[] = [
   {
+    id: "used-rollback",
     question: "Can you finance a used rollback tow truck?",
-    answer: (
-      <>
-        Yes. Used rollback deals are a big part of what we do. If you&apos;re
-        looking at an older truck or trying to buy smart instead of buying new,
-        start with our <Link
-          href="/used-tow-truck-financing"
-          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-        >
-          used tow truck financing
-        </Link>{" "}
-        page, then we can look at the actual truck and seller.
-      </>
-    ),
-    schemaAnswer:
+    answerText:
       "Yes. We regularly finance used rollback trucks, including older inventory when the deal and business profile make sense.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "Yes. Used rollback deals are a big part of what we do. If you're looking at an older truck or trying to buy smart instead of buying new, start with our ",
+      },
+      {
+        type: "link",
+        value: "used tow truck financing",
+        href: "/used-tow-truck-financing",
+      },
+      {
+        type: "text",
+        value: " page, then we can look at the actual truck and seller.",
+      },
+    ],
   },
   {
+    id: "private-party-auction",
     question: "Can you finance a rollback from a private seller or auction?",
-    answer:
+    answerText:
       "Yes. Private-party and auction rollback deals are common here. The key is getting the right truck details, seller information, and transaction structure in front of us early so you get a straight answer fast.",
-    schemaAnswer:
-      "Yes. Private-party and auction rollback deals can be financed when the truck details, seller information, and transaction structure fit underwriting.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "Yes. Private-party and auction rollback deals are common here. The key is getting the right truck details, seller information, and transaction structure in front of us early so you get a straight answer fast.",
+      },
+    ],
   },
   {
+    id: "down-payment",
     question: "How much down do you need for a rollback?",
-    answer: (
-      <>
-        It depends on the truck, the deal, and your business profile. Some
-        operators qualify for <Link
-          href="/zero-down-tow-truck-financing"
-          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-        >
-          zero-down tow truck financing
-        </Link>
-        . Others may need money down to make the payment or structure work.
-      </>
-    ),
-    schemaAnswer:
+    answerText:
       "Down payment depends on the truck, deal structure, and business profile. Some qualified operators can get zero-down financing.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "It depends on the truck, the deal, and your business profile. Some operators qualify for ",
+      },
+      {
+        type: "link",
+        value: "zero-down tow truck financing",
+        href: "/zero-down-tow-truck-financing",
+      },
+      {
+        type: "text",
+        value:
+          ". Others may need money down to make the payment or structure work.",
+      },
+    ],
   },
   {
+    id: "leasing",
     question: "Can you lease a rollback tow truck?",
-    answer: (
-      <>
-        Yes. For some operators, leasing keeps the payment lower or fits their
-        tax strategy better. Compare both paths in our <Link
-          href="/resources/tow-truck-lease-vs-loan"
-          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-        >
-          tow truck lease vs. loan guide
-        </Link>{" "}
-        or go straight to <Link
-          href="/tow-truck-leasing"
-          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-        >
-          tow truck leasing
-        </Link>
-        .
-      </>
-    ),
-    schemaAnswer:
+    answerText:
       "Yes. Leasing can be a better fit when lower payments or tax treatment matter more than ownership on day one.",
+    answerContent: [
+      {
+        type: "text",
+        value:
+          "Yes. For some operators, leasing keeps the payment lower or fits their tax strategy better. Compare both paths in our ",
+      },
+      {
+        type: "link",
+        value: "tow truck lease vs. loan guide",
+        href: "/resources/tow-truck-lease-vs-loan",
+      },
+      {
+        type: "text",
+        value: " or go straight to ",
+      },
+      {
+        type: "link",
+        value: "tow truck leasing",
+        href: "/tow-truck-leasing",
+      },
+      {
+        type: "text",
+        value: ".",
+      },
+    ],
   },
   {
+    id: "fit-payment",
     question: "How do I know what payment fits my business?",
-    answer: (
-      <>
-        Start with the <Link
-          href="/tow-truck-calculator?type=rollback"
-          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-        >
-          rollback payment calculator
-        </Link>
-        , then look at whether a deduction like <Link
-          href="/resources/section-179-tow-truck"
-          className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
-        >
-          Section 179
-        </Link>{" "}
-        changes the picture. We can help you pressure-test the payment against
-        how your business actually runs.
-      </>
-    ),
-    schemaAnswer:
+    answerText:
       "Start with a rollback payment estimate, then compare the payment to your actual cash flow, call volume, and tax position before finalizing the deal.",
+    answerContent: [
+      {
+        type: "text",
+        value: "Start with the ",
+      },
+      {
+        type: "link",
+        value: "rollback payment calculator",
+        href: "/tow-truck-calculator?type=rollback",
+      },
+      {
+        type: "text",
+        value: ", then look at whether a deduction like ",
+      },
+      {
+        type: "link",
+        value: "Section 179",
+        href: "/resources/section-179-tow-truck",
+      },
+      {
+        type: "text",
+        value:
+          " changes the picture. We can help you pressure-test the payment against how your business actually runs.",
+      },
+    ],
   },
 ];
 
@@ -215,18 +251,7 @@ const articleSchema = {
   },
 };
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqItems.map((faq) => ({
-    "@type": "Question",
-    name: faq.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.schemaAnswer,
-    },
-  })),
-};
+const faqSchema = buildFaqSchema(faqItems);
 
 export default function RollbackFinancingPage() {
   return (

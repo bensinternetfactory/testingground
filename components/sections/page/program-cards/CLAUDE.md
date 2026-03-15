@@ -7,7 +7,7 @@ Grid of financing program cards with icons, descriptions, and CTA button-links. 
 ```tsx
 import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/program-cards";
 
-<ProgramCards config={config} />
+<ProgramCards config={PROGRAM_CARDS_CONFIG} />
 ```
 
 ## Props -- `ProgramCards`
@@ -23,7 +23,7 @@ import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/p
 | `id` | `string` | Unique card identifier |
 | `title` | `string` | Card heading |
 | `description` | `string` | Short description text |
-| `icon` | `ReactNode` | Icon element (decoupled -- passed by consumer) |
+| `iconId` | union | Icon token resolved by the section |
 | `iconClassName` | `string?` | Optional extra classes on the icon wrapper |
 | `linkText` | `string` | CTA link label |
 | `linkHref` | `string` | CTA link destination |

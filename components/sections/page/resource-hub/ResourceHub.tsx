@@ -84,6 +84,7 @@ export function ResourceHub({ config }: { config: ResourceHubConfig }) {
                   <h3 className="mt-4 text-base font-medium tracking-tight text-[#101820] min-[321px]:text-xl min-[321px]:tracking-normal">
                     <Link
                       href={card.titleHref}
+                      prefetch={false}
                       className="underline-offset-4 transition-colors hover:text-[#22C55E] hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820]"
                     >
                       {card.title}
@@ -96,6 +97,7 @@ export function ResourceHub({ config }: { config: ResourceHubConfig }) {
                 <div className="mt-auto pt-6">
                   <RippleCtaLink
                     href={card.linkHref}
+                    prefetch={false}
                     label={card.linkText}
                     icon={ArrowIcon}
                     size="sm"
@@ -115,6 +117,7 @@ export function ResourceHub({ config }: { config: ResourceHubConfig }) {
               {link.prefixText}{" "}
               <Link
                 href={link.linkHref}
+                prefetch={false}
                 className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
               >
                 {link.linkText}
