@@ -371,7 +371,7 @@ Keep existing footer structure. No changes.
 3. `PreApprovalDrawer.tsx` — sheet (mobile) + modal (desktop)
 4. `config.ts`, `index.ts`, `CLAUDE.md`
 
-### Phase 2: New Sections (parallel)
+### Phase 2: New Sections (parallel) ✅
 5. `ProofBlock` — comparison table
 6. `TrustBridge` — step list
 
