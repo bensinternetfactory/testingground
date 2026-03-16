@@ -2,28 +2,40 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { SelectionTile } from "./SelectionTile";
 import type { SelectionTileData } from "./config";
 
 interface TileSelectorProps {
   tiles: SelectionTileData[];
   cta: { label: string; href: string };
-  viewAllLink: { label: string; href: string };
+  selectionPrompt: string;
+  selectionRequiredMessage: string;
+  viewAllLink?: { label: string; href: string };
 }
 
-export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
+export function TileSelector({
+  tiles,
+  cta,
+  selectionPrompt,
+  selectionRequiredMessage,
+  viewAllLink,
+}: TileSelectorProps) {
   // Initial value MUST be null (not read from URL/localStorage) to avoid hydration mismatch
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
-  const href = selectedTile
-    ? buildSelectedHref(cta.href, selectedTile)
-    : cta.href;
+  const selectedLabel = tiles.find((tile) => tile.id === selectedTile)?.label;
 
   return (
     <>
+      <p className="text-base font-semibold leading-6 text-[#101820] sm:text-[1.0625rem]">
+        {selectionPrompt}
+      </p>
+
       <div
         role="group"
         aria-label="Equipment types"
-        className="grid grid-cols-2 gap-3"
+        className="grid grid-cols-2 gap-2.5 sm:gap-3"
       >
         {tiles.map((tile) => (
           <SelectionTile
@@ -35,43 +47,38 @@ export function TileSelector({ tiles, cta, viewAllLink }: TileSelectorProps) {
         ))}
       </div>
 
-      {/* Screen reader announcement for tile selection */}
-      <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {selectedTile
-          ? `${tiles.find((t) => t.id === selectedTile)?.label} selected. The ${cta.label} button will include this equipment type.`
-          : ""}
-      </div>
+      <p
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {selectedLabel
+          ? `${selectedLabel} selected. Continue to estimate your financing.`
+          : selectionRequiredMessage}
+      </p>
 
-      {/* View all link */}
-      <div className="mt-3">
-        <Link
-          href={viewAllLink.href}
-          className="text-sm text-[#545454] underline"
-        >
-          {viewAllLink.label}
-        </Link>
-      </div>
+      {viewAllLink ? (
+        <div className="mt-3">
+          <Link
+            href={viewAllLink.href}
+            prefetch={false}
+            className="rounded-sm text-sm text-[#545454] underline underline-offset-4 transition-colors hover:text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+          >
+            {viewAllLink.label}
+          </Link>
+        </div>
+      ) : null}
 
       {/* Primary CTA */}
-      <Link
-        href={href}
-        className="mt-4 block w-full rounded-full bg-[#111111] px-8 py-4 text-center text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 sm:w-auto sm:inline-block"
-      >
-        {cta.label}
-      </Link>
+      <RippleCtaLink
+        href={cta.href === DRAWER_HASH ? DRAWER_HASH : cta.href}
+        label={cta.label}
+        size="md"
+        disabled={!selectedTile}
+        section="rollback-hero"
+        ariaLabel={cta.label}
+        className="mt-3 w-full justify-center sm:mt-4 sm:w-auto"
+      />
     </>
   );
-}
-
-function buildSelectedHref(baseHref: string, equipment: string) {
-  if (baseHref.startsWith("#")) {
-    return `?equipment=${equipment}${baseHref}`;
-  }
-
-  const [pathAndQuery, hash = ""] = baseHref.split("#");
-  const separator = pathAndQuery.includes("?") ? "&" : "?";
-
-  return `${pathAndQuery}${separator}equipment=${equipment}${
-    hash ? `#${hash}` : ""
-  }`;
 }
