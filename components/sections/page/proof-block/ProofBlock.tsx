@@ -31,7 +31,7 @@ const XIcon = (
 );
 
 export function ProofBlock({ config }: { config: ProofBlockConfig }) {
-  const { kicker, headline, columns, rows } = config;
+  const { kicker, headline, description, columns, rows } = config;
 
   return (
     <section
@@ -46,19 +46,25 @@ export function ProofBlock({ config }: { config: ProofBlockConfig }) {
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#101820] sm:text-5xl">
             {headline}
           </h2>
+          {description ? (
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-[#545454] sm:text-lg">
+              {description}
+            </p>
+          ) : null}
         </div>
 
-        <div className="mt-16 overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9]">
-          <table className="w-full text-left">
+        <div className="relative mt-16 overflow-hidden rounded-3xl shadow-[inset_0_0_0_1px_#E9E9E9]">
+          <div className="overflow-x-auto overscroll-x-contain">
+            <table className="w-full min-w-[36rem] text-left">
             <thead>
               <tr className="border-b border-[#E9E9E9] bg-[#F5F5F5]">
-                <th className="px-6 py-4 text-sm font-medium text-[#545454]">
+                <th scope="col" className="px-6 py-4 text-sm font-medium text-[#545454]">
                   <span className="sr-only">Feature</span>
                 </th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#101820]">
+                <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-[#101820]">
                   {columns[0]}
                 </th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-[#545454]">
+                <th scope="col" className="px-6 py-4 text-center text-sm font-semibold text-[#545454]">
                   {columns[1]}
                 </th>
               </tr>
@@ -87,7 +93,8 @@ export function ProofBlock({ config }: { config: ProofBlockConfig }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
       </div>
     </section>

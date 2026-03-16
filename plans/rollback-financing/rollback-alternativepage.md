@@ -146,7 +146,6 @@
   - Final validation sequence when implemented:
       - npm run lint
       - npm run build
-      - Chrome DevTools MCP runtime validation as the last gate
 
   ## Assumptions and Defaults
 

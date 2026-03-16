@@ -6,6 +6,7 @@ export interface ProofBlockRow {
 export interface ProofBlockConfig {
   kicker: string;
   headline: string;
+  description?: string;
   columns: [string, string];
   rows: ProofBlockRow[];
 }
@@ -13,6 +14,8 @@ export interface ProofBlockConfig {
 export const PROOF_BLOCK_CONFIG: ProofBlockConfig = {
   kicker: "THE DIFFERENCE",
   headline: "Why operators finance rollbacks through us",
+  description:
+    "Pick the rollback you want to finance, then get a straight answer on the deal without dealer-only bank friction.",
   columns: ["TowLoans", "Most Lenders"],
   rows: [
     { feature: "Used truck financing", values: [true, true] },

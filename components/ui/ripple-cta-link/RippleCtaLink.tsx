@@ -52,6 +52,7 @@ export interface RippleCtaLinkProps {
   section?: string;
   /** Card identifier for analytics */
   cardId?: string;
+  disabled?: boolean;
 }
 
 const sizeClasses = {
@@ -87,6 +88,7 @@ export function RippleCtaLink({
   ariaLabel,
   section = "",
   cardId,
+  disabled = false,
 }: RippleCtaLinkProps) {
   const [ripple, setRipple] = useState<Ripple | null>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -218,6 +220,9 @@ export function RippleCtaLink({
 
   const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center overflow-hidden rounded-full bg-[#111111] font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${className ?? ""}`;
 
+  const disabledClassName =
+    "cursor-not-allowed bg-[#D1D5DB] text-white hover:bg-[#D1D5DB]";
+
   const content = (
     <>
       {iconPosition === "start" && iconElement}
@@ -237,6 +242,19 @@ export function RippleCtaLink({
       )}
     </>
   );
+
+  if (disabled) {
+    return (
+      <button
+        type="button"
+        disabled
+        aria-label={ariaLabel}
+        className={`${sharedClassName} ${disabledClassName}`}
+      >
+        {content}
+      </button>
+    );
+  }
 
   if (external) {
     return (

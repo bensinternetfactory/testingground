@@ -42,7 +42,3 @@ Date: 2026-03-08
 ## Validation Results
 - `npm run lint`: passed
 - `npm run build`: passed
-- Chrome DevTools MCP final gate: pending rerun on a non-`3000` port in this environment after your port rule update.
-
-## Additional Repository Rule Added
-- Added to `AGENTS.md`: never run agent-managed dev/validation servers on port `3000`; use `3001+`.

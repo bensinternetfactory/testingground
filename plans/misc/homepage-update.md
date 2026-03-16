@@ -49,8 +49,6 @@
   - Confirm the visible button text switches to Get Pre-Approved at <= 640px
   - Confirm the accessible name remains the full CTA wording after the mobile text swap
   - Confirm the homepage still links correctly to #pre-approve and the contact phone link still works
-  - Run Chrome DevTools MCP validation last on the homepage to check console errors, failed requests, and obvious runtime/UI
-    issues
 
   ## Assumptions
 

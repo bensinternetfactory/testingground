@@ -38,7 +38,7 @@ export function AmountSlider({
     <div className="w-full">
       {/* Prominent value display */}
       <p
-        className="text-center text-5xl font-semibold tracking-tight text-[#101820] sm:text-6xl"
+        className="text-center text-5xl font-semibold tracking-tight tabular-nums text-[#101820] sm:text-6xl"
         aria-hidden="true"
       >
         {formatCurrency(value)}
@@ -47,13 +47,14 @@ export function AmountSlider({
       {/* Range input */}
       <div className="mt-8 px-1">
         <input
+          name="estimated-financing-amount"
           type="range"
           min={SLIDER_MIN}
           max={SLIDER_MAX}
           step={SLIDER_STEP}
           value={value}
           onChange={handleChange}
-          aria-label="Financing amount"
+          aria-label="Estimated financing amount"
           aria-valuetext={formatCurrency(value)}
           className="slider-thumb w-full appearance-none bg-transparent focus:outline-none"
           style={
@@ -65,7 +66,7 @@ export function AmountSlider({
       </div>
 
       {/* Min / Max labels */}
-      <div className="mt-2 flex justify-between text-sm text-[#545454]">
+      <div className="mt-2 flex justify-between text-sm tabular-nums text-[#545454]">
         <span>{formatCurrency(SLIDER_MIN)}</span>
         <span>{formatCurrency(SLIDER_MAX)}</span>
       </div>

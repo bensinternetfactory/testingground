@@ -41,11 +41,14 @@ export const metadata: Metadata = {
 const heroConfig: HeroConvertConfig = {
   headline: "Rollback Tow Truck Financing",
   bodyCopy:
-    "Used trucks, private sellers, auction units. We finance the deal as it actually exists — not how a bank wishes it looked. No credit check to get pre-approved. Defer your first payment up to 180 days.",
+    "Finance used rollback trucks, private-seller deals, and auction buys with deferred payments up to 180 days. Choose your rollback type, then see if the deal fits in about 30 seconds.",
+  selectionPrompt: "Choose your rollback type to continue.",
+  selectionRequiredMessage:
+    "Choose a rollback type before opening pre-approval.",
   tiles: [
     {
       id: "light-duty",
-      label: "Light Duty",
+      label: "Light-Duty Rollback",
       icon: (
         <Image
           src="/brand-assets/truck-icons/rollback/rollback-light-green.svg"
@@ -53,13 +56,13 @@ const heroConfig: HeroConvertConfig = {
           aria-hidden="true"
           width={150}
           height={43}
-          className="h-8 w-auto"
+          className="h-6 w-auto sm:h-8"
         />
       ),
     },
     {
       id: "medium-heavy",
-      label: "Medium / Heavy Duty",
+      label: "Medium / Heavy-Duty Rollback",
       icon: (
         <Image
           src="/brand-assets/truck-icons/rollback/rollback-green.svg"
@@ -67,7 +70,7 @@ const heroConfig: HeroConvertConfig = {
           aria-hidden="true"
           width={150}
           height={43}
-          className="h-8 w-auto"
+          className="h-6 w-auto sm:h-8"
         />
       ),
     },
@@ -83,9 +86,8 @@ const heroConfig: HeroConvertConfig = {
       href: "/tow-truck-leasing",
     },
   ],
-  viewAllLink: { label: "Tow truck financing", href: "/" },
   microcopy:
-    "No credit check for pre-approval. Approvals use a soft Experian inquiry — your score stays untouched.",
+    "No credit check for pre-approval. Full approval uses a soft Experian inquiry, so your score stays untouched.",
   disclaimer:
     "All financing is subject to credit review and approval. Terms vary by truck, seller, and business profile.",
   heroImage: truck3,
@@ -404,19 +406,21 @@ export default function RollbackFinancingPage() {
               <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-[#545454]">
                 <Link
                   href="/wrecker-financing"
-                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+                  prefetch={false}
+                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 rounded-sm"
                 >
                   Need a wrecker instead?
                 </Link>
                 <Link
                   href="/rotator-financing"
-                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+                  prefetch={false}
+                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 rounded-sm"
                 >
                   Looking at rotators?
                 </Link>
                 <Link
                   href="/"
-                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+                  className="underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 rounded-sm"
                 >
                   Tow truck financing
                 </Link>

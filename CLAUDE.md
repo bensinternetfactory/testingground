@@ -11,6 +11,10 @@ npm start        # Run production server
 npm run lint     # ESLint check (eslint v9 flat config)
 ```
 
+Agent rule: never start validation or preview servers on port `3000`; use `3001+` and prefer `3005` in this repo so the user's own preview on `3000` is left alone.
+
+For user-facing changes, browser/DOM validation is required after standard checks. Use the globally installed `agent-browser` skill or CLI against a local server on a non-`3000` port, preferably `3005` in this repo. Minimum validation: open the changed page, wait for load completion, confirm the page renders, and verify at least one relevant DOM interaction or assertion for the changed feature.
+
 ## Architecture
 
 This is a Next.js 16 landing page using the App Router architecture with React 19.

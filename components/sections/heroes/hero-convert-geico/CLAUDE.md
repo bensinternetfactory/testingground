@@ -31,7 +31,7 @@ const config = {
 | Prop | Type | Description |
 |---|---|---|
 | `id` | `string` | Unique tile identifier |
-| `label` | `string` | Display text |
+| `label` | `string` | Accessible label announced to assistive tech |
 | `icon` | `ReactNode?` | Optional icon (decoupled — passed by consumer) |
 | `selected` | `boolean` | Whether this tile is active |
 | `onSelect` | `(id: string) => void` | Selection callback |
@@ -47,8 +47,9 @@ This keeps the hero component portable across projects without coupling to speci
 
 ## Config Notes
 
-- `viewAllLink` is an object: `{ label, href }`
+- `viewAllLink` is optional; omit it to remove the hero-local utility link
 - `tertiaryLinks` supports additional inline links below the main CTA
+- `selectionPrompt` and `selectionRequiredMessage` control the visible truck-selection guidance around the interactive tiles
 - `tiles` can be any length; the current UI renders them in a two-column grid
 
 ## Server/Client Boundary

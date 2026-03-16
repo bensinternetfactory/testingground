@@ -15,6 +15,7 @@ import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 import Link from "next/link";
 import Image from "next/image";
 import type { NavSection, NavCardItem } from "./nav-data";
+import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 
 /* ------------------------------------------------------------------ */
 /*  Icons — lightweight inline SVGs for dropdown cards                 */
@@ -260,7 +261,7 @@ export function NavClient({ sections }: NavClientProps) {
               <span>(888)&nbsp;555-0199</span>
             </a>
             <a
-              href="#pre-approve"
+              href={DRAWER_HASH}
               className="hidden h-12 items-center justify-center rounded-full bg-[#111111] px-6 text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 sm:inline-flex"
             >
               <span className="hidden sm:inline">Get Pre-Approved</span>
@@ -343,8 +344,8 @@ export function NavClient({ sections }: NavClientProps) {
                 (888)&nbsp;555-0199
               </a>
               <a
-                href="#pre-approve"
-                className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90"
+                href={DRAWER_HASH}
+                className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] text-base font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
               >
                 Get Pre-Approved
               </a>

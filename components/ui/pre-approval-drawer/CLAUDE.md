@@ -13,7 +13,7 @@ import { DrawerProvider } from "@/components/ui/pre-approval-drawer";
 </DrawerProvider>
 ```
 
-Any link with `href="#get-pre-approved"` (the `DRAWER_HASH` constant) opens the drawer via the built-in `DrawerHashListener`.
+Any same-page link with `href="#get-pre-approved"` (the `DRAWER_HASH` constant) opens the drawer via the built-in `DrawerHashListener`. Direct visits to `/rollback-financing#get-pre-approved` also open on mount, then clear the hash.
 
 ## Exports
 
@@ -36,7 +36,7 @@ Hash is cleared via `history.replaceState` so back button goes to previous page.
 
 ## Viewport Behavior
 
-- **Mobile (<md):** iOS-style bottom sheet with drag-to-dismiss, spring animation
+- **Mobile (<md):** iOS-style bottom sheet with drag-to-dismiss, spring animation, and no explicit close button
 - **Desktop (md+):** Centered modal (max-width 480px) with scale transition, close button
 
 ## Accessibility

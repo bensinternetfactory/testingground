@@ -15,10 +15,12 @@ export interface SelectionTileData {
 export interface HeroConvertConfig {
   headline: string;
   bodyCopy: string;
+  selectionPrompt: string;
+  selectionRequiredMessage: string;
   tiles: SelectionTileData[];
   cta: { label: string; href: string };
   tertiaryLinks: { label: string; href: string }[];
-  viewAllLink: { label: string; href: string };
+  viewAllLink?: { label: string; href: string };
   microcopy: string;
   disclaimer: string;
   heroImage: StaticImageData;
@@ -32,6 +34,8 @@ export interface HeroConvertConfig {
 export const HERO_CONVERT_CONFIG: HeroConvertConfig = {
   headline: "Tow Truck Financing Built for Your Business",
   bodyCopy: "See what you may qualify for\u2026",
+  selectionPrompt: "Choose the equipment you want to finance first.",
+  selectionRequiredMessage: "Select a truck type to continue.",
   tiles: [
     { id: "rollback", label: "Rollback" },
     { id: "wrecker", label: "Wrecker" },

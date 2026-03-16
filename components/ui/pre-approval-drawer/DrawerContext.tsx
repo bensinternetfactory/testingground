@@ -3,88 +3,142 @@
 import {
   createContext,
   use,
-  useState,
   useCallback,
   useEffect,
+  useEffectEvent,
+  useMemo,
+  useState,
   type ReactNode,
 } from "react";
 import { DRAWER_HASH } from "./config";
 import { PreApprovalDrawer } from "./PreApprovalDrawer";
 
-/* ------------------------------------------------------------------ */
-/*  Context                                                            */
-/* ------------------------------------------------------------------ */
-
-interface DrawerContextValue {
+interface DrawerState {
   isOpen: boolean;
+}
+
+interface DrawerActions {
   open: () => void;
   close: () => void;
 }
 
+interface DrawerMeta {
+  triggerHash: string;
+}
+
+interface DrawerContextValue {
+  state: DrawerState;
+  actions: DrawerActions;
+  meta: DrawerMeta;
+}
+
 const DrawerContext = createContext<DrawerContextValue | null>(null);
 
-export function useDrawer(): DrawerContextValue {
+export function useDrawer() {
   const ctx = use(DrawerContext);
   if (!ctx) {
     throw new Error("useDrawer must be used within a <DrawerProvider>");
   }
-  return ctx;
+
+  return {
+    isOpen: ctx.state.isOpen,
+    open: ctx.actions.open,
+    close: ctx.actions.close,
+  };
 }
 
-/* ------------------------------------------------------------------ */
-/*  Hash listener                                                      */
-/* ------------------------------------------------------------------ */
+function clearDrawerHash() {
+  const { pathname, search } = window.location;
+  history.replaceState(null, "", `${pathname}${search}`);
+}
+
+function isDrawerTarget(anchor: HTMLAnchorElement) {
+  if (anchor.target && anchor.target !== "_self") return false;
+  if (anchor.hasAttribute("download")) return false;
+
+  const targetUrl = new URL(anchor.href, window.location.href);
+  const currentUrl = new URL(window.location.href);
+
+  return (
+    targetUrl.origin === currentUrl.origin &&
+    targetUrl.pathname === currentUrl.pathname &&
+    targetUrl.hash === DRAWER_HASH
+  );
+}
 
 function DrawerHashListener({ open }: { open: () => void }) {
-  useEffect(() => {
-    // Open on initial load if hash is present (direct URL access)
+  const openFromHash = useEffectEvent(() => {
+    open();
+    clearDrawerHash();
+  });
+
+  const handleHashChange = useEffectEvent(() => {
     if (window.location.hash === DRAWER_HASH) {
-      open();
-      history.replaceState(null, "", window.location.pathname + window.location.search);
+      openFromHash();
+    }
+  });
+
+  const handleDocumentClick = useEffectEvent((event: MouseEvent) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
     }
 
-    // Fallback: native hashchange (browser back/forward, plain <a> tags)
-    function handleHashChange() {
-      if (window.location.hash === DRAWER_HASH) {
-        open();
-        history.replaceState(null, "", window.location.pathname + window.location.search);
-      }
+    const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>(
+      "a[href]",
+    );
+
+    if (!anchor || !isDrawerTarget(anchor)) {
+      return;
     }
 
-    // Primary: intercept clicks on any link targeting DRAWER_HASH
-    function handleClick(e: MouseEvent) {
-      const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[href]");
-      if (!anchor) return;
-      const href = anchor.getAttribute("href") || "";
-      if (href === DRAWER_HASH || href.endsWith(DRAWER_HASH)) {
-        e.preventDefault();
-        open();
-      }
-    }
+    event.preventDefault();
+    open();
+  });
 
+  useEffect(() => {
+    handleHashChange();
+
+    document.addEventListener("click", handleDocumentClick, true);
     window.addEventListener("hashchange", handleHashChange);
-    document.addEventListener("click", handleClick);
+
     return () => {
+      document.removeEventListener("click", handleDocumentClick, true);
       window.removeEventListener("hashchange", handleHashChange);
-      document.removeEventListener("click", handleClick);
     };
-  }, [open]);
+  }, []);
 
   return null;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Provider                                                           */
-/* ------------------------------------------------------------------ */
-
 export function DrawerProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const open = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const close = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const contextValue = useMemo<DrawerContextValue>(
+    () => ({
+      state: { isOpen },
+      actions: { open, close },
+      meta: { triggerHash: DRAWER_HASH },
+    }),
+    [close, isOpen, open],
+  );
 
   return (
-    <DrawerContext value={{ isOpen, open, close }}>
+    <DrawerContext value={contextValue}>
       <DrawerHashListener open={open} />
       {children}
       <PreApprovalDrawer />

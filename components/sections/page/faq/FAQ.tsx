@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -10,7 +10,7 @@ function InlineLink({ href, children }: { href: string; children: string }) {
       <Link
         href={href}
         prefetch={false}
-        className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+        className="rounded-sm font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
       >
         {children}
       </Link>
@@ -20,7 +20,7 @@ function InlineLink({ href, children }: { href: string; children: string }) {
   return (
     <a
       href={href}
-      className="font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E]"
+      className="rounded-sm font-medium text-[#101820] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
     >
       {children}
     </a>
@@ -54,21 +54,27 @@ function AccordionItem({
   isOpen: boolean;
   onClick: () => void;
 }) {
+  const buttonId = `${faq.id}-button`;
+  const panelId = `${faq.id}-panel`;
+
   return (
     <div className="border-b border-[#E9E9E9] last:border-b-0">
       <button
         type="button"
-        className="flex w-full items-center justify-between py-5 text-left"
+        className="flex w-full items-center justify-between py-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
         onClick={onClick}
+        id={buttonId}
         aria-expanded={isOpen}
+        aria-controls={panelId}
       >
-        <span className="pr-4 text-lg font-medium text-[#101820]">
+        <span className="min-w-0 pr-4 text-lg font-medium text-[#101820]">
           {faq.question}
         </span>
         <span
           className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors ${
             isOpen ? "bg-[#22C55E] text-white" : "bg-[#F5F5F5] text-[#545454]"
           }`}
+          aria-hidden="true"
         >
           <svg
             className={`h-5 w-5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
@@ -86,13 +92,22 @@ function AccordionItem({
         </span>
       </button>
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-96 pb-5" : "max-h-0"
+        className={`grid overflow-hidden transition-[grid-template-rows,padding-bottom] duration-300 ease-in-out ${
+          isOpen ? "grid-rows-[1fr] pb-5" : "grid-rows-[0fr]"
         }`}
+        aria-hidden={!isOpen}
       >
-        <p className="text-base leading-relaxed text-[#545454]">
-          <RichAnswer content={faq.answerContent} />
-        </p>
+        <div
+          id={panelId}
+          role={isOpen ? "region" : undefined}
+          aria-labelledby={isOpen ? buttonId : undefined}
+          className="min-h-0"
+          inert={!isOpen}
+        >
+          <p className="text-base leading-relaxed text-[#545454]">
+            <RichAnswer content={faq.answerContent} />
+          </p>
+        </div>
       </div>
     </div>
   );

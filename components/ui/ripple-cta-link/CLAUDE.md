@@ -32,6 +32,7 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 | `ariaLabel` | `string` | — | Explicit accessible name when custom children should stay `aria-hidden` |
 | `section` | `string` | `""` | Section identifier for analytics |
 | `cardId` | `string` | — | Card identifier for analytics |
+| `disabled` | `boolean` | `false` | Renders a non-interactive button with the same layout when the CTA should stay visually present but unavailable |
 
 ## Visual States
 

@@ -431,4 +431,3 @@ Keep existing footer structure. No changes.
    - View page source → confirm 3 JSON-LD blocks render
    - Google Rich Results Test on FAQPage schema
    - Verify title tag and meta description in `<head>`
-5. **Chrome DevTools MCP** — final runtime validation as last gate

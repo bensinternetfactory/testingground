@@ -26,15 +26,9 @@
 ## Testing Guidelines
 - No dedicated test runner is currently configured.
 - Minimum pre-PR checks: `npm run lint` and `npm run build`.
+- For user-facing changes, browser/DOM validation is also required after standard checks. Use the globally installed `agent-browser` skill/CLI against a local server on a non-`3000` port, preferably `3005` in this repo.
+- Minimum `agent-browser` validation for user-facing work: open the changed page, wait for load completion, confirm the page renders, and verify at least one relevant DOM interaction or assertion for the changed feature.
 - If adding tests, place them near features as `*.test.ts` / `*.test.tsx` or in `__tests__/` and document the run command in `package.json`.
-
-## MCP Validation Gate (Final Step for New Features)
-- For every new feature, MCP validations are required and must be the last testing step before completion/PR readiness.
-- Run standard project checks first (`npm run lint`, `npm run build`, and any feature-specific checks), then run MCP validations last.
-
-### Required MCP validations
-- Chrome DevTools MCP validation is mandatory for runtime quality checks (console errors, failed network requests, and obvious page/runtime issues).
-- A feature is not considered complete until Chrome DevTools MCP validation passes as the final gate.
 
 ## Commit & Pull Request Guidelines
 - Follow the repository’s commit style: concise, imperative subjects (for example `Add ...`, `Fix ...`, `Update ...`).
