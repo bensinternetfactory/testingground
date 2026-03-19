@@ -8,40 +8,7 @@ import {
 } from "@/components/sections/page/faq";
 import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 
-function createRollbackHeroTiles(iconClassName: string): HeroConvertConfig["tiles"] {
-  return [
-    {
-      id: "light-duty",
-      label: "Light-Duty Rollback",
-      icon: (
-        <Image
-          src="/brand-assets/truck-icons/rollback/rollback-light-green.svg"
-          alt=""
-          aria-hidden="true"
-          width={150}
-          height={43}
-          className={iconClassName}
-        />
-      ),
-    },
-    {
-      id: "medium-heavy",
-      label: "Medium / Heavy-Duty Rollback",
-      icon: (
-        <Image
-          src="/brand-assets/truck-icons/rollback/rollback-green.svg"
-          alt=""
-          aria-hidden="true"
-          width={150}
-          height={43}
-          className={iconClassName}
-        />
-      ),
-    },
-  ];
-}
-
-const rollbackHeroBaseConfig = {
+export const rollbackHeroConfig: HeroConvertConfig = {
   headline: "Need Rollback Financing?",
   bodyCopy:
     "We'll pre-approve you for your next truck in less then 30 seconds. Know your payment before you apply.",
@@ -64,16 +31,36 @@ const rollbackHeroBaseConfig = {
     "All financing is subject to credit review and approval. Terms vary by truck, seller, and business profile.",
   heroImage: truck3,
   heroImageAlt: "Rollback tow truck ready for financing",
-} satisfies Omit<HeroConvertConfig, "tiles">;
-
-export const rollbackHeroConfig: HeroConvertConfig = {
-  ...rollbackHeroBaseConfig,
-  tiles: createRollbackHeroTiles("h-6 w-auto sm:h-8"),
-};
-
-export const rollbackPreviewHeroConfig: HeroConvertConfig = {
-  ...rollbackHeroBaseConfig,
-  tiles: createRollbackHeroTiles("h-10 w-auto sm:h-12"),
+  tiles: [
+    {
+      id: "light-duty",
+      label: "Light-Duty Rollback",
+      icon: (
+        <Image
+          src="/brand-assets/truck-icons/rollback/rollback-light-green.svg"
+          alt=""
+          aria-hidden="true"
+          width={150}
+          height={43}
+          className="h-8 w-auto sm:h-12"
+        />
+      ),
+    },
+    {
+      id: "medium-heavy",
+      label: "Medium / Heavy-Duty Rollback",
+      icon: (
+        <Image
+          src="/brand-assets/truck-icons/rollback/rollback-green.svg"
+          alt=""
+          aria-hidden="true"
+          width={150}
+          height={43}
+          className="h-8 w-auto sm:h-12"
+        />
+      ),
+    },
+  ],
 };
 
 export const rollbackFaqItems: FaqItemData[] = [

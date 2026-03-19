@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HeroConvert } from "@/components/sections/heroes/hero-convert-geico";
+import { HeroConvertFramed } from "@/components/sections/heroes/hero-convert-framed";
 import { RollbackFinancingPageShell } from "./_shared/RollbackFinancingPageShell";
 import { rollbackHeroConfig } from "./_shared/rollback-page-data";
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RollbackFinancingPage() {
   return (
     <RollbackFinancingPageShell
-      hero={<HeroConvert config={rollbackHeroConfig} />}
+      hero={<HeroConvertFramed config={rollbackHeroConfig} />}
     />
   );
 }
