@@ -1,6 +1,6 @@
 # ripple-cta-link
 
-Shared CTA button-link with ripple animation, haptic feedback, and anchor SEO semantics.
+Shared CTA button-link with lightweight ripple feedback, analytics hooks, and anchor SEO semantics.
 
 ## Usage
 
@@ -43,25 +43,22 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 - **Default**: Dark pill (`bg-[#111111]`, white text, `rounded-full`)
 - **Hover**: Subtle fade (`bg-[#111111]/90`) + icon nudge (translate 0.5px in icon direction)
 - **Focus**: `focus-visible:ring-2` with `ring-[#111111]` and `ring-offset-2`
-- **Active/Tap**: `scale: 0.96` spring + green ripple from tap point (`bg-[#22C55E]/20`)
+- **Tap**: CSS-only ripple pulse from tap point (`bg-[#22C55E]/20`)
 - **Disabled**: `bg-[#D1D5DB]`, white text, `cursor-not-allowed`
-- **Reduced motion**: No ripple/spring animation; haptics still fire at lower intensity
 
 ### Outline variant
 
 - **Default**: Transparent background, `border-gray-400`, dark text (`text-[#111]`), `rounded-full`
 - **Hover**: `bg-gray-100` fill + border darkens to `gray-500` + icon nudge
 - **Focus**: Same ring treatment as filled (`ring-[#111]`)
-- **Active/Tap**: `scale: 0.96` spring + neutral gray ripple (`bg-black/10`)
+- **Tap**: CSS-only neutral ripple (`bg-black/10`)
 - **Disabled**: `border-gray-300`, `text-gray-400`, transparent background
-- **Reduced motion**: No ripple/spring animation; haptics still fire at lower intensity
 
 ## Interaction Behavior
 
 - Ripple cap: max 1 active ripple per instance
-- Double-tap guard: ignores duplicate activation within 250ms
-- Swipe guard: in scroll containers, suppresses tap effects when movement exceeds 10px threshold
-- Keyboard: `Enter` triggers center-origin ripple; no haptic on keyboard
+- Ripple clears after ~250ms
+- Keyboard: `Enter` triggers center-origin ripple
 - Desktop: icon nudge on hover/focus
 
 ## Server/Client Boundary
@@ -76,6 +73,4 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 
 ## Dependencies
 
-- `framer-motion` (v12+)
 - `next/link`
-- `web-haptics/react`

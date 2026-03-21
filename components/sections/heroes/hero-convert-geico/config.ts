@@ -25,12 +25,6 @@ export interface HeroConvertConfig {
   disclaimer?: string;
   heroImage: StaticImageData;
   heroImageAlt: string;
-  /** Render tertiary links as outline button-links instead of plain text links */
-  tertiaryVariant?: "link" | "outline";
-  /** Icon element rendered trailing in each tertiary link (used with outline variant) */
-  tertiaryIcon?: ReactNode;
-  /** Map of body copy substrings to superscript footnote markers, e.g. { "30 seconds": "¹" } */
-  footnoteMarkers?: Record<string, string>;
 }
 
 /* ------------------------------------------------------------------ */

@@ -1,7 +1,9 @@
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import truck1 from "@/public/truck-1.jpg";
 import truck3 from "@/public/truck-3.jpg";
-import type { HeroConvertConfig } from "@/components/sections/heroes/hero-convert-geico";
+import truck4 from "@/public/truck-4.jpg";
+import truck5 from "@/public/truck-5.jpg";
+import truck6 from "@/public/truck-6.jpg";
+import type { HeroConvertFramedConfig } from "@/components/sections/heroes/hero-convert-framed";
 import {
   buildFaqSchema,
   type FaqItemData,
@@ -9,15 +11,15 @@ import {
 } from "@/components/sections/page/faq";
 import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 
-export const rollbackHeroConfig: HeroConvertConfig = {
+export const rollbackHeroConfig: HeroConvertFramedConfig = {
   headline: "Need Rollback Financing?",
   bodyCopy:
     "We'll pre-approve you for your next truck in less than 30 seconds. Know your payment before you apply.",
   selectionPrompt: "What do you need financing on?",
-  selectionRequiredMessage: "hello",
+  selectionRequiredMessage:
+    "Select a rollback type to enable the pre-approval action.",
   cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
   tertiaryVariant: "outline",
-  tertiaryIcon: <ArrowRight className="h-4 w-4" />,
   footnoteMarkers: {
     "30 seconds": "¹",
     "before you apply": "²",
@@ -33,36 +35,42 @@ export const rollbackHeroConfig: HeroConvertConfig = {
       href: "/pre-approval",
     },
   ],
+  tertiaryActions: [
+    {
+      eyebrow: "Already have a truck in mind?",
+      label: "I found a truck and need financing",
+      href: DRAWER_HASH,
+      drawerTitle: "How much is the rollback you found?",
+    },
+    {
+      eyebrow: "Haven't found a truck?",
+      label: "What's my buying power?",
+      href: "/pre-approval",
+    },
+  ],
   heroImage: truck3,
   heroImageAlt: "Rollback tow truck ready for financing",
+  galleryImages: [
+    { src: truck3, alt: "2023 Jerr-Dan MPL40" },
+    { src: truck1, alt: "2022 Chevron 408" },
+    { src: truck4, alt: "2024 Miller Industries" },
+    { src: truck5, alt: "2021 Vulcan 810" },
+    { src: truck6, alt: "2023 Century 12-Series" },
+  ],
   tiles: [
     {
       id: "light-duty",
       label: "Light-Duty Rollback",
-      icon: (
-        <Image
-          src="/brand-assets/truck-icons/rollback/rollback-light-green.svg"
-          alt=""
-          aria-hidden="true"
-          width={150}
-          height={43}
-          className="h-8 w-auto sm:h-12"
-        />
-      ),
+      iconSrc: "/brand-assets/truck-icons/rollback/rollback-light-green.svg",
+      iconWidth: 150,
+      iconHeight: 43,
     },
     {
       id: "medium-heavy",
       label: "Medium / Heavy-Duty Rollback",
-      icon: (
-        <Image
-          src="/brand-assets/truck-icons/rollback/rollback-green.svg"
-          alt=""
-          aria-hidden="true"
-          width={150}
-          height={43}
-          className="h-8 w-auto sm:h-12"
-        />
-      ),
+      iconSrc: "/brand-assets/truck-icons/rollback/rollback-green.svg",
+      iconWidth: 150,
+      iconHeight: 43,
     },
   ],
 };

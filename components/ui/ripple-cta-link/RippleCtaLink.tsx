@@ -1,21 +1,12 @@
 "use client";
 
 import {
-  useState,
   useCallback,
-  useRef,
-  type ReactNode,
+  useState,
   type MouseEvent,
-  type KeyboardEvent,
-  type TouchEvent,
+  type ReactNode,
 } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { useWebHaptics } from "web-haptics/react";
-
-const MotionLink = motion.create(Link);
-
-const tapSpring = { type: "spring" as const, stiffness: 600, damping: 30 };
 
 interface Ripple {
   x: number;
@@ -44,24 +35,19 @@ export interface RippleCtaLinkProps {
   iconPosition?: "start" | "end";
   size?: "sm" | "md" | "lg";
   variant?: "filled" | "outline";
-  /** When "between", label stays left and icon pushes to far right (useful for full-width outline buttons) */
   justify?: "center" | "between";
   className?: string;
   prefetch?: boolean;
   isPlaceholder?: boolean;
   onAnalyticsEvent?: (payload: RippleCtaLinkAnalyticsPayload) => void;
   ariaLabel?: string;
-  /** Section identifier for analytics */
   section?: string;
-  /** Card identifier for analytics */
   cardId?: string;
   disabled?: boolean;
-  /** Custom drawer title passed as data-drawer-title on the anchor element */
   drawerTitle?: string;
 }
 
 const sizeClasses = {
-  // Keep minimum 44px hit area on mobile for accessibility.
   sm: "px-4 py-3 text-sm gap-1.5",
   md: "px-6 py-4 text-base gap-2",
   lg: "px-8 py-5 text-lg gap-2.5",
@@ -75,9 +61,6 @@ const iconNudgeClasses = {
 function isExternalUrl(href: string): boolean {
   return /^https?:\/\//.test(href);
 }
-
-// Movement threshold in pixels for swipe guard
-const SWIPE_THRESHOLD = 10;
 
 export function RippleCtaLink({
   href,
@@ -99,12 +82,6 @@ export function RippleCtaLink({
   drawerTitle,
 }: RippleCtaLinkProps) {
   const [ripple, setRipple] = useState<Ripple | null>(null);
-  const shouldReduceMotion = useReducedMotion();
-  const { trigger } = useWebHaptics();
-  const lastTapRef = useRef(0);
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const pendingModalityRef = useRef<"touch" | "keyboard" | null>(null);
-  const ignoreNextClickRef = useRef(false);
 
   const fireAnalytics = useCallback(
     (modality: "touch" | "mouse" | "keyboard") => {
@@ -119,103 +96,35 @@ export function RippleCtaLink({
         timestamp: Date.now(),
       });
     },
-    [onAnalyticsEvent, section, cardId, href, label, isPlaceholder]
-  );
-
-  const spawnRipple = useCallback(
-    (x: number, y: number) => {
-      if (shouldReduceMotion) return;
-      setRipple({ x, y, id: ++rippleId });
-    },
-    [shouldReduceMotion]
-  );
-
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLAnchorElement>) => {
-      if (ignoreNextClickRef.current) {
-        ignoreNextClickRef.current = false;
-        pendingModalityRef.current = null;
-        e.preventDefault();
-        return;
-      }
-
-      const modality = pendingModalityRef.current ?? "mouse";
-      pendingModalityRef.current = null;
-
-      if (modality !== "keyboard") {
-        // Double-tap guard for pointer/touch activations
-        const now = Date.now();
-        if (now - lastTapRef.current < 250) {
-          e.preventDefault();
-          return;
-        }
-        lastTapRef.current = now;
-
-        // Haptics: lower intensity under reduced motion
-        trigger(
-          [{ duration: 35 }],
-          { intensity: shouldReduceMotion ? 0.4 : 1 }
-        );
-      }
-
-      if (!shouldReduceMotion) {
-        const rect = e.currentTarget.getBoundingClientRect();
-        if (modality === "keyboard") {
-          spawnRipple(rect.width / 2, rect.height / 2);
-        } else {
-          spawnRipple(e.clientX - rect.left, e.clientY - rect.top);
-        }
-      }
-
-      fireAnalytics(modality);
-    },
-    [shouldReduceMotion, trigger, spawnRipple, fireAnalytics]
-  );
-
-  const handleTouchStart = useCallback(
-    (e: TouchEvent<HTMLAnchorElement>) => {
-      const touch = e.touches[0];
-      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-    },
-    []
-  );
-
-  const handleTouchEnd = useCallback(
-    (e: TouchEvent<HTMLAnchorElement>) => {
-      const start = touchStartRef.current;
-      if (!start) return;
-      const touch = e.changedTouches[0];
-      const dx = Math.abs(touch.clientX - start.x);
-      const dy = Math.abs(touch.clientY - start.y);
-      if (dx > SWIPE_THRESHOLD || dy > SWIPE_THRESHOLD) {
-        // Swiping, not tapping — suppress CTA effects
-        ignoreNextClickRef.current = true;
-        pendingModalityRef.current = null;
-        e.preventDefault();
-        touchStartRef.current = null;
-        return;
-      }
-      touchStartRef.current = null;
-      pendingModalityRef.current = "touch";
-    },
-    []
-  );
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLAnchorElement>) => {
-      // Anchor activation is Enter only; Space should not emit activation effects.
-      if (e.key === "Enter") {
-        pendingModalityRef.current = "keyboard";
-      }
-    },
-    []
+    [cardId, href, isPlaceholder, label, onAnalyticsEvent, section],
   );
 
   const removeRipple = useCallback(() => {
     setRipple(null);
   }, []);
 
-  const external = isExternalUrl(href);
+  const handleClick = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      const nativeEvent = event.nativeEvent as MouseEvent & {
+        pointerType?: string;
+      };
+      const modality =
+        event.detail === 0
+          ? "keyboard"
+          : nativeEvent.pointerType === "touch"
+            ? "touch"
+            : "mouse";
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = modality === "keyboard" ? rect.width / 2 : event.clientX - rect.left;
+      const y = modality === "keyboard" ? rect.height / 2 : event.clientY - rect.top;
+
+      setRipple({ x, y, id: ++rippleId });
+      fireAnalytics(modality);
+      window.setTimeout(removeRipple, 250);
+    },
+    [fireAnalytics, removeRipple],
+  );
 
   const iconElement = icon ? (
     <span
@@ -227,36 +136,31 @@ export function RippleCtaLink({
   ) : null;
 
   const isOutline = variant === "outline";
-
+  const external = isExternalUrl(href);
   const justifyClass = justify === "between" ? "justify-between" : "justify-center";
 
-  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation ${sizeClasses[size]} ${
+  const sharedClassName = `group/cta relative inline-flex items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full ${sizeClasses[size]} ${
     isOutline
-      ? "border border-gray-400 bg-transparent text-[#111111] hover:border-gray-500 hover:bg-gray-100 [-webkit-tap-highlight-color:rgba(0,0,0,0.06)]"
-      : "bg-[#111111] text-white hover:bg-[#111111]/90 [-webkit-tap-highlight-color:rgba(34,197,94,0.18)]"
+      ? "border border-gray-400 bg-transparent text-[#111111] hover:border-gray-500 hover:bg-gray-100"
+      : "bg-[#111111] text-white hover:bg-[#111111]/90"
   } ${className ?? ""}`;
 
   const disabledClassName = isOutline
-    ? "cursor-not-allowed border-gray-300 text-gray-400 bg-transparent hover:bg-transparent hover:border-gray-300"
+    ? "cursor-not-allowed border-gray-300 bg-transparent text-gray-400 hover:border-gray-300 hover:bg-transparent"
     : "cursor-not-allowed bg-[#D1D5DB] text-white hover:bg-[#D1D5DB]";
 
   const content = (
     <>
-      {iconPosition === "start" && iconElement}
+      {iconPosition === "start" ? iconElement : null}
       {children ?? label}
-      {iconPosition === "end" && iconElement}
-      {ripple && (
-        <motion.span
-          key={ripple.id}
+      {iconPosition === "end" ? iconElement : null}
+      {ripple ? (
+        <span
           aria-hidden="true"
-          initial={{ scale: 0, opacity: 0.4 }}
-          animate={{ scale: 4, opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          onAnimationComplete={removeRipple}
-          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
+          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full ${isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
           style={{ left: ripple.x, top: ripple.y }}
         />
-      )}
+      ) : null}
     </>
   );
 
@@ -275,43 +179,29 @@ export function RippleCtaLink({
 
   if (external) {
     return (
-      <motion.a
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onKeyDown={handleKeyDown}
         aria-label={ariaLabel}
-        whileTap={
-          shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
-        }
-        transition={tapSpring}
         className={sharedClassName}
       >
         {content}
-      </motion.a>
+      </a>
     );
   }
 
   return (
-    <MotionLink
+    <Link
       href={href}
       prefetch={prefetch}
       onClick={handleClick}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onKeyDown={handleKeyDown}
       aria-label={ariaLabel}
       data-drawer-title={drawerTitle}
-      whileTap={
-        shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
-      }
-      transition={tapSpring}
       className={sharedClassName}
     >
       {content}
-    </MotionLink>
+    </Link>
   );
 }

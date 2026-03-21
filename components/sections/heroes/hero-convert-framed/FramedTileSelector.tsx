@@ -5,10 +5,18 @@ import Link from "next/link";
 import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { FramedSelectionTile } from "./FramedSelectionTile";
-import type { SelectionTileData } from "../hero-convert-geico/config";
+
+export interface FramedHeroTileData {
+  id: string;
+  label: string;
+  iconSrc?: string;
+  iconAlt?: string;
+  iconWidth?: number;
+  iconHeight?: number;
+}
 
 interface FramedTileSelectorProps {
-  tiles: SelectionTileData[];
+  tiles: FramedHeroTileData[];
   cta: { label: string; href: string };
   selectionPrompt: string;
   selectionRequiredMessage: string;

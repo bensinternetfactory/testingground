@@ -1,9 +1,35 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import { FramedTileSelector } from "./FramedTileSelector";
+import ArrowRight from "lucide-react/dist/esm/icons/arrow-right";
+import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
+import { HeroGallery } from "./HeroGallery";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
+
+interface HeroTertiaryAction {
+  eyebrow: string;
+  label: string;
+  href: string;
+  drawerTitle?: string;
+}
+
+interface HeroGalleryImage {
+  src: StaticImageData;
+  alt: string;
+}
+
+export interface HeroConvertFramedConfig
+  extends Omit<
+    HeroConvertConfig,
+    "tiles" | "tertiaryLinks"
+  > {
+  tiles: FramedHeroTileData[];
+  tertiaryVariant?: "link" | "outline";
+  footnoteMarkers?: Record<string, string>;
+  tertiaryActions?: [HeroTertiaryAction, HeroTertiaryAction];
+  galleryImages?: HeroGalleryImage[];
+}
 
 /**
  * Injects superscript footnote markers into body copy text.
@@ -22,20 +48,24 @@ function renderBodyWithMarkers(
         next.push(part);
         continue;
       }
+
       const idx = part.indexOf(substring);
       if (idx === -1) {
         next.push(part);
         continue;
       }
+
       const before = part.slice(0, idx + substring.length);
       const after = part.slice(idx + substring.length);
       next.push(before);
       next.push(
-        <sup key={marker} className="text-[0.65em] text-[#999]">
+        <sup key={`${substring}-${marker}`} className="text-[0.65em] text-[#999]">
           {marker}
-        </sup>
+        </sup>,
       );
-      if (after) next.push(after);
+      if (after) {
+        next.push(after);
+      }
     }
     parts.length = 0;
     parts.push(...next);
@@ -44,8 +74,86 @@ function renderBodyWithMarkers(
   return parts;
 }
 
-export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
+function TertiaryActionCard({
+  action,
+  compact = false,
+}: {
+  action: HeroTertiaryAction;
+  compact?: boolean;
+}) {
+  return (
+    <RippleCtaLink
+      href={action.href}
+      label={action.label}
+      variant="outline"
+      size="sm"
+      justify="between"
+      icon={<ArrowRight className="h-4 w-4" />}
+      drawerTitle={action.drawerTitle}
+      prefetch={false}
+      section="hero"
+      className={compact ? "w-full lg:w-auto" : "w-full rounded-2xl border-gray-200 px-6 py-5"}
+    >
+      {compact ? (
+        <span className="text-left">{action.label}</span>
+      ) : (
+        <span className="flex flex-col items-start">
+          <span className="text-xs text-[#999]">{action.eyebrow}</span>
+          <span className="mt-1 text-sm font-medium text-[#111]">
+            {action.label}
+          </span>
+        </span>
+      )}
+    </RippleCtaLink>
+  );
+}
+
+function TertiaryOutlineLinks({
+  actions,
+}: {
+  actions: [HeroTertiaryAction, HeroTertiaryAction];
+}) {
+  return (
+    <div className="border-t border-gray-200 pt-4">
+      {actions.map((action, index) => (
+        <div key={action.label} className={index === 0 ? undefined : "mt-4"}>
+          <p className="mb-2 text-xs text-[#999]">{action.eyebrow}</p>
+          <TertiaryActionCard action={action} compact />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TertiaryTextLinks({
+  tertiaryLinks,
+}: {
+  tertiaryLinks: HeroConvertConfig["tertiaryLinks"];
+}) {
+  return (
+    <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
+      {tertiaryLinks.map((link) => (
+        <Link
+          key={link.label}
+          href={link.href}
+          prefetch={false}
+          className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+        >
+          {link.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+export function HeroConvertFramed({
+  config,
+}: {
+  config: HeroConvertFramedConfig;
+}) {
   const useOutlineTertiary = config.tertiaryVariant === "outline";
+  const hasGallery = Boolean(config.galleryImages?.length);
+  const tertiaryActions = config.tertiaryActions;
 
   const bodyCopyContent = config.footnoteMarkers
     ? renderBodyWithMarkers(config.bodyCopy, config.footnoteMarkers)
@@ -56,8 +164,7 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
       id="hero"
       className="bg-white pt-[var(--nav-height)] 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200"
     >
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:grid lg:grid-cols-2 lg:gap-12 lg:py-16">
-        {/* Left column — content + framed tile selector */}
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:grid lg:grid-cols-2 lg:items-start lg:gap-12 lg:py-16">
         <div className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
           <h1
             className="text-[2rem] font-semibold leading-[0.98] tracking-[-0.03em] text-[#111111] sm:text-[2.75rem] md:text-5xl lg:text-[3.5rem]"
@@ -70,7 +177,6 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
             {bodyCopyContent}
           </p>
 
-          {/* Only interactive part crosses the RSC boundary */}
           <FramedTileSelector
             tiles={config.tiles}
             cta={config.cta}
@@ -85,53 +191,18 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
             </p>
           ) : null}
 
-          {/* Tertiary CTAs — inside left column, below tile selector */}
-          {useOutlineTertiary ? (
-            <div className="border-t border-gray-200 pt-4">
-              <p className="mb-2 text-xs text-[#999]">
-                Already have a truck in mind?
-              </p>
-              <RippleCtaLink
-                href={config.tertiaryLinks[0]?.href ?? "#"}
-                label={config.tertiaryLinks[0]?.label ?? ""}
-                variant="outline"
-                size="sm"
-                justify="between"
-                icon={config.tertiaryIcon}
-                drawerTitle={config.tertiaryLinks[0]?.drawerTitle}
-                prefetch={false}
-                section="hero"
-                className="w-full lg:w-auto"
-              />
-
-              <p className="mb-2 mt-4 text-xs text-[#999]">
-                Haven&apos;t found a truck?
-              </p>
-              <RippleCtaLink
-                href={config.tertiaryLinks[1]?.href ?? "#"}
-                label={config.tertiaryLinks[1]?.label ?? ""}
-                variant="outline"
-                size="sm"
-                justify="between"
-                icon={config.tertiaryIcon}
-                prefetch={false}
-                section="hero"
-                className="w-full lg:w-auto"
-              />
+          {hasGallery && tertiaryActions ? (
+            <div className="lg:hidden">
+              {useOutlineTertiary ? (
+                <TertiaryOutlineLinks actions={tertiaryActions} />
+              ) : (
+                <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
+              )}
             </div>
+          ) : useOutlineTertiary && tertiaryActions ? (
+            <TertiaryOutlineLinks actions={tertiaryActions} />
           ) : (
-            <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
-              {config.tertiaryLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  prefetch={false}
-                  className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+            <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
           )}
 
           {config.disclaimer ? (
@@ -141,27 +212,38 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
           ) : null}
         </div>
 
-        {/* Right column — hero image (desktop only) */}
-        <div className="hidden lg:block">
-          <Image
-            src={config.heroImage}
-            alt={config.heroImageAlt}
-            placeholder="blur"
-            priority
-            sizes="(min-width: 1024px) 50vw, 0px"
-            className="rounded-3xl object-cover"
-          />
-        </div>
+        {hasGallery ? (
+          <div className="hidden lg:block">
+            <HeroGallery images={config.galleryImages ?? []} />
+          </div>
+        ) : (
+          <div className="hidden lg:block">
+            <Image
+              src={config.heroImage}
+              alt={config.heroImageAlt}
+              placeholder="blur"
+              priority
+              sizes="(min-width: 1024px) 50vw, 0px"
+              className="rounded-3xl object-cover"
+            />
+          </div>
+        )}
       </div>
 
-      {/* Mobile hero image — below hero content, visible on scroll */}
+      {hasGallery && useOutlineTertiary && tertiaryActions ? (
+        <div className="mx-auto hidden max-w-7xl grid-cols-2 gap-4 px-8 pb-10 lg:grid">
+          {tertiaryActions.map((action) => (
+            <TertiaryActionCard key={action.label} action={action} />
+          ))}
+        </div>
+      ) : null}
+
       {useOutlineTertiary ? (
         <div className="px-4 pb-4 sm:px-6 lg:hidden">
           <Image
             src={config.heroImage}
             alt={config.heroImageAlt}
             placeholder="blur"
-            priority={false}
             sizes="(max-width: 1023px) 100vw, 0px"
             className="h-48 w-full rounded-2xl object-cover sm:h-56"
           />

@@ -6,7 +6,7 @@ Framed Selector Deck variant of the conversion hero — tiles + CTA wrapped in a
 
 ```tsx
 import { HeroConvertFramed } from "@/components/sections/heroes/hero-convert-framed";
-import type { HeroConvertConfig } from "@/components/sections/heroes/hero-convert-geico";
+import type { HeroConvertFramedConfig } from "@/components/sections/heroes/hero-convert-framed";
 
 <HeroConvertFramed config={heroConfig} />
 ```
@@ -15,15 +15,16 @@ import type { HeroConvertConfig } from "@/components/sections/heroes/hero-conver
 
 | Prop | Type | Description |
 |---|---|---|
-| `config` | `HeroConvertConfig` | Same config shape as `hero-convert-geico` (reuses its types) |
+| `config` | `HeroConvertFramedConfig` | Framed-hero config with local rollback-specific fields for gallery, footnotes, and structured tertiary actions |
 
 ## Optional Config Fields
 
 | Field | Type | Description |
 |---|---|---|
-| `tertiaryVariant` | `"link" \| "outline"` | When `"outline"`, renders tertiary links as `RippleCtaLink` outline buttons inside a grouped card with a divider and contextual label |
-| `tertiaryIcon` | `ReactNode` | Icon passed to each tertiary `RippleCtaLink` (typically a trailing arrow) |
+| `tertiaryVariant` | `"link" \| "outline"` | When `"outline"`, renders tertiary links as outline CTA cards |
 | `footnoteMarkers` | `Record<string, string>` | Maps body copy substrings to superscript markers (e.g. `{ "30 seconds": "¹" }`) |
+| `tertiaryActions` | `[HeroTertiaryAction, HeroTertiaryAction]` | Explicit two-card tertiary action model used by rollback financing |
+| `galleryImages` | `HeroGalleryImage[]` | Optional desktop gallery images shown beside the hero body |
 | `microcopy` | `string?` | When omitted, no microcopy `<p>` is rendered (no DOM node) |
 | `disclaimer` | `string?` | When omitted, no disclaimer `<p>` is rendered (no DOM node) |
 
@@ -34,8 +35,9 @@ import type { HeroConvertConfig } from "@/components/sections/heroes/hero-conver
 - Tiles are taller with more padding (`p-4 sm:p-6`, `min-h-[5.5rem] sm:min-h-32`)
 - Grid stacks to single column on mobile (`grid-cols-1 sm:grid-cols-2`)
 - Left column has more breathing room (`gap-5 sm:gap-6 lg:gap-8`)
-- Supports outline tertiary CTAs with grouped card layout (via `tertiaryVariant: "outline"`)
-- Supports footnote markers in body copy (via `footnoteMarkers`)
+- Uses primitive tile icon metadata (`iconSrc`, `iconWidth`, `iconHeight`) instead of JSX-in-config
+- Supports outline tertiary CTA cards with explicit `tertiaryActions`
+- Supports desktop gallery images and footnote markers as framed-hero-only fields
 
 ## Server/Client Boundary
 
@@ -45,6 +47,6 @@ import type { HeroConvertConfig } from "@/components/sections/heroes/hero-conver
 
 ## Dependencies
 
-- Reuses `HeroConvertConfig` and `SelectionTileData` types from `hero-convert-geico/config.ts`
+- Reuses the shared base hero fields from `hero-convert-geico/config.ts` but owns its rollback-specific extension type locally
 - `RippleCtaLink`, `DRAWER_HASH` from shared UI
-- `framer-motion`, `web-haptics` for tile interactions
+- `next/image` for primitive tile and gallery assets
