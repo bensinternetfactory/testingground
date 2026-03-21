@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import truck3 from "@/public/truck-3.jpg";
 import type { HeroConvertConfig } from "@/components/sections/heroes/hero-convert-geico";
 import {
@@ -11,24 +12,27 @@ import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 export const rollbackHeroConfig: HeroConvertConfig = {
   headline: "Need Rollback Financing?",
   bodyCopy:
-    "We'll pre-approve you for your next truck in less then 30 seconds. Know your payment before you apply.",
+    "We'll pre-approve you for your next truck in less than 30 seconds. Know your payment before you apply.",
   selectionPrompt: "What do you need financing on?",
   selectionRequiredMessage: "hello",
   cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+  tertiaryVariant: "outline",
+  tertiaryIcon: <ArrowRight className="h-4 w-4" />,
+  footnoteMarkers: {
+    "30 seconds": "¹",
+    "before you apply": "²",
+  },
   tertiaryLinks: [
     {
-      label: "I found a rollback and need financing",
-      href: "/tow-truck-calculator?type=rollback",
+      label: "I found a truck and need financing",
+      href: DRAWER_HASH,
+      drawerTitle: "How much is the rollback you found?",
     },
     {
       label: "What's my buying power?",
-      href: "/tow-truck-leasing",
+      href: "/pre-approval",
     },
   ],
-  microcopy:
-    "No credit check for pre-approval. Full approval uses a soft Experian inquiry, so your score stays untouched.",
-  disclaimer:
-    "All financing is subject to credit review and approval. Terms vary by truck, seller, and business profile.",
   heroImage: truck3,
   heroImageAlt: "Rollback tow truck ready for financing",
   tiles: [

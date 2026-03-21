@@ -32,14 +32,28 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 | `ariaLabel` | `string` | — | Explicit accessible name when custom children should stay `aria-hidden` |
 | `section` | `string` | `""` | Section identifier for analytics |
 | `cardId` | `string` | — | Card identifier for analytics |
+| `variant` | `"filled" \| "outline"` | `"filled"` | Visual variant — `filled` is the default dark pill, `outline` is a transparent button with border |
+| `justify` | `"center" \| "between"` | `"center"` | Content justification — `between` pushes icon to far right (useful for full-width outline buttons) |
 | `disabled` | `boolean` | `false` | Renders a non-interactive button with the same layout when the CTA should stay visually present but unavailable |
 
 ## Visual States
+
+### Filled variant (default)
 
 - **Default**: Dark pill (`bg-[#111111]`, white text, `rounded-full`)
 - **Hover**: Subtle fade (`bg-[#111111]/90`) + icon nudge (translate 0.5px in icon direction)
 - **Focus**: `focus-visible:ring-2` with `ring-[#111111]` and `ring-offset-2`
 - **Active/Tap**: `scale: 0.96` spring + green ripple from tap point (`bg-[#22C55E]/20`)
+- **Disabled**: `bg-[#D1D5DB]`, white text, `cursor-not-allowed`
+- **Reduced motion**: No ripple/spring animation; haptics still fire at lower intensity
+
+### Outline variant
+
+- **Default**: Transparent background, `border-gray-400`, dark text (`text-[#111]`), `rounded-full`
+- **Hover**: `bg-gray-100` fill + border darkens to `gray-500` + icon nudge
+- **Focus**: Same ring treatment as filled (`ring-[#111]`)
+- **Active/Tap**: `scale: 0.96` spring + neutral gray ripple (`bg-black/10`)
+- **Disabled**: `border-gray-300`, `text-gray-400`, transparent background
 - **Reduced motion**: No ripple/spring animation; haptics still fire at lower intensity
 
 ## Interaction Behavior

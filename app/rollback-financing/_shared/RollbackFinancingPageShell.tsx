@@ -48,6 +48,24 @@ export function RollbackFinancingPageShell({
           <TrustBridge config={TRUST_BRIDGE_CONFIG} />
           <FaqSection config={rollbackFaqSectionConfig} />
 
+          {/* Legal footnotes — referenced by superscript markers in the hero body copy */}
+          <section className="bg-gray-50 py-6 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
+            <div className="mx-auto max-w-7xl px-6">
+              <ol className="list-none space-y-1 text-xs leading-5 text-[#999]">
+                <li>
+                  <sup className="mr-1 font-medium">1</sup>
+                  No credit check for pre-approval. Full approval uses a soft
+                  Experian inquiry, so your score stays untouched.
+                </li>
+                <li>
+                  <sup className="mr-1 font-medium">2</sup>
+                  All financing is subject to credit review and approval. Terms
+                  vary by truck, seller, and business profile.
+                </li>
+              </ol>
+            </div>
+          </section>
+
           <section className="bg-[#101820] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
             <div className="mx-auto max-w-5xl px-6 text-center">
               <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#22C55E]">

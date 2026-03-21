@@ -43,6 +43,9 @@ export interface RippleCtaLinkProps {
   icon?: ReactNode;
   iconPosition?: "start" | "end";
   size?: "sm" | "md" | "lg";
+  variant?: "filled" | "outline";
+  /** When "between", label stays left and icon pushes to far right (useful for full-width outline buttons) */
+  justify?: "center" | "between";
   className?: string;
   prefetch?: boolean;
   isPlaceholder?: boolean;
@@ -53,6 +56,8 @@ export interface RippleCtaLinkProps {
   /** Card identifier for analytics */
   cardId?: string;
   disabled?: boolean;
+  /** Custom drawer title passed as data-drawer-title on the anchor element */
+  drawerTitle?: string;
 }
 
 const sizeClasses = {
@@ -81,6 +86,8 @@ export function RippleCtaLink({
   icon,
   iconPosition = "end",
   size = "md",
+  variant = "filled",
+  justify = "center",
   className,
   prefetch,
   isPlaceholder = false,
@@ -89,6 +96,7 @@ export function RippleCtaLink({
   section = "",
   cardId,
   disabled = false,
+  drawerTitle,
 }: RippleCtaLinkProps) {
   const [ripple, setRipple] = useState<Ripple | null>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -218,10 +226,19 @@ export function RippleCtaLink({
     </span>
   ) : null;
 
-  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center overflow-hidden rounded-full bg-[#111111] font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${className ?? ""}`;
+  const isOutline = variant === "outline";
 
-  const disabledClassName =
-    "cursor-not-allowed bg-[#D1D5DB] text-white hover:bg-[#D1D5DB]";
+  const justifyClass = justify === "between" ? "justify-between" : "justify-center";
+
+  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation ${sizeClasses[size]} ${
+    isOutline
+      ? "border border-gray-400 bg-transparent text-[#111111] hover:border-gray-500 hover:bg-gray-100 [-webkit-tap-highlight-color:rgba(0,0,0,0.06)]"
+      : "bg-[#111111] text-white hover:bg-[#111111]/90 [-webkit-tap-highlight-color:rgba(34,197,94,0.18)]"
+  } ${className ?? ""}`;
+
+  const disabledClassName = isOutline
+    ? "cursor-not-allowed border-gray-300 text-gray-400 bg-transparent hover:bg-transparent hover:border-gray-300"
+    : "cursor-not-allowed bg-[#D1D5DB] text-white hover:bg-[#D1D5DB]";
 
   const content = (
     <>
@@ -236,7 +253,7 @@ export function RippleCtaLink({
           animate={{ scale: 4, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           onAnimationComplete={removeRipple}
-          className="pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#22C55E]/20"
+          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
           style={{ left: ripple.x, top: ripple.y }}
         />
       )}
@@ -287,6 +304,7 @@ export function RippleCtaLink({
       onTouchEnd={handleTouchEnd}
       onKeyDown={handleKeyDown}
       aria-label={ariaLabel}
+      data-drawer-title={drawerTitle}
       whileTap={
         shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
       }

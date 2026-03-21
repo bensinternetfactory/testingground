@@ -1,15 +1,62 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FramedTileSelector } from "./FramedTileSelector";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
 
+/**
+ * Injects superscript footnote markers into body copy text.
+ * Splits on matching substrings and wraps each match with a trailing <sup>.
+ */
+function renderBodyWithMarkers(
+  text: string,
+  markers: Record<string, string>
+): ReactNode[] {
+  const parts: ReactNode[] = [text];
+
+  for (const [substring, marker] of Object.entries(markers)) {
+    const next: ReactNode[] = [];
+    for (const part of parts) {
+      if (typeof part !== "string") {
+        next.push(part);
+        continue;
+      }
+      const idx = part.indexOf(substring);
+      if (idx === -1) {
+        next.push(part);
+        continue;
+      }
+      const before = part.slice(0, idx + substring.length);
+      const after = part.slice(idx + substring.length);
+      next.push(before);
+      next.push(
+        <sup key={marker} className="text-[0.65em] text-[#999]">
+          {marker}
+        </sup>
+      );
+      if (after) next.push(after);
+    }
+    parts.length = 0;
+    parts.push(...next);
+  }
+
+  return parts;
+}
+
 export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
+  const useOutlineTertiary = config.tertiaryVariant === "outline";
+
+  const bodyCopyContent = config.footnoteMarkers
+    ? renderBodyWithMarkers(config.bodyCopy, config.footnoteMarkers)
+    : config.bodyCopy;
+
   return (
     <section
       id="hero"
       className="bg-white pt-[var(--nav-height)] 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200"
     >
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:grid-cols-2 lg:gap-12 lg:py-16">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:grid lg:grid-cols-2 lg:gap-12 lg:py-16">
         {/* Left column — content + framed tile selector */}
         <div className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
           <h1
@@ -20,7 +67,7 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
           </h1>
 
           <p className="max-w-2xl text-base leading-6 text-[#545454] sm:text-[1.0625rem] sm:leading-7">
-            {config.bodyCopy}
+            {bodyCopyContent}
           </p>
 
           {/* Only interactive part crosses the RSC boundary */}
@@ -32,24 +79,66 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
             viewAllLink={config.viewAllLink}
           />
 
-          <p className="text-sm leading-5 text-[#545454]">{config.microcopy}</p>
+          {config.microcopy ? (
+            <p className="text-sm leading-5 text-[#545454]">
+              {config.microcopy}
+            </p>
+          ) : null}
 
-          {/* Tertiary links */}
-          <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
-            {config.tertiaryLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
+          {/* Tertiary CTAs — inside left column, below tile selector */}
+          {useOutlineTertiary ? (
+            <div className="border-t border-gray-200 pt-4">
+              <p className="mb-2 text-xs text-[#999]">
+                Already have a truck in mind?
+              </p>
+              <RippleCtaLink
+                href={config.tertiaryLinks[0]?.href ?? "#"}
+                label={config.tertiaryLinks[0]?.label ?? ""}
+                variant="outline"
+                size="sm"
+                justify="between"
+                icon={config.tertiaryIcon}
+                drawerTitle={config.tertiaryLinks[0]?.drawerTitle}
                 prefetch={false}
-                className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+                section="hero"
+                className="w-full lg:w-auto"
+              />
 
-          {/* Legal disclaimer */}
-          <p className="text-xs leading-5 text-[#999]">{config.disclaimer}</p>
+              <p className="mb-2 mt-4 text-xs text-[#999]">
+                Haven&apos;t found a truck?
+              </p>
+              <RippleCtaLink
+                href={config.tertiaryLinks[1]?.href ?? "#"}
+                label={config.tertiaryLinks[1]?.label ?? ""}
+                variant="outline"
+                size="sm"
+                justify="between"
+                icon={config.tertiaryIcon}
+                prefetch={false}
+                section="hero"
+                className="w-full lg:w-auto"
+              />
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
+              {config.tertiaryLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  prefetch={false}
+                  className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {config.disclaimer ? (
+            <p className="text-xs leading-5 text-[#999]">
+              {config.disclaimer}
+            </p>
+          ) : null}
         </div>
 
         {/* Right column — hero image (desktop only) */}
@@ -64,6 +153,20 @@ export function HeroConvertFramed({ config }: { config: HeroConvertConfig }) {
           />
         </div>
       </div>
+
+      {/* Mobile hero image — below hero content, visible on scroll */}
+      {useOutlineTertiary ? (
+        <div className="px-4 pb-4 sm:px-6 lg:hidden">
+          <Image
+            src={config.heroImage}
+            alt={config.heroImageAlt}
+            placeholder="blur"
+            priority={false}
+            sizes="(max-width: 1023px) 100vw, 0px"
+            className="h-48 w-full rounded-2xl object-cover sm:h-56"
+          />
+        </div>
+      ) : null}
     </section>
   );
 }

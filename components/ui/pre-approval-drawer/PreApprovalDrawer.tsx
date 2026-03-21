@@ -157,7 +157,7 @@ function useDialogA11y({
 }
 
 export function PreApprovalDrawer() {
-  const { isOpen, close } = useDrawer();
+  const { isOpen, title, close } = useDrawer();
   const router = useRouter();
   const prefersReducedMotion = useReducedMotion() ?? false;
   const isDesktop = useIsDesktop();
@@ -352,13 +352,15 @@ function DrawerContent({
   titleId: string;
   onContinue: () => void;
 }) {
+  const { title } = useDrawer();
+
   return (
     <div className="flex flex-col items-center">
       <h2
         id={titleId}
         className="text-center text-2xl font-semibold tracking-tight text-[#101820]"
       >
-        Estimate how much financing you need.
+        {title}
       </h2>
 
       <div className="mt-8 w-full">

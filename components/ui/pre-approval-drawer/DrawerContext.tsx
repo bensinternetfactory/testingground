@@ -10,15 +10,16 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { DRAWER_HASH } from "./config";
+import { DRAWER_DEFAULT_TITLE, DRAWER_HASH } from "./config";
 import { PreApprovalDrawer } from "./PreApprovalDrawer";
 
 interface DrawerState {
   isOpen: boolean;
+  title: string;
 }
 
 interface DrawerActions {
-  open: () => void;
+  open: (title?: string) => void;
   close: () => void;
 }
 
@@ -42,6 +43,7 @@ export function useDrawer() {
 
   return {
     isOpen: ctx.state.isOpen,
+    title: ctx.state.title,
     open: ctx.actions.open,
     close: ctx.actions.close,
   };
@@ -66,7 +68,7 @@ function isDrawerTarget(anchor: HTMLAnchorElement) {
   );
 }
 
-function DrawerHashListener({ open }: { open: () => void }) {
+function DrawerHashListener({ open }: { open: (title?: string) => void }) {
   const openFromHash = useEffectEvent(() => {
     open();
     clearDrawerHash();
@@ -99,7 +101,7 @@ function DrawerHashListener({ open }: { open: () => void }) {
     }
 
     event.preventDefault();
-    open();
+    open(anchor.dataset.drawerTitle);
   });
 
   useEffect(() => {
@@ -119,8 +121,10 @@ function DrawerHashListener({ open }: { open: () => void }) {
 
 export function DrawerProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState(DRAWER_DEFAULT_TITLE);
 
-  const open = useCallback(() => {
+  const open = useCallback((customTitle?: string) => {
+    setTitle(customTitle ?? DRAWER_DEFAULT_TITLE);
     setIsOpen(true);
   }, []);
 
@@ -130,11 +134,11 @@ export function DrawerProvider({ children }: { children: ReactNode }) {
 
   const contextValue = useMemo<DrawerContextValue>(
     () => ({
-      state: { isOpen },
+      state: { isOpen, title },
       actions: { open, close },
       meta: { triggerHash: DRAWER_HASH },
     }),
-    [close, isOpen, open],
+    [close, isOpen, open, title],
   );
 
   return (

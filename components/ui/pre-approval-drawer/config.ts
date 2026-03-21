@@ -7,3 +7,6 @@ export const SLIDER_DEFAULT = 100_000;
 
 /** The URL hash that triggers the drawer open. */
 export const DRAWER_HASH = "#get-pre-approved";
+
+/** Default drawer heading when no custom title is provided by the trigger. */
+export const DRAWER_DEFAULT_TITLE = "Estimate how much financing you need.";
