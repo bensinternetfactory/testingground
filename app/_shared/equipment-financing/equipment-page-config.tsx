@@ -30,13 +30,84 @@ interface ClosingCtaConfig {
   body: string;
 }
 
+/* ── Tertiary Strip ─────────────────────────────────────────────── */
+export interface TertiaryStripAction {
+  eyebrow: string;
+  label: string;
+  href: string;
+  drawerTitle?: string;
+}
+export interface TertiaryStripConfig {
+  actions: TertiaryStripAction[];
+}
+
+/* ── Financing Offers Split ─────────────────────────────────────── */
+export interface FinancingOfferHalf {
+  headline: string;
+  body: string;
+  iconSrc: string;
+  iconAlt: string;
+  iconWidth: number;
+  iconHeight: number;
+}
+export interface FinancingOffersSplitConfig {
+  left: FinancingOfferHalf;
+  right: FinancingOfferHalf;
+}
+
+/* ── Purchase Source Stack ──────────────────────────────────────── */
+export interface PurchaseSourceCard {
+  id: string;
+  sourceName: string;
+  sourceSubtitle: string;
+  iconSrc: string;
+  iconAlt: string;
+  badgeLabel: string;
+  sampleListing: string;
+  samplePrice: string;
+}
+export interface PurchaseSourceStackConfig {
+  headline: string;
+  body: string;
+  iconSrc: string;
+  iconAlt: string;
+  cards: PurchaseSourceCard[];
+  rotationIntervalMs: number;
+}
+
+/* ── Term Slider ────────────────────────────────────────────────── */
+export interface TermLookupEntry {
+  minYear: number;
+  maxYear: number;
+  maxTermMonths: number;
+}
+export interface TermSliderConfig {
+  headline: string;
+  subheading: string;
+  body: string;
+  iconSrc: string;
+  iconAlt: string;
+  defaultYear: number;
+  lookupTable: TermLookupEntry[];
+}
+
+/* ── Purchase & Terms (parent wrapper) ──────────────────────────── */
+export interface PurchaseAndTermsConfig {
+  purchaseStack: PurchaseSourceStackConfig;
+  termSlider: TermSliderConfig;
+}
+
+/* ── Page Config ────────────────────────────────────────────────── */
 export interface EquipmentFinancingPageConfig {
   slug: "rollback-financing" | "wrecker-financing" | "rotator-financing";
   metadata: Metadata;
   hero: HeroConvertFramedConfig;
-  programs: ProgramCardsConfig;
-  trustBridge: TrustBridgeConfig;
-  dealsSection: EquipmentDealsSectionConfig;
+  programs?: ProgramCardsConfig;
+  trustBridge?: TrustBridgeConfig;
+  dealsSection?: EquipmentDealsSectionConfig;
+  tertiaryStrip?: TertiaryStripConfig;
+  financingOffers?: FinancingOffersSplitConfig;
+  purchaseAndTerms?: PurchaseAndTermsConfig;
   faqSection: FaqSectionConfig;
   faqSchema: ReturnType<typeof buildFaqSchema>;
   financialProductSchema: Record<string, unknown>;
@@ -308,6 +379,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       "Select a rollback type to enable the pre-approval action.",
     cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
     tertiaryVariant: "outline",
+    showTertiaryInHero: false,
     footnoteMarkers: {
       "30 seconds": "¹",
       "before you apply": "²",
@@ -362,43 +434,104 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  programs: buildEquipmentPrograms(
-    "Rollback financing programs built for real deals",
-    "Short, commercial structures for operators buying another carrier without dragging the process out."
-  ),
-  trustBridge: SHARED_TRUST_BRIDGE_CONFIG,
-  dealsSection: {
-    eyebrow: "WHAT WE FINANCE",
-    heading: "Rollback deals we can structure",
-    intro:
-      "This page does not need a wall of text. It needs to tell an operator whether the rollback they are looking at actually fits the box.",
-    items: [
+  tertiaryStrip: {
+    actions: [
       {
-        title: "New rollback trucks",
-        description:
-          "Stretch new carrier purchases over longer terms when the truck and business profile support it.",
+        eyebrow: "Already have a truck in mind?",
+        label: "I found a truck and need financing",
+        href: DRAWER_HASH,
+        drawerTitle: "How much is the rollback you found?",
       },
       {
-        title: "Used rollback trucks",
-        description:
-          "Keep older rollback purchases workable with structures built around commercial use, not consumer auto rules.",
-      },
-      {
-        title: "Private seller deals",
-        description:
-          "Buy from another towing company or independent seller without needing a dealer in the middle.",
-      },
-      {
-        title: "Auction purchases",
-        description:
-          "Move quickly on auction units without trying to solve the financing after the sale is already over.",
-      },
-      {
-        title: "Fleet additions",
-        description:
-          "Add another carrier when call volume is there and you need the next truck to fit the payment model cleanly.",
+        eyebrow: "Haven't found a truck?",
+        label: "What's my buying power?",
+        href: "/pre-approval",
       },
     ],
+  },
+  financingOffers: {
+    left: {
+      headline: "Zero Down Rollback Financing",
+      body: "Keep your cash in the business. Qualified operators can finance a rollback with nothing down when the deal, truck, and operating profile support it.",
+      iconSrc: "/brand-assets/benefit-icons/zero-down/no-money-down-dark.svg",
+      iconAlt: "Zero down payment icon",
+      iconWidth: 64,
+      iconHeight: 64,
+    },
+    right: {
+      headline: "No Payments for Up to 180 Days",
+      body: "Put the rollback on the road and start producing revenue before full payments begin. Deferred first-payment options give you runway.",
+      iconSrc: "/brand-assets/benefit-icons/deferment/deferment-180-dark.svg",
+      iconAlt: "180-day payment deferment icon",
+      iconWidth: 64,
+      iconHeight: 64,
+    },
+  },
+  purchaseAndTerms: {
+    purchaseStack: {
+      headline: "Buy from anyone. We'll finance it.",
+      body: "Dealership, private seller, auction house, or another towing operator. We finance the truck, not the source.",
+      iconSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
+      iconAlt: "Hook icon",
+      rotationIntervalMs: 4500,
+      cards: [
+        {
+          id: "dealer",
+          sourceName: "Authorized Retailers",
+          sourceSubtitle: "Dealer Inventory",
+          iconSrc: "/brand-assets/source-icons/placeholder-dealer.svg",
+          iconAlt: "Dealer icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2024 Kenworth T270 Rollback",
+          samplePrice: "$87,500",
+        },
+        {
+          id: "fbmp",
+          sourceName: "Facebook Marketplace",
+          sourceSubtitle: "Private Seller Listings",
+          iconSrc: "/brand-assets/source-icons/placeholder-fbmp.svg",
+          iconAlt: "Facebook Marketplace icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2019 Hino 258 Rollback",
+          samplePrice: "$62,500",
+        },
+        {
+          id: "auction",
+          sourceName: "Ritchie Brothers",
+          sourceSubtitle: "Auction Listings",
+          iconSrc: "/brand-assets/source-icons/placeholder-auction.svg",
+          iconAlt: "Auction house icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2021 Freightliner M2 Rollback",
+          samplePrice: "$74,000",
+        },
+        {
+          id: "private",
+          sourceName: "Private Sellers",
+          sourceSubtitle: "Operator-to-Operator",
+          iconSrc: "/brand-assets/source-icons/placeholder-private.svg",
+          iconAlt: "Private seller icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2017 International 4300 Rollback",
+          samplePrice: "$51,000",
+        },
+      ],
+    },
+    termSlider: {
+      headline: "Older truck? Still financeable.",
+      subheading: "See your max term by model year",
+      body: "Slide to any model year and see the longest term available. Newer rollbacks stretch further, but we finance trucks back to 2000.",
+      iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+      iconAlt: "Term length icon",
+      defaultYear: 2021,
+      lookupTable: [
+        { minYear: 2000, maxYear: 2009, maxTermMonths: 36 },
+        { minYear: 2010, maxYear: 2014, maxTermMonths: 48 },
+        { minYear: 2015, maxYear: 2018, maxTermMonths: 60 },
+        { minYear: 2019, maxYear: 2022, maxTermMonths: 72 },
+        { minYear: 2023, maxYear: 2099, maxTermMonths: 84 },
+      ],
+    },
   },
   faqSection: rollbackFaq.section,
   faqSchema: rollbackFaq.schema,

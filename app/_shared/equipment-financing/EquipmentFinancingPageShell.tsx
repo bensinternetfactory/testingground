@@ -10,6 +10,9 @@ import { FaqSection } from "@/components/sections/page/faq";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { Footer, FOOTER_CONFIG } from "@/components/sections/page/footer";
 import { HeroConvertFramed } from "@/components/sections/heroes/hero-convert-framed";
+import { TertiaryActionsStrip } from "@/components/sections/page/tertiary-strip";
+import { FinancingOffersSplit } from "@/components/sections/page/financing-offers-split";
+import { PurchaseAndTermsSection } from "@/components/sections/page/purchase-and-terms";
 import type { EquipmentFinancingPageConfig } from "./equipment-page-config";
 
 export function EquipmentFinancingPageShell({
@@ -35,10 +38,23 @@ export function EquipmentFinancingPageShell({
       <DrawerProvider>
         <main id="main-content">
           <HeroConvertFramed config={config.hero} />
-          <ProgramCards config={config.programs} />
+          {config.tertiaryStrip ? (
+            <TertiaryActionsStrip config={config.tertiaryStrip} />
+          ) : null}
+          {config.financingOffers ? (
+            <FinancingOffersSplit config={config.financingOffers} />
+          ) : null}
+          {config.programs ? <ProgramCards config={config.programs} /> : null}
           <BrandMarquee />
-          <TrustBridge config={config.trustBridge} />
-          <EquipmentDealsSection config={config.dealsSection} />
+          {config.purchaseAndTerms ? (
+            <PurchaseAndTermsSection config={config.purchaseAndTerms} />
+          ) : null}
+          {config.trustBridge ? (
+            <TrustBridge config={config.trustBridge} />
+          ) : null}
+          {config.dealsSection ? (
+            <EquipmentDealsSection config={config.dealsSection} />
+          ) : null}
           <FaqSection config={config.faqSection} />
 
           <section className="bg-gray-50 py-6 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">

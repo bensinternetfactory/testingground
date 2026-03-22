@@ -29,6 +29,7 @@ export interface HeroConvertFramedConfig
   footnoteMarkers?: Record<string, string>;
   tertiaryActions?: [HeroTertiaryAction, HeroTertiaryAction];
   galleryImages?: HeroGalleryImage[];
+  showTertiaryInHero?: boolean;
 }
 
 /**
@@ -154,6 +155,7 @@ export function HeroConvertFramed({
   const useOutlineTertiary = config.tertiaryVariant === "outline";
   const hasGallery = Boolean(config.galleryImages?.length);
   const tertiaryActions = config.tertiaryActions;
+  const showTertiary = config.showTertiaryInHero !== false;
 
   const bodyCopyContent = config.footnoteMarkers
     ? renderBodyWithMarkers(config.bodyCopy, config.footnoteMarkers)
@@ -191,19 +193,21 @@ export function HeroConvertFramed({
             </p>
           ) : null}
 
-          {hasGallery && tertiaryActions ? (
-            <div className="lg:hidden">
-              {useOutlineTertiary ? (
-                <TertiaryOutlineLinks actions={tertiaryActions} />
-              ) : (
-                <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
-              )}
-            </div>
-          ) : useOutlineTertiary && tertiaryActions ? (
-            <TertiaryOutlineLinks actions={tertiaryActions} />
-          ) : (
-            <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
-          )}
+          {showTertiary ? (
+            hasGallery && tertiaryActions ? (
+              <div className="lg:hidden">
+                {useOutlineTertiary ? (
+                  <TertiaryOutlineLinks actions={tertiaryActions} />
+                ) : (
+                  <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
+                )}
+              </div>
+            ) : useOutlineTertiary && tertiaryActions ? (
+              <TertiaryOutlineLinks actions={tertiaryActions} />
+            ) : (
+              <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
+            )
+          ) : null}
 
           {config.disclaimer ? (
             <p className="text-xs leading-5 text-[#999]">
@@ -230,7 +234,7 @@ export function HeroConvertFramed({
         )}
       </div>
 
-      {hasGallery && useOutlineTertiary && tertiaryActions ? (
+      {showTertiary && hasGallery && useOutlineTertiary && tertiaryActions ? (
         <div className="mx-auto hidden max-w-7xl grid-cols-2 gap-4 px-8 pb-10 lg:grid">
           {tertiaryActions.map((action) => (
             <TertiaryActionCard key={action.label} action={action} />
