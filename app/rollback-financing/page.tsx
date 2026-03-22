@@ -1,7 +1,5 @@
 import { EquipmentFinancingPageShell } from "@/app/_shared/equipment-financing/EquipmentFinancingPageShell";
-import {
-  rollbackFinancingPageConfig,
-} from "@/app/_shared/equipment-financing/equipment-page-config";
+import { rollbackFinancingPageConfig } from "./config";
 
 export const metadata = rollbackFinancingPageConfig.metadata;
 

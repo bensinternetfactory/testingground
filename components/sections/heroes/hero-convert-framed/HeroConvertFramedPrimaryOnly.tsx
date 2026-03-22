@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
@@ -10,20 +9,16 @@ interface HeroGalleryImage {
   alt: string;
 }
 
-export interface HeroConvertFramedConfig
+export interface HeroConvertFramedPrimaryOnlyConfig
   extends Omit<
     HeroConvertConfig,
-    "tiles"
+    "tiles" | "tertiaryLinks"
   > {
   tiles: FramedHeroTileData[];
   footnoteMarkers?: Record<string, string>;
   galleryImages?: HeroGalleryImage[];
 }
 
-/**
- * Injects superscript footnote markers into body copy text.
- * Splits on matching substrings and wraps each match with a trailing <sup>.
- */
 function renderBodyWithMarkers(
   text: string,
   markers: Record<string, string>
@@ -32,6 +27,7 @@ function renderBodyWithMarkers(
 
   for (const [substring, marker] of Object.entries(markers)) {
     const next: ReactNode[] = [];
+
     for (const part of parts) {
       if (typeof part !== "string") {
         next.push(part);
@@ -46,16 +42,19 @@ function renderBodyWithMarkers(
 
       const before = part.slice(0, idx + substring.length);
       const after = part.slice(idx + substring.length);
+
       next.push(before);
       next.push(
         <sup key={`${substring}-${marker}`} className="text-[0.65em] text-[#999]">
           {marker}
         </sup>,
       );
+
       if (after) {
         next.push(after);
       }
     }
+
     parts.length = 0;
     parts.push(...next);
   }
@@ -63,34 +62,12 @@ function renderBodyWithMarkers(
   return parts;
 }
 
-function TertiaryTextLinks({
-  tertiaryLinks,
-}: {
-  tertiaryLinks: HeroConvertConfig["tertiaryLinks"];
-}) {
-  return (
-    <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
-      {tertiaryLinks.map((link) => (
-        <Link
-          key={link.label}
-          href={link.href}
-          prefetch={false}
-          className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
-        >
-          {link.label}
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-export function HeroConvertFramed({
+export function HeroConvertFramedPrimaryOnly({
   config,
 }: {
-  config: HeroConvertFramedConfig;
+  config: HeroConvertFramedPrimaryOnlyConfig;
 }) {
   const hasGallery = Boolean(config.galleryImages?.length);
-
   const bodyCopyContent = config.footnoteMarkers
     ? renderBodyWithMarkers(config.bodyCopy, config.footnoteMarkers)
     : config.bodyCopy;
@@ -126,14 +103,6 @@ export function HeroConvertFramed({
               {config.microcopy}
             </p>
           ) : null}
-
-          {hasGallery ? (
-            <div className="lg:hidden">
-              <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
-            </div>
-          ) : (
-            <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
-          )}
 
           {config.disclaimer ? (
             <p className="text-xs leading-5 text-[#999]">

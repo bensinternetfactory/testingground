@@ -41,4 +41,4 @@ import { FinancingOffersSplit } from "@/components/sections/page/financing-offer
 ## Dependencies
 
 - `next/image` for icon rendering
-- Type imports from `equipment-page-config`
+- Local config types from `config.ts`

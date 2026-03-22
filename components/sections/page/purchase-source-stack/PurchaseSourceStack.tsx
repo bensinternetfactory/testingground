@@ -1,9 +1,16 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from "react";
+import {
+  type FocusEvent,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { PurchaseSourceStackConfig } from "@/app/_shared/equipment-financing/equipment-page-config";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import type { PurchaseSourceStackConfig } from "./config";
 
 function getReducedMotionSnapshot() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -25,16 +32,23 @@ export function PurchaseSourceStack({
   config: PurchaseSourceStackConfig;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHoverPaused, setIsHoverPaused] = useState(false);
+  const [isFocusPaused, setIsFocusPaused] = useState(false);
+  const [isUserPaused, setIsUserPaused] = useState(false);
   const prefersReducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot,
   );
-  const containerRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const cardCount = config.cards.length;
+  const isPaused =
+    prefersReducedMotion || isHoverPaused || isFocusPaused || isUserPaused;
+  const activeCard = config.cards[activeIndex];
+  const liveAnnouncement = `${activeCard.sourceName} slide ${activeIndex + 1} of ${cardCount}. ${
+    isPaused ? "Carousel paused." : "Carousel playing."
+  }`;
 
   const goNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % cardCount);
@@ -46,7 +60,7 @@ export function PurchaseSourceStack({
 
   // Auto-rotation
   useEffect(() => {
-    if (prefersReducedMotion || isPaused) {
+    if (isPaused) {
       if (intervalRef.current) clearInterval(intervalRef.current);
       return;
     }
@@ -55,7 +69,7 @@ export function PurchaseSourceStack({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [prefersReducedMotion, isPaused, goNext, config.rotationIntervalMs]);
+  }, [isPaused, goNext, config.rotationIntervalMs]);
 
   // Keyboard nav
   const handleKeyDown = useCallback(
@@ -87,6 +101,16 @@ export function PurchaseSourceStack({
     },
     [goNext, goPrev],
   );
+
+  const handleBlurCapture = useCallback((e: FocusEvent<HTMLDivElement>) => {
+    const nextTarget = e.relatedTarget;
+
+    if (nextTarget instanceof Node && e.currentTarget.contains(nextTarget)) {
+      return;
+    }
+
+    setIsFocusPaused(false);
+  }, []);
 
   // Reduced motion — static list
   if (prefersReducedMotion) {
@@ -131,19 +155,22 @@ export function PurchaseSourceStack({
       </p>
 
       <div
-        ref={containerRef}
         className="relative mt-8"
         role="region"
         aria-roledescription="carousel"
         aria-label="Purchase sources"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onFocus={() => setIsPaused(true)}
-        onBlur={() => setIsPaused(false)}
+        onMouseEnter={() => setIsHoverPaused(true)}
+        onMouseLeave={() => setIsHoverPaused(false)}
+        onFocusCapture={() => setIsFocusPaused(true)}
+        onBlurCapture={handleBlurCapture}
         onKeyDown={handleKeyDown}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
+        <p className="sr-only" aria-live={isPaused ? "polite" : "off"}>
+          {liveAnnouncement}
+        </p>
+
         {/* Card stack */}
         <div className="relative" style={{ minHeight: "220px" }}>
           {config.cards.map((card, index) => {
@@ -171,6 +198,7 @@ export function PurchaseSourceStack({
             return (
               <div
                 key={card.id}
+                id={`purchase-source-slide-${card.id}`}
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${index + 1} of ${cardCount}: ${card.sourceName}`}
@@ -185,26 +213,53 @@ export function PurchaseSourceStack({
         </div>
 
         {/* Controls */}
-        <div className="mt-4 flex items-center justify-between" aria-live="polite">
-          <button
-            type="button"
-            onClick={goPrev}
-            aria-label="Previous source"
-            className="rounded-full border border-gray-300 p-2 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous source"
+              className="rounded-full border border-gray-300 p-2 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsUserPaused((prev) => !prev)}
+              aria-pressed={isUserPaused}
+              aria-label={isUserPaused ? "Resume carousel autoplay" : "Pause carousel autoplay"}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-3 py-2 text-sm font-medium text-[#111] transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
+            >
+              {isUserPaused ? (
+                <Play className="h-4 w-4" />
+              ) : (
+                <Pause className="h-4 w-4" />
+              )}
+              {isUserPaused ? "Play" : "Pause"}
+            </button>
+          </div>
+
           <div className="flex gap-2">
             {config.cards.map((card, i) => (
               <button
                 key={card.id}
                 type="button"
-                aria-label={`Go to ${card.sourceName}`}
+                aria-controls={`purchase-source-slide-${card.id}`}
+                aria-label={
+                  i === activeIndex
+                    ? `${card.sourceName} slide, current`
+                    : `Go to ${card.sourceName} slide`
+                }
+                aria-pressed={i === activeIndex}
                 onClick={() => setActiveIndex(i)}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  i === activeIndex ? "bg-[#111]" : "bg-gray-300"
-                }`}
-              />
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-offset-2"
+              >
+                <span
+                  className={`h-2.5 w-2.5 rounded-full transition-colors ${
+                    i === activeIndex ? "bg-[#111]" : "bg-gray-300"
+                  }`}
+                />
+              </button>
             ))}
           </div>
           <button

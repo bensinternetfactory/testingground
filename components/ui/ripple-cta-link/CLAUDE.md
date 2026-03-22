@@ -43,7 +43,7 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 - **Default**: Dark pill (`bg-[#111111]`, white text, `rounded-full`)
 - **Hover**: Subtle fade (`bg-[#111111]/90`) + icon nudge (translate 0.5px in icon direction)
 - **Focus**: `focus-visible:ring-2` with `ring-[#111111]` and `ring-offset-2`
-- **Tap**: CSS-only ripple pulse from tap point (`bg-[#22C55E]/20`)
+- **Tap**: Motion ripple from tap point (`bg-[#22C55E]/20`)
 - **Disabled**: `bg-[#D1D5DB]`, white text, `cursor-not-allowed`
 
 ### Outline variant
@@ -51,15 +51,19 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 - **Default**: Transparent background, `border-gray-400`, dark text (`text-[#111]`), `rounded-full`
 - **Hover**: `bg-gray-100` fill + border darkens to `gray-500` + icon nudge
 - **Focus**: Same ring treatment as filled (`ring-[#111]`)
-- **Tap**: CSS-only neutral ripple (`bg-black/10`)
+- **Tap**: Motion ripple from tap point (`bg-black/10`)
 - **Disabled**: `border-gray-300`, `text-gray-400`, transparent background
 
 ## Interaction Behavior
 
 - Ripple cap: max 1 active ripple per instance
-- Ripple clears after ~250ms
+- Ripple animates from the activation point and clears on animation completion
 - Keyboard: `Enter` triggers center-origin ripple
 - Desktop: icon nudge on hover/focus
+- Touch: short haptic pulse on activation when supported by the device/browser
+- Touch swipe guard: swiping across the CTA does not trigger press feedback or navigation
+- Double-tap guard: rapid repeat pointer/touch taps are suppressed to avoid duplicate activation
+- Reduced motion: skips ripple/tap animation and lowers haptic intensity while keeping navigation intact
 
 ## Server/Client Boundary
 
@@ -74,3 +78,5 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 ## Dependencies
 
 - `next/link`
+- `framer-motion`
+- `web-haptics/react`

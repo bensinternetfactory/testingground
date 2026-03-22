@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
-import type { TertiaryStripConfig } from "@/app/_shared/equipment-financing/equipment-page-config";
+import type { TertiaryStripConfig } from "./config";
 
 export function TertiaryActionsStrip({
   config,

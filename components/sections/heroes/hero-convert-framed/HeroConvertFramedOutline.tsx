@@ -1,29 +1,34 @@
 import type { ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
+
+interface HeroTertiaryAction {
+  eyebrow: string;
+  label: string;
+  href: string;
+  drawerTitle?: string;
+}
 
 interface HeroGalleryImage {
   src: StaticImageData;
   alt: string;
 }
 
-export interface HeroConvertFramedConfig
+export interface HeroConvertFramedOutlineConfig
   extends Omit<
     HeroConvertConfig,
-    "tiles"
+    "tiles" | "tertiaryLinks"
   > {
   tiles: FramedHeroTileData[];
   footnoteMarkers?: Record<string, string>;
+  tertiaryActions: [HeroTertiaryAction, HeroTertiaryAction];
   galleryImages?: HeroGalleryImage[];
 }
 
-/**
- * Injects superscript footnote markers into body copy text.
- * Splits on matching substrings and wraps each match with a trailing <sup>.
- */
 function renderBodyWithMarkers(
   text: string,
   markers: Record<string, string>
@@ -32,6 +37,7 @@ function renderBodyWithMarkers(
 
   for (const [substring, marker] of Object.entries(markers)) {
     const next: ReactNode[] = [];
+
     for (const part of parts) {
       if (typeof part !== "string") {
         next.push(part);
@@ -46,16 +52,19 @@ function renderBodyWithMarkers(
 
       const before = part.slice(0, idx + substring.length);
       const after = part.slice(idx + substring.length);
+
       next.push(before);
       next.push(
         <sup key={`${substring}-${marker}`} className="text-[0.65em] text-[#999]">
           {marker}
         </sup>,
       );
+
       if (after) {
         next.push(after);
       }
     }
+
     parts.length = 0;
     parts.push(...next);
   }
@@ -63,34 +72,63 @@ function renderBodyWithMarkers(
   return parts;
 }
 
-function TertiaryTextLinks({
-  tertiaryLinks,
+function TertiaryActionCard({
+  action,
+  compact = false,
 }: {
-  tertiaryLinks: HeroConvertConfig["tertiaryLinks"];
+  action: HeroTertiaryAction;
+  compact?: boolean;
 }) {
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-2 sm:gap-x-6">
-      {tertiaryLinks.map((link) => (
-        <Link
-          key={link.label}
-          href={link.href}
-          prefetch={false}
-          className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
-        >
-          {link.label}
-        </Link>
+    <RippleCtaLink
+      href={action.href}
+      label={action.label}
+      variant="outline"
+      size="sm"
+      justify="between"
+      icon={<ArrowRight className="h-4 w-4" />}
+      drawerTitle={action.drawerTitle}
+      prefetch={false}
+      section="hero"
+      className={compact ? "w-full lg:w-auto" : "w-full rounded-2xl border-gray-200 px-6 py-5"}
+    >
+      {compact ? (
+        <span className="text-left">{action.label}</span>
+      ) : (
+        <span className="flex flex-col items-start">
+          <span className="text-xs text-[#999]">{action.eyebrow}</span>
+          <span className="mt-1 text-sm font-medium text-[#111]">
+            {action.label}
+          </span>
+        </span>
+      )}
+    </RippleCtaLink>
+  );
+}
+
+function TertiaryOutlineLinks({
+  actions,
+}: {
+  actions: [HeroTertiaryAction, HeroTertiaryAction];
+}) {
+  return (
+    <div className="border-t border-gray-200 pt-4">
+      {actions.map((action, index) => (
+        <div key={action.label} className={index === 0 ? undefined : "mt-4"}>
+          <p className="mb-2 text-xs text-[#999]">{action.eyebrow}</p>
+          <TertiaryActionCard action={action} compact />
+        </div>
       ))}
     </div>
   );
 }
 
-export function HeroConvertFramed({
+export function HeroConvertFramedOutline({
   config,
 }: {
-  config: HeroConvertFramedConfig;
+  config: HeroConvertFramedOutlineConfig;
 }) {
   const hasGallery = Boolean(config.galleryImages?.length);
-
   const bodyCopyContent = config.footnoteMarkers
     ? renderBodyWithMarkers(config.bodyCopy, config.footnoteMarkers)
     : config.bodyCopy;
@@ -129,10 +167,10 @@ export function HeroConvertFramed({
 
           {hasGallery ? (
             <div className="lg:hidden">
-              <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
+              <TertiaryOutlineLinks actions={config.tertiaryActions} />
             </div>
           ) : (
-            <TertiaryTextLinks tertiaryLinks={config.tertiaryLinks} />
+            <TertiaryOutlineLinks actions={config.tertiaryActions} />
           )}
 
           {config.disclaimer ? (
@@ -159,6 +197,14 @@ export function HeroConvertFramed({
           </div>
         )}
       </div>
+
+      {hasGallery ? (
+        <div className="mx-auto hidden max-w-7xl grid-cols-2 gap-4 px-8 pb-10 lg:grid">
+          {config.tertiaryActions.map((action) => (
+            <TertiaryActionCard key={action.label} action={action} />
+          ))}
+        </div>
+      ) : null}
 
       <div className="px-4 pb-4 sm:px-6 lg:hidden">
         <Image

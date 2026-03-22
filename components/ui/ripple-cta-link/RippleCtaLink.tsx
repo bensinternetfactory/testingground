@@ -2,11 +2,20 @@
 
 import {
   useCallback,
+  useRef,
   useState,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
+  type TouchEvent,
 } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { useWebHaptics } from "web-haptics/react";
+
+const MotionLink = motion.create(Link);
+
+const tapSpring = { type: "spring" as const, stiffness: 600, damping: 30 };
 
 interface Ripple {
   x: number;
@@ -62,6 +71,8 @@ function isExternalUrl(href: string): boolean {
   return /^https?:\/\//.test(href);
 }
 
+const SWIPE_THRESHOLD = 10;
+
 export function RippleCtaLink({
   href,
   label,
@@ -82,6 +93,12 @@ export function RippleCtaLink({
   drawerTitle,
 }: RippleCtaLinkProps) {
   const [ripple, setRipple] = useState<Ripple | null>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const { trigger } = useWebHaptics();
+  const lastTapRef = useRef(0);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const pendingModalityRef = useRef<"touch" | "keyboard" | null>(null);
+  const ignoreNextClickRef = useRef(false);
 
   const fireAnalytics = useCallback(
     (modality: "touch" | "mouse" | "keyboard") => {
@@ -103,28 +120,93 @@ export function RippleCtaLink({
     setRipple(null);
   }, []);
 
+  const spawnRipple = useCallback(
+    (x: number, y: number) => {
+      if (shouldReduceMotion) return;
+      setRipple({ x, y, id: ++rippleId });
+    },
+    [shouldReduceMotion],
+  );
+
   const handleClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
+      if (ignoreNextClickRef.current) {
+        ignoreNextClickRef.current = false;
+        pendingModalityRef.current = null;
+        event.preventDefault();
+        return;
+      }
+
       const nativeEvent = event.nativeEvent as unknown as {
         pointerType?: string;
       };
       const modality =
-        event.detail === 0
+        pendingModalityRef.current ??
+        (event.detail === 0
           ? "keyboard"
           : nativeEvent.pointerType === "touch"
             ? "touch"
-            : "mouse";
+            : "mouse");
+      pendingModalityRef.current = null;
+
+      if (modality !== "keyboard") {
+        const now = Date.now();
+        if (now - lastTapRef.current < 250) {
+          event.preventDefault();
+          return;
+        }
+        lastTapRef.current = now;
+
+        trigger([{ duration: 35 }], {
+          intensity: shouldReduceMotion ? 0.4 : 1,
+        });
+      }
 
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = modality === "keyboard" ? rect.width / 2 : event.clientX - rect.left;
-      const y = modality === "keyboard" ? rect.height / 2 : event.clientY - rect.top;
+      if (modality === "keyboard") {
+        spawnRipple(rect.width / 2, rect.height / 2);
+      } else {
+        spawnRipple(event.clientX - rect.left, event.clientY - rect.top);
+      }
 
-      setRipple({ x, y, id: ++rippleId });
       fireAnalytics(modality);
-      window.setTimeout(removeRipple, 250);
     },
-    [fireAnalytics, removeRipple],
+    [fireAnalytics, shouldReduceMotion, spawnRipple, trigger],
   );
+
+  const handleTouchStart = useCallback(
+    (event: TouchEvent<HTMLAnchorElement>) => {
+      const touch = event.touches[0];
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    },
+    [],
+  );
+
+  const handleTouchEnd = useCallback((event: TouchEvent<HTMLAnchorElement>) => {
+    const start = touchStartRef.current;
+    if (!start) return;
+
+    const touch = event.changedTouches[0];
+    const dx = Math.abs(touch.clientX - start.x);
+    const dy = Math.abs(touch.clientY - start.y);
+
+    if (dx > SWIPE_THRESHOLD || dy > SWIPE_THRESHOLD) {
+      ignoreNextClickRef.current = true;
+      pendingModalityRef.current = null;
+      event.preventDefault();
+      touchStartRef.current = null;
+      return;
+    }
+
+    touchStartRef.current = null;
+    pendingModalityRef.current = "touch";
+  }, []);
+
+  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLAnchorElement>) => {
+    if (event.key === "Enter") {
+      pendingModalityRef.current = "keyboard";
+    }
+  }, []);
 
   const iconElement = icon ? (
     <span
@@ -139,7 +221,7 @@ export function RippleCtaLink({
   const external = isExternalUrl(href);
   const justifyClass = justify === "between" ? "justify-between" : "justify-center";
 
-  const sharedClassName = `group/cta relative inline-flex items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full ${sizeClasses[size]} ${
+  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${
     isOutline
       ? "border border-gray-400 bg-transparent text-[#111111] hover:border-gray-500 hover:bg-gray-100"
       : "bg-[#111111] text-white hover:bg-[#111111]/90"
@@ -155,9 +237,14 @@ export function RippleCtaLink({
       {children ?? label}
       {iconPosition === "end" ? iconElement : null}
       {ripple ? (
-        <span
+        <motion.span
+          key={ripple.id}
           aria-hidden="true"
-          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full ${isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
+          initial={{ scale: 0, opacity: 0.4 }}
+          animate={{ scale: 4, opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          onAnimationComplete={removeRipple}
+          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
           style={{ left: ripple.x, top: ripple.y }}
         />
       ) : null}
@@ -179,29 +266,43 @@ export function RippleCtaLink({
 
   if (external) {
     return (
-      <a
+      <motion.a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onKeyDown={handleKeyDown}
+        whileTap={
+          shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
+        }
+        transition={tapSpring}
         aria-label={ariaLabel}
         className={sharedClassName}
       >
         {content}
-      </a>
+      </motion.a>
     );
   }
 
   return (
-    <Link
+    <MotionLink
       href={href}
       prefetch={prefetch}
       onClick={handleClick}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onKeyDown={handleKeyDown}
+      whileTap={
+        shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
+      }
+      transition={tapSpring}
       aria-label={ariaLabel}
       data-drawer-title={drawerTitle}
       className={sharedClassName}
     >
       {content}
-    </Link>
+    </MotionLink>
   );
 }

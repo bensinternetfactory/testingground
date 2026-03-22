@@ -39,4 +39,4 @@ import { TertiaryActionsStrip } from "@/components/sections/page/tertiary-strip"
 
 - `RippleCtaLink` from `@/components/ui/ripple-cta-link`
 - `lucide-react` for ArrowRight icon
-- Type imports from `equipment-page-config`
+- Local config types from `config.ts`

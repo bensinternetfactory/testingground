@@ -42,7 +42,9 @@ import { PurchaseSourceStack } from "@/components/sections/page/purchase-source-
 
 - `aria-roledescription="carousel"` on container
 - `role="group"` with `aria-roledescription="slide"` per card
-- `aria-live="polite"` on controls region
+- Explicit pause/play control
+- Live status region announces active slide and paused/playing state
+- Active dot button exposes `aria-pressed`
 - Keyboard navigation: ArrowLeft/ArrowRight
 - Pause on hover/focus
 - `prefers-reduced-motion: reduce` renders static list
@@ -55,4 +57,4 @@ import { PurchaseSourceStack } from "@/components/sections/page/purchase-source-
 
 - `next/image` for source icons
 - `lucide-react` for ChevronLeft/ChevronRight
-- Type imports from `equipment-page-config`
+- Local config types from `config.ts`

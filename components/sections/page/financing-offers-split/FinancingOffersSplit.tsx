@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { FinancingOffersSplitConfig } from "@/app/_shared/equipment-financing/equipment-page-config";
+import type { FinancingOffersSplitConfig } from "./config";
 
 function OfferHalf({
   offer,

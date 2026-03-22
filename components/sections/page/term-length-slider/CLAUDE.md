@@ -40,7 +40,7 @@ import { TermLengthSlider } from "@/components/sections/page/term-length-slider"
 
 - Slider range: 2000 to `currentYear + 1` (programmatic)
 - `aria-valuetext` announces both year and term
-- 44px touch target on slider thumb
+- 44px touch target on the slider thumb in WebKit and Firefox
 - Result displays in a bordered container
 
 ## Server/Client Boundary
@@ -50,4 +50,4 @@ import { TermLengthSlider } from "@/components/sections/page/term-length-slider"
 ## Dependencies
 
 - `next/image` for icon
-- Type imports from `equipment-page-config`
+- Local config types from `config.ts`

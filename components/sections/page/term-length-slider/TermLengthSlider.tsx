@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import type { TermSliderConfig } from "@/app/_shared/equipment-financing/equipment-page-config";
+import type { TermSliderConfig } from "./config";
 
 export function TermLengthSlider({
   config,
@@ -11,18 +11,18 @@ export function TermLengthSlider({
 }) {
   const currentYear = new Date().getFullYear() + 1;
   const minYear = 2000;
+  const initialYear = Math.min(Math.max(config.defaultYear, minYear), currentYear);
 
-  const [selectedYear, setSelectedYear] = useState(config.defaultYear);
+  const [selectedYear, setSelectedYear] = useState(initialYear);
 
-  const maxTerm = useMemo(() => {
-    for (const entry of config.lookupTable) {
-      if (selectedYear >= entry.minYear && selectedYear <= entry.maxYear) {
-        return entry.maxTermMonths;
-      }
+  let maxTerm = config.lookupTable[config.lookupTable.length - 1].maxTermMonths;
+
+  for (const entry of config.lookupTable) {
+    if (selectedYear >= entry.minYear && selectedYear <= entry.maxYear) {
+      maxTerm = entry.maxTermMonths;
+      break;
     }
-    // Fallback: use the last entry
-    return config.lookupTable[config.lookupTable.length - 1].maxTermMonths;
-  }, [selectedYear, config.lookupTable]);
+  }
 
   return (
     <div>
@@ -60,7 +60,7 @@ export function TermLengthSlider({
           onChange={(e) => setSelectedYear(Number(e.target.value))}
           aria-label="Select truck model year"
           aria-valuetext={`${selectedYear} model year, up to ${maxTerm} month term`}
-          className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-[#111] [&::-webkit-slider-thumb]:h-[44px] [&::-webkit-slider-thumb]:w-[44px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#111] [&::-webkit-slider-thumb]:shadow-lg"
+          className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-[#111] [&::-moz-range-thumb]:h-[44px] [&::-moz-range-thumb]:w-[44px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[#111] [&::-moz-range-thumb]:shadow-lg [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-gray-200 [&::-webkit-slider-thumb]:h-[44px] [&::-webkit-slider-thumb]:w-[44px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#111] [&::-webkit-slider-thumb]:shadow-lg"
         />
       </div>
 

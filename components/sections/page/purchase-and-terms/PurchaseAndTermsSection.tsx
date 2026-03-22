@@ -1,6 +1,6 @@
 import { PurchaseSourceStack } from "@/components/sections/page/purchase-source-stack";
 import { TermLengthSlider } from "@/components/sections/page/term-length-slider";
-import type { PurchaseAndTermsConfig } from "@/app/_shared/equipment-financing/equipment-page-config";
+import type { PurchaseAndTermsConfig } from "./config";
 
 export function PurchaseAndTermsSection({
   config,

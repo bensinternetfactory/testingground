@@ -38,4 +38,4 @@ import { PurchaseAndTermsSection } from "@/components/sections/page/purchase-and
 
 - `PurchaseSourceStack` from `@/components/sections/page/purchase-source-stack`
 - `TermLengthSlider` from `@/components/sections/page/term-length-slider`
-- Type imports from `equipment-page-config`
+- Local config types from `config.ts`

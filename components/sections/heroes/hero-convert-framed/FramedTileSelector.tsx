@@ -21,6 +21,7 @@ interface FramedTileSelectorProps {
   selectionPrompt: string;
   selectionRequiredMessage: string;
   viewAllLink?: { label: string; href: string };
+  section?: string;
 }
 
 export function FramedTileSelector({
@@ -29,6 +30,7 @@ export function FramedTileSelector({
   selectionPrompt,
   selectionRequiredMessage,
   viewAllLink,
+  section = "equipment-hero",
 }: FramedTileSelectorProps) {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const selectedLabel = tiles.find((tile) => tile.id === selectedTile)?.label;
@@ -81,7 +83,7 @@ export function FramedTileSelector({
         label={cta.label}
         size="md"
         disabled={!selectedTile}
-        section="rollback-hero"
+        section={section}
         ariaLabel={cta.label}
         className="mt-1 w-full justify-center sm:mt-1 sm:w-auto"
       />
