@@ -105,7 +105,7 @@ export function RippleCtaLink({
 
   const handleClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
-      const nativeEvent = event.nativeEvent as MouseEvent & {
+      const nativeEvent = event.nativeEvent as unknown as {
         pointerType?: string;
       };
       const modality =

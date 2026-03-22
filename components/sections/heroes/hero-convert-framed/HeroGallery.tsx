@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Image, { type StaticImageData } from "next/image";
-import ChevronLeft from "lucide-react/dist/esm/icons/chevron-left";
-import ChevronRight from "lucide-react/dist/esm/icons/chevron-right";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface HeroGalleryProps {
   images: { src: StaticImageData; alt: string }[];
@@ -22,7 +21,7 @@ export function HeroGallery({ images }: HeroGalleryProps) {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm font-semibold uppercase tracking-widest text-[#999]">
-        Rollbacks We&apos;ve Financed
+        Deals We&apos;ve Financed
       </p>
 
       <div className="relative overflow-hidden rounded-2xl">

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import ArrowRight from "lucide-react/dist/esm/icons/arrow-right";
+import { ArrowRight } from "lucide-react";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
@@ -22,7 +22,7 @@ interface HeroGalleryImage {
 export interface HeroConvertFramedConfig
   extends Omit<
     HeroConvertConfig,
-    "tiles" | "tertiaryLinks"
+    "tiles"
   > {
   tiles: FramedHeroTileData[];
   tertiaryVariant?: "link" | "outline";

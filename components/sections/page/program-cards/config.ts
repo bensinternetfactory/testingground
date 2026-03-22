@@ -2,7 +2,13 @@ export interface ProgramCardData {
   id: string;
   title: string;
   description: string;
-  iconId: "zero-down" | "fleet" | "deferred" | "private-party";
+  iconId:
+    | "zero-down"
+    | "fleet"
+    | "deferred"
+    | "private-party"
+    | "used-terms"
+    | "new-terms";
   iconClassName?: string;
   linkText: string;
   linkHref: string;

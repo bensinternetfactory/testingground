@@ -40,6 +40,20 @@ const ICONS = {
     height: 60,
     className: "h-10 w-auto sm:h-12",
   },
+  "used-terms": {
+    src: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+    alt: "Longer terms on used trucks",
+    width: 60,
+    height: 60,
+    className: "h-10 w-auto sm:h-12",
+  },
+  "new-terms": {
+    src: "/brand-assets/benefit-icons/terms/terms-pencil.svg",
+    alt: "Up to 84 months on new trucks",
+    width: 60,
+    height: 60,
+    className: "h-10 w-auto sm:h-12",
+  },
   "private-party": {
     src: "/brand-assets/benefit-icons/hook/hook-dark.svg",
     alt: "Private party sales",
