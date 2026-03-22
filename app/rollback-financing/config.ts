@@ -105,6 +105,21 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
   tertiaryStrip: ROLLBACK_TERTIARY_STRIP_CONFIG,
   financingOffers: ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
   purchaseAndTerms: ROLLBACK_PURCHASE_AND_TERMS_CONFIG,
+  purchaseTermsTertiaryStrip: {
+    actions: [
+      {
+        eyebrow: "Buying from a private seller?",
+        label: "Private-party rollback financing",
+        href: "/private-party-tow-truck-financing",
+      },
+      {
+        eyebrow: "Looking at an older rollback?",
+        label: "See if your truck year qualifies",
+        href: DRAWER_HASH,
+        drawerTitle: "How much is the rollback you're looking at?",
+      },
+    ],
+  },
   faqSection: rollbackFaq.section,
   faqSchema: rollbackFaq.schema,
   financialProductSchema: {

@@ -40,6 +40,7 @@ import { TermLengthSlider } from "@/components/sections/page/term-length-slider"
 
 - Slider range: 2000 to `currentYear + 1` (programmatic)
 - `aria-valuetext` announces both year and term
+- Reuses pre-approval drawer slider visual style (green gradient fill, white thumb with green border)
 - 44px touch target on the slider thumb in WebKit and Firefox
 - Result displays in a bordered container
 
@@ -50,4 +51,5 @@ import { TermLengthSlider } from "@/components/sections/page/term-length-slider"
 ## Dependencies
 
 - `next/image` for icon
+- `amount-slider.css` from `@/components/ui/pre-approval-drawer` for shared slider styling
 - Local config types from `config.ts`

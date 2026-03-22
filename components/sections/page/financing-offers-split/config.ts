@@ -1,3 +1,17 @@
+export interface CountdownConfig {
+  /** ISO date string anchor for the countdown, e.g. "2026-04-01" */
+  anchorDate: string;
+  /** Number of days for the initial countdown window */
+  initialWindowDays: number;
+  /** If true, restart in 30-day cycles after the initial window expires */
+  autoReset: boolean;
+}
+
+export interface LearnMoreLink {
+  text: string;
+  href: string;
+}
+
 interface BaseOfferIcon {
   iconSrc: string;
   iconAlt: string;
@@ -8,6 +22,8 @@ interface BaseOfferIcon {
 export interface FinancingOfferHalf extends BaseOfferIcon {
   headline: string;
   body: string;
+  countdown?: CountdownConfig;
+  learnMoreLink?: LearnMoreLink;
 }
 
 export interface FinancingOffersSplitConfig {
@@ -33,5 +49,14 @@ export const ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig 
     iconAlt: "180-day payment deferment icon",
     iconWidth: 64,
     iconHeight: 64,
+    countdown: {
+      anchorDate: "2026-03-22",
+      initialWindowDays: 30,
+      autoReset: true,
+    },
+    learnMoreLink: {
+      text: "How deferred payments work",
+      href: "/deferred-payment-tow-truck-financing",
+    },
   },
 };

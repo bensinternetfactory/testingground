@@ -1,201 +1,246 @@
-# Rollback Financing Page Refactor — Dev Log
+# Rollback Financing Page Update Spec
 
-## What we did
+## Goal
 
-Refactored the `/rollback-financing` page from a generic shared layout into rollback-specific content. The page previously reused three shared sections — `ProgramCards`, `TrustBridge`, and `EquipmentDealsSection` — that were the same across rollback, wrecker, and rotator pages. We replaced all three with purpose-built sections that speak directly to rollback shoppers arriving from search, ads, or internal links.
+Clean up and tighten the `/rollback-financing` page so the two-column content feels consistent, the deferred-payment offer feels more compelling, and the purchase/term section has stronger next-step paths without becoming cluttered.
 
-The shared `EquipmentFinancingPageShell` was evolved, not forked. Rollback moved to a route-local config model, and the shared shell/hero contracts were later cleaned up so the rollback page follows the homepage’s thin-route, section-owned content pattern without regressing wrecker or rotator behavior.
+This spec is intended to be clear enough that a new Codex or Claude instance can implement it without having to rediscover the intent.
 
-## Why we did it
+## References
 
-The generic sections didn't say anything rollback-specific. A shopper landing on `/rollback-financing` from Google saw the same program cards and deal types as every other equipment page. The new sections address what rollback buyers actually care about: zero-down options, payment deferment, where they can buy from, and what terms are available for the model year they're looking at.
+- Route: `app/rollback-financing/page.tsx`
+- Page config: `app/rollback-financing/config.ts`
+- Financing offers section: `components/sections/page/financing-offers-split/`
+- Purchase + terms wrapper: `components/sections/page/purchase-and-terms/`
+- Term slider section: `components/sections/page/term-length-slider/`
+- Purchase source section: `components/sections/page/purchase-source-stack/`
+- Pre-approval drawer: `components/ui/pre-approval-drawer/`
+- Existing tertiary strip pattern: `components/sections/page/tertiary-strip/`
+- Related dev notes: `plans/rollback-financing/rollbackdevlog.md`
+- Deferred payments destination: `/deferred-payment-tow-truck-financing` from `major-seo.md`
 
-## Section order before → after
+## Scope
 
-**Before:**
-```
-Hero (with tertiary actions inside)
-ProgramCards
-BrandMarquee
-TrustBridge ("How It Works")
-EquipmentDealsSection
-FAQ → Footnotes → Closing CTA → Related Links → Footer
-```
+This work covers three areas:
 
-**After:**
-```
-Hero (tertiary actions removed)
-Tertiary Actions Strip          ← new
-Financing Offers Split          ← new (replaces ProgramCards)
-BrandMarquee                    ← moved up
-Purchase & Terms Section        ← new (replaces TrustBridge + EquipmentDealsSection)
-FAQ → Footnotes → Closing CTA → Related Links → Footer
-```
+1. Update the deferred-payments half of the financing offers split.
+2. Fix the shared layout/spacing problem between the purchase-source and term-length content.
+3. Add a slim tertiary CTA row below the purchase-and-terms section.
 
-## Files modified
+## Desired Outcome
 
-### `app/rollback-financing/config.ts`
-- Route-local rollback config now owns rollback-specific copy, metadata, section ordering, and section config imports so content is edited beside the route/sections instead of inside a shared cross-route config file
+- The financing-offers split and the purchase-and-terms section should feel like the same layout system.
+- The deferred-payment offer should add urgency without feeling spammy.
+- The term-length section should stay educational, not overly salesy.
+- The new CTA row should create clearer next steps without competing with the page’s main funnel.
 
-### `app/_shared/equipment-financing/page-config-types.ts`
-- Introduced a thinner shared page contract for equipment pages
-- Hero rendering now uses an explicit union (`framed`, `framed-outline`, `primary-only`) instead of a rollback-only boolean flag
+## 1. Financing Offers Split
 
-### `app/_shared/equipment-financing/shared-config.ts`
-- Extracted shared equipment helpers and shared footnotes into a reusable module
+### Section
 
-### `app/_shared/equipment-financing/equipment-page-config.tsx`
-- Reduced to shared wrecker/rotator page config only
-- Rollback-specific section content no longer lives here
+`components/sections/page/financing-offers-split/`
 
-### `app/_shared/equipment-financing/EquipmentFinancingPageShell.tsx`
-- Converted the shell into an orchestration layer that renders explicit hero variants plus section components
-- Replaced inline footnotes / closing CTA / related links markup with dedicated section components and config-driven rendering
+### Required changes
 
-## Files created
+- Update the right-hand offer: `No Payments for Up to 180 Days`.
+- Add a promotional-but-professional countdown chip.
+- Add a small text CTA at the bottom of that offer for deferred-payment education.
 
-### `components/sections/page/tertiary-strip/`
-- `TertiaryActionsStrip.tsx` — Server component. Thin `bg-gray-50` strip with `RippleCtaLink variant="outline"` cards in a responsive `sm:grid-cols-2` grid. Each card has an eyebrow label, action text, ArrowRight icon, and drawer integration via `drawerTitle`. Extracted from the hero to give these secondary conversion paths their own visual weight.
-- `config.ts` — Local section config + rollback strip content
-- `index.ts` — Barrel export
-- `CLAUDE.md` — Component docs
+### Countdown chip requirements
 
-### `components/sections/page/financing-offers-split/`
-- `FinancingOffersSplit.tsx` — Server component. Two prominent halves (Zero Down Rollback Financing | No Payments for Up to 180 Days) in a hero-style split layout. Desktop uses `grid md:grid-cols-[1fr_1px_1fr]` with a `bg-gray-200` vertical divider column. Mobile stacks with a horizontal `border-t`. Each half renders an icon, headline, and body copy. Informational only, no CTAs. Replaced the generic ProgramCards with rollback-specific value props.
-- `config.ts` — Local section config + rollback offer copy
-- `index.ts` — Barrel export
-- `CLAUDE.md` — Component docs
+- Place the chip inside the right-hand offer.
+- On both desktop and mobile, the chip should sit at the top-right, visually across from the icon.
+- The chip should feel like part of the offer card content, not like a separate section-level badge.
+- Show remaining **days only**. Do not show hours/minutes.
+- The countdown is **site-wide**, not per user/session.
 
-### `components/sections/page/purchase-source-stack/`
-- `PurchaseSourceStack.tsx` — Client component. Animated card carousel showing 4 financing sources (Authorized Retailers, Facebook Marketplace, Ritchie Brothers, Private Sellers) with mock listing cards styled like marketplace results. Uses `useSyncExternalStore` for `prefers-reduced-motion` detection. Auto-rotates every ~4.5s, pauses on hover/focus or via explicit pause/play control, supports swipe on mobile and prev/next buttons on desktop, and exposes larger dot controls with `aria-pressed` state. Reduced motion renders a static list. Stacking visual: active card at full opacity, behind-1 at `scale(0.95) translateY(8px)`, behind-2 at `scale(0.90) translateY(16px)`. Hook icon above the headline. Replaced EquipmentDealsSection.
-- `config.ts` — Local section config + rollback source cards
-- `index.ts` — Barrel export
-- `CLAUDE.md` — Component docs
+### Countdown config behavior
 
-### `components/sections/page/term-length-slider/`
-- `TermLengthSlider.tsx` — Client component. Interactive `<input type="range">` slider mapping truck model year to maximum financing term. Range: 2000 to `currentYear + 1` (programmatic, always adds the next year). 44px touch target on the slider thumb is styled for WebKit and Firefox. `aria-valuetext` announces both year and term. Result displayed in a bordered container (e.g. "72 months / maximum term length"). Placeholder lookup table: 2000–2009 → 36mo, 2010–2014 → 48mo, 2015–2018 → 60mo, 2019–2022 → 72mo, 2023+ → 84mo.
-- `config.ts` — Local section config + rollback term table
-- `index.ts` — Barrel export
-- `CLAUDE.md` — Component docs
+The countdown must be configurable in code.
 
-### `components/sections/page/purchase-and-terms/`
-- `PurchaseAndTermsSection.tsx` — Server component wrapping PurchaseSourceStack (left) and TermLengthSlider (right). Same divider pattern as FinancingOffersSplit: desktop uses `grid lg:grid-cols-[1fr_1px_1fr]` with `self-stretch bg-gray-200` for a full-height vertical divider, mobile stacks with a horizontal `border-t`. White background, `py-20 md:py-28`. Per-column headlines, no shared section header.
-- `config.ts` — Local wrapper config that composes the purchase-stack and term-slider section configs
-- `index.ts` — Barrel export
-- `CLAUDE.md` — Component docs
+The implementation should support:
 
-### `components/sections/page/financing-footnotes/`
-- Extracted shared equipment footnotes into a dedicated section component + config type so the shell no longer inlines authored copy
+- A configurable anchor/expiry date so the owner can set a real promo window.
+- A configurable initial window that can be something other than 30 days, for example 25 or 60.
+- An `autoReset` mode.
+- If `autoReset` is `true`, once the configured window expires the countdown should automatically restart in **30-day cycles**.
+- Future resets should always default to 30 days, even if the initial configured window was different.
 
-### `components/sections/page/equipment-closing-cta/`
-- Extracted the dark closing CTA into a dedicated section component + config type
+The spec does not require a CMS. A code/config-driven solution is fine.
 
-### `components/sections/page/related-links-strip/`
-- Extracted related links into a dedicated section component + config type
+### Chip tone
 
-### `components/sections/heroes/hero-convert-framed/`
-- `HeroConvertFramedPrimaryOnly.tsx` — Explicit rollback hero variant with no tertiary content inside the hero
-- `HeroConvertFramedOutline.tsx` — Explicit wrecker/rotator hero variant with outline tertiary cards
-- `HeroConvertFramed.tsx` — Reduced to the text-link tertiary variant instead of multiplexing link vs outline behavior behind a single config shape
+- Promotional
+- Professional
+- Not compliance-heavy
+- Not flashy or gimmicky
 
-### `public/brand-assets/source-icons/`
-- `placeholder-dealer.svg` — House/storefront geometric placeholder
-- `placeholder-fbmp.svg` — Person/profile geometric placeholder
-- `placeholder-auction.svg` — Gavel/scale geometric placeholder
-- `placeholder-private.svg` — Lock geometric placeholder
+### Example chip copy
 
-Simple geometric SVGs standing in for real source icons. Will be replaced with branded assets.
+- `Offer expires in 27 days`
+- `Deferred payment offer ends in 27 days`
 
-## Headline iterations
+Keep the final version short.
 
-During review, the purchase/terms column headlines were revised for punch:
-- Purchase column: "Finance from any source" → **"Buy from anyone. We'll finance it."**
-- Term column: "Term Length by Model Year" → **"Older truck? Still financeable."**
+### Deferred-payments learn-more link
 
-## Wrecker & rotator — no regressions
+- Add a text-style CTA at the bottom of the deferred-payments offer.
+- This should not look like a full button.
+- It can use an arrow treatment if that fits the existing design language.
+- Link destination: `/deferred-payment-tow-truck-financing`
+- The purpose is to answer questions like:
+  - how deferred payments work
+  - who they are for
+  - what happens after the deferred period
+  - what the tradeoffs are
+- This information should live on the dedicated page, not on `/rollback-financing`
 
-Both pages still render their original sections (ProgramCards, TrustBridge, EquipmentDealsSection) because those config fields remain populated. Their hero wiring was later migrated onto the explicit `framed-outline` hero variant, but that cleanup was structural rather than behavioral. Verified in browser with no wrecker/rotator regressions.
+### Example link copy
 
-## Verification
+- `Learn more about deferred payments`
+- `How deferred payments work`
 
-- `npm run build` — clean, all 7 routes generate
-- `npm run lint` — 0 errors (1 pre-existing warning in `PreApprovalDrawer.tsx`, unrelated)
-- Browser validation on port 3005: correct section order, drawer opens from tertiary strip, carousel rotates and pauses, slider shows correct terms, wrecker/rotator unchanged
+## 2. Shared Two-Column Layout Fix
 
-## Follow-up fix — 2026-03-22 14:33 EDT
+### Sections involved
 
-A sitewide regression surfaced after the rollback refactor work: `RippleCtaLink` interactions still navigated correctly, but the touch layer had degraded. The visible ripple feedback felt wrong, haptics were no longer firing, and the hardened touch handling that protected against swipe misfires and rapid double taps had been lost in the shared CTA primitive.
+- `components/sections/page/financing-offers-split/`
+- `components/sections/page/purchase-and-terms/`
+- `components/sections/page/term-length-slider/`
+- `components/sections/page/purchase-source-stack/`
 
-### Root cause
+### Problem to solve
 
-The issue was not rollback-page-specific. It came from the shared `components/ui/ripple-cta-link/RippleCtaLink.tsx` implementation, which had been simplified during recent CTA API work. That simplification preserved the newer props (`children`, `variant`, `justify`, `disabled`, `drawerTitle`) but dropped the previous interaction logic built around `framer-motion`, `useReducedMotion`, `web-haptics`, swipe suppression, double-tap guarding, and keyboard-specific ripple behavior. Because `RippleCtaLink` is reused sitewide, the regression affected CTAs across the site.
+The purchase-and-terms area currently has extra white space on desktop and does not visually match the financing-offers split, even though they are both effectively the same two-column layout pattern.
 
-### Fix applied
+The goal is not just to hide the symptom. The goal is to fix the layout system so this mismatch does not keep happening.
 
-- Restored `framer-motion` press feedback and animated ripple behavior while preserving the newer CTA API surface
-- Restored `web-haptics` activation on pointer/touch input with reduced intensity under reduced-motion preferences
-- Restored touch swipe guarding so dragging across a CTA does not trigger activation
-- Restored double-tap protection to suppress duplicate rapid activations
-- Restored keyboard `Enter` handling so keyboard activation still produces centered ripple feedback
-- Kept current drawer/hash integration intact, including `data-drawer-title` passthrough for drawer-opening CTA variants
-- Updated `components/ui/ripple-cta-link/CLAUDE.md` so the component docs match the actual interaction contract again
+### Required outcome
 
-### Verification for follow-up fix
+- The purchase-and-terms module should visually mirror the financing-offers split on desktop.
+- Treat this as a shared layout problem, not just a one-off spacing tweak.
+- If needed, extract or introduce a reusable shared two-column section shell/pattern that both modules can use.
 
-- `npm run build` — clean
-- `npm run lint` — no errors; same pre-existing warning in `PreApprovalDrawer.tsx`
-- Browser validation on port 3005: `/rollback-financing` rendered correctly and a filled `Get Pre-Approved` CTA still opened the pre-approval drawer after the interaction-layer restore
+### What should match
 
-## Follow-up fix — 2026-03-22
+- Outer section rhythm
+- Container width
+- Top and bottom spacing
+- Internal column spacing
+- Divider behavior
+- General sizing feel of each half
 
-The post-review cleanup addressed the remaining architecture and accessibility gaps from the rollback refactor so the page now matches the homepage’s thin-route, section-config editing model and the interactive controls are defensible under review.
+### Divider behavior
 
-### Root cause
+- Desktop: full-height vertical divider between columns
+- Mobile: horizontal divider between stacked sections
 
-- Rollback-owned content was still too centralized in the shared equipment page config instead of living beside the route and section folders
-- The shared framed hero had shed the rollback-only boolean, but it still multiplexed tertiary link mode vs outline-card mode inside one component
-- The purchase-source carousel still had undersized dot targets for touch users
-- The rollback dev log was describing an older boolean-based implementation that no longer matched the code
+### Important clarification
 
-### Fix applied
+The spacing problem being called out is a **desktop issue**.
 
-- Moved rollback page ownership into `app/rollback-financing/config.ts` and section-local `config.ts` files for the new rollback sections
-- Added `app/_shared/equipment-financing/page-config-types.ts` and `shared-config.ts` so the shared shell stays an orchestration layer and shared helpers stay separate from rollback-authored content
-- Replaced inline shell footnotes, closing CTA, and related links with dedicated section components/config types
-- Split the framed hero into explicit variants:
-  - `HeroConvertFramed.tsx` for text-link tertiary content
-  - `HeroConvertFramedOutline.tsx` for outline tertiary cards
-  - `HeroConvertFramedPrimaryOnly.tsx` for rollback’s no-tertiary-in-hero variant
-- Increased the carousel dot targets to full button-sized hit areas while keeping the visible dot styling compact
-- Updated `FramedTileSelector.tsx` so shared hero CTA analytics use a generic equipment-hero section value instead of hard-coded rollback-specific metadata
-- Updated component docs and this rollback log so the documented implementation matches the code again
+Mobile should still remain coherent, but the main correction is for desktop parity.
 
-### Verification
+## 3. Term-Length Slider Update
 
-- `npm run lint` — passes with the same pre-existing `PreApprovalDrawer.tsx` warning only
-- `npm run build` — clean
-- Browser validation on port 3005:
-  - `/rollback-financing` desktop and mobile render correctly
-  - rollback hero tertiary actions remain in the strip, not inside the hero
-  - hero CTA and tertiary strip CTA open the pre-approval drawer
-  - carousel renders with pause/play control and enlarged dot controls
-  - `/wrecker-financing` still renders its in-hero tertiary cards and legacy section stack correctly
-  - `/rotator-financing` remained clean in the earlier regression pass before the hero-variant cleanup, and the explicit hero split preserved that behavior contract
-- Final live re-check on port 3005 after the analytics cleanup:
-  - `/rollback-financing` still enables the hero CTA after truck selection
-  - the enabled hero CTA still opens the pre-approval drawer
-  - `npm run lint` and `npm run build` still pass after the selector change
+### Section
 
-### Independent code review
+`components/sections/page/term-length-slider/`
 
-- Passed a fresh Codex re-review using:
-  - `.agents/skills/vercel-composition-patterns/SKILL.md`
-  - `.agents/skills/vercel-react-best-practices/SKILL.md`
-- Final review result: no remaining implementation findings after the shared hero analytics cleanup
-- Final reviewer caveat: the last independent live check re-verified `/rollback-financing` on port 3005, but did not repeat a fresh mobile browser pass in that final micro-review
+### Required changes
 
-## Open items
+- Rework this section so it reuses the same slider style and interaction feel as the slider in `components/ui/pre-approval-drawer/`
+- Reuse the slider’s visual language and interaction model
+- The math/lookup logic can remain different because this section is educational and serves a different purpose
 
-- Replace placeholder source icons with real branded assets
-- Term lookup table values are placeholder — real rules TBD
-- Copy on all new sections is draft and may be revised
+### Intent
+
+- This section is primarily **educational**
+- It should help the user understand how truck age affects financing term length
+- It should not read like a calculator-first or application-first module
+
+## 4. New Slim CTA Row Below Purchase + Terms
+
+### Placement
+
+- Add a slim two-link CTA row immediately **below** the purchase-and-terms section
+- This should be a separate strip, not embedded inside one of the two columns
+- Show it on **both desktop and mobile**
+
+### Pattern
+
+- Reuse the existing `TertiaryActionsStrip` pattern/component if possible
+- It should feel similar in spirit to the hero’s two slim links
+- The wording should be shorter and cleaner than the raw intent notes in this doc
+
+### CTA strategy
+
+This row should contain two actions:
+
+1. One action tied to the purchase-source side
+2. One action tied to the older-truck / term-length side
+
+This row should feel secondary. It should help users self-select without overpowering the primary page CTAs.
+
+### CTA 1: private-party purchase path
+
+- Intent: speak directly to users buying from a private seller
+- Destination: `/private-party-tow-truck-financing`
+- This should not open the drawer
+
+#### Example copy
+
+- Eyebrow: `Buying outside a dealership?`
+- Label: `Buying a rollback from a private party seller?`
+
+### CTA 2: older-truck uncertainty path
+
+- Intent: address uncertainty about truck age and whether an older rollback still qualifies
+- This CTA should open the **same rollback pre-approval drawer flow** used when a user selects a rollback tile in the hero and clicks `Get Pre-Approved`
+- It should behave exactly like that existing drawer entry point, including rollback-specific context/title behavior
+
+#### Example copy
+
+- Eyebrow: `Looking at an older rollback?`
+- Label: `See if your truck year still works`
+
+Alternative directions are fine as long as they stay focused on truck age, not generic payments or qualification language.
+
+## UX Guidance
+
+- Keep the page feeling clean and direct.
+- Do not add extra explanatory bulk just because a new CTA row exists.
+- Do not clutter the deferred-payment offer with too much copy.
+- The educational slider section should remain simple and readable.
+- The urgency chip should add scarcity without making the page feel low-trust.
+
+## Non-Goals
+
+- Do not rewrite the whole `/rollback-financing` page.
+- Do not turn the term-length section into a full payment calculator.
+- Do not add compliance-heavy legal content as part of this pass.
+- Do not move deferred-payment education onto this page; keep that on the dedicated deferred-payments page.
+- Do not invent a different drawer flow for the age-related CTA; reuse the existing rollback pre-approval flow.
+
+## Acceptance Criteria
+
+- The deferred-payments offer includes a top-right countdown chip on both desktop and mobile.
+- The countdown is site-wide, config-driven, and supports optional auto-reset behavior.
+- The deferred-payments offer includes a bottom text link to `/deferred-payment-tow-truck-financing`.
+- The purchase-and-terms section no longer has the mismatched desktop white-space issue.
+- The purchase-and-terms layout matches the financing-offers split layout pattern closely enough that they feel intentionally related.
+- The term slider reuses the pre-approval drawer slider style/interaction feel.
+- A new slim two-link CTA strip appears immediately below purchase-and-terms on both desktop and mobile.
+- One link routes to `/private-party-tow-truck-financing`.
+- The other opens the existing rollback pre-approval drawer flow.
+- The new CTA row feels secondary, not like a replacement for the primary page CTA.
+
+## Implementation Notes for the Next Agent
+
+- Start by inspecting the desktop spacing difference between `FinancingOffersSplit` and `PurchaseAndTermsSection`.
+- Fix the layout pattern first, then layer in the new CTA row.
+- Reuse existing patterns where possible:
+  - `TertiaryActionsStrip`
+  - pre-approval drawer hash/title behavior
+  - pre-approval slider styling
+- Keep the implementation config-driven so future copy/date updates do not require structural rewrites.

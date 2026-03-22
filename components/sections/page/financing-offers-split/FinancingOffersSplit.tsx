@@ -1,5 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import type { FinancingOffersSplitConfig } from "./config";
+import { CountdownChip } from "./CountdownChip";
 
 function OfferHalf({
   offer,
@@ -8,19 +11,31 @@ function OfferHalf({
 }) {
   return (
     <div className="flex flex-col gap-5 py-10 md:py-16">
-      <Image
-        src={offer.iconSrc}
-        alt={offer.iconAlt}
-        width={offer.iconWidth}
-        height={offer.iconHeight}
-        className="h-14 w-14 sm:h-16 sm:w-16"
-      />
+      <div className="flex items-start justify-between">
+        <Image
+          src={offer.iconSrc}
+          alt={offer.iconAlt}
+          width={offer.iconWidth}
+          height={offer.iconHeight}
+          className="h-14 w-14 sm:h-16 sm:w-16"
+        />
+        {offer.countdown ? <CountdownChip config={offer.countdown} /> : null}
+      </div>
       <h2 className="text-2xl font-semibold tracking-tight text-[#111] sm:text-3xl lg:text-4xl">
         {offer.headline}
       </h2>
       <p className="max-w-md text-base leading-relaxed text-[#545454] sm:text-lg">
         {offer.body}
       </p>
+      {offer.learnMoreLink ? (
+        <Link
+          href={offer.learnMoreLink.href}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-[#545454] transition-colors hover:text-[#111]"
+        >
+          {offer.learnMoreLink.text}
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      ) : null}
     </div>
   );
 }

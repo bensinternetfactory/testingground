@@ -60,6 +60,9 @@ export function EquipmentFinancingPageShell({
           {config.purchaseAndTerms ? (
             <PurchaseAndTermsSection config={config.purchaseAndTerms} />
           ) : null}
+          {config.purchaseTermsTertiaryStrip ? (
+            <TertiaryActionsStrip config={config.purchaseTermsTertiaryStrip} />
+          ) : null}
           {config.trustBridge ? (
             <TrustBridge config={config.trustBridge} />
           ) : null}

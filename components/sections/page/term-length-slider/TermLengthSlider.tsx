@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { TermSliderConfig } from "./config";
+import "@/components/ui/pre-approval-drawer/amount-slider.css";
 
 export function TermLengthSlider({
   config,
@@ -23,6 +24,9 @@ export function TermLengthSlider({
       break;
     }
   }
+
+  const fillPercent =
+    ((selectedYear - minYear) / (currentYear - minYear)) * 100;
 
   return (
     <div>
@@ -48,20 +52,25 @@ export function TermLengthSlider({
       <div className="mt-8">
         <div className="flex items-center justify-between text-xs font-medium text-[#999]">
           <span>{minYear}</span>
-          <span className="text-sm font-semibold text-[#111]">{selectedYear}</span>
+          <span className="text-sm font-semibold text-[#111]">
+            {selectedYear}
+          </span>
           <span>{currentYear}</span>
         </div>
-        <input
-          type="range"
-          min={minYear}
-          max={currentYear}
-          step={1}
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          aria-label="Select truck model year"
-          aria-valuetext={`${selectedYear} model year, up to ${maxTerm} month term`}
-          className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-[#111] [&::-moz-range-thumb]:h-[44px] [&::-moz-range-thumb]:w-[44px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[#111] [&::-moz-range-thumb]:shadow-lg [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-gray-200 [&::-webkit-slider-thumb]:h-[44px] [&::-webkit-slider-thumb]:w-[44px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#111] [&::-webkit-slider-thumb]:shadow-lg"
-        />
+        <div className="mt-2 px-1">
+          <input
+            type="range"
+            min={minYear}
+            max={currentYear}
+            step={1}
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            aria-label="Select truck model year"
+            aria-valuetext={`${selectedYear} model year, up to ${maxTerm} month term`}
+            className="slider-thumb w-full appearance-none bg-transparent focus:outline-none"
+            style={{ "--fill": `${fillPercent}%` } as React.CSSProperties}
+          />
+        </div>
       </div>
 
       {/* Result */}

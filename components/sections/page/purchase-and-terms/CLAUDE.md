@@ -25,9 +25,10 @@ import { PurchaseAndTermsSection } from "@/components/sections/page/purchase-and
 
 ## Layout
 
-- `grid gap-16 lg:grid-cols-2 lg:gap-12` inside `max-w-7xl`
-- White background, `py-20 md:py-28`
-- Mobile: left column (purchase stack) on top
+- `md:grid-cols-[1fr_1px_1fr]` with vertical divider inside `max-w-7xl`
+- White background, inner column padding `py-10 md:py-16` (matches `FinancingOffersSplit`)
+- Mobile (`<md`): stacked with horizontal `border-t` divider
+- Desktop (`md+`): side-by-side with full-height vertical divider
 - Per-column headlines only (no shared section header)
 
 ## Server/Client Boundary

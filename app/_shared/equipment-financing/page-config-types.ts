@@ -46,6 +46,7 @@ export interface EquipmentFinancingPageConfig {
   tertiaryStrip?: TertiaryStripConfig;
   financingOffers?: FinancingOffersSplitConfig;
   purchaseAndTerms?: PurchaseAndTermsConfig;
+  purchaseTermsTertiaryStrip?: TertiaryStripConfig;
   faqSection: FaqSectionConfig;
   faqSchema: ReturnType<typeof buildFaqSchema>;
   financialProductSchema: Record<string, unknown>;
