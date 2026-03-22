@@ -304,6 +304,57 @@ Added a two-link `TertiaryActionsStrip` immediately below the purchase-and-terms
   - Older-truck CTA opens pre-approval drawer with title "How much is the rollback you're looking at?"
   - Wrecker and rotator pages unaffected (no `purchaseTermsTertiaryStrip` config)
 
+## Dark TertiaryActionsStrip + outline-dark RippleCtaLink variant — 2026-03-22
+
+Both tertiary strips on the rollback page now render on a dark `#101820` background (matching the brand marquee) instead of the previous `bg-gray-50`. This required a new CTA variant and a styling pass on the strip component.
+
+### 1. `outline-dark` variant for RippleCtaLink
+
+Added `"outline-dark"` to the `variant` prop union in `RippleCtaLink.tsx`. The variant is designed for dark backgrounds:
+
+- **Default:** `border-white/20`, `bg-transparent`, `text-white`
+- **Hover:** `border-white/30`, `bg-white/10`
+- **Focus:** `ring-white` (instead of `ring-[#111111]`)
+- **Ripple:** `bg-white/15`
+- **Disabled:** `border-white/10`, `text-white/30`
+
+### 2. TertiaryActionsStrip — always dark
+
+Converted `TertiaryActionsStrip.tsx` from light to dark styling:
+
+| Property | Before | After |
+|---|---|---|
+| Section bg | `bg-gray-50` | `bg-[#101820]` |
+| RippleCtaLink variant | `"outline"` | `"outline-dark"` |
+| Card border class | `border-gray-200` | `border-white/15` |
+| Eyebrow text | `text-[#999]` | `text-white/60` |
+| Label text | `text-[#111]` | `text-white` |
+
+The 2xl containment classes stay unchanged (`2xl:border-gray-200`).
+
+### 3. Rollback strip config consolidation
+
+Moved the upper strip actions (previously exported as `ROLLBACK_TERTIARY_STRIP_CONFIG` from the component config) inline into `app/rollback-financing/config.ts` alongside the lower strip config. The component config file now exports types only (`TertiaryStripAction`, `TertiaryStripConfig`).
+
+### Files modified
+
+- `components/ui/ripple-cta-link/RippleCtaLink.tsx` — added `"outline-dark"` variant
+- `components/ui/ripple-cta-link/CLAUDE.md` — documented new variant
+- `components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx` — dark styling
+- `components/sections/page/tertiary-strip/config.ts` — types only, removed rollback data export
+- `components/sections/page/tertiary-strip/index.ts` — removed `ROLLBACK_TERTIARY_STRIP_CONFIG` re-export
+- `components/sections/page/tertiary-strip/CLAUDE.md` — updated docs
+- `app/rollback-financing/config.ts` — inlined upper strip config
+
+### Verification
+
+- `npm run build` — clean, all routes generate
+- Browser validation on port 3005 at `/rollback-financing`:
+  - Upper strip (below hero): dark `#101820` bg, white text, outline-dark CTA cards
+  - Lower strip (below purchase-and-terms): same dark styling, different action text/links
+  - Both strips' CTAs respond to click/tap with white ripple
+  - Wrecker and rotator pages unaffected (neither uses the strip)
+
 ## Open items
 
 - Replace placeholder source icons with real branded assets

@@ -43,7 +43,7 @@ export interface RippleCtaLinkProps {
   icon?: ReactNode;
   iconPosition?: "start" | "end";
   size?: "sm" | "md" | "lg";
-  variant?: "filled" | "outline";
+  variant?: "filled" | "outline" | "outline-dark";
   justify?: "center" | "between";
   className?: string;
   prefetch?: boolean;
@@ -217,19 +217,30 @@ export function RippleCtaLink({
     </span>
   ) : null;
 
-  const isOutline = variant === "outline";
+  const isOutline = variant === "outline" || variant === "outline-dark";
   const external = isExternalUrl(href);
   const justifyClass = justify === "between" ? "justify-between" : "justify-center";
 
-  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${
-    isOutline
-      ? "border border-gray-400 bg-transparent text-[#111111] hover:border-gray-500 hover:bg-gray-100"
-      : "bg-[#111111] text-white hover:bg-[#111111]/90"
-  } ${className ?? ""}`;
+  const variantClasses =
+    variant === "outline-dark"
+      ? "border border-white/20 bg-transparent text-white hover:border-white/30 hover:bg-white/10"
+      : variant === "outline"
+        ? "border border-gray-400 bg-transparent text-[#111111] hover:border-gray-500 hover:bg-gray-100"
+        : "bg-[#111111] text-white hover:bg-[#111111]/90";
 
-  const disabledClassName = isOutline
-    ? "cursor-not-allowed border-gray-300 bg-transparent text-gray-400 hover:border-gray-300 hover:bg-transparent"
-    : "cursor-not-allowed bg-[#D1D5DB] text-white hover:bg-[#D1D5DB]";
+  const focusRingClass =
+    variant === "outline-dark"
+      ? "focus-visible:ring-white"
+      : "focus-visible:ring-[#111111]";
+
+  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 ${focusRingClass} focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${variantClasses} ${className ?? ""}`;
+
+  const disabledClassName =
+    variant === "outline-dark"
+      ? "cursor-not-allowed border-white/10 bg-transparent text-white/30 hover:border-white/10 hover:bg-transparent"
+      : isOutline
+        ? "cursor-not-allowed border-gray-300 bg-transparent text-gray-400 hover:border-gray-300 hover:bg-transparent"
+        : "cursor-not-allowed bg-[#D1D5DB] text-white hover:bg-[#D1D5DB]";
 
   const content = (
     <>
@@ -244,7 +255,7 @@ export function RippleCtaLink({
           animate={{ scale: 4, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           onAnimationComplete={removeRipple}
-          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
+          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${variant === "outline-dark" ? "bg-white/15" : isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
           style={{ left: ripple.x, top: ripple.y }}
         />
       ) : null}

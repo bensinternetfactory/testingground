@@ -1,6 +1,6 @@
 # tertiary-strip
 
-Thin transition strip of outline CTA cards extracted from the hero section.
+Dark transition strip of outline CTA cards rendered between page sections.
 
 ## Usage
 
@@ -30,6 +30,13 @@ import { TertiaryActionsStrip } from "@/components/sections/page/tertiary-strip"
 | `label` | `string` | Primary action text |
 | `href` | `string` | Navigation target |
 | `drawerTitle` | `string?` | Optional drawer title override via `data-drawer-title` |
+
+## Visual Style
+
+- Dark background (`bg-[#101820]`) matching the brand marquee
+- Uses `outline-dark` RippleCtaLink variant (white text, `border-white/15` cards)
+- Eyebrow text: `text-white/60`
+- Label text: `text-white`
 
 ## Server/Client Boundary
 

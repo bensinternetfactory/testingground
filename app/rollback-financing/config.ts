@@ -15,8 +15,8 @@ import {
 import {
   ROLLBACK_PURCHASE_AND_TERMS_CONFIG,
 } from "@/components/sections/page/purchase-and-terms/config";
-import {
-  ROLLBACK_TERTIARY_STRIP_CONFIG,
+import type {
+  TertiaryStripConfig,
 } from "@/components/sections/page/tertiary-strip/config";
 
 const rollbackFaq = buildFaqSection("Rollback financing questions, straight answers.", [
@@ -102,7 +102,21 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       ],
     },
   },
-  tertiaryStrip: ROLLBACK_TERTIARY_STRIP_CONFIG,
+  tertiaryStrip: {
+    actions: [
+      {
+        eyebrow: "Already have a truck in mind?",
+        label: "I found a truck and need financing",
+        href: DRAWER_HASH,
+        drawerTitle: "How much is the rollback you found?",
+      },
+      {
+        eyebrow: "Haven't found a truck?",
+        label: "What's my buying power?",
+        href: "/pre-approval",
+      },
+    ],
+  } satisfies TertiaryStripConfig,
   financingOffers: ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
   purchaseAndTerms: ROLLBACK_PURCHASE_AND_TERMS_CONFIG,
   purchaseTermsTertiaryStrip: {
