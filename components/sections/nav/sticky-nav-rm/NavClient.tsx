@@ -93,26 +93,17 @@ function DropdownItem({ item }: { item: NavCardItem }) {
       href={item.href}
       className="group flex items-center gap-3 rounded-lg px-3 py-3 transition-colors duration-150"
     >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E5] bg-white transition-colors duration-150 group-hover:border-transparent group-hover:bg-[#111111]">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E5E5E5] bg-white transition-colors duration-150 group-hover:border-[#D4D4D4] group-hover:bg-[#F5F5F5]">
         {item.imageSrc ? (
-          <>
-            <Image
-              src={item.imageSrc}
-              alt=""
-              width={36}
-              height={36}
-              className={`${imgClass} object-contain group-hover:hidden`}
-            />
-            <Image
-              src={item.imageSrcLight!}
-              alt=""
-              width={36}
-              height={36}
-              className={`hidden ${imgClass} object-contain group-hover:block`}
-            />
-          </>
+          <Image
+            src={item.imageSrc}
+            alt=""
+            width={36}
+            height={36}
+            className={`${imgClass} object-contain`}
+          />
         ) : (
-          <span className="text-[#545454] transition-colors duration-150 group-hover:text-white">{ICON_MAP[item.icon]}</span>
+          <span className="text-[#545454]">{ICON_MAP[item.icon]}</span>
         )}
       </span>
       <div className="min-w-0">
@@ -219,6 +210,29 @@ export function NavClient({ sections }: NavClientProps) {
     return () => document.removeEventListener("keydown", handler);
   }, [closeMobile, mobileOpen]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    const prevHtml = document.documentElement.style.overflow;
+    const prevBody = document.body.style.overflow;
+    const prevPadding = document.body.style.paddingRight;
+
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      document.documentElement.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+      document.body.style.paddingRight = prevPadding;
+    };
+  }, [mobileOpen]);
+
   return (
     <>
       <nav
@@ -231,9 +245,9 @@ export function NavClient({ sections }: NavClientProps) {
               <Image
                 src="/brand-assets/logo/towloans-green-hook.svg"
                 alt="TowLoans"
-                width={191}
-                height={28}
-                className="h-auto w-[150px] lg:w-[191px]"
+                width={220}
+                height={32}
+                className="h-auto w-[190px] md:w-[205px] lg:w-[220px]"
                 priority
               />
             </Link>
@@ -242,7 +256,7 @@ export function NavClient({ sections }: NavClientProps) {
               <NavigationMenuList className="gap-0.5 xl:gap-1">
                 {sections.map((section) => (
                   <NavigationMenuItem key={section.value}>
-                    <NavigationMenuTrigger className="bg-transparent px-3 text-sm font-medium text-[#111111] hover:bg-transparent hover:text-[#111111]/70 focus:bg-transparent data-[state=open]:bg-transparent lg:text-base xl:px-4">
+                    <NavigationMenuTrigger className="bg-transparent px-3 text-sm font-medium text-[#111111] hover:bg-transparent hover:text-[#111111]/70 focus:bg-transparent data-[state=open]:bg-[#F5F5F5] lg:text-base xl:px-4">
                       {section.label}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent className="p-0">
@@ -295,7 +309,7 @@ export function NavClient({ sections }: NavClientProps) {
             <NavPressable
               onPress={toggleMobile}
               ariaLabel={mobileOpen ? "Close menu" : "Open menu"}
-              className="relative flex h-10 w-10 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:hidden"
+              className={`relative flex h-10 w-10 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:hidden ${mobileOpen ? "bg-[#F5F5F5]" : ""}`}
             >
               <span
                 className="hamburger-bar absolute left-2 h-[2px] w-6 bg-[#545454] transition-transform duration-200"
@@ -323,7 +337,7 @@ export function NavClient({ sections }: NavClientProps) {
           className="mobile-overlay fixed inset-0 z-[45] overflow-y-auto overscroll-contain bg-white md:hidden"
           style={{ top: "var(--nav-height)" }}
         >
-          <div className="flex min-h-full flex-col border-t border-[#E9E9E9]">
+          <div className="border-t border-[#E9E9E9] pb-[120px]">
             {sections.map((section) => (
               <MobileAccordion
                 key={section.value}
@@ -350,7 +364,7 @@ export function NavClient({ sections }: NavClientProps) {
               </svg>
             </NavPressable>
 
-            <div className="mt-auto space-y-4 px-6 py-8">
+            <div className="sticky bottom-0 space-y-4 border-t border-[#E9E9E9] bg-white px-6 py-8">
               <NavPressable
                 href="tel:+18885550199"
                 className="flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-base font-medium text-[#111111] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
