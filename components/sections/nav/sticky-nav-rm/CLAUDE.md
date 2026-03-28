@@ -4,15 +4,22 @@ Reusable sticky navigation extracted from the revenue-leak page. Self-contained 
 
 ## Architecture
 
-**Server / Client split:**
-- `StickyNav.tsx` — thin server component, passes `NAV_SECTIONS` to `NavClient`
-- `NavClient.tsx` — `"use client"` component with all interactive logic
+**Public API:**
+- `index.ts` exports `StickyNav` only.
+- Nav data, client wiring, and interactive helpers are private to this folder.
 
-**NavClient features:**
-- Desktop: Radix `NavigationMenu` with hover-triggered dropdown panels
-- Mobile: hamburger toggle → full-screen overlay with accordion sections
-- Escape key closes mobile overlay
-- 9 inline SVG icons mapped via `ICON_MAP`
+**Server / Client split:**
+- `StickyNav.tsx` — thin server entrypoint, passes `NAV_SECTIONS` to `NavClient`
+- `NavClient.tsx` — small client shell that composes focused internal units
+- `NavDesktopMenu.tsx` — desktop dropdown composition
+- `NavHeaderActions.tsx` — phone link, desktop CTA, and mobile toggle
+- `NavMobileOverlay.tsx` — mobile overlay and accordion composition
+- `useMobileNavState.ts` — mobile open/close and active section state
+- `useEscapeKey.ts` / `useScrollLock.ts` — focused side-effect hooks owned by the interactive layer
+
+**Nav item data:**
+- `nav-data.ts` uses explicit `NavCardItem` variants instead of one mixed shape.
+- Current data is image-backed, but icon-backed items remain supported through the discriminated union.
 
 ## NavClient Props
 
@@ -26,16 +33,16 @@ Each `NavSection` has a `label`, `value`, and `items` array of `NavCardItem`.
 
 ## CSS
 
-`NavClient` imports `./sticky-nav.css` which contains 6 keyframe animations for the Radix viewport transitions. These were extracted from `globals.css`.
+`NavClient` imports `./sticky-nav.css` which contains the Radix viewport transition animations extracted from `globals.css`.
 
 ## Dependencies
 
 | Dependency | Type |
 |---|---|
 | `@/components/ui/navigation-menu` | Shared Radix primitive wrapper |
-| `radix-ui` | NavigationMenu primitive (for `About` link) |
 | `next/link` | Routing |
 | `next/image` | Logo image |
+| `@/lib/press-feedback` | Shared press/ripple interaction hook used by nav pressables |
 
 ## Global dependency
 

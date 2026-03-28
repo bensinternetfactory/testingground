@@ -5,14 +5,34 @@
  * across renders (no inline array allocation in JSX).
  */
 
-export interface NavCardItem {
+export type NavIconName =
+  | "lightning"
+  | "truck"
+  | "chart"
+  | "clock"
+  | "shield"
+  | "calculator"
+  | "book"
+  | "phone"
+  | "star";
+
+interface NavCardItemBase {
   title: string;
   description: string;
   href: string;
-  icon: "lightning" | "truck" | "chart" | "clock" | "shield" | "calculator" | "book" | "phone" | "star";
-  imageSrc?: string;
-  imageSrcLight?: string;
 }
+
+export interface NavIconCardItem extends NavCardItemBase {
+  kind: "icon";
+  icon: NavIconName;
+}
+
+export interface NavImageCardItem extends NavCardItemBase {
+  kind: "image";
+  imageSrc: string;
+}
+
+export type NavCardItem = NavIconCardItem | NavImageCardItem;
 
 export interface NavSection {
   label: string;
@@ -22,114 +42,101 @@ export interface NavSection {
 
 export const FINANCING_ITEMS: readonly NavCardItem[] = [
   {
+    kind: "image",
     title: "Rollback Financing",
     description: "Finance a flatbed or car carrier",
     href: "/rollback-financing",
-    icon: "truck",
     imageSrc: "/brand-assets/truck-icons/rollback/rollback-green.svg",
-    imageSrcLight: "/brand-assets/truck-icons/rollback/rollback-light.svg",
   },
   {
+    kind: "image",
     title: "Wrecker Financing",
     description: "Finance a light, medium, or heavy wrecker",
     href: "/wrecker-financing",
-    icon: "shield",
     imageSrc: "/brand-assets/truck-icons/wrecker/wrecker-green.svg",
-    imageSrcLight: "/brand-assets/truck-icons/wrecker/wrecker-light.svg",
   },
   {
+    kind: "image",
     title: "Rotator Financing",
     description: "Finance a 50-75 ton rotator",
     href: "/rotator-financing",
-    icon: "star",
     imageSrc: "/brand-assets/truck-icons/rotator/rotator-green.svg",
-    imageSrcLight: "/brand-assets/truck-icons/rotator/rotator-light.svg",
   },
   {
+    kind: "image",
     title: "Used Tow Truck Financing",
     description: "Finance a used truck from any seller",
     href: "/used-tow-truck-financing",
-    icon: "lightning",
     imageSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/hook/hook-light.svg",
   },
 ] as const;
 
 export const PROGRAMS_ITEMS: readonly NavCardItem[] = [
   {
+    kind: "image",
     title: "Zero Down",
     description: "No money down on equipment",
     href: "/zero-down-tow-truck-financing",
-    icon: "star",
     imageSrc: "/brand-assets/benefit-icons/zero-down/no-money-down-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/zero-down/no-money-down-light.svg",
   },
   {
+    kind: "image",
     title: "Fleet Upgrade",
     description: "Special rates for your next truck",
     href: "/fleet-financing",
-    icon: "chart",
     imageSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/terms/terms-light.svg",
   },
   {
+    kind: "image",
     title: "Deferred Payments",
     description: "$99 payments for up to 180 days",
     href: "/deferred-payment-tow-truck-financing",
-    icon: "clock",
     imageSrc: "/brand-assets/benefit-icons/deferment/deferment-180-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/deferment/deferment-180-light.svg",
   },
   {
+    kind: "image",
     title: "Private Party",
     description: "Marketplace, auctions & private sellers",
     href: "/",
-    icon: "truck",
     imageSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/hook/hook-light.svg",
   },
 ] as const;
 
 export const RESOURCES_ITEMS: readonly NavCardItem[] = [
   {
+    kind: "image",
     title: "Tow Truck Prices",
     description: "New & used ranges by type",
     href: "/resources/how-much-does-a-tow-truck-cost",
-    icon: "book",
     imageSrc: "/brand-assets/benefit-icons/terms/magnify-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/terms/magnify-light.svg",
   },
   {
+    kind: "image",
     title: "Payment Calculator",
     description: "Estimate payments & ROI",
     href: "/tow-truck-calculator?angle=roi",
-    icon: "calculator",
     imageSrc: "/brand-assets/benefit-icons/terms/cost-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/terms/cost-light.svg",
   },
   {
+    kind: "image",
     title: "Compare Lenders",
     description: "Options, rates & program fit",
     href: "/resources/tow-truck-financing-companies",
-    icon: "chart",
     imageSrc: "/brand-assets/benefit-icons/best/best-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/best/best-light.svg",
   },
   {
+    kind: "image",
     title: "Lease vs. Loan",
     description: "Side-by-side comparison",
     href: "/resources/tow-truck-lease-vs-loan",
-    icon: "book",
     imageSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/terms/terms-light.svg",
   },
   {
+    kind: "image",
     title: "Tax Write-Offs",
     description: "Section 179 deduction guide",
     href: "/resources/section-179-tow-truck",
-    icon: "shield",
     imageSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
-    imageSrcLight: "/brand-assets/benefit-icons/hook/hook-light.svg",
   },
 ] as const;
 

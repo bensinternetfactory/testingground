@@ -77,6 +77,7 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 
 - `RippleCtaLink.tsx` — **client component** (`"use client"`)
 - Parent components remain server components; only CTA interaction is client-side
+- Shared press-state logic lives in `@/lib/press-feedback` so CTA and nav pressables use one interaction model for ripple, haptics, keyboard modality, swipe-cancel, and double-tap throttling
 
 ## Link Routing
 
