@@ -233,7 +233,7 @@ export function RippleCtaLink({
       ? "focus-visible:ring-white"
       : "focus-visible:ring-[#111111]";
 
-  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 ${focusRingClass} focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${sizeClasses[size]} ${variantClasses} ${className ?? ""}`;
+  const sharedClassName = `group/cta relative inline-flex cursor-pointer items-center ${justifyClass} overflow-hidden rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 ${focusRingClass} focus-visible:ring-offset-2 focus-visible:rounded-full touch-action-manipulation [-webkit-tap-highlight-color:transparent] ${sizeClasses[size]} ${variantClasses} ${className ?? ""}`;
 
   const disabledClassName =
     variant === "outline-dark"
@@ -255,7 +255,7 @@ export function RippleCtaLink({
           animate={{ scale: 4, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           onAnimationComplete={removeRipple}
-          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${variant === "outline-dark" ? "bg-white/15" : isOutline ? "bg-black/10" : "bg-[#22C55E]/20"}`}
+          className={`pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full ${variant === "outline-dark" ? "bg-white/15" : "bg-black/10"}`}
           style={{ left: ripple.x, top: ripple.y }}
         />
       ) : null}

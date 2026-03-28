@@ -51,17 +51,6 @@ export const FOOTER_CONFIG: FooterConfig = {
       ],
     },
     {
-      id: "leasing",
-      heading: "Leasing",
-      links: [
-        { label: "Tow Truck Leasing", href: "/tow-truck-leasing" },
-        {
-          label: "Lease vs Loan",
-          href: "/resources/tow-truck-lease-vs-loan",
-        },
-      ],
-    },
-    {
       id: "programs",
       heading: "Programs",
       links: [

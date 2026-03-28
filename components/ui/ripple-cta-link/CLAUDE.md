@@ -43,7 +43,7 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 - **Default**: Dark pill (`bg-[#111111]`, white text, `rounded-full`)
 - **Hover**: Subtle fade (`bg-[#111111]/90`) + icon nudge (translate 0.5px in icon direction)
 - **Focus**: `focus-visible:ring-2` with `ring-[#111111]` and `ring-offset-2`
-- **Tap**: Motion ripple from tap point (`bg-[#22C55E]/20`)
+- **Tap**: Motion ripple from tap point (`bg-black/10`)
 - **Disabled**: `bg-[#D1D5DB]`, white text, `cursor-not-allowed`
 
 ### Outline variant

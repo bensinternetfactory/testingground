@@ -153,7 +153,7 @@ export function NavPressable({
     }
   }, []);
 
-  const sharedClassName = `relative overflow-hidden touch-manipulation [-webkit-tap-highlight-color:rgba(34,197,94,0.18)] ${className}`;
+  const sharedClassName = `relative overflow-hidden touch-manipulation [-webkit-tap-highlight-color:transparent] ${className}`;
   const sharedMotionProps = {
     onClick: handleClick,
     onTouchStart: handleTouchStart,
@@ -176,7 +176,7 @@ export function NavPressable({
           animate={{ scale: 5, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           onAnimationComplete={removeRipple}
-          className="pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#22C55E]/20"
+          className="pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/10"
           style={{ left: ripple.x, top: ripple.y }}
         />
       ) : null}
