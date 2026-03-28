@@ -103,6 +103,10 @@ export const FOOTER_CONFIG: FooterConfig = {
     { label: "(888) 555-0199", href: "tel:+18885550199" },
     { label: "info@towloans.com", href: "mailto:info@towloans.com" },
   ],
-  legalLinks: [{ label: "Privacy" }, { label: "Terms" }],
+  legalLinks: [
+    { label: "About", href: "/about" },
+    { label: "Privacy" },
+    { label: "Terms" },
+  ],
   companyName: "TowLoans",
 };

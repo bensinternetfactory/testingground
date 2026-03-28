@@ -10,8 +10,8 @@ export interface NavCardItem {
   description: string;
   href: string;
   icon: "lightning" | "truck" | "chart" | "clock" | "shield" | "calculator" | "book" | "phone" | "star";
-  tint?: string;
-  dividerBefore?: boolean;
+  imageSrc?: string;
+  imageSrcLight?: string;
 }
 
 export interface NavSection {
@@ -23,126 +23,134 @@ export interface NavSection {
 export const FINANCING_ITEMS: readonly NavCardItem[] = [
   {
     title: "Rollback Financing",
-    description: "The most common flatbed — competitive rates, fast approval",
+    description: "Finance a flatbed or car carrier",
     href: "/rollback-financing",
     icon: "truck",
-    tint: "#FBF0F6",
+    imageSrc: "/brand-assets/truck-icons/rollback/rollback-dark.svg",
+    imageSrcLight: "/brand-assets/truck-icons/rollback/rollback-light.svg",
   },
   {
     title: "Wrecker Financing",
-    description: "Light, medium, and heavy duty — terms built for operators",
+    description: "Finance a light, medium, or heavy wrecker",
     href: "/wrecker-financing",
     icon: "shield",
-    tint: "#F3EEE7",
+    imageSrc: "/brand-assets/truck-icons/wrecker/wrecker-dark.svg",
+    imageSrcLight: "/brand-assets/truck-icons/wrecker/wrecker-light.svg",
   },
   {
     title: "Rotator Financing",
-    description: "Finance $200K–$1.3M rotators with towing-specific terms",
+    description: "Finance a 50-75 ton rotator",
     href: "/rotator-financing",
     icon: "star",
-    tint: "#EDF1FF",
+    imageSrc: "/brand-assets/truck-icons/rotator/rotator-dark.svg",
+    imageSrcLight: "/brand-assets/truck-icons/rotator/rotator-light.svg",
   },
   {
     title: "Used Tow Truck Financing",
-    description: "Any age, any seller — private party, auction, Marketplace",
+    description: "Finance a used truck from any seller",
     href: "/used-tow-truck-financing",
     icon: "lightning",
-    tint: "#FBF0F6",
-    dividerBefore: true,
+    imageSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/hook/hook-light.svg",
   },
 ] as const;
 
 export const LEASING_ITEMS: readonly NavCardItem[] = [
   {
     title: "Tow Truck Leasing",
-    description: "Lower payments, tax advantages, trade up every 3-5 years",
+    description: "Lower payments, tax advantages",
     href: "/tow-truck-leasing",
     icon: "book",
-    tint: "#EDF1FF",
   },
   {
     title: "Lease vs. Loan",
-    description: "Side-by-side comparison to find your best option",
+    description: "Side-by-side comparison",
     href: "/resources/tow-truck-lease-vs-loan",
     icon: "chart",
-    tint: "#F3EEE7",
   },
   {
     title: "Lease-to-Own",
-    description: "Build equity with every payment — own it at the end",
+    description: "Build equity, own it at the end",
     href: "/tow-truck-leasing#lease-to-own",
     icon: "lightning",
-    tint: "#FBF0F6",
   },
 ] as const;
 
 export const PROGRAMS_ITEMS: readonly NavCardItem[] = [
   {
     title: "Zero Down",
-    description: "Add equipment without draining your bank account",
+    description: "No money down on equipment",
     href: "/zero-down-tow-truck-financing",
     icon: "star",
-    tint: "#FBF0F6",
+    imageSrc: "/brand-assets/benefit-icons/zero-down/no-money-down-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/zero-down/no-money-down-light.svg",
   },
   {
     title: "Fleet Upgrade",
-    description: "Special rates when you're adding your next truck",
+    description: "Special rates for your next truck",
     href: "/fleet-financing",
     icon: "chart",
-    tint: "#EDF1FF",
+    imageSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/terms/terms-light.svg",
   },
   {
     title: "Deferred Payments",
-    description: "$99 touch payments for up to 180 days while your truck ramps up",
+    description: "$99 payments for up to 180 days",
     href: "/deferred-payment-tow-truck-financing",
     icon: "clock",
-    tint: "#F3EEE7",
+    imageSrc: "/brand-assets/benefit-icons/deferment/deferment-180-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/deferment/deferment-180-light.svg",
   },
   {
     title: "Private Party",
-    description: "Finance trucks from Facebook Marketplace, auctions, or private sellers",
+    description: "Marketplace, auctions & private sellers",
     href: "/",
     icon: "truck",
-    tint: "#FBF0F6",
+    imageSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/hook/hook-light.svg",
   },
 ] as const;
 
 export const RESOURCES_ITEMS: readonly NavCardItem[] = [
   {
-    title: "Payment Calculator",
-    description: "Estimate your monthly payment in under 30 seconds",
-    href: "/tow-truck-calculator",
-    icon: "calculator",
-    tint: "#F3EEE7",
-  },
-  {
-    title: "How Much Does a Truck Cost?",
-    description: "2026 pricing guide — new, used, by equipment type",
+    title: "How Much Does a Tow Truck Cost?",
+    description: "New, used, by type. Real price ranges.",
     href: "/resources/how-much-does-a-tow-truck-cost",
     icon: "book",
-    tint: "#EDF1FF",
+    imageSrc: "/brand-assets/benefit-icons/terms/magnify-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/terms/magnify-light.svg",
   },
   {
-    title: "Tow Truck ROI Guide",
-    description: "How fast does a tow truck pay for itself?",
-    href: "/resources/tow-truck-roi",
+    title: "Tow Truck Payment + ROI Calculator",
+    description: "Run monthly payment and payback math in one tool.",
+    href: "/tow-truck-calculator?angle=roi",
+    icon: "calculator",
+    imageSrc: "/brand-assets/benefit-icons/terms/cost-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/terms/cost-light.svg",
+  },
+  {
+    title: "Tow Truck Financing Companies",
+    description: "Compare lender options, terms, speed, and program fit.",
+    href: "/resources/tow-truck-financing-companies",
     icon: "chart",
-    tint: "#FBF0F6",
+    imageSrc: "/brand-assets/benefit-icons/best/best-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/best/best-light.svg",
   },
   {
-    title: "How to Qualify",
-    description: "Requirements, docs needed, and credit ranges",
-    href: "/resources/how-to-qualify",
+    title: "Lease vs. Loan: Which Is Right for You?",
+    description: "Side-by-side comparison guide.",
+    href: "/resources/tow-truck-lease-vs-loan",
+    icon: "book",
+    imageSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/terms/terms-light.svg",
+  },
+  {
+    title: "Section 179",
+    description: "See how the year-end deduction may apply.",
+    href: "/resources/section-179-tow-truck",
     icon: "shield",
-    tint: "#F3EEE7",
-  },
-  {
-    title: "Start a Towing Business",
-    description: "Complete startup guide — costs, licenses, and first steps",
-    href: "/resources/how-to-start-a-towing-business",
-    icon: "lightning",
-    tint: "#EDF1FF",
-    dividerBefore: true,
+    imageSrc: "/brand-assets/benefit-icons/tax/section-179-dark.svg",
+    imageSrcLight: "/brand-assets/benefit-icons/tax/section-179-light.svg",
   },
 ] as const;
 
