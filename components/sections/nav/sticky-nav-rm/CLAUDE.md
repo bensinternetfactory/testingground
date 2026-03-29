@@ -9,17 +9,22 @@ Reusable sticky navigation extracted from the revenue-leak page. Self-contained 
 - Nav data, client wiring, and interactive helpers are private to this folder.
 
 **Server / Client split:**
-- `StickyNav.tsx` — thin server entrypoint, passes `NAV_SECTIONS` to `NavClient`
-- `NavClient.tsx` — small client shell that composes focused internal units
-- `NavDesktopMenu.tsx` — desktop dropdown composition
-- `NavHeaderActions.tsx` — phone link, desktop CTA, and mobile toggle
-- `NavMobileOverlay.tsx` — mobile overlay and accordion composition
+- `StickyNav.tsx` — server shell for the fixed bar, logo, and static phone link
+- `NavDesktopMenu.tsx` — client island for desktop dropdown composition
+- `NavClient.tsx` — small client island for current-path CTA resolution and mobile menu state
+- `NavHeaderActions.tsx` — desktop CTA and mobile toggle button
+- `NavMobileOverlay.tsx` — full-screen mobile dialog, focus containment, and accordion composition
 - `useMobileNavState.ts` — mobile open/close and active section state
 - `useEscapeKey.ts` / `useScrollLock.ts` — focused side-effect hooks owned by the interactive layer
 
 **Nav item data:**
 - `nav-data.ts` uses explicit `NavCardItem` variants instead of one mixed shape.
 - Current data is image-backed, but icon-backed items remain supported through the discriminated union.
+
+**Desktop dropdown contract:**
+- `NavDesktopMenu.tsx` keeps `NavigationMenuLink asChild` with a direct `next/link` child for each dropdown row.
+- `DropdownItem` is presentational only; it renders the visual tile and copy, but it does not own the anchor.
+- Row hover/focus treatment must live on the slotted link itself, using the named group `group/nav-item`, so Radix owns one authoritative interactive surface for the row and the icon tile transitions.
 
 ## NavClient Props
 

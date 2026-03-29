@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { useEscapeKey } from "./useEscapeKey";
 import { useScrollLock } from "./useScrollLock";
 
 export function useMobileNavState() {
@@ -25,7 +24,6 @@ export function useMobileNavState() {
     setOpenSection((current) => (current === value ? null : value));
   }, []);
 
-  useEscapeKey(mobileOpen, closeMobile);
   useScrollLock(mobileOpen);
 
   return {
