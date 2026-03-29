@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { HeroLeadGen } from "@/components/sections/heroes/hero-lead-gen/HeroLeadGen";
-import { HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/hero-lead-gen/config";
+import { HeroGallery } from "@/components/sections/heroes/hero-gallery/HeroGallery";
+import { HERO_GALLERY_CONFIG } from "@/components/sections/heroes/hero-gallery/config";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm/StickyNav";
 import { BrandMarquee } from "@/components/sections/page/brand-marquee/BrandMarquee";
 import { ClosingCta } from "@/components/sections/page/closing-cta/ClosingCta";
@@ -56,7 +56,7 @@ export default function Homepage01() {
       <StickyNav />
 
       <main id="main-content">
-        <HeroLeadGen config={HERO_LEAD_GEN_CONFIG} />
+        <HeroGallery config={HERO_GALLERY_CONFIG} />
         <EquipmentCards config={EQUIPMENT_CARDS_CONFIG} />
 
         <TruckGalleryHeroLeft

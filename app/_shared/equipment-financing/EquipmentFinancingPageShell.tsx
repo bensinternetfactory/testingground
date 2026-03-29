@@ -1,6 +1,6 @@
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { DrawerProvider } from "@/components/ui/pre-approval-drawer";
+
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
 import { TrustBridge } from "@/components/sections/page/trust-bridge";
 import { ProgramCards } from "@/components/sections/page/program-cards/ProgramCards";
@@ -40,7 +40,6 @@ export function EquipmentFinancingPageShell({
 
       <StickyNav />
 
-      <DrawerProvider>
         <main id="main-content">
           {config.hero.kind === "primary-only" ? (
             <HeroConvertFramedPrimaryOnly config={config.hero.config} />
@@ -74,7 +73,6 @@ export function EquipmentFinancingPageShell({
           <EquipmentClosingCta config={config.closingCta} />
           <RelatedLinksStrip config={config.relatedLinks} />
         </main>
-      </DrawerProvider>
 
       <Footer config={FOOTER_CONFIG} />
     </div>

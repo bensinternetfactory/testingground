@@ -1,9 +1,9 @@
-# Navbar Fixes:  
+## Build a new hero
 
--Make the logo bigger at all break points
--remove the dark hover and put a subtle gray hover istead of the dark hover on the navbar icons
--replace the dark truck icons with the colored versions
--dont replace the the icons with differnt color varations on hover. the subltle gray should be enough
+Build a new hero in the hero @components/sections/heros folder named hero-gallery
 
----
-
+This hero has the following:
+-Centered h1: Fast & Easy Tow Truck Financing
+-Centered Subheading: Get pre-approved in less then 30 seconds. Know your truck payment before you apply.
+-Centerted Input (desktop only): Input: How much do you need? With button inside input that says get pre-approved
+-Two offset rows of trucks that blend into the next section

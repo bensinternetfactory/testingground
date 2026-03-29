@@ -22,8 +22,8 @@ export function NavHeaderActions({
         href={primaryCtaHref}
         className="hidden h-12 items-center justify-center rounded-full bg-[#111111] px-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:inline-flex xl:px-6 xl:text-base"
       >
-        <span className="hidden lg:inline">Get Pre-Approved</span>
-        <span className="lg:hidden">Apply</span>
+        <span className="hidden lg:inline">Apply Now</span>
+        <span className="lg:hidden">Apply Now</span>
       </a>
 
       <NavPressable
