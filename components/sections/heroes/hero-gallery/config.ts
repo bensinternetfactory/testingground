@@ -5,6 +5,7 @@ import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 /* ------------------------------------------------------------------ */
 
 export interface TertiaryLink {
+  eyebrow: string;
   label: string;
   href: string;
   drawerTitle?: string;
@@ -33,12 +34,14 @@ export const HERO_GALLERY_CONFIG: HeroGalleryConfig = {
   mobileCta: { label: "Get Pre-Approved", href: DRAWER_HASH },
   tertiaryLinks: [
     {
-      label: "I found a tow truck and need financing",
+      eyebrow: "Already found a truck?",
+      label: "Found a truck? Get financing",
       href: DRAWER_HASH,
       drawerTitle: "How much is the tow truck you found?",
     },
     {
-      label: "What\u2019s my buying power",
+      eyebrow: "Not sure yet?",
+      label: "What\u2019s my buying power?",
       href: "#",
     },
   ],

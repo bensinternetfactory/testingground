@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import NextImage from "next/image";
+import { ChevronRight } from "lucide-react";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { HeroInput } from "./HeroInput";
 import type { HeroGalleryConfig } from "./config";
@@ -34,33 +35,41 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
           </div>
 
           {/* Mobile CTA + tertiary links — hidden on desktop */}
-          <div className="mt-6 flex flex-col gap-4 md:hidden">
+          <div className="mt-6 flex flex-col gap-3 md:hidden">
             <RippleCtaLink
               href={config.mobileCta.href}
               label={config.mobileCta.label}
               section="hero-gallery"
-              className="w-full"
+              className="w-full !bg-[#22C55E] hover:!bg-[#1EA94E]"
             />
 
-            {/* Tertiary link container */}
-            <div className="overflow-hidden rounded-full border border-gray-200">
-              {config.tertiaryLinks.map((link, i) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  data-drawer-title={link.drawerTitle}
-                  prefetch={false}
-                  className={`flex items-center justify-between px-5 py-3.5 text-sm text-[#545454] transition-colors hover:bg-gray-50 ${
-                    i > 0 ? "border-t border-gray-200" : ""
-                  }`}
-                >
-                  <span>{link.label}</span>
-                  <span className="ml-2 text-gray-400" aria-hidden="true">
-                    ›
-                  </span>
-                </Link>
-              ))}
-            </div>
+            {/* Compact tertiary action links */}
+            {config.tertiaryLinks.map((link) => (
+              <RippleCtaLink
+                key={link.label}
+                href={link.href}
+                label={link.label}
+                variant="outline"
+                size="sm"
+                justify="between"
+                icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
+                drawerTitle={link.drawerTitle}
+                prefetch={false}
+                section="hero-gallery"
+                className="w-full rounded-xl px-4 py-2.5"
+              >
+                <span className="flex items-center gap-2.5">
+                  <NextImage
+                    src="/brand-assets/benefit-icons/hook/hook-dark.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm text-[#111]">{link.label}</span>
+                </span>
+              </RippleCtaLink>
+            ))}
           </div>
         </div>
       </div>
