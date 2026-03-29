@@ -5,7 +5,6 @@ import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 /* ------------------------------------------------------------------ */
 
 export interface TertiaryLink {
-  eyebrow: string;
   label: string;
   href: string;
   drawerTitle?: string;
@@ -16,6 +15,7 @@ export interface HeroGalleryConfig {
   subheadline: string;
   inputPlaceholder: string;
   ctaLabel: string;
+  submitHref: string;
   mobileCta: { label: string; href: string };
   tertiaryLinks: TertiaryLink[];
   images: { row1: string[]; row2: string[] };
@@ -28,21 +28,21 @@ export interface HeroGalleryConfig {
 export const HERO_GALLERY_CONFIG: HeroGalleryConfig = {
   headline: "Fast & Easy Tow Truck Financing",
   subheadline:
-    "Get pre-approved in less then 30 seconds. Know your truck payment before you apply.",
+    "Get pre-approved in less than 30 seconds. Know your truck payment before you apply.",
   inputPlaceholder: "How much do you need?",
   ctaLabel: "Get Pre-Approved",
+  submitHref: "/pre-approval",
   mobileCta: { label: "Get Pre-Approved", href: DRAWER_HASH },
   tertiaryLinks: [
     {
-      eyebrow: "Already found a truck?",
       label: "Found a truck? Get financing",
       href: DRAWER_HASH,
       drawerTitle: "How much is the tow truck you found?",
     },
     {
-      eyebrow: "Not sure yet?",
       label: "What\u2019s my buying power?",
-      href: "#",
+      href: DRAWER_HASH,
+      drawerTitle: "Estimate your buying power",
     },
   ],
   images: {

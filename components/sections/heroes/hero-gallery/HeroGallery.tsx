@@ -1,5 +1,4 @@
 import Image from "next/image";
-import NextImage from "next/image";
 import { ChevronRight } from "lucide-react";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { HeroInput } from "./HeroInput";
@@ -31,6 +30,7 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
             <HeroInput
               placeholder={config.inputPlaceholder}
               ctaLabel={config.ctaLabel}
+              submitHref={config.submitHref}
             />
           </div>
 
@@ -44,48 +44,51 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
             />
 
             {/* Compact tertiary action links */}
-            {config.tertiaryLinks.map((link) => (
-              <RippleCtaLink
-                key={link.label}
-                href={link.href}
-                label={link.label}
-                variant="outline"
-                size="sm"
-                justify="between"
-                icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
-                drawerTitle={link.drawerTitle}
-                prefetch={false}
-                section="hero-gallery"
-                className="w-full rounded-xl px-4 py-2.5"
-              >
-                <span className="flex items-center gap-2.5">
-                  <NextImage
-                    src="/brand-assets/benefit-icons/hook/hook-dark.svg"
-                    alt=""
-                    width={20}
-                    height={20}
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm text-[#111]">{link.label}</span>
-                </span>
-              </RippleCtaLink>
-            ))}
+            <ul className="contents">
+              {config.tertiaryLinks.map((link) => (
+                <li key={link.label}>
+                  <RippleCtaLink
+                    href={link.href}
+                    label={link.label}
+                    variant="outline"
+                    size="sm"
+                    justify="between"
+                    icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
+                    drawerTitle={link.drawerTitle}
+                    prefetch={false}
+                    section="hero-gallery"
+                    className="w-full rounded-xl px-4 py-2.5"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <Image
+                        src="/brand-assets/benefit-icons/hook/hook-dark.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        aria-hidden="true"
+                      />
+                      <span className="text-sm text-[#111]">{link.label}</span>
+                    </span>
+                  </RippleCtaLink>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
 
-      {/* Truck image gallery — desktop only */}
-      <div className="relative mt-0 hidden overflow-hidden md:block">
+      {/* Truck image gallery — desktop only, decorative */}
+      <div className="relative mt-0 hidden overflow-hidden md:block" aria-hidden="true">
         {/* Row 1 */}
         <div className="flex justify-center gap-3 lg:gap-4">
-          {config.images.row1.map((src, i) => (
+          {config.images.row1.map((src) => (
             <div
               key={src}
               className="relative h-40 w-56 shrink-0 overflow-hidden rounded-xl lg:h-48 lg:w-64"
             >
               <Image
                 src={src}
-                alt={`Tow truck ${i + 1}`}
+                alt=""
                 fill
                 sizes="(max-width: 1023px) 224px, 256px"
                 className="object-cover"
@@ -99,14 +102,14 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
           className="mt-3 flex justify-center gap-3 lg:mt-4 lg:gap-4"
           style={{ transform: "translateX(8rem)" }}
         >
-          {config.images.row2.map((src, i) => (
+          {config.images.row2.map((src) => (
             <div
               key={src}
               className="relative h-40 w-56 shrink-0 overflow-hidden rounded-xl lg:h-48 lg:w-64"
             >
               <Image
                 src={src}
-                alt={`Tow truck ${i + 8}`}
+                alt=""
                 fill
                 sizes="(max-width: 1023px) 224px, 256px"
                 className="object-cover"
