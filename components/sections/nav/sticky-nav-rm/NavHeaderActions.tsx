@@ -1,13 +1,14 @@
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 import { NavPressable } from "./NavPressable";
 import { PhoneIcon } from "./nav-icons";
 
 export function NavHeaderActions({
   mobileOpen,
   onToggleMobile,
+  primaryCtaHref,
 }: {
   mobileOpen: boolean;
   onToggleMobile: () => void;
+  primaryCtaHref: string;
 }) {
   return (
     <div className="flex items-center gap-4 lg:gap-6">
@@ -21,7 +22,7 @@ export function NavHeaderActions({
       </a>
 
       <a
-        href={DRAWER_HASH}
+        href={primaryCtaHref}
         className="hidden h-12 items-center justify-center rounded-full bg-[#111111] px-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:inline-flex xl:px-6 xl:text-base"
       >
         <span className="hidden lg:inline">Get Pre-Approved</span>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Calculator } from "@/components/sections/calculator/Calculator";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm/StickyNav";
+import { Footer, FOOTER_CONFIG } from "@/components/sections/page/footer";
 
 export const metadata: Metadata = {
   title: "Tow Truck ROI Calculator — Will This Truck Cash Flow? | TowLoans",
@@ -17,13 +18,21 @@ export const metadata: Metadata = {
 
 export default function TowTruckCalculatorPage() {
   return (
-    <>
+    <div className="min-h-screen bg-white font-sans">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-[#22C55E] focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+      >
+        Skip to main content
+      </a>
+
       <StickyNav />
-      <main>
+
+      <main id="main-content">
         {/* Dark Hero */}
         <section className="bg-[#101820] pb-12 pt-[calc(var(--nav-height)+3rem)] md:pb-16">
           <div className="mx-auto max-w-7xl px-6">
-            <h1 className="text-3xl font-medium tracking-tight text-white sm:text-5xl">
+            <h1 className="text-balance text-3xl font-medium tracking-tight text-white sm:text-5xl">
               Will this truck{" "}
               <span className="text-[#22C55E]">cash flow?</span>
             </h1>
@@ -71,6 +80,8 @@ export default function TowTruckCalculatorPage() {
           </div>
         </section>
       </main>
-    </>
+
+      <Footer config={FOOTER_CONFIG} />
+    </div>
   );
 }

@@ -4,6 +4,8 @@ import "./sticky-nav.css";
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { resolveDrawerTriggerHref } from "@/components/ui/pre-approval-drawer/config";
 import { NavDesktopMenu } from "./NavDesktopMenu";
 import { NavHeaderActions } from "./NavHeaderActions";
 import { NavMobileOverlay } from "./NavMobileOverlay";
@@ -15,6 +17,7 @@ interface NavClientProps {
 }
 
 export function NavClient({ sections }: NavClientProps) {
+  const pathname = usePathname();
   const {
     closeMobile,
     mobileOpen,
@@ -22,6 +25,7 @@ export function NavClient({ sections }: NavClientProps) {
     toggleMobile,
     toggleSection,
   } = useMobileNavState();
+  const primaryCtaHref = resolveDrawerTriggerHref(pathname);
 
   return (
     <>
@@ -48,6 +52,7 @@ export function NavClient({ sections }: NavClientProps) {
           <NavHeaderActions
             mobileOpen={mobileOpen}
             onToggleMobile={toggleMobile}
+            primaryCtaHref={primaryCtaHref}
           />
         </div>
       </nav>
@@ -58,6 +63,7 @@ export function NavClient({ sections }: NavClientProps) {
           openSection={openSection}
           onToggleSection={toggleSection}
           onClose={closeMobile}
+          primaryCtaHref={primaryCtaHref}
         />
       ) : null}
     </>

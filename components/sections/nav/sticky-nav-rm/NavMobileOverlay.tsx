@@ -1,4 +1,3 @@
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { NavPressable } from "./NavPressable";
 import { NavItemVisual } from "./NavItemVisual";
@@ -61,11 +60,13 @@ export function NavMobileOverlay({
   onClose,
   onToggleSection,
   openSection,
+  primaryCtaHref,
   sections,
 }: {
   onClose: () => void;
   onToggleSection: (value: string) => void;
   openSection: string | null;
+  primaryCtaHref: string;
   sections: readonly NavSection[];
 }) {
   return (
@@ -106,7 +107,7 @@ export function NavMobileOverlay({
           </NavPressable>
 
           <RippleCtaLink
-            href={DRAWER_HASH}
+            href={primaryCtaHref}
             label="Get Pre-Approved"
             className="w-full"
           />

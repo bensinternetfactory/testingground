@@ -185,59 +185,63 @@
   ## Checkpoint 2: Broken Destinations, CTA Contract, and Route Contract
 
   Start only after your commit confirmation.
+  Status: [x] Complete
 
   ### Files to change
 
-  - components/sections/nav/sticky-nav-rm/nav-data.ts
-  - components/sections/nav/sticky-nav-rm/NavClient.tsx
-  - components/ui/pre-approval-drawer/DrawerContext.tsx
-  - app/page.tsx
-  - app/about/page.tsx
-  - app/tow-truck-calculator/page.tsx
+  - [x] components/sections/nav/sticky-nav-rm/nav-data.ts
+  - [x] components/sections/nav/sticky-nav-rm/NavClient.tsx
+  - [x] components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx
+  - [x] components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx
+  - [x] components/sections/page/footer/config.ts
+  - [x] components/ui/pre-approval-drawer/config.ts
+  - [x] components/ui/pre-approval-drawer/index.ts
+  - [x] app/about/page.tsx
+  - [x] app/tow-truck-calculator/page.tsx
+  - [x] app/_shared/minimal-nav-page/MinimalNavPage.tsx
 
   ### New route files to create
 
-  - app/used-tow-truck-financing/page.tsx
-  - app/zero-down-tow-truck-financing/page.tsx
-  - app/fleet-financing/page.tsx
-  - app/deferred-payment-tow-truck-financing/page.tsx
-  - app/resources/how-much-does-a-tow-truck-cost/page.tsx
-  - app/resources/tow-truck-financing-companies/page.tsx
-  - app/resources/tow-truck-lease-vs-loan/page.tsx
-  - app/resources/section-179-tow-truck/page.tsx
+  - [x] app/used-tow-truck-financing/page.tsx
+  - [x] app/zero-down-tow-truck-financing/page.tsx
+  - [x] app/fleet-financing/page.tsx
+  - [x] app/deferred-payment-tow-truck-financing/page.tsx
+  - [x] app/resources/how-much-does-a-tow-truck-cost/page.tsx
+  - [x] app/resources/tow-truck-financing-companies/page.tsx
+  - [x] app/resources/tow-truck-lease-vs-loan/page.tsx
+  - [x] app/resources/section-179-tow-truck/page.tsx
 
   ### Changes
 
-  - Replace the misleading Private Party -> / placeholder in components/sections/nav/sticky-nav-rm/nav-data.ts with a truthful destination.
-      - Point it to one of the newly created plumbing routes.
-  - Fix the broken primary CTA contract used by components/sections/nav/sticky-nav-rm/NavClient.tsx and components/ui/pre-approval-drawer/
-    DrawerContext.tsx.
-      - Make the CTA safe on routes without DrawerProvider, without creating a /pre-approval page.
-      - Keep existing pre-approval drawer behavior where the provider exists.
-  - Standardize every fixed-nav route to include the same skip-link and main#main-content contract already used on the homepage.
-      - Update app/about/page.tsx.
-      - Update app/tow-truck-calculator/page.tsx.
-      - Adjust app/page.tsx only if CTA/provider wiring changes require it.
-  - Create minimal plumbing pages for every nav destination that currently does not resolve.
-      - Each new page should contain StickyNav, a skip link, main#main-content, a single heading section, and the shared footer.
-      - Do not add real body content.
+  - [x] Replace the misleading Private Party -> / placeholder in components/sections/nav/sticky-nav-rm/nav-data.ts with a truthful destination.
+      - [x] Point it to one of the newly created plumbing routes.
+  - [x] Fix the broken primary CTA contract used by components/sections/nav/sticky-nav-rm/NavClient.tsx and the shared pre-approval drawer config.
+      - [x] Make the CTA safe on routes without DrawerProvider, without creating a /pre-approval page.
+      - [x] Keep existing pre-approval drawer behavior where the provider exists.
+  - [x] Standardize every fixed-nav route to include the same skip-link and main#main-content contract already used on the homepage.
+      - [x] Update app/about/page.tsx.
+      - [x] Update app/tow-truck-calculator/page.tsx.
+      - [x] Leave app/page.tsx unchanged because CTA/provider wiring did not require it.
+  - [x] Create minimal plumbing pages for every nav destination that currently does not resolve.
+      - [x] Each new page should contain StickyNav, a skip link, main#main-content, a single heading section, and the shared footer.
+      - [x] Do not add real body content.
 
   ### Validation before checking off
 
-  - Rerun web-design-guidelines against:
-      - components/sections/nav/sticky-nav-rm/nav-data.ts
-      - components/sections/nav/sticky-nav-rm/NavClient.tsx
-      - components/ui/pre-approval-drawer/DrawerContext.tsx
-      - app/page.tsx
-      - app/about/page.tsx
-      - app/tow-truck-calculator/page.tsx
-      - All new plumbing route files.
-  - Run npm run lint.
-  - Run npm run build.
-  - Browser-validate on 3005:
-      - Every nav link resolves to a real page.
-      - CTA behaves correctly on homepage, about, calculator, and an equipment financing page.
-      - Skip link lands on #main-content on the fixed-nav routes.
+  - [x] Rerun web-design-guidelines against:
+      - [x] components/sections/nav/sticky-nav-rm/nav-data.ts
+      - [x] components/sections/nav/sticky-nav-rm/NavClient.tsx
+      - [x] components/ui/pre-approval-drawer/config.ts
+      - [x] app/about/page.tsx
+      - [x] app/tow-truck-calculator/page.tsx
+      - [x] All new plumbing route files.
+  - [x] Rerun vercel-react-best-practices on the nav/client-boundary changes.
+  - [x] Run npm run lint.
+  - [x] Run npm run build.
+  - [x] Browser-validate on 3005:
+      - [x] Every nav link resolves to a real page.
+      - [x] CTA behaves correctly on homepage, about, calculator, and an equipment financing page.
+      - [x] Skip link lands on #main-content on the fixed-nav routes.
 
   ## Checkpoint 3: IA Consistency, Accessibility, and React/Next Tightening
 

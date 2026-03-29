@@ -1,2 +1,6 @@
 export { DrawerProvider, useDrawer } from "./DrawerContext";
-export { DRAWER_HASH } from "./config";
+export {
+  DRAWER_FALLBACK_HREF,
+  DRAWER_HASH,
+  resolveDrawerTriggerHref,
+} from "./config";

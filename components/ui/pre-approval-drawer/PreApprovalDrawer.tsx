@@ -157,7 +157,7 @@ function useDialogA11y({
 }
 
 export function PreApprovalDrawer() {
-  const { isOpen, title, close } = useDrawer();
+  const { isOpen, close } = useDrawer();
   const router = useRouter();
   const prefersReducedMotion = useReducedMotion() ?? false;
   const isDesktop = useIsDesktop();
