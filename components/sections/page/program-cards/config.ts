@@ -58,7 +58,7 @@ export const PROGRAM_CARDS_CONFIG: ProgramCardsConfig = {
         "Finance trucks from Facebook Marketplace, auctions, or private sellers.",
       iconId: "private-party",
       linkText: "Private Party Financing",
-      linkHref: "/",
+      linkHref: "/private-party-tow-truck-financing",
     },
   ],
 };

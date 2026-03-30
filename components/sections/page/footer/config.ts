@@ -60,7 +60,7 @@ export const FOOTER_CONFIG: FooterConfig = {
           label: "Deferred Pay",
           href: "/deferred-payment-tow-truck-financing",
         },
-        { label: "Private Party", href: "/used-tow-truck-financing" },
+        { label: "Private Party", href: "/private-party-tow-truck-financing" },
       ],
     },
     {

@@ -1,9 +1,7 @@
-## Build a new hero
+# Organize /app folder
 
-Build a new hero in the hero @components/sections/heros folder named hero-gallery
+We need to organzie the app folder 
 
-This hero has the following:
--Centered h1: Fast & Easy Tow Truck Financing
--Centered Subheading: Get pre-approved in less then 30 seconds. Know your truck payment before you apply.
--Centerted Input (desktop only): Input: How much do you need? With button inside input that says get pre-approved
--Two offset rows of trucks that blend into the next section
+-Everything should be put into a (marketing) folder /app/(marketing)
+-Each navigation group should have its own folder as well, for example all the links under financing nav bar should be in (financing), same with everything under programs so (progams) and reseoruces (resources)
+-We need to make sure there are error pages with error js for each page and error boundries for components. there should also be a layout.js for each page type and a loading.js

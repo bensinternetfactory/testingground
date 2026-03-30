@@ -97,7 +97,7 @@ export const PROGRAMS_ITEMS: readonly NavCardItem[] = [
     kind: "image",
     title: "Private Party",
     description: "Marketplace, auctions & private sellers",
-    href: "/used-tow-truck-financing",
+    href: "/private-party-tow-truck-financing",
     imageSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
   },
 ] as const;
