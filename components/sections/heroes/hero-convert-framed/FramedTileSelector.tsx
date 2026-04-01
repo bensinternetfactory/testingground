@@ -22,6 +22,8 @@ interface FramedTileSelectorProps {
   selectionRequiredMessage: string;
   viewAllLink?: { label: string; href: string };
   section?: string;
+  /** "responsive" stacks to 1 col on mobile (default). "fixed-2" keeps 2 cols always. */
+  gridCols?: "responsive" | "fixed-2";
 }
 
 export function FramedTileSelector({
@@ -31,6 +33,7 @@ export function FramedTileSelector({
   selectionRequiredMessage,
   viewAllLink,
   section = "equipment-hero",
+  gridCols = "responsive",
 }: FramedTileSelectorProps) {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const selectedLabel = tiles.find((tile) => tile.id === selectedTile)?.label;
@@ -44,7 +47,11 @@ export function FramedTileSelector({
       <div
         role="group"
         aria-label="Equipment types"
-        className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+        className={
+          gridCols === "fixed-2"
+            ? "grid grid-cols-2 gap-3 sm:gap-4"
+            : "grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+        }
       >
         {tiles.map((tile) => (
           <FramedSelectionTile

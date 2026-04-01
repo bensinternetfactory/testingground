@@ -66,7 +66,7 @@ const SHARED_EQUIPMENT_PROGRAMS = [
   },
 ];
 
-const equipmentFaqCore: FaqItemData[] = [
+export const equipmentFaqCore: FaqItemData[] = [
   {
     id: "terms-length",
     question: "How long can you finance a tow truck?",

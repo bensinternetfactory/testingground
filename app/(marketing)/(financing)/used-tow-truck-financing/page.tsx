@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { MinimalNavPage } from "@/app/(marketing)/_components/MinimalNavPage";
+import { EquipmentFinancingPageShell } from "../_components/EquipmentFinancingPageShell";
+import { usedTowTruckFinancingPageConfig } from "./config";
 
-export const metadata: Metadata = {
-  title: "Used Tow Truck Financing | TowLoans",
-  description: "Used tow truck financing information from TowLoans.",
-};
+export const metadata: Metadata = usedTowTruckFinancingPageConfig.metadata;
 
 export default function UsedTowTruckFinancingPage() {
-  return <MinimalNavPage title="Used Tow Truck Financing" />;
+  return <EquipmentFinancingPageShell config={usedTowTruckFinancingPageConfig} />;
 }

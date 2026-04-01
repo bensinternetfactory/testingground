@@ -9,6 +9,7 @@ import {
   HeroConvertFramed,
   HeroConvertFramedOutline,
   HeroConvertFramedPrimaryOnly,
+  HeroConvertFramedTileRight,
 } from "@/components/sections/heroes/hero-convert-framed";
 ```
 
@@ -19,13 +20,14 @@ import {
 | `HeroConvertFramed` | Text-link tertiary variant |
 | `HeroConvertFramedOutline` | Outline-card tertiary variant |
 | `HeroConvertFramedPrimaryOnly` | No-tertiary rollback hero variant |
+| `HeroConvertFramedTileRight` | Headline/body left, framed 2x2 tile selector right (no image/gallery) |
 
 ## Differences from `hero-convert-geico`
 
 - Tile selector wrapped in a `rounded-3xl` card frame with border and shadow
 - Tile labels are visible (not sr-only)
 - Tiles are taller with more padding (`p-4 sm:p-6`, `min-h-[5.5rem] sm:min-h-32`)
-- Grid stacks to single column on mobile (`grid-cols-1 sm:grid-cols-2`)
+- Grid stacks to single column on mobile (`grid-cols-1 sm:grid-cols-2`) unless `gridCols="fixed-2"` is passed (always 2 cols)
 - Left column has more breathing room (`gap-5 sm:gap-6 lg:gap-8`)
 - Uses primitive tile icon metadata (`iconSrc`, `iconWidth`, `iconHeight`) instead of JSX-in-config
 - All variants support desktop gallery images and footnote markers
@@ -37,6 +39,7 @@ import {
 - `HeroConvertFramed.tsx` — server component
 - `HeroConvertFramedOutline.tsx` — server component
 - `HeroConvertFramedPrimaryOnly.tsx` — server component
+- `HeroConvertFramedTileRight.tsx` — server component
 - `FramedTileSelector.tsx` — client component ("use client") — handles interactive tile selection
 - `FramedSelectionTile.tsx` — rendered inside FramedTileSelector's client boundary
 
