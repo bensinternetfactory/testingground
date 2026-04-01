@@ -13,114 +13,13 @@ import {
   ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
 } from "@/components/sections/page/financing-offers-split/config";
 import type {
-  PurchaseAndTermsConfig,
-} from "@/components/sections/page/purchase-and-terms/config";
-import type {
   TertiaryStripConfig,
 } from "@/components/sections/page/tertiary-strip/config";
 
-const rollbackFaq = buildFaqSection(
-  "Rollback financing questions, straight answers.",
-  [
-    {
-      id: "private-party-auction",
-      question: "Can I finance a rollback from a private seller or auction?",
-      answerText:
-        "Yes. TowLoans finances private-party and auction rollback deals when the truck details and transaction structure fit.",
-      answerContent: [
-        {
-          type: "text",
-          value:
-            "Yes. Private-party and auction rollback deals are common for us. Get the truck details and seller information in front of us early and you will get a straight answer fast.",
-        },
-      ],
-    },
-    {
-      id: "rollback-vs-flatbed",
-      question: "What is the difference between a rollback and a flatbed?",
-      answerText:
-        "Rollback and flatbed are interchangeable terms for a tow truck with a tilting carrier bed.",
-      answerContent: [
-        {
-          type: "text",
-          value:
-            "Same truck, different name. Rollback and flatbed both refer to a tow truck with a tilting carrier bed that loads vehicles by rolling the deck back.",
-        },
-      ],
-    },
-  ],
-);
-
-/* ── Purchase & Terms (inlined for editability) ────────────────────── */
-
-const ROLLBACK_PURCHASE_AND_TERMS: PurchaseAndTermsConfig = {
-  purchaseStack: {
-    headline: "Buy from anyone. We\u2019ll finance it.",
-    body: "Dealership, private seller, auction house, or another towing operator. We finance the truck, not the source.",
-    iconSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
-    iconAlt: "Hook icon",
-    rotationIntervalMs: 4500,
-    cards: [
-      {
-        id: "dealer",
-        sourceName: "Authorized Retailers",
-        sourceSubtitle: "Dealer Inventory",
-        iconSrc: "/brand-assets/source-icons/placeholder-dealer.svg",
-        iconAlt: "Dealer icon",
-        badgeLabel: "For Sale",
-        sampleListing: "2024 Kenworth T270 Rollback",
-        samplePrice: "$87,500",
-      },
-      {
-        id: "fbmp",
-        sourceName: "Facebook Marketplace",
-        sourceSubtitle: "Private Seller Listings",
-        iconSrc: "/brand-assets/source-icons/placeholder-fbmp.svg",
-        iconAlt: "Facebook Marketplace icon",
-        badgeLabel: "For Sale",
-        sampleListing: "2019 Hino 258 Rollback",
-        samplePrice: "$62,500",
-      },
-      {
-        id: "auction",
-        sourceName: "Ritchie Brothers",
-        sourceSubtitle: "Auction Listings",
-        iconSrc: "/brand-assets/source-icons/placeholder-auction.svg",
-        iconAlt: "Auction house icon",
-        badgeLabel: "For Sale",
-        sampleListing: "2021 Freightliner M2 Rollback",
-        samplePrice: "$74,000",
-      },
-      {
-        id: "private",
-        sourceName: "Private Sellers",
-        sourceSubtitle: "Operator-to-Operator",
-        iconSrc: "/brand-assets/source-icons/placeholder-private.svg",
-        iconAlt: "Private seller icon",
-        badgeLabel: "For Sale",
-        sampleListing: "2017 International 4300 Rollback",
-        samplePrice: "$51,000",
-      },
-    ],
-  },
-  termSlider: {
-    headline: "Older truck? Still financeable.",
-    subheading: "See your max term by model year",
-    body: "Slide to any model year and see the longest term available. Newer rollbacks stretch further, but we finance trucks back to 2000.",
-    iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
-    iconAlt: "Term length icon",
-    defaultYear: 2021,
-    lookupTable: [
-      { minYear: 2000, maxYear: 2009, maxTermMonths: 36 },
-      { minYear: 2010, maxYear: 2014, maxTermMonths: 48 },
-      { minYear: 2015, maxYear: 2018, maxTermMonths: 60 },
-      { minYear: 2019, maxYear: 2022, maxTermMonths: 72 },
-      { minYear: 2023, maxYear: 2099, maxTermMonths: 84 },
-    ],
-  },
-};
+/* ── Page Config ─────────────────────────────────────────────────── */
 
 export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
+  /* ── Page identity & metadata ──────────────────────────── */
   slug: "rollback-financing",
   metadata: {
     title: "Rollback Financing — Pre-Approved in 30 Seconds | TowLoans",
@@ -133,6 +32,8 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       type: "website",
     },
   },
+
+  /* ── Visual sections — top to bottom ───────────────────── */
   hero: {
     kind: "primary-only",
     config: {
@@ -190,7 +91,72 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
     ],
   } satisfies TertiaryStripConfig,
   financingOffers: ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
-  purchaseAndTerms: ROLLBACK_PURCHASE_AND_TERMS,
+  purchaseAndTerms: {
+    purchaseStack: {
+      headline: "Buy from anyone. We\u2019ll finance it.",
+      body: "Dealership, private seller, auction house, or another towing operator. We finance the truck, not the source.",
+      iconSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
+      iconAlt: "Hook icon",
+      rotationIntervalMs: 4500,
+      cards: [
+        {
+          id: "dealer",
+          sourceName: "Authorized Retailers",
+          sourceSubtitle: "Dealer Inventory",
+          iconSrc: "/brand-assets/source-icons/placeholder-dealer.svg",
+          iconAlt: "Dealer icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2024 Kenworth T270 Rollback",
+          samplePrice: "$87,500",
+        },
+        {
+          id: "fbmp",
+          sourceName: "Facebook Marketplace",
+          sourceSubtitle: "Private Seller Listings",
+          iconSrc: "/brand-assets/source-icons/placeholder-fbmp.svg",
+          iconAlt: "Facebook Marketplace icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2019 Hino 258 Rollback",
+          samplePrice: "$62,500",
+        },
+        {
+          id: "auction",
+          sourceName: "Ritchie Brothers",
+          sourceSubtitle: "Auction Listings",
+          iconSrc: "/brand-assets/source-icons/placeholder-auction.svg",
+          iconAlt: "Auction house icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2021 Freightliner M2 Rollback",
+          samplePrice: "$74,000",
+        },
+        {
+          id: "private",
+          sourceName: "Private Sellers",
+          sourceSubtitle: "Operator-to-Operator",
+          iconSrc: "/brand-assets/source-icons/placeholder-private.svg",
+          iconAlt: "Private seller icon",
+          badgeLabel: "For Sale",
+          sampleListing: "2017 International 4300 Rollback",
+          samplePrice: "$51,000",
+        },
+      ],
+    },
+    termSlider: {
+      headline: "Older truck? Still financeable.",
+      subheading: "See your max term by model year",
+      body: "Slide to any model year and see the longest term available. Newer rollbacks stretch further, but we finance trucks back to 2000.",
+      iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+      iconAlt: "Term length icon",
+      defaultYear: 2021,
+      lookupTable: [
+        { minYear: 2000, maxYear: 2009, maxTermMonths: 36 },
+        { minYear: 2010, maxYear: 2014, maxTermMonths: 48 },
+        { minYear: 2015, maxYear: 2018, maxTermMonths: 60 },
+        { minYear: 2019, maxYear: 2022, maxTermMonths: 72 },
+        { minYear: 2023, maxYear: 2099, maxTermMonths: 84 },
+      ],
+    },
+  },
   purchaseTermsTertiaryStrip: {
     actions: [
       {
@@ -206,8 +172,34 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  faqSection: rollbackFaq.section,
-  faqSchema: rollbackFaq.schema,
+  faqSection: buildRollbackFaqContent().section,
+  footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
+  closingCta: {
+    eyebrow: "READY WHEN YOU ARE",
+    headline: "Ready to lock in your rollback?",
+    body:
+      "You do not need corporate runaround. You need to know whether the rollback works and what the payment looks like.",
+    cta: {
+      href: DRAWER_HASH,
+      label: "Get Pre-Approved",
+    },
+    contactBlock: {
+      prompt: "Prefer to talk?",
+      phoneLabel: "(888) 555-0199",
+      phoneHref: "tel:+18885550199",
+      supportText: "Mon-Fri 8am-6pm CT",
+    },
+  },
+  relatedLinks: {
+    links: [
+      { label: "Need a wrecker instead?", href: "/wrecker-financing" },
+      { label: "Looking at rotators?", href: "/rotator-financing" },
+      { label: "Tow truck financing", href: "/" },
+    ],
+  },
+
+  /* ── Structured data (invisible JsonLd) ────────────────── */
+  faqSchema: buildRollbackFaqContent().schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -240,28 +232,38 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
-  closingCta: {
-    eyebrow: "READY WHEN YOU ARE",
-    headline: "Ready to lock in your rollback?",
-    body:
-      "You do not need corporate runaround. You need to know whether the rollback works and what the payment looks like.",
-    cta: {
-      href: DRAWER_HASH,
-      label: "Get Pre-Approved",
-    },
-    contactBlock: {
-      prompt: "Prefer to talk?",
-      phoneLabel: "(888) 555-0199",
-      phoneHref: "tel:+18885550199",
-      supportText: "Mon-Fri 8am-6pm CT",
-    },
-  },
-  relatedLinks: {
-    links: [
-      { label: "Need a wrecker instead?", href: "/wrecker-financing" },
-      { label: "Looking at rotators?", href: "/rotator-financing" },
-      { label: "Tow truck financing", href: "/" },
-    ],
-  },
 };
+
+function buildRollbackFaqContent() {
+  return buildFaqSection(
+    "Rollback financing questions, straight answers.",
+    [
+      {
+        id: "private-party-auction",
+        question: "Can I finance a rollback from a private seller or auction?",
+        answerText:
+          "Yes. TowLoans finances private-party and auction rollback deals when the truck details and transaction structure fit.",
+        answerContent: [
+          {
+            type: "text",
+            value:
+              "Yes. Private-party and auction rollback deals are common for us. Get the truck details and seller information in front of us early and you will get a straight answer fast.",
+          },
+        ],
+      },
+      {
+        id: "rollback-vs-flatbed",
+        question: "What is the difference between a rollback and a flatbed?",
+        answerText:
+          "Rollback and flatbed are interchangeable terms for a tow truck with a tilting carrier bed.",
+        answerContent: [
+          {
+            type: "text",
+            value:
+              "Same truck, different name. Rollback and flatbed both refer to a tow truck with a tilting carrier bed that loads vehicles by rolling the deck back.",
+          },
+        ],
+      },
+    ],
+  );
+}

@@ -43,24 +43,30 @@ export type EquipmentHeroConfig =
   | PrimaryOnlyEquipmentHeroConfig
   | TileRightEquipmentHeroConfig;
 
+// Page config objects should be authored in rendered page order; only extract content that is reused.
 export interface EquipmentFinancingPageConfig {
+  /* ── Page identity & metadata ──────────────────────────── */
   slug: "rollback-financing" | "wrecker-financing" | "rotator-financing" | "used-tow-truck-financing";
   metadata: Metadata;
+
+  /* ── Visual sections — top to bottom ───────────────────── */
   hero: EquipmentHeroConfig;
-  programs?: ProgramCardsConfig;
-  trustBridge?: TrustBridgeConfig;
-  dealsSection?: EquipmentDealsSectionConfig;
   tertiaryStrip?: TertiaryStripConfig;
   financingOffers?: FinancingOffersSplitConfig;
+  programs?: ProgramCardsConfig;
   financingOffersSecondary?: FinancingOffersSplitConfig;
   purchaseAndTerms?: PurchaseAndTermsConfig;
-  purchaseAndTermsSecondary?: PurchaseAndTermsConfig;
   purchaseTermsTertiaryStrip?: TertiaryStripConfig;
+  trustBridge?: TrustBridgeConfig;
+  purchaseAndTermsSecondary?: PurchaseAndTermsConfig;
+  dealsSection?: EquipmentDealsSectionConfig;
   faqSection: FaqSectionConfig;
-  faqSchema: ReturnType<typeof buildFaqSchema>;
-  financialProductSchema: Record<string, unknown>;
-  breadcrumbSchema: Record<string, unknown>;
   footnotes: FinancingFootnotesConfig;
   closingCta: EquipmentClosingCtaConfig;
   relatedLinks: RelatedLinksStripConfig;
+
+  /* ── Structured data (invisible JsonLd) ────────────────── */
+  faqSchema: ReturnType<typeof buildFaqSchema>;
+  financialProductSchema: Record<string, unknown>;
+  breadcrumbSchema: Record<string, unknown>;
 }

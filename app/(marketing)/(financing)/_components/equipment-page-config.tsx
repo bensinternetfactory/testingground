@@ -12,65 +12,8 @@ import {
 } from "./shared-config";
 import type { EquipmentFinancingPageConfig } from "./page-config-types";
 
-const wreckerFaq = buildFaqSection("Wrecker financing questions, straight answers.", [
-  {
-    id: "self-loader-repo",
-    question: "Do you finance self-loader or repo wreckers?",
-    answerText:
-      "Yes. Self-loader and repo-style wrecker deals are financeable when the truck, seller, and business profile fit the program.",
-    answerContent: [
-      {
-        type: "text",
-        value:
-          "Yes. Self-loader and repo units are part of the market we understand. If the truck specs, purchase structure, and operating history make sense, we can usually show you a workable path.",
-      },
-    ],
-  },
-  {
-    id: "used-wreckers",
-    question: "Do you finance used wrecker trucks?",
-    answerText:
-      "Yes. Used wrecker financing is common, including service trucks bought from dealers, auctions, and private sellers.",
-    answerContent: [
-      {
-        type: "text",
-        value:
-          "Yes. Used wrecker deals are common, especially for operators adding another service truck without paying new-truck money.",
-      },
-    ],
-  },
-]);
-
-const rotatorFaq = buildFaqSection("Rotator financing questions, straight answers.", [
-  {
-    id: "expensive-used-rotators",
-    question: "Do you finance expensive used rotators?",
-    answerText:
-      "Yes. High-value used rotator deals can be financed when the truck condition, structure, and business profile support it.",
-    answerContent: [
-      {
-        type: "text",
-        value:
-          "Yes. Used rotators are often still large-ticket transactions, which makes structured financing more important, not less. We look at the truck, the purchase structure, and your operation together.",
-      },
-    ],
-  },
-  {
-    id: "replacement-or-expansion",
-    question: "Is rotator financing available for replacement or fleet expansion?",
-    answerText:
-      "Yes. Rotator financing can work for both replacement purchases and heavy-recovery fleet expansion.",
-    answerContent: [
-      {
-        type: "text",
-        value:
-          "Yes. Some operators are replacing an aging heavy-recovery unit. Others are adding capacity for bigger recovery work. Both are common fit scenarios for rotator financing.",
-      },
-    ],
-  },
-]);
-
 export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
+  /* ── Page identity & metadata ──────────────────────────── */
   slug: "wrecker-financing",
   metadata: {
     title: "Wrecker Financing — Pre-Approved in 30 Seconds | TowLoans",
@@ -83,6 +26,8 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       type: "website",
     },
   },
+
+  /* ── Visual sections — top to bottom ───────────────────── */
   hero: {
     kind: "framed-outline",
     config: {
@@ -175,8 +120,34 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  faqSection: wreckerFaq.section,
-  faqSchema: wreckerFaq.schema,
+  faqSection: buildWreckerFaqContent().section,
+  footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
+  closingCta: {
+    eyebrow: "READY WHEN YOU ARE",
+    headline: "Ready to lock in your wrecker?",
+    body:
+      "You do not need a long application process to know whether the service truck works. Start with the payment and the structure.",
+    cta: {
+      href: DRAWER_HASH,
+      label: "Get Pre-Approved",
+    },
+    contactBlock: {
+      prompt: "Prefer to talk?",
+      phoneLabel: "(888) 555-0199",
+      phoneHref: "tel:+18885550199",
+      supportText: "Mon-Fri 8am-6pm CT",
+    },
+  },
+  relatedLinks: {
+    links: [
+      { label: "Looking at a rollback instead?", href: "/rollback-financing" },
+      { label: "Need a rotator program?", href: "/rotator-financing" },
+      { label: "Tow truck financing", href: "/" },
+    ],
+  },
+
+  /* ── Structured data (invisible JsonLd) ────────────────── */
+  faqSchema: buildWreckerFaqContent().schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -209,33 +180,10 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
-  closingCta: {
-    eyebrow: "READY WHEN YOU ARE",
-    headline: "Ready to lock in your wrecker?",
-    body:
-      "You do not need a long application process to know whether the service truck works. Start with the payment and the structure.",
-    cta: {
-      href: DRAWER_HASH,
-      label: "Get Pre-Approved",
-    },
-    contactBlock: {
-      prompt: "Prefer to talk?",
-      phoneLabel: "(888) 555-0199",
-      phoneHref: "tel:+18885550199",
-      supportText: "Mon-Fri 8am-6pm CT",
-    },
-  },
-  relatedLinks: {
-    links: [
-      { label: "Looking at a rollback instead?", href: "/rollback-financing" },
-      { label: "Need a rotator program?", href: "/rotator-financing" },
-      { label: "Tow truck financing", href: "/" },
-    ],
-  },
 };
 
 export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
+  /* ── Page identity & metadata ──────────────────────────── */
   slug: "rotator-financing",
   metadata: {
     title: "Rotator Financing — Pre-Approved in 30 Seconds | TowLoans",
@@ -248,6 +196,8 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       type: "website",
     },
   },
+
+  /* ── Visual sections — top to bottom ───────────────────── */
   hero: {
     kind: "framed-outline",
     config: {
@@ -340,8 +290,34 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  faqSection: rotatorFaq.section,
-  faqSchema: rotatorFaq.schema,
+  faqSection: buildRotatorFaqContent().section,
+  footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
+  closingCta: {
+    eyebrow: "READY WHEN YOU ARE",
+    headline: "Ready to lock in your rotator?",
+    body:
+      "Heavy-recovery equipment is too expensive to guess on. Start with the structure and see whether the unit fits the business.",
+    cta: {
+      href: DRAWER_HASH,
+      label: "Get Pre-Approved",
+    },
+    contactBlock: {
+      prompt: "Prefer to talk?",
+      phoneLabel: "(888) 555-0199",
+      phoneHref: "tel:+18885550199",
+      supportText: "Mon-Fri 8am-6pm CT",
+    },
+  },
+  relatedLinks: {
+    links: [
+      { label: "Looking at a rollback instead?", href: "/rollback-financing" },
+      { label: "Need a wrecker program?", href: "/wrecker-financing" },
+      { label: "Tow truck financing", href: "/" },
+    ],
+  },
+
+  /* ── Structured data (invisible JsonLd) ────────────────── */
+  faqSchema: buildRotatorFaqContent().schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -374,28 +350,66 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
-  closingCta: {
-    eyebrow: "READY WHEN YOU ARE",
-    headline: "Ready to lock in your rotator?",
-    body:
-      "Heavy-recovery equipment is too expensive to guess on. Start with the structure and see whether the unit fits the business.",
-    cta: {
-      href: DRAWER_HASH,
-      label: "Get Pre-Approved",
-    },
-    contactBlock: {
-      prompt: "Prefer to talk?",
-      phoneLabel: "(888) 555-0199",
-      phoneHref: "tel:+18885550199",
-      supportText: "Mon-Fri 8am-6pm CT",
-    },
-  },
-  relatedLinks: {
-    links: [
-      { label: "Looking at a rollback instead?", href: "/rollback-financing" },
-      { label: "Need a wrecker program?", href: "/wrecker-financing" },
-      { label: "Tow truck financing", href: "/" },
-    ],
-  },
 };
+
+function buildWreckerFaqContent() {
+  return buildFaqSection("Wrecker financing questions, straight answers.", [
+    {
+      id: "self-loader-repo",
+      question: "Do you finance self-loader or repo wreckers?",
+      answerText:
+        "Yes. Self-loader and repo-style wrecker deals are financeable when the truck, seller, and business profile fit the program.",
+      answerContent: [
+        {
+          type: "text",
+          value:
+            "Yes. Self-loader and repo units are part of the market we understand. If the truck specs, purchase structure, and operating history make sense, we can usually show you a workable path.",
+        },
+      ],
+    },
+    {
+      id: "used-wreckers",
+      question: "Do you finance used wrecker trucks?",
+      answerText:
+        "Yes. Used wrecker financing is common, including service trucks bought from dealers, auctions, and private sellers.",
+      answerContent: [
+        {
+          type: "text",
+          value:
+            "Yes. Used wrecker deals are common, especially for operators adding another service truck without paying new-truck money.",
+        },
+      ],
+    },
+  ]);
+}
+
+function buildRotatorFaqContent() {
+  return buildFaqSection("Rotator financing questions, straight answers.", [
+    {
+      id: "expensive-used-rotators",
+      question: "Do you finance expensive used rotators?",
+      answerText:
+        "Yes. High-value used rotator deals can be financed when the truck condition, structure, and business profile support it.",
+      answerContent: [
+        {
+          type: "text",
+          value:
+            "Yes. Used rotators are often still large-ticket transactions, which makes structured financing more important, not less. We look at the truck, the purchase structure, and your operation together.",
+        },
+      ],
+    },
+    {
+      id: "replacement-or-expansion",
+      question: "Is rotator financing available for replacement or fleet expansion?",
+      answerText:
+        "Yes. Rotator financing can work for both replacement purchases and heavy-recovery fleet expansion.",
+      answerContent: [
+        {
+          type: "text",
+          value:
+            "Yes. Some operators are replacing an aging heavy-recovery unit. Others are adding capacity for bigger recovery work. Both are common fit scenarios for rotator financing.",
+        },
+      ],
+    },
+  ]);
+}

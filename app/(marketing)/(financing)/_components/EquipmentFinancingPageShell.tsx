@@ -28,10 +28,6 @@ export function EquipmentFinancingPageShell({
 }) {
   return (
     <div className="min-h-screen bg-white font-sans">
-      <JsonLd data={config.faqSchema} />
-      <JsonLd data={config.financialProductSchema} />
-      <JsonLd data={config.breadcrumbSchema} />
-
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-[#22C55E] focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
@@ -41,47 +37,50 @@ export function EquipmentFinancingPageShell({
 
       <StickyNav />
 
-        <main id="main-content">
-          {config.hero.kind === "tile-right" ? (
-            <HeroConvertFramedTileRight config={config.hero.config} />
-          ) : config.hero.kind === "primary-only" ? (
-            <HeroConvertFramedPrimaryOnly config={config.hero.config} />
-          ) : config.hero.kind === "framed-outline" ? (
-            <HeroConvertFramedOutline config={config.hero.config} />
-          ) : (
-            <HeroConvertFramed config={config.hero.config} />
-          )}
-          {config.tertiaryStrip ? (
-            <TertiaryActionsStrip config={config.tertiaryStrip} />
-          ) : null}
-          {config.financingOffers ? (
-            <FinancingOffersSplit config={config.financingOffers} />
-          ) : null}
-          {config.programs ? <ProgramCards config={config.programs} /> : null}
-          <BrandMarquee />
-          {config.financingOffersSecondary ? (
-            <FinancingOffersSplit config={config.financingOffersSecondary} />
-          ) : null}
-          {config.purchaseAndTerms ? (
-            <PurchaseAndTermsSection config={config.purchaseAndTerms} />
-          ) : null}
-          {config.purchaseTermsTertiaryStrip ? (
-            <TertiaryActionsStrip config={config.purchaseTermsTertiaryStrip} />
-          ) : null}
-          {config.trustBridge ? (
-            <TrustBridge config={config.trustBridge} />
-          ) : null}
-          {config.purchaseAndTermsSecondary ? (
-            <PurchaseAndTermsSection config={config.purchaseAndTermsSecondary} />
-          ) : null}
-          {config.dealsSection ? (
-            <EquipmentDealsSection config={config.dealsSection} />
-          ) : null}
-          <FaqSection config={config.faqSection} />
-          <FinancingFootnotes config={config.footnotes} />
-          <EquipmentClosingCta config={config.closingCta} />
-          <RelatedLinksStrip config={config.relatedLinks} />
-        </main>
+      <main id="main-content">
+        {config.hero.kind === "tile-right" ? (
+          <HeroConvertFramedTileRight config={config.hero.config} />
+        ) : config.hero.kind === "primary-only" ? (
+          <HeroConvertFramedPrimaryOnly config={config.hero.config} />
+        ) : config.hero.kind === "framed-outline" ? (
+          <HeroConvertFramedOutline config={config.hero.config} />
+        ) : (
+          <HeroConvertFramed config={config.hero.config} />
+        )}
+        {config.tertiaryStrip ? (
+          <TertiaryActionsStrip config={config.tertiaryStrip} />
+        ) : null}
+        {config.financingOffers ? (
+          <FinancingOffersSplit config={config.financingOffers} />
+        ) : null}
+        {config.programs ? <ProgramCards config={config.programs} /> : null}
+        <BrandMarquee />
+        {config.financingOffersSecondary ? (
+          <FinancingOffersSplit config={config.financingOffersSecondary} />
+        ) : null}
+        {config.purchaseAndTerms ? (
+          <PurchaseAndTermsSection config={config.purchaseAndTerms} />
+        ) : null}
+        {config.purchaseTermsTertiaryStrip ? (
+          <TertiaryActionsStrip config={config.purchaseTermsTertiaryStrip} />
+        ) : null}
+        {config.trustBridge ? (
+          <TrustBridge config={config.trustBridge} />
+        ) : null}
+        {config.purchaseAndTermsSecondary ? (
+          <PurchaseAndTermsSection config={config.purchaseAndTermsSecondary} />
+        ) : null}
+        {config.dealsSection ? (
+          <EquipmentDealsSection config={config.dealsSection} />
+        ) : null}
+        <FaqSection config={config.faqSection} />
+        <FinancingFootnotes config={config.footnotes} />
+        <EquipmentClosingCta config={config.closingCta} />
+        <RelatedLinksStrip config={config.relatedLinks} />
+        <JsonLd data={config.faqSchema} />
+        <JsonLd data={config.financialProductSchema} />
+        <JsonLd data={config.breadcrumbSchema} />
+      </main>
 
       <Footer config={FOOTER_CONFIG} />
     </div>
