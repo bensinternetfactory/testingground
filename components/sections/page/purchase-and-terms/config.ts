@@ -1,18 +1,14 @@
-import {
-  ROLLBACK_PURCHASE_SOURCE_STACK_CONFIG,
-  type PurchaseSourceStackConfig,
-} from "@/components/sections/page/purchase-source-stack/config";
-import {
-  ROLLBACK_TERM_LENGTH_SLIDER_CONFIG,
-  type TermSliderConfig,
-} from "@/components/sections/page/term-length-slider/config";
+import type { PurchaseSourceStackConfig } from "@/components/sections/page/purchase-source-stack/config";
+import type { TermSliderConfig } from "@/components/sections/page/term-length-slider/config";
+
+export interface PurchaseAndTermsSectionHeading {
+  eyebrow?: string;
+  heading: string;
+  intro?: string;
+}
 
 export interface PurchaseAndTermsConfig {
+  sectionHeading?: PurchaseAndTermsSectionHeading;
   purchaseStack: PurchaseSourceStackConfig;
   termSlider: TermSliderConfig;
 }
-
-export const ROLLBACK_PURCHASE_AND_TERMS_CONFIG: PurchaseAndTermsConfig = {
-  purchaseStack: ROLLBACK_PURCHASE_SOURCE_STACK_CONFIG,
-  termSlider: ROLLBACK_TERM_LENGTH_SLIDER_CONFIG,
-};

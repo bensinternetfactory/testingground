@@ -12,8 +12,8 @@ import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 import {
   ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
 } from "@/components/sections/page/financing-offers-split/config";
-import {
-  ROLLBACK_PURCHASE_AND_TERMS_CONFIG,
+import type {
+  PurchaseAndTermsConfig,
 } from "@/components/sections/page/purchase-and-terms/config";
 import type {
   TertiaryStripConfig,
@@ -50,6 +50,75 @@ const rollbackFaq = buildFaqSection(
     },
   ],
 );
+
+/* ── Purchase & Terms (inlined for editability) ────────────────────── */
+
+const ROLLBACK_PURCHASE_AND_TERMS: PurchaseAndTermsConfig = {
+  purchaseStack: {
+    headline: "Buy from anyone. We\u2019ll finance it.",
+    body: "Dealership, private seller, auction house, or another towing operator. We finance the truck, not the source.",
+    iconSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
+    iconAlt: "Hook icon",
+    rotationIntervalMs: 4500,
+    cards: [
+      {
+        id: "dealer",
+        sourceName: "Authorized Retailers",
+        sourceSubtitle: "Dealer Inventory",
+        iconSrc: "/brand-assets/source-icons/placeholder-dealer.svg",
+        iconAlt: "Dealer icon",
+        badgeLabel: "For Sale",
+        sampleListing: "2024 Kenworth T270 Rollback",
+        samplePrice: "$87,500",
+      },
+      {
+        id: "fbmp",
+        sourceName: "Facebook Marketplace",
+        sourceSubtitle: "Private Seller Listings",
+        iconSrc: "/brand-assets/source-icons/placeholder-fbmp.svg",
+        iconAlt: "Facebook Marketplace icon",
+        badgeLabel: "For Sale",
+        sampleListing: "2019 Hino 258 Rollback",
+        samplePrice: "$62,500",
+      },
+      {
+        id: "auction",
+        sourceName: "Ritchie Brothers",
+        sourceSubtitle: "Auction Listings",
+        iconSrc: "/brand-assets/source-icons/placeholder-auction.svg",
+        iconAlt: "Auction house icon",
+        badgeLabel: "For Sale",
+        sampleListing: "2021 Freightliner M2 Rollback",
+        samplePrice: "$74,000",
+      },
+      {
+        id: "private",
+        sourceName: "Private Sellers",
+        sourceSubtitle: "Operator-to-Operator",
+        iconSrc: "/brand-assets/source-icons/placeholder-private.svg",
+        iconAlt: "Private seller icon",
+        badgeLabel: "For Sale",
+        sampleListing: "2017 International 4300 Rollback",
+        samplePrice: "$51,000",
+      },
+    ],
+  },
+  termSlider: {
+    headline: "Older truck? Still financeable.",
+    subheading: "See your max term by model year",
+    body: "Slide to any model year and see the longest term available. Newer rollbacks stretch further, but we finance trucks back to 2000.",
+    iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+    iconAlt: "Term length icon",
+    defaultYear: 2021,
+    lookupTable: [
+      { minYear: 2000, maxYear: 2009, maxTermMonths: 36 },
+      { minYear: 2010, maxYear: 2014, maxTermMonths: 48 },
+      { minYear: 2015, maxYear: 2018, maxTermMonths: 60 },
+      { minYear: 2019, maxYear: 2022, maxTermMonths: 72 },
+      { minYear: 2023, maxYear: 2099, maxTermMonths: 84 },
+    ],
+  },
+};
 
 export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
   slug: "rollback-financing",
@@ -121,7 +190,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
     ],
   } satisfies TertiaryStripConfig,
   financingOffers: ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
-  purchaseAndTerms: ROLLBACK_PURCHASE_AND_TERMS_CONFIG,
+  purchaseAndTerms: ROLLBACK_PURCHASE_AND_TERMS,
   purchaseTermsTertiaryStrip: {
     actions: [
       {

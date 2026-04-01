@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { HeroConvertFramedConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramed";
 import type { HeroConvertFramedOutlineConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline";
 import type { HeroConvertFramedPrimaryOnlyConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedPrimaryOnly";
+import type { HeroConvertFramedTileRightConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedTileRight";
 import type { EquipmentDealsSectionConfig } from "@/components/sections/page/equipment-deals";
 import type { EquipmentClosingCtaConfig } from "@/components/sections/page/equipment-closing-cta/config";
 import {
@@ -31,13 +32,19 @@ export interface FramedOutlineEquipmentHeroConfig {
   config: HeroConvertFramedOutlineConfig;
 }
 
+export interface TileRightEquipmentHeroConfig {
+  kind: "tile-right";
+  config: HeroConvertFramedTileRightConfig;
+}
+
 export type EquipmentHeroConfig =
   | FramedEquipmentHeroConfig
   | FramedOutlineEquipmentHeroConfig
-  | PrimaryOnlyEquipmentHeroConfig;
+  | PrimaryOnlyEquipmentHeroConfig
+  | TileRightEquipmentHeroConfig;
 
 export interface EquipmentFinancingPageConfig {
-  slug: "rollback-financing" | "wrecker-financing" | "rotator-financing";
+  slug: "rollback-financing" | "wrecker-financing" | "rotator-financing" | "used-tow-truck-financing";
   metadata: Metadata;
   hero: EquipmentHeroConfig;
   programs?: ProgramCardsConfig;
@@ -45,7 +52,9 @@ export interface EquipmentFinancingPageConfig {
   dealsSection?: EquipmentDealsSectionConfig;
   tertiaryStrip?: TertiaryStripConfig;
   financingOffers?: FinancingOffersSplitConfig;
+  financingOffersSecondary?: FinancingOffersSplitConfig;
   purchaseAndTerms?: PurchaseAndTermsConfig;
+  purchaseAndTermsSecondary?: PurchaseAndTermsConfig;
   purchaseTermsTertiaryStrip?: TertiaryStripConfig;
   faqSection: FaqSectionConfig;
   faqSchema: ReturnType<typeof buildFaqSchema>;

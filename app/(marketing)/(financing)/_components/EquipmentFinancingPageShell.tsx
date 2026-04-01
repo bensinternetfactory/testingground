@@ -11,6 +11,7 @@ import {
   HeroConvertFramed,
   HeroConvertFramedOutline,
   HeroConvertFramedPrimaryOnly,
+  HeroConvertFramedTileRight,
 } from "@/components/sections/heroes/hero-convert-framed";
 import { FinancingFootnotes } from "@/components/sections/page/financing-footnotes";
 import { EquipmentClosingCta } from "@/components/sections/page/equipment-closing-cta";
@@ -41,7 +42,9 @@ export function EquipmentFinancingPageShell({
       <StickyNav />
 
         <main id="main-content">
-          {config.hero.kind === "primary-only" ? (
+          {config.hero.kind === "tile-right" ? (
+            <HeroConvertFramedTileRight config={config.hero.config} />
+          ) : config.hero.kind === "primary-only" ? (
             <HeroConvertFramedPrimaryOnly config={config.hero.config} />
           ) : config.hero.kind === "framed-outline" ? (
             <HeroConvertFramedOutline config={config.hero.config} />
@@ -56,6 +59,9 @@ export function EquipmentFinancingPageShell({
           ) : null}
           {config.programs ? <ProgramCards config={config.programs} /> : null}
           <BrandMarquee />
+          {config.financingOffersSecondary ? (
+            <FinancingOffersSplit config={config.financingOffersSecondary} />
+          ) : null}
           {config.purchaseAndTerms ? (
             <PurchaseAndTermsSection config={config.purchaseAndTerms} />
           ) : null}
@@ -64,6 +70,9 @@ export function EquipmentFinancingPageShell({
           ) : null}
           {config.trustBridge ? (
             <TrustBridge config={config.trustBridge} />
+          ) : null}
+          {config.purchaseAndTermsSecondary ? (
+            <PurchaseAndTermsSection config={config.purchaseAndTermsSecondary} />
           ) : null}
           {config.dealsSection ? (
             <EquipmentDealsSection config={config.dealsSection} />
