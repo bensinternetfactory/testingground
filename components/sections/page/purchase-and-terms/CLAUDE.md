@@ -1,6 +1,6 @@
 # purchase-and-terms
 
-Server component wrapper composing PurchaseSourceStack and TermLengthSlider into a two-column layout.
+Server component wrapper composing PurchaseSourceGrid and TermLengthSlider into a two-column layout.
 
 ## Usage
 
@@ -20,7 +20,7 @@ import { PurchaseAndTermsSection } from "@/components/sections/page/purchase-and
 
 | Field | Type | Description |
 |---|---|---|
-| `purchaseStack` | `PurchaseSourceStackConfig` | Config for the purchase source carousel |
+| `purchaseStack` | `PurchaseSourceGridConfig` | Config for the purchase source checklist grid |
 | `termSlider` | `TermSliderConfig` | Config for the term length slider |
 
 ## Layout
@@ -37,6 +37,6 @@ import { PurchaseAndTermsSection } from "@/components/sections/page/purchase-and
 
 ## Dependencies
 
-- `PurchaseSourceStack` from `@/components/sections/page/purchase-source-stack`
+- `PurchaseSourceGrid` from `@/components/sections/page/purchase-source-grid`
 - `TermLengthSlider` from `@/components/sections/page/term-length-slider`
 - Local config types from `config.ts`

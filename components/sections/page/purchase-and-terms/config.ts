@@ -1,4 +1,4 @@
-import type { PurchaseSourceStackConfig } from "@/components/sections/page/purchase-source-stack/config";
+import type { PurchaseSourceGridConfig } from "@/components/sections/page/purchase-source-grid/config";
 import type { TermSliderConfig } from "@/components/sections/page/term-length-slider/config";
 
 export interface PurchaseAndTermsSectionHeading {
@@ -9,6 +9,6 @@ export interface PurchaseAndTermsSectionHeading {
 
 export interface PurchaseAndTermsConfig {
   sectionHeading?: PurchaseAndTermsSectionHeading;
-  purchaseStack: PurchaseSourceStackConfig;
+  purchaseStack: PurchaseSourceGridConfig;
   termSlider: TermSliderConfig;
 }
