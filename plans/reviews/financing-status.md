@@ -1,10 +1,10 @@
 # Financing Review Status
 
-- Current phase: Step 1
-- Current target substep: Step 1
-- Last completed substep: none
-- Next substep: Step 1
-- Pass status: not-started
-- Current output artifact: `plans/reviews/financing-review-rubric.md`, `plans/reviews/financing-review-scope.md`, `plans/reviews/financing-findings-ledger.md`, `plans/reviews/financing-status.md`
-- Ledger updated: no
-- Notes: Initialize control files first. No audit substeps are valid until Step 1 is completed.
+- Current phase: Step 8
+- Current target substep: Step 8
+- Last completed substep: Step 7
+- Next substep: Step 8
+- Pass status: completed
+- Current output artifact: `plans/reviews/financing-review-final.md`
+- Ledger updated: yes
+- Notes: Step 7 completed. This pass reconciled all nineteen ledger findings, found no exact duplicates, and kept every finding in `open` status for final consolidation. Severity lock for Step 8 is `1` high-severity finding (`FIN-a11y-017`), `14` medium-severity findings, and `4` low-severity findings. Adjacent findings were grouped into shared remediation families without merging canonical ledger rows: shell ownership and drawer contracts, hero family architecture/runtime issues, shared serialization/rendering efficiency, and route-surface accessibility. The next valid pass must execute Step 8 only.
