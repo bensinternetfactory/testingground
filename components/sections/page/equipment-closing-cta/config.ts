@@ -1,4 +1,6 @@
 export interface EquipmentClosingCtaConfig {
+  iconSrc?: string;
+  iconAlt?: string;
   eyebrow: string;
   headline: string;
   body: string;

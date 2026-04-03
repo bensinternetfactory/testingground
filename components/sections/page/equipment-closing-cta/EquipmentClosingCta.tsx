@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import type { EquipmentClosingCtaConfig } from "./config";
 
@@ -9,6 +10,15 @@ export function EquipmentClosingCta({
   return (
     <section className="bg-[#101820] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
       <div className="mx-auto max-w-5xl px-6 text-center">
+        {config.iconSrc ? (
+          <Image
+            src={config.iconSrc}
+            alt={config.iconAlt ?? ""}
+            width={48}
+            height={48}
+            className="mx-auto mb-5 h-12 w-12"
+          />
+        ) : null}
         <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#22C55E]">
           {config.eyebrow}
         </p>

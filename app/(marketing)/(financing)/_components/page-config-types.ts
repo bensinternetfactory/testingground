@@ -15,6 +15,7 @@ import type { ProgramCardsConfig } from "@/components/sections/page/program-card
 import type { PurchaseAndTermsConfig } from "@/components/sections/page/purchase-and-terms/config";
 import type { RelatedLinksStripConfig } from "@/components/sections/page/related-links-strip/config";
 import type { TertiaryStripConfig } from "@/components/sections/page/tertiary-strip/config";
+import type { ContentImageSplitConfig } from "@/components/sections/page/content-image-split/config";
 import type { TrustBridgeConfig } from "@/components/sections/page/trust-bridge/config";
 
 export interface FramedEquipmentHeroConfig {
@@ -57,6 +58,7 @@ export interface EquipmentFinancingPageConfig {
   financingOffersSecondary?: FinancingOffersSplitConfig;
   purchaseAndTerms?: PurchaseAndTermsConfig;
   purchaseTermsTertiaryStrip?: TertiaryStripConfig;
+  contentImageSplit?: ContentImageSplitConfig;
   trustBridge?: TrustBridgeConfig;
   purchaseAndTermsSecondary?: PurchaseAndTermsConfig;
   dealsSection?: EquipmentDealsSectionConfig;

@@ -102,8 +102,8 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       headline: "Older truck? Still financeable.",
       subheading: "See your max term by model year",
       body: "Slide to any model year and see the longest term available. Newer rollbacks stretch further, but we finance trucks back to 2000.",
-      iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
-      iconAlt: "Term length icon",
+      iconSrc: "/brand-assets/benefit-icons/miles/odometer-dark.svg",
+      iconAlt: "Odometer icon",
       defaultYear: 2021,
       lookupTable: [
         { minYear: 2000, maxYear: 2009, maxTermMonths: 36 },
@@ -113,6 +113,14 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
         { minYear: 2023, maxYear: 2099, maxTermMonths: 84 },
       ],
     },
+  },
+  contentImageSplit: {
+    eyebrow: "ROLLBACK FINANCING",
+    headline: "Rollback financing built around the way operators actually buy.",
+    body: "Whether you are picking up a new light-duty rollback from a dealer or a medium/heavy off a lot two states away, the financing should not be the part that slows you down. We structure rollback deals around the truck and the business so you get a payment and a timeline you can plan around before you sign anything.",
+    imageSrc: truck1,
+    imageAlt: "Rollback tow truck ready for financing",
+    background: "white",
   },
   purchaseTermsTertiaryStrip: {
     actions: [
@@ -132,8 +140,10 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
   faqSection: buildRollbackFaqContent().section,
   footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
   closingCta: {
+    iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-light.svg",
+    iconAlt: "Fast funding icon",
     eyebrow: "READY WHEN YOU ARE",
-    headline: "Ready to lock in your rollback?",
+    headline: "Get your rollback payment in 30 seconds.",
     body:
       "You do not need corporate runaround. You need to know whether the rollback works and what the payment looks like.",
     cta: {

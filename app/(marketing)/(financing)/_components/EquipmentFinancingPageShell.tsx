@@ -2,6 +2,7 @@ import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
 import { JsonLd } from "@/components/shared/JsonLd";
 
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
+import { ContentImageSplit } from "@/components/sections/page/content-image-split";
 import { TrustBridge } from "@/components/sections/page/trust-bridge";
 import { ProgramCards } from "@/components/sections/page/program-cards/ProgramCards";
 import { EquipmentDealsSection } from "@/components/sections/page/equipment-deals";
@@ -63,6 +64,9 @@ export function EquipmentFinancingPageShell({
         ) : null}
         {config.purchaseTermsTertiaryStrip ? (
           <TertiaryActionsStrip config={config.purchaseTermsTertiaryStrip} />
+        ) : null}
+        {config.contentImageSplit ? (
+          <ContentImageSplit config={config.contentImageSplit} />
         ) : null}
         {config.trustBridge ? (
           <TrustBridge config={config.trustBridge} />

@@ -1,7 +1,7 @@
 import type { EquipmentFinancingPageConfig } from "../_components/page-config-types";
+import truck2 from "@/public/truck-2.jpg";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
-  SHARED_TRUST_BRIDGE_CONFIG,
   equipmentFaqCore,
 } from "../_components/shared-config";
 import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
@@ -149,14 +149,14 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     },
   },
-  trustBridge: SHARED_TRUST_BRIDGE_CONFIG,
+  contentImageSplit: {
+    eyebrow: "USED TOW TRUCK FINANCING",
+    headline: "Know the payment before you commit to the truck.",
+    body: "You should not have to negotiate the truck, then wait weeks to find out if the financing works. Tell us the truck, the price, and where you found it. We will show you the payment and the structure upfront so you can make the call with real numbers, not guesswork.",
+    imageSrc: truck2,
+    imageAlt: "Used tow truck ready for financing",
+  },
   purchaseAndTermsSecondary: {
-    sectionHeading: {
-      eyebrow: "WHAT WE FINANCE",
-      heading: "Used truck deals we can structure",
-      intro:
-        "Used tow truck financing is usually about getting the right truck for the business without letting the age, mileage, or seller type kill the deal.",
-    },
     purchaseStack: {
       headline: "Buy from anyone. We\u2019ll finance it.",
       body: "Dealership, private seller, auction house, or another towing operator. We finance the truck, not where you found it.",
@@ -167,8 +167,8 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
       headline: "Older truck? Still financeable.",
       subheading: "See your max term by model year",
       body: "Slide to any model year and see the longest term available. We finance used tow trucks back to 2000 \u2014 no age limits.",
-      iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
-      iconAlt: "Term length icon",
+      iconSrc: "/brand-assets/benefit-icons/miles/odometer-dark.svg",
+      iconAlt: "Odometer icon",
       defaultYear: 2019,
       lookupTable: [
         { minYear: 2000, maxYear: 2009, maxTermMonths: 36 },
@@ -186,8 +186,10 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
   },
   footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
   closingCta: {
+    iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-light.svg",
+    iconAlt: "Fast funding icon",
     eyebrow: "READY WHEN YOU ARE",
-    headline: "Ready to lock in your used truck?",
+    headline: "See your payment in 30 seconds.",
     body: "You found the truck. You know it fits the business. Do not let the age, the mileage, or the seller type slow down the deal. Start with the payment and the structure.",
     cta: { href: DRAWER_HASH, label: "Get Pre-Approved" },
     contactBlock: {
