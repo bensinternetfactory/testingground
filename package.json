@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "review:financing:next": "node scripts/financing-review-harness.mjs next",
+    "review:financing:prompt": "node scripts/financing-review-harness.mjs prompt",
+    "review:financing:validate": "node scripts/financing-review-harness.mjs validate",
+    "review:financing:guard": "node scripts/financing-review-harness.mjs guard"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
