@@ -3,6 +3,7 @@ import type { HeroConvertFramedConfig } from "@/components/sections/heroes/hero-
 import type { HeroConvertFramedOutlineConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline";
 import type { HeroConvertFramedPrimaryOnlyConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedPrimaryOnly";
 import type { HeroConvertFramedTileRightConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedTileRight";
+import type { HeroLeadGenConfig } from "@/components/sections/heroes/hero-lead-gen/config";
 import type { EquipmentDealsSectionConfig } from "@/components/sections/page/equipment-deals";
 import type { EquipmentClosingCtaConfig } from "@/components/sections/page/equipment-closing-cta/config";
 import {
@@ -38,11 +39,17 @@ export interface TileRightEquipmentHeroConfig {
   config: HeroConvertFramedTileRightConfig;
 }
 
+export interface LeadGenEquipmentHeroConfig {
+  kind: "lead-gen";
+  config: HeroLeadGenConfig;
+}
+
 export type EquipmentHeroConfig =
   | FramedEquipmentHeroConfig
   | FramedOutlineEquipmentHeroConfig
   | PrimaryOnlyEquipmentHeroConfig
-  | TileRightEquipmentHeroConfig;
+  | TileRightEquipmentHeroConfig
+  | LeadGenEquipmentHeroConfig;
 
 // Page config objects should be authored in rendered page order; only extract content that is reused.
 export interface EquipmentFinancingPageConfig {

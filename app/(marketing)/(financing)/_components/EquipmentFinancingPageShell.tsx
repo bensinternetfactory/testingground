@@ -14,6 +14,7 @@ import {
   HeroConvertFramedPrimaryOnly,
   HeroConvertFramedTileRight,
 } from "@/components/sections/heroes/hero-convert-framed";
+import { HeroLeadGen } from "@/components/sections/heroes/hero-lead-gen";
 import { FinancingFootnotes } from "@/components/sections/page/financing-footnotes";
 import { EquipmentClosingCta } from "@/components/sections/page/equipment-closing-cta";
 import { TertiaryActionsStrip } from "@/components/sections/page/tertiary-strip";
@@ -39,7 +40,9 @@ export function EquipmentFinancingPageShell({
       <StickyNav />
 
       <main id="main-content">
-        {config.hero.kind === "tile-right" ? (
+        {config.hero.kind === "lead-gen" ? (
+          <HeroLeadGen config={config.hero.config} />
+        ) : config.hero.kind === "tile-right" ? (
           <HeroConvertFramedTileRight config={config.hero.config} />
         ) : config.hero.kind === "primary-only" ? (
           <HeroConvertFramedPrimaryOnly config={config.hero.config} />

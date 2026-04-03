@@ -1,7 +1,5 @@
 import { EquipmentFinancingPageShell } from "../_components/EquipmentFinancingPageShell";
-import {
-  rotatorFinancingPageConfig,
-} from "../_components/equipment-page-config";
+import { rotatorFinancingPageConfig } from "./config";
 
 export const metadata = rotatorFinancingPageConfig.metadata;
 
