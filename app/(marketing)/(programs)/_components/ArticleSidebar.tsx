@@ -1,6 +1,6 @@
 import { SidebarCta } from "./SidebarCta";
 import { TableOfContents } from "./TableOfContents";
-import type { SidebarCtaConfig, TocItem } from "./types";
+import type { SidebarCtaConfig, TocItem } from "./page-config-types";
 
 export function ArticleSidebar({
   toc,

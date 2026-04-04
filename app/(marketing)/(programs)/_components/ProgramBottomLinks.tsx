@@ -1,7 +1,11 @@
-import type { BottomLinkGroupsConfig } from "../config";
-import { NavCardLink } from "./NavCardLink";
+import type { BottomLinkGroupsConfig } from "./page-config-types";
+import { ProgramNavCardLink } from "./ProgramNavCardLink";
 
-export function BottomLinkCards({ config }: { config: BottomLinkGroupsConfig }) {
+export function ProgramBottomLinks({
+  config,
+}: {
+  config: BottomLinkGroupsConfig;
+}) {
   return (
     <section className="bg-white py-16 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
       <div className="mx-auto max-w-7xl space-y-10 px-6">
@@ -13,7 +17,7 @@ export function BottomLinkCards({ config }: { config: BottomLinkGroupsConfig }) 
             <ul className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {group.links.map((link) => (
                 <li key={link.href}>
-                  <NavCardLink href={link.href} label={link.label} />
+                  <ProgramNavCardLink href={link.href} label={link.label} />
                 </li>
               ))}
             </ul>

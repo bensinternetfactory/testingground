@@ -27,7 +27,7 @@ function ArrowIcon() {
   );
 }
 
-export function NavCardLink({
+export function ProgramNavCardLink({
   href,
   label,
 }: {

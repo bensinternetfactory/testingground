@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
-import type { SidebarCtaConfig } from "./types";
+import type { SidebarCtaConfig } from "./page-config-types";
 
 export function SidebarCta({ config }: { config: SidebarCtaConfig }) {
   return (

@@ -1,11 +1,1 @@
-export interface TocItem {
-  id: string;
-  label: string;
-}
-
-export interface SidebarCtaConfig {
-  headline: string;
-  subhead: string;
-  ctaLabel: string;
-  ctaHref: string;
-}
+export type { SidebarCtaConfig, TocItem } from "./page-config-types";
