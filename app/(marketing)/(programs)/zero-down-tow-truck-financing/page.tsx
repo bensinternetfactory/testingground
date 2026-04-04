@@ -1,14 +1,14 @@
 import { HeroLeadGen } from "@/components/sections/heroes/hero-lead-gen/HeroLeadGen";
 import { StickyNav } from "@/components/sections/nav/sticky-nav-rm";
-import { EquipmentClosingCta } from "@/components/sections/page/equipment-closing-cta";
+import { EquipmentClosingCtaTrucks } from "@/components/sections/page/equipment-closing-cta";
 import { FaqSection } from "@/components/sections/page/faq";
 import { Footer } from "@/components/sections/page/footer/Footer";
 import { FOOTER_CONFIG } from "@/components/sections/page/footer/config";
-import { RelatedLinksStrip } from "@/components/sections/page/related-links-strip";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { ArticleIntro } from "./_components/ArticleIntro";
 import { ArticleSidebar } from "./_components/ArticleSidebar";
 import { BlogLayout } from "./_components/BlogLayout";
+import { BottomLinkCards } from "./_components/BottomLinkCards";
 import { BusinessCaseSection } from "./_components/BusinessCaseSection";
 import { CalculatorPromoSection } from "./_components/CalculatorPromoSection";
 import { InlineCtaBand } from "./_components/InlineCtaBand";
@@ -60,8 +60,8 @@ export default function ZeroDownTowTruckFinancingPage() {
         </BlogLayout>
 
         <FaqSection config={zeroDownPageConfig.faqSection} />
-        <EquipmentClosingCta config={zeroDownPageConfig.closingCta} />
-        <RelatedLinksStrip config={zeroDownPageConfig.relatedLinks} />
+        <EquipmentClosingCtaTrucks config={zeroDownPageConfig.closingCta} />
+        <BottomLinkCards config={zeroDownPageConfig.bottomLinks} />
         <JsonLd data={zeroDownPageConfig.faqSchema} />
         <JsonLd data={zeroDownPageConfig.serviceSchema} />
         <JsonLd data={zeroDownPageConfig.breadcrumbSchema} />

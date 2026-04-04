@@ -28,6 +28,23 @@ const programs: Program[] = [
   },
 ];
 
+function ArrowIcon() {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 8h10M9 4l4 4-4 4" />
+    </svg>
+  );
+}
+
 export function RelatedProgramsSection() {
   return (
     <section className="pt-14">
@@ -39,11 +56,11 @@ export function RelatedProgramsSection() {
         actually buy and run trucks.
       </p>
 
-      <ul className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
         {programs.map((program) => (
           <li
             key={program.href}
-            className="flex flex-col gap-3 rounded-3xl bg-white p-6 shadow-[inset_0_0_0_1px_#E9E9E9]"
+            className="flex flex-col gap-4 rounded-3xl bg-white p-7 shadow-[inset_0_0_0_1px_#E9E9E9] md:p-8"
           >
             <h3 className="text-lg font-semibold tracking-tight text-[#111]">
               {program.title}
@@ -53,10 +70,10 @@ export function RelatedProgramsSection() {
             </p>
             <Link
               href={program.href}
-              className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[#15803D] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:rounded-sm"
+              className="inline-flex items-center gap-2 self-start rounded-full bg-[#F0FDF4] px-4 py-2 text-sm font-semibold text-[#15803D] transition-colors hover:bg-[#22C55E] hover:text-[#101820] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2"
             >
               {program.linkLabel}
-              <span aria-hidden="true">&rarr;</span>
+              <ArrowIcon />
             </Link>
           </li>
         ))}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import type { HeroLeadGenConfig } from "@/components/sections/heroes/hero-lead-gen/config";
 import type { EquipmentClosingCtaConfig } from "@/components/sections/page/equipment-closing-cta/config";
-import type { RelatedLinksStripConfig } from "@/components/sections/page/related-links-strip/config";
 import {
   buildFaqSchema,
   type FaqItemData,
@@ -23,6 +22,8 @@ export interface InlineCtaBandConfig {
   message: string;
   ctaLabel: string;
   ctaHref: string;
+  iconSrc?: string;
+  iconAlt?: string;
 }
 
 export interface SidebarCtaConfig {
@@ -30,6 +31,20 @@ export interface SidebarCtaConfig {
   subhead: string;
   ctaLabel: string;
   ctaHref: string;
+}
+
+export interface BottomLinkItem {
+  label: string;
+  href: string;
+}
+
+export interface BottomLinkGroup {
+  label: string;
+  links: BottomLinkItem[];
+}
+
+export interface BottomLinkGroupsConfig {
+  groups: BottomLinkGroup[];
 }
 
 export interface ZeroDownPageConfig {
@@ -41,7 +56,7 @@ export interface ZeroDownPageConfig {
   ctaBand2: InlineCtaBandConfig;
   faqSection: FaqSectionConfig;
   closingCta: EquipmentClosingCtaConfig;
-  relatedLinks: RelatedLinksStripConfig;
+  bottomLinks: BottomLinkGroupsConfig;
   faqSchema: Record<string, unknown>;
   serviceSchema: Record<string, unknown>;
   breadcrumbSchema: Record<string, unknown>;
@@ -210,10 +225,12 @@ export const zeroDownPageConfig: ZeroDownPageConfig = {
   },
 
   ctaBand2: {
-    eyebrow: "SAME RATE. ZERO DOWN.",
+    eyebrow: "KNOW YOUR PAYMENT. ZERO DOWN.",
     message: "See your payment before you commit to a truck.",
     ctaLabel: "Get Pre-Approved",
     ctaHref: DRAWER_HASH,
+    iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-light.svg",
+    iconAlt: "",
   },
 
   faqSection: {
@@ -237,22 +254,46 @@ export const zeroDownPageConfig: ZeroDownPageConfig = {
     },
   },
 
-  relatedLinks: {
-    links: [
-      { label: "Rollback financing", href: "/rollback-financing" },
-      { label: "Wrecker financing", href: "/wrecker-financing" },
-      { label: "Rotator financing", href: "/rotator-financing" },
-      { label: "Used tow truck financing", href: "/used-tow-truck-financing" },
+  bottomLinks: {
+    groups: [
       {
-        label: "Deferred payments",
-        href: "/deferred-payment-tow-truck-financing",
+        label: "Learn more about what we finance",
+        links: [
+          { label: "Rollback financing", href: "/rollback-financing" },
+          { label: "Wrecker financing", href: "/wrecker-financing" },
+          { label: "Rotator financing", href: "/rotator-financing" },
+        ],
       },
-      { label: "Fleet financing", href: "/fleet-financing" },
       {
-        label: "Private-party financing",
-        href: "/private-party-tow-truck-financing",
+        label: "Looking for something specific?",
+        links: [
+          {
+            label: "I need to finance a used tow truck",
+            href: "/used-tow-truck-financing",
+          },
+          {
+            label: "I need deferred payments",
+            href: "/deferred-payment-tow-truck-financing",
+          },
+          {
+            label: "I'm adding to my fleet",
+            href: "/fleet-financing",
+          },
+          {
+            label: "I found the truck from another operator",
+            href: "/private-party-tow-truck-financing",
+          },
+        ],
       },
-      { label: "Tow truck ROI calculator", href: "/tow-truck-calculator" },
+      {
+        label: "Tools",
+        links: [
+          {
+            label: "Tow truck ROI calculator",
+            href: "/tow-truck-calculator",
+          },
+        ],
+      },
     ],
   },
 

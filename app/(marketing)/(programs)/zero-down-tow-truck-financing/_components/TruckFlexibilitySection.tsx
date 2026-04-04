@@ -55,11 +55,11 @@ export function TruckFlexibilitySection() {
         <p>We don&apos;t do that.</p>
       </div>
 
-      <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+      <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
         {items.map((item) => (
           <li
             key={item.title}
-            className="flex flex-col gap-3 rounded-2xl bg-[#F5F5F5] p-5 shadow-[inset_0_0_0_1px_#E9E9E9]"
+            className="flex flex-col gap-3 rounded-2xl bg-[#F5F5F5] p-6 shadow-[inset_0_0_0_1px_#E9E9E9] md:p-7"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[inset_0_0_0_1px_#E9E9E9]">
               <CheckIcon />

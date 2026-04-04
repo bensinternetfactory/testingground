@@ -46,28 +46,30 @@ export function PaymentComparisonSection() {
       <div className="mt-6 space-y-5 text-base leading-relaxed text-[#111] md:text-lg">
         <p>Forget the abstract. Here&apos;s what this means for a real deal:</p>
         <p className="text-base font-semibold text-[#111] md:text-lg">
-          Example: Used rollback, $75,000 purchase price, 60-month term,
-          8.5&ndash;10.5% rate
+          Example: Used rollback, $75,000 purchase price, 60-month term.
         </p>
       </div>
 
       {/* Desktop table */}
-      <div className="mt-6 hidden overflow-hidden rounded-2xl shadow-[inset_0_0_0_1px_#E9E9E9] md:block">
+      <div className="mt-6 hidden overflow-hidden rounded-2xl border border-[#D4D4D4] md:block">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="bg-[#F5F5F5] text-[#111]">
+            <tr className="bg-[#101820] text-white">
               <th scope="col" className="px-4 py-3 font-semibold">
                 &nbsp;
               </th>
               <th scope="col" className="px-4 py-3 font-semibold">
                 With $7,500&ndash;$15,000 Down
               </th>
-              <th scope="col" className="px-4 py-3 font-semibold text-[#15803D]">
+              <th
+                scope="col"
+                className="border-l-2 border-[#22C55E] px-4 py-3 font-semibold text-[#22C55E]"
+              >
                 With $0 Down
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E9E9E9] bg-white text-[#111]">
+          <tbody className="divide-y divide-[#D4D4D4] bg-white text-[#111]">
             {rows.map((row) => (
               <tr key={row.label}>
                 <th
@@ -77,7 +79,7 @@ export function PaymentComparisonSection() {
                   {row.label}
                 </th>
                 <td className="px-4 py-3">{row.withDown}</td>
-                <td className="px-4 py-3 font-medium text-[#15803D]">
+                <td className="bg-[#F0FDF4] px-4 py-3 font-semibold text-[#15803D]">
                   {row.zeroDown}
                 </td>
               </tr>
@@ -91,7 +93,7 @@ export function PaymentComparisonSection() {
         {rows.map((row) => (
           <div
             key={row.label}
-            className="rounded-2xl bg-white p-4 shadow-[inset_0_0_0_1px_#E9E9E9]"
+            className="rounded-2xl border border-[#D4D4D4] bg-white p-4"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#3A3A3A]">
               {row.label}
@@ -103,7 +105,7 @@ export function PaymentComparisonSection() {
               </div>
               <div className="flex justify-between gap-4">
                 <dt className="text-[#15803D]">With $0 down</dt>
-                <dd className="text-right font-medium text-[#15803D]">
+                <dd className="text-right font-semibold text-[#15803D]">
                   {row.zeroDown}
                 </dd>
               </div>
@@ -114,23 +116,36 @@ export function PaymentComparisonSection() {
 
       <div className="mt-8 space-y-5 text-base leading-relaxed text-[#111] md:text-lg">
         <p>
-          Same rate. Same term. The only difference is whether you hand over
-          $7,500&ndash;$15,000 upfront or keep it working in your business.
+          Look at those two columns. Same truck. Same term. Same seller. The
+          only thing that moves between them is whether $15,000 leaves your
+          business account.
         </p>
         <p>
-          Yes, the monthly payment is higher without a down payment. Roughly
-          $150&ndash;$300/mo higher depending on the deal. Operators know this.
+          Here&apos;s what that $15,000 actually buys you: roughly $200 off
+          your monthly payment. Over the 60-month term, that&apos;s about
+          $12,000 in &ldquo;savings.&rdquo;
         </p>
         <p>
-          But here&apos;s what that $15,000 &ldquo;saved&rdquo; on the monthly
-          payment actually costs you: if that truck runs 2&ndash;3 tows per day
-          at $200+, you&apos;re leaving $12,000&ndash;$18,000/month in gross
-          revenue on the table every month you spend saving up. The difference
-          in monthly payment pays for itself before lunch on day one.
+          Do the arithmetic.{" "}
+          <span className="font-semibold text-[#111]">
+            You paid $15,000 to save $12,000.
+          </span>{" "}
+          That&apos;s not a discount. It&apos;s a prepayment &mdash; and a
+          losing one. You&apos;re lending yourself your own working capital,
+          and getting back less than you put in.
+        </p>
+        <p>
+          The left column isn&apos;t the &ldquo;responsible&rdquo; choice.
+          It&apos;s an operator who sent $15,000 to a lender that
+          didn&apos;t need it, to avoid payments they could cover out of tow
+          revenue anyway.
         </p>
       </div>
 
-      <PullQuote>The math isn&apos;t close.</PullQuote>
+      <PullQuote>
+        A down payment isn&apos;t a discount. It&apos;s a loan you made to
+        yourself that pays back less than you put in.
+      </PullQuote>
     </section>
   );
 }
