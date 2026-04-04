@@ -1,11 +1,8 @@
-import type { Metadata } from "next";
-import { MinimalNavPage } from "@/app/(marketing)/_components/MinimalNavPage";
+import { ProgramPageShell } from "../_components/ProgramPageShell";
+import { fleetFinancingPageConfig } from "./config";
 
-export const metadata: Metadata = {
-  title: "Fleet Financing | TowLoans",
-  description: "Fleet financing information from TowLoans.",
-};
+export const metadata = fleetFinancingPageConfig.metadata;
 
 export default function FleetFinancingPage() {
-  return <MinimalNavPage title="Fleet Financing" />;
+  return <ProgramPageShell config={fleetFinancingPageConfig} />;
 }
