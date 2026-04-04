@@ -13,7 +13,10 @@
 - `npm run build`: Build the production bundle (validates routes and types via Next.js).
 - `npm start`: Run the built app in production mode.
 - `npm run lint`: Run ESLint (`eslint.config.mjs` with Next core-web-vitals + TypeScript rules).
-- Agent rule: never start local validation/dev servers on port `3000`; use an alternate port (for example `3001+`) to avoid conflict with the user's active personal preview.
+- Agent rule: never start local validation/dev servers on port `3000`.
+- Agent rule: for active UI/browser validation, prefer `npm run dev` over `npm start` so live reload remains available while iterating across viewports.
+- Agent rule: start the validation server in a persistent PTY/TTY-backed long-running session (or equivalent background process) so it stays available for repeated browser checks.
+- Agent rule: do not assume port `3005`; first check for an open non-`3000` port, launch the server there, and reuse that same running server for desktop/mobile validation passes when possible.
 
 ## Coding Style & Naming Conventions
 - Language: TypeScript (`strict` mode enabled).
@@ -26,8 +29,10 @@
 ## Testing Guidelines
 - No dedicated test runner is currently configured.
 - Minimum pre-PR checks: `npm run lint` and `npm run build`.
-- For user-facing changes, browser/DOM validation is also required after standard checks. Use the globally installed `agent-browser` skill/CLI against a local server on a non-`3000` port, preferably `3005` in this repo.
+- For user-facing changes, browser/DOM validation is also required after standard checks. Use the globally installed `agent-browser` skill/CLI against a local `npm run dev` server on an open non-`3000` port.
+- Start that validation server once in a persistent PTY/TTY-backed session (or equivalent background process), then keep it running while you perform desktop and mobile checks.
 - Minimum `agent-browser` validation for user-facing work: open the changed page, wait for load completion, confirm the page renders, and verify at least one relevant DOM interaction or assertion for the changed feature.
+- Use `npm start` only when you specifically need a production-mode verification pass after the build succeeds.
 - If adding tests, place them near features as `*.test.ts` / `*.test.tsx` or in `__tests__/` and document the run command in `package.json`.
 
 ## Commit & Pull Request Guidelines

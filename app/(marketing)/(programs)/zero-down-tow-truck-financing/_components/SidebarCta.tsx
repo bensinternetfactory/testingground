@@ -4,7 +4,7 @@ import type { SidebarCtaConfig } from "../config";
 
 export function SidebarCta({ config }: { config: SidebarCtaConfig }) {
   return (
-    <div className="rounded-2xl bg-[#101820] p-6 text-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+    <div className="rounded-3xl bg-[#101820] p-6 text-white shadow-[0_18px_36px_rgba(16,24,32,0.18)] ring-1 ring-white/10">
       <Image
         src="/brand-assets/benefit-icons/fast/fast-funding-light.svg"
         alt=""
@@ -12,13 +12,13 @@ export function SidebarCta({ config }: { config: SidebarCtaConfig }) {
         height={36}
         className="mb-4 h-9 w-auto"
       />
-      <h3 className="text-lg font-semibold tracking-tight">
+      <h3 className="text-lg font-semibold tracking-tight text-white">
         {config.headline}
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-white/70">
+      <p className="mt-2 text-sm leading-relaxed text-white/72">
         {config.subhead}
       </p>
-      <div className="mt-5">
+      <div className="mt-6">
         <RippleCtaLink
           href={config.ctaHref}
           label={config.ctaLabel}

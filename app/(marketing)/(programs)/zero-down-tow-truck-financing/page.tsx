@@ -12,7 +12,6 @@ import { BottomLinkCards } from "./_components/BottomLinkCards";
 import { BusinessCaseSection } from "./_components/BusinessCaseSection";
 import { CalculatorPromoSection } from "./_components/CalculatorPromoSection";
 import { InlineCtaBand } from "./_components/InlineCtaBand";
-import { MobileTocCard } from "./_components/MobileTocCard";
 import { PaymentComparisonSection } from "./_components/PaymentComparisonSection";
 import { QualificationPathsSection } from "./_components/QualificationPathsSection";
 import { RelatedProgramsSection } from "./_components/RelatedProgramsSection";
@@ -38,8 +37,7 @@ export default function ZeroDownTowTruckFinancingPage() {
         <HeroLeadGen config={zeroDownPageConfig.hero} />
 
         <BlogLayout>
-          <article className="min-w-0 max-w-[720px] px-6 py-20 md:px-8 md:py-28 lg:pr-12">
-            <MobileTocCard items={zeroDownPageConfig.toc} />
+          <article className="min-w-0 px-6 py-20 md:px-8 md:py-28 lg:px-10 xl:px-14 2xl:px-20">
             <ArticleIntro />
             <BusinessCaseSection />
             <InlineCtaBand config={zeroDownPageConfig.ctaBand1} />

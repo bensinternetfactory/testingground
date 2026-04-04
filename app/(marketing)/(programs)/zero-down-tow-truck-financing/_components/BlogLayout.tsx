@@ -18,7 +18,7 @@ import type { ReactNode } from "react";
 export function BlogLayout({ children }: { children: ReactNode }) {
   return (
     <section className="border-t border-[#E9E9E9] bg-white 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:border-x 2xl:border-gray-200">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px] 2xl:max-w-screen-2xl 2xl:grid-cols-[minmax(0,1fr)_420px]">
         {children}
       </div>
     </section>
