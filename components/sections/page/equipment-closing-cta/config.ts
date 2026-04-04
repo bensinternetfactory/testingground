@@ -1,10 +1,17 @@
+export interface EquipmentClosingTile {
+  label: string;
+  href: string;
+  iconSrc: string;
+  iconAlt?: string;
+}
+
 export interface EquipmentClosingCtaConfig {
   iconSrc?: string;
   iconAlt?: string;
   eyebrow: string;
   headline: string;
   body: string;
-  cta: {
+  cta?: {
     href: string;
     label: string;
   };
@@ -14,4 +21,5 @@ export interface EquipmentClosingCtaConfig {
     phoneHref: string;
     supportText: string;
   };
+  tiles?: EquipmentClosingTile[];
 }

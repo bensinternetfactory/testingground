@@ -29,15 +29,17 @@ export function EquipmentClosingCta({
           {config.body}
         </p>
 
-        <div className="mt-12">
-          <RippleCtaLink
-            href={config.cta.href}
-            label={config.cta.label}
-            size="lg"
-            section="closing-cta"
-            className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"
-          />
-        </div>
+        {config.cta ? (
+          <div className="mt-12">
+            <RippleCtaLink
+              href={config.cta.href}
+              label={config.cta.label}
+              size="lg"
+              section="closing-cta"
+              className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"
+            />
+          </div>
+        ) : null}
 
         {config.contactBlock ? (
           <p className="mt-8 text-sm text-white/60">

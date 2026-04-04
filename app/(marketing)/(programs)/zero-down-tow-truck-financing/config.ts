@@ -7,15 +7,13 @@ import {
   type FaqSectionConfig,
 } from "@/components/sections/page/faq";
 import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import type { SidebarCtaConfig, TocItem } from "../_components/types";
+
+export type { SidebarCtaConfig, TocItem } from "../_components/types";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
-
-export interface TocItem {
-  id: string;
-  label: string;
-}
 
 export interface InlineCtaBandConfig {
   eyebrow?: string;
@@ -24,13 +22,6 @@ export interface InlineCtaBandConfig {
   ctaHref: string;
   iconSrc?: string;
   iconAlt?: string;
-}
-
-export interface SidebarCtaConfig {
-  headline: string;
-  subhead: string;
-  ctaLabel: string;
-  ctaHref: string;
 }
 
 export interface BottomLinkItem {
@@ -222,6 +213,8 @@ export const zeroDownPageConfig: ZeroDownPageConfig = {
     message: "Know your $0-down payment in 30 seconds.",
     ctaLabel: "Get Pre-Approved",
     ctaHref: DRAWER_HASH,
+    iconSrc: "/brand-assets/benefit-icons/zero-down/no-money-down-light.svg",
+    iconAlt: "",
   },
 
   ctaBand2: {
@@ -239,19 +232,33 @@ export const zeroDownPageConfig: ZeroDownPageConfig = {
   },
 
   closingCta: {
+    iconSrc: "/brand-assets/benefit-icons/zero-down/no-money-down-light.svg",
+    iconAlt: "",
     eyebrow: "STOP SAVING. START EARNING.",
     headline: "Every month you wait, the truck doesn't earn.",
-    body: "Pre-approval takes 30 seconds and does not impact your credit. You'll know your payment before you commit to a truck.",
-    cta: {
-      href: DRAWER_HASH,
-      label: "Get Pre-Approved",
-    },
-    contactBlock: {
-      prompt: "Prefer to talk?",
-      phoneLabel: "(888) 555-0199",
-      phoneHref: "tel:+18885550199",
-      supportText: "Mon-Fri 8am-6pm CT",
-    },
+    body: "Pre-approval takes 30 seconds and does not impact your credit. Pick the truck you're eyeing and see your payment.",
+    tiles: [
+      {
+        label: "Rollback",
+        href: DRAWER_HASH,
+        iconSrc: "/brand-assets/truck-icons/rollback/rollback-green.svg",
+      },
+      {
+        label: "Wrecker",
+        href: DRAWER_HASH,
+        iconSrc: "/brand-assets/truck-icons/wrecker/wrecker-green.svg",
+      },
+      {
+        label: "Heavy Wrecker",
+        href: DRAWER_HASH,
+        iconSrc: "/brand-assets/truck-icons/heavywrecker/heavywrecker-green.svg",
+      },
+      {
+        label: "Rotator",
+        href: DRAWER_HASH,
+        iconSrc: "/brand-assets/truck-icons/rotator/rotator-green.svg",
+      },
+    ],
   },
 
   bottomLinks: {
