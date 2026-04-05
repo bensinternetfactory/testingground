@@ -1,3 +1,4 @@
+import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 import truck1 from "@/public/truck-1.jpg";
 import truck2 from "@/public/truck-2.jpg";
 import truck3 from "@/public/truck-3.jpg";
@@ -26,7 +27,7 @@ export const HERO_CONFIG = {
   phrases: ["lower payments", "faster funding", "better experience"],
   cta: {
     label: "See my payment",
-    href: "#pre-approve",
+    href: DRAWER_HASH,
     subtext: "Get pre-approved in less than 30 seconds. No credit check",
   },
   tiles: [

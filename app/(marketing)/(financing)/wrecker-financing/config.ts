@@ -3,7 +3,10 @@ import truck8 from "@/public/truck-8.jpg";
 import truck9 from "@/public/truck-9.jpg";
 import truck12 from "@/public/truck-12.jpg";
 import truck14 from "@/public/truck-14.jpg";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  WRECKER_HERO_DRAWER,
+} from "@/components/ui/pre-approval-drawer";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
@@ -62,7 +65,11 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       selectionPrompt: "What do you need financing on?",
       selectionRequiredMessage:
         "Select a wrecker type to enable the pre-approval action.",
-      cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+      cta: {
+        label: "Get Pre-Approved",
+        href: DRAWER_HASH,
+        drawer: WRECKER_HERO_DRAWER,
+      },
       footnoteMarkers: {
         "30 seconds": "¹",
         "before the deal": "²",
@@ -100,7 +107,7 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
         eyebrow: "Already have a truck in mind?",
         label: "I found a truck and need financing",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the wrecker you found?",
+        drawer: { title: "How much is the wrecker you found?" },
       },
       {
         eyebrow: "Haven\u2019t found a truck?",
@@ -152,7 +159,7 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
         eyebrow: "Looking at an older wrecker?",
         label: "See if your truck year qualifies",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the wrecker you\u2019re looking at?",
+        drawer: { title: "How much is the wrecker you\u2019re looking at?" },
       },
     ],
   } satisfies TertiaryStripConfig,

@@ -1,3 +1,8 @@
+import {
+  DRAWER_HASH,
+  type DrawerTriggerPayload,
+} from "@/components/ui/pre-approval-drawer";
+
 interface BaseClosingCtaBenefitIcon {
   src: string;
   width: number;
@@ -31,6 +36,7 @@ export interface ClosingCtaConfig {
     label: string;
     shortLabel: string;
     href: string;
+    drawer?: DrawerTriggerPayload;
   };
   contactBlock?: {
     phone: { label: string; href: string };
@@ -75,7 +81,7 @@ export const CLOSING_CTA_CONFIG: ClosingCtaConfig = {
   primaryCta: {
     label: "Get Pre-Approved \u2014 It Takes 30\u00a0Seconds",
     shortLabel: "Get Pre-Approved",
-    href: "#pre-approve",
+    href: DRAWER_HASH,
   },
   contactBlock: {
     phone: { label: "(888)\u00a0555-0199", href: "tel:+18885550199" },

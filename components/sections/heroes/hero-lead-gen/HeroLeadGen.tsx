@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { TrustBadge } from "./TrustBadge";
 import type { HeroLeadGenConfig } from "./config";
 
@@ -19,12 +19,15 @@ export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
           <p className="text-lg text-[#545454]">{config.subheadline}</p>
 
           {/* Primary CTA */}
-          <Link
+          <RippleCtaLink
             href={config.cta.href}
-            className="inline-flex h-14 w-full items-center justify-center rounded-full bg-[#101820] text-lg font-medium text-white transition-colors duration-200 hover:bg-[#101820]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#101820] focus-visible:ring-offset-2 sm:w-auto sm:self-start sm:px-10"
+            label={config.cta.label}
+            drawer={config.cta.drawer}
+            section="hero-lead-gen"
+            className="h-14 w-full bg-[#101820] text-lg font-medium text-white hover:bg-[#101820]/90 focus-visible:ring-[#101820] sm:w-auto sm:self-start sm:px-10"
           >
             {config.cta.label}
-          </Link>
+          </RippleCtaLink>
 
           {config.phone && (
             <p className="text-sm text-[#545454]">

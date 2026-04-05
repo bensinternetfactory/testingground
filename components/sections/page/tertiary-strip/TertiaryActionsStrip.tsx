@@ -20,7 +20,7 @@ export function TertiaryActionsStrip({
               size="sm"
               justify="between"
               icon={<ArrowRight className="h-4 w-4" />}
-              drawerTitle={action.drawerTitle}
+              drawer={action.drawer}
               prefetch={false}
               section="tertiary-strip"
               className="w-full rounded-2xl border-white/15 px-6 py-5"

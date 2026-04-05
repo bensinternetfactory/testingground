@@ -1,3 +1,8 @@
+import {
+  DRAWER_HASH,
+  type DrawerTriggerPayload,
+} from "@/components/ui/pre-approval-drawer";
+
 export interface HowItWorksStep {
   number: string;
   title: string;
@@ -7,7 +12,7 @@ export interface HowItWorksStep {
 export interface HowItWorksConfig {
   headline: string;
   steps: HowItWorksStep[];
-  cta: { label: string; href: string };
+  cta: { label: string; href: string; drawer?: DrawerTriggerPayload };
 }
 
 export const HOW_IT_WORKS_CONFIG: HowItWorksConfig = {
@@ -33,6 +38,6 @@ export const HOW_IT_WORKS_CONFIG: HowItWorksConfig = {
   ],
   cta: {
     label: "See Your Payment",
-    href: "#",
+    href: DRAWER_HASH,
   },
 };

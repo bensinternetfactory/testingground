@@ -47,6 +47,7 @@ export function ClosingCta({ config }: { config: ClosingCtaConfig }) {
           <RippleCtaLink
             href={primaryCta.href}
             label={primaryCta.label}
+            drawer={primaryCta.drawer}
             ariaLabel={primaryCta.label}
             size="lg"
             section="closing-cta"

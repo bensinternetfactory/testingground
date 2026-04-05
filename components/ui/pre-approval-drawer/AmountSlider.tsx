@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { SLIDER_MIN, SLIDER_MAX, SLIDER_STEP, SLIDER_DEFAULT } from "./config";
 import "./amount-slider.css";
 
@@ -21,6 +21,7 @@ export function AmountSlider({
   onChange?: (value: number) => void;
 }) {
   const [internalValue, setInternalValue] = useState(SLIDER_DEFAULT);
+  const [isDragging, setIsDragging] = useState(false);
   const value = controlledValue ?? internalValue;
 
   const handleChange = useCallback(
@@ -35,7 +36,7 @@ export function AmountSlider({
   const fillPercent = ((value - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)) * 100;
 
   return (
-    <div className="w-full">
+    <div className="w-full" data-slider-root>
       {/* Prominent value display */}
       <p
         className="text-center text-5xl font-semibold tracking-tight tabular-nums text-[#101820] sm:text-6xl"
@@ -54,9 +55,13 @@ export function AmountSlider({
           step={SLIDER_STEP}
           value={value}
           onChange={handleChange}
+          onPointerDown={() => setIsDragging(true)}
+          onPointerUp={() => setIsDragging(false)}
+          onPointerCancel={() => setIsDragging(false)}
+          onBlur={() => setIsDragging(false)}
           aria-label="Estimated financing amount"
           aria-valuetext={formatCurrency(value)}
-          className="slider-thumb w-full appearance-none bg-transparent focus:outline-none"
+          className={`slider-thumb w-full appearance-none bg-transparent focus:outline-none ${isDragging ? "is-dragging" : ""}`}
           style={
             {
               "--fill": `${fillPercent}%`,

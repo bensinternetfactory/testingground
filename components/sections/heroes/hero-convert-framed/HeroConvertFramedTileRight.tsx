@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
+import type { DrawerSelectionTrigger } from "@/components/ui/pre-approval-drawer";
 
 export interface HeroConvertFramedTileRightConfig {
   headline: string;
@@ -8,7 +9,7 @@ export interface HeroConvertFramedTileRightConfig {
   selectionPrompt: string;
   selectionRequiredMessage: string;
   tiles: FramedHeroTileData[];
-  cta: { label: string; href: string };
+  cta: { label: string; href: string; drawer?: DrawerSelectionTrigger };
   microcopy?: string;
   disclaimer?: string;
 }

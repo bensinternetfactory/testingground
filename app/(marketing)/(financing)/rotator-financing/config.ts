@@ -1,5 +1,8 @@
 import truck12 from "@/public/truck-12.jpg";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  ROTATOR_HERO_DRAWER,
+} from "@/components/ui/pre-approval-drawer";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
@@ -55,7 +58,11 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       headline: "Rotator Financing for Heavy Recovery.",
       subheadline:
         "Rotators are the largest equipment purchase most operators make. See your payment structure before you commit to the unit.",
-      cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+      cta: {
+        label: "Get Pre-Approved",
+        href: DRAWER_HASH,
+        drawer: ROTATOR_HERO_DRAWER,
+      },
       phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
       trustBadges: [
         { label: "30-Second Pre-Approval" },
@@ -72,7 +79,7 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
         eyebrow: "Already have a rotator in mind?",
         label: "I found a truck and need financing",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the rotator you found?",
+        drawer: { title: "How much is the rotator you found?" },
       },
       {
         eyebrow: "Need to size the deal first?",
@@ -119,13 +126,13 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
         eyebrow: "Buying from another operator?",
         label: "Operator-to-operator rotator financing",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the rotator you\u2019re looking at?",
+        drawer: { title: "How much is the rotator you\u2019re looking at?" },
       },
       {
         eyebrow: "Looking at an older rotator?",
         label: "See if your truck year qualifies",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the rotator you\u2019re looking at?",
+        drawer: { title: "How much is the rotator you\u2019re looking at?" },
       },
     ],
   } satisfies TertiaryStripConfig,

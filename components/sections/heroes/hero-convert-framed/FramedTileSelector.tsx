@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  resolveSelectionDrawerTrigger,
+  type DrawerSelectionTrigger,
+} from "@/components/ui/pre-approval-drawer";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { FramedSelectionTile } from "./FramedSelectionTile";
 
@@ -17,7 +21,7 @@ export interface FramedHeroTileData {
 
 interface FramedTileSelectorProps {
   tiles: FramedHeroTileData[];
-  cta: { label: string; href: string };
+  cta: { label: string; href: string; drawer?: DrawerSelectionTrigger };
   selectionPrompt: string;
   selectionRequiredMessage: string;
   viewAllLink?: { label: string; href: string };
@@ -37,6 +41,7 @@ export function FramedTileSelector({
 }: FramedTileSelectorProps) {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const selectedLabel = tiles.find((tile) => tile.id === selectedTile)?.label;
+  const drawer = resolveSelectionDrawerTrigger(cta.drawer, selectedTile);
 
   return (
     <div className="flex flex-col gap-4 rounded-3xl border border-[#E9E9E9] bg-white p-5 shadow-sm sm:gap-5 sm:p-8">
@@ -88,6 +93,7 @@ export function FramedTileSelector({
       <RippleCtaLink
         href={cta.href === DRAWER_HASH ? DRAWER_HASH : cta.href}
         label={cta.label}
+        drawer={drawer}
         size="md"
         disabled={!selectedTile}
         section={section}

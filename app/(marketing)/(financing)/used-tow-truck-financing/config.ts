@@ -4,7 +4,10 @@ import {
   buildFaqSection,
   SHARED_FINANCING_FOOTNOTES_CONFIG,
 } from "../_components/shared-config";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  USED_TOW_TRUCK_HERO_DRAWER,
+} from "@/components/ui/pre-approval-drawer";
 import type { FaqItemData } from "@/components/sections/page/faq/config";
 
 /* ── Page Config ─────────────────────────────────────────────────── */
@@ -25,7 +28,11 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
         "Other lenders draw lines on used trucks. We do not. No age restrictions. No mileage caps. Dealer, auction, Facebook Marketplace, or the operator down the road. If the truck makes sense for your business, we will structure the deal.",
       selectionPrompt: "What used tow truck do you need financing?",
       selectionRequiredMessage: "Select a truck type to continue.",
-      cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+      cta: {
+        label: "Get Pre-Approved",
+        href: DRAWER_HASH,
+        drawer: USED_TOW_TRUCK_HERO_DRAWER,
+      },
       microcopy: "Checking won't affect your credit score.\u00B9",
       disclaimer:
         "All financing subject to credit review and approval.\u00B2",

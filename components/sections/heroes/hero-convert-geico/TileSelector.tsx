@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  resolveSelectionDrawerTrigger,
+} from "@/components/ui/pre-approval-drawer";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { SelectionTile } from "./SelectionTile";
-import type { SelectionTileData } from "./config";
+import type { HeroConvertConfig, SelectionTileData } from "./config";
 
 interface TileSelectorProps {
   tiles: SelectionTileData[];
-  cta: { label: string; href: string };
+  cta: HeroConvertConfig["cta"];
   selectionPrompt: string;
   selectionRequiredMessage: string;
   viewAllLink?: { label: string; href: string };
@@ -25,6 +28,7 @@ export function TileSelector({
   // Initial value MUST be null (not read from URL/localStorage) to avoid hydration mismatch
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const selectedLabel = tiles.find((tile) => tile.id === selectedTile)?.label;
+  const drawer = resolveSelectionDrawerTrigger(cta.drawer, selectedTile);
 
   return (
     <>
@@ -73,6 +77,7 @@ export function TileSelector({
       <RippleCtaLink
         href={cta.href === DRAWER_HASH ? DRAWER_HASH : cta.href}
         label={cta.label}
+        drawer={drawer}
         size="md"
         disabled={!selectedTile}
         section="rollback-hero"

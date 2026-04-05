@@ -8,7 +8,10 @@ import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
 } from "../_components/shared-config";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  ROLLBACK_HERO_DRAWER,
+} from "@/components/ui/pre-approval-drawer";
 import {
   ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
 } from "@/components/sections/page/financing-offers-split/config";
@@ -34,7 +37,11 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       selectionPrompt: "What do you need financing on?",
       selectionRequiredMessage:
         "Select a rollback type to enable the pre-approval action.",
-      cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+      cta: {
+        label: "Get Pre-Approved",
+        href: DRAWER_HASH,
+        drawer: ROLLBACK_HERO_DRAWER,
+      },
       footnoteMarkers: {
         "30 seconds": "¹",
         "before you apply": "²",
@@ -72,7 +79,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
         eyebrow: "Already have a truck in mind?",
         label: "I found a truck and need financing",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the rollback you found?",
+        drawer: { title: "How much is the rollback you found?" },
       },
       {
         eyebrow: "Haven't found a truck?",
@@ -124,7 +131,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
         eyebrow: "Looking at an older rollback?",
         label: "See if your truck year qualifies",
         href: DRAWER_HASH,
-        drawerTitle: "How much is the rollback you're looking at?",
+        drawer: { title: "How much is the rollback you're looking at?" },
       },
     ],
   },

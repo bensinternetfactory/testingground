@@ -10,17 +10,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { DRAWER_DEFAULT_TITLE, DRAWER_HASH } from "./config";
+import { DRAWER_HASH } from "./config";
 import { PreApprovalDrawer } from "./PreApprovalDrawer";
-
-interface DrawerState {
-  isOpen: boolean;
-  title: string;
-}
+import {
+  createDrawerSession,
+  getClosedDrawerSession,
+  parseDrawerTriggerDataAttributes,
+  type DrawerSessionState,
+  type DrawerTriggerPayload,
+} from "./triggers";
 
 interface DrawerActions {
-  open: (title?: string) => void;
+  open: (trigger?: DrawerTriggerPayload) => void;
   close: () => void;
+  setAmount: (amount: number) => void;
 }
 
 interface DrawerMeta {
@@ -28,7 +31,7 @@ interface DrawerMeta {
 }
 
 interface DrawerContextValue {
-  state: DrawerState;
+  state: DrawerSessionState;
   actions: DrawerActions;
   meta: DrawerMeta;
 }
@@ -44,8 +47,12 @@ export function useDrawer() {
   return {
     isOpen: ctx.state.isOpen,
     title: ctx.state.title,
+    amount: ctx.state.amount,
+    source: ctx.state.source,
+    heroTruckType: ctx.state.heroTruckType,
     open: ctx.actions.open,
     close: ctx.actions.close,
+    setAmount: ctx.actions.setAmount,
   };
 }
 
@@ -68,7 +75,11 @@ function isDrawerTarget(anchor: HTMLAnchorElement) {
   );
 }
 
-function DrawerHashListener({ open }: { open: (title?: string) => void }) {
+function DrawerHashListener({
+  open,
+}: {
+  open: (trigger?: DrawerTriggerPayload) => void;
+}) {
   const openFromHash = useEffectEvent(() => {
     open();
     clearDrawerHash();
@@ -101,7 +112,7 @@ function DrawerHashListener({ open }: { open: (title?: string) => void }) {
     }
 
     event.preventDefault();
-    open(anchor.dataset.drawerTitle);
+    open(parseDrawerTriggerDataAttributes(anchor.dataset));
   });
 
   useEffect(() => {
@@ -120,25 +131,29 @@ function DrawerHashListener({ open }: { open: (title?: string) => void }) {
 }
 
 export function DrawerProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState(DRAWER_DEFAULT_TITLE);
+  const [state, setState] = useState<DrawerSessionState>(getClosedDrawerSession);
 
-  const open = useCallback((customTitle?: string) => {
-    setTitle(customTitle ?? DRAWER_DEFAULT_TITLE);
-    setIsOpen(true);
+  const open = useCallback((trigger?: DrawerTriggerPayload) => {
+    setState(createDrawerSession(trigger));
   }, []);
 
   const close = useCallback(() => {
-    setIsOpen(false);
+    setState((current) => ({ ...current, isOpen: false }));
+  }, []);
+
+  const setAmount = useCallback((amount: number) => {
+    setState((current) =>
+      current.amount === amount ? current : { ...current, amount },
+    );
   }, []);
 
   const contextValue = useMemo<DrawerContextValue>(
     () => ({
-      state: { isOpen, title },
-      actions: { open, close },
+      state,
+      actions: { open, close, setAmount },
       meta: { triggerHash: DRAWER_HASH },
     }),
-    [close, isOpen, open, title],
+    [close, open, setAmount, state],
   );
 
   return (

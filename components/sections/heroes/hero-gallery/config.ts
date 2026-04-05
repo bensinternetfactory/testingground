@@ -1,4 +1,7 @@
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import {
+  DRAWER_HASH,
+  type DrawerTriggerPayload,
+} from "@/components/ui/pre-approval-drawer";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -7,7 +10,7 @@ import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
 export interface TertiaryLink {
   label: string;
   href: string;
-  drawerTitle?: string;
+  drawer?: DrawerTriggerPayload;
 }
 
 export interface HeroGalleryConfig {
@@ -16,7 +19,7 @@ export interface HeroGalleryConfig {
   inputPlaceholder: string;
   ctaLabel: string;
   submitHref: string;
-  mobileCta: { label: string; href: string };
+  mobileCta: { label: string; href: string; drawer?: DrawerTriggerPayload };
   tertiaryLinks: TertiaryLink[];
   images: { row1: string[]; row2: string[] };
 }
@@ -37,12 +40,12 @@ export const HERO_GALLERY_CONFIG: HeroGalleryConfig = {
     {
       label: "Found a truck? Get financing",
       href: DRAWER_HASH,
-      drawerTitle: "How much is the tow truck you found?",
+      drawer: { title: "How much is the tow truck you found?" },
     },
     {
       label: "What\u2019s my buying power?",
       href: DRAWER_HASH,
-      drawerTitle: "Estimate your buying power",
+      drawer: { title: "Estimate your buying power" },
     },
   ],
   images: {

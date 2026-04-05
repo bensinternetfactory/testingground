@@ -4,6 +4,10 @@ import { useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
+  buildDrawerTriggerDataAttributes,
+  type DrawerTriggerPayload,
+} from "@/components/ui/pre-approval-drawer";
+import {
   PressFeedbackRipple,
   tapSpring,
   usePressFeedback,
@@ -40,6 +44,7 @@ export interface RippleCtaLinkProps {
   section?: string;
   cardId?: string;
   disabled?: boolean;
+  drawer?: DrawerTriggerPayload;
   drawerTitle?: string;
 }
 
@@ -75,6 +80,7 @@ export function RippleCtaLink({
   section = "",
   cardId,
   disabled = false,
+  drawer,
   drawerTitle,
 }: RippleCtaLinkProps) {
   const fireAnalytics = useCallback(
@@ -180,6 +186,10 @@ export function RippleCtaLink({
     );
   }
 
+  const drawerAttributes = buildDrawerTriggerDataAttributes(
+    drawer ?? (drawerTitle ? { title: drawerTitle } : undefined),
+  );
+
   return (
     <MotionLink
       href={href}
@@ -190,7 +200,7 @@ export function RippleCtaLink({
       }
       transition={tapSpring}
       aria-label={ariaLabel}
-      data-drawer-title={drawerTitle}
+      {...drawerAttributes}
       className={sharedClassName}
     >
       {content}

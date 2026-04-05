@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { CircleDollarSign } from "lucide-react";
+import { buildPreApprovalHref } from "@/components/ui/pre-approval-drawer";
 
 function formatCurrency(value: string): string {
   const digits = value.replace(/\D/g, "");
@@ -41,7 +42,7 @@ export function HeroInput({
       if (onSubmit) {
         onSubmit(rawDigits);
       } else if (submitHref) {
-        router.push(`${submitHref}?amount=${rawDigits}`);
+        router.push(buildPreApprovalHref({ amount: rawDigits }));
       }
     },
     [value, onSubmit, submitHref, router],
