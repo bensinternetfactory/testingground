@@ -3,6 +3,9 @@ import { fileURLToPath } from "node:url";
 import { resolveNextUnit, validateTrackerEntries } from "./harness/dependencies.ts";
 import { runPreflight } from "./harness/preflight.ts";
 import { createNextPromptPayload, createPromptPayload } from "./harness/prompt.ts";
+import { approveRemediationUnit } from "./orchestrator/approval.ts";
+import { rejectRemediationUnit } from "./orchestrator/rejection.ts";
+import { rollbackRemediationUnit } from "./orchestrator/rollback.ts";
 import { runSingleRemediationUnit } from "./orchestrator/run-unit.ts";
 import { assertValidProgramDefinition, validateProgramDefinition } from "./harness/registry.ts";
 import { readTrackerState } from "./harness/tracker.ts";
@@ -14,7 +17,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const defaultRepoRoot = path.resolve(__dirname, "../..");
 
-type CliCommand = "validate" | "next" | "prompt" | "preflight" | "unlock-stale" | "run";
+type CliCommand =
+  | "validate"
+  | "next"
+  | "prompt"
+  | "preflight"
+  | "unlock-stale"
+  | "run"
+  | "approve"
+  | "reject"
+  | "rollback";
 
 interface ParsedCliArgs {
   command: CliCommand | "help";
@@ -101,6 +113,39 @@ interface RunCommandData {
   baselineSnapshotPath?: string;
 }
 
+interface ApproveCommandData {
+  command: "approve";
+  programId: string;
+  displayName: string;
+  unit: ReturnType<typeof approveRemediationUnit>["unit"];
+  runId: string;
+  commitSha: string;
+  approvalArtifactPath: string;
+  waveSummaryPath?: string;
+  nextUnit?: string;
+  isProgramComplete: boolean;
+}
+
+interface RejectCommandData {
+  command: "reject";
+  programId: string;
+  displayName: string;
+  unit: ReturnType<typeof rejectRemediationUnit>["unit"];
+  runId: string;
+  rejectionArtifactPath: string;
+}
+
+interface RollbackCommandData {
+  command: "rollback";
+  programId: string;
+  displayName: string;
+  unit: ReturnType<typeof rollbackRemediationUnit>["unit"];
+  originalCommitSha: string;
+  rollbackCommitSha: string;
+  rollbackArtifactPath: string;
+  nextUnit?: string;
+}
+
 function createIo(): CliIo {
   return {
     stdout: (line) => console.log(line),
@@ -146,6 +191,9 @@ function parseArgs(argv: string[]): ParsedCliArgs {
       || firstArg === "preflight"
       || firstArg === "unlock-stale"
       || firstArg === "run"
+      || firstArg === "approve"
+      || firstArg === "reject"
+      || firstArg === "rollback"
     ) {
       command = firstArg;
       args.shift();
@@ -612,9 +660,106 @@ function runUnitCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
   return result.runtime.finalState === "passed" ? 0 : 1;
 }
 
+function runApproveCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
+  const definition = getRemediationProgramDefinition(parsed.programId);
+  const result = approveRemediationUnit(definition, cwd, parsed.unitId);
+  const data: ApproveCommandData = {
+    command: "approve",
+    programId: definition.program.programId,
+    displayName: definition.program.displayName,
+    unit: result.unit,
+    runId: result.runId,
+    commitSha: result.commitSha,
+    approvalArtifactPath: result.approvalArtifactPath,
+    waveSummaryPath: result.waveSummaryPath,
+    nextUnit: result.nextUnit,
+    isProgramComplete: result.isProgramComplete,
+  };
+
+  if (parsed.json) {
+    writeJson(io, data);
+    return 0;
+  }
+
+  io.stdout(`Program: ${data.displayName} (${data.programId})`);
+  io.stdout(`Approved unit: ${data.unit.id} - ${data.unit.title}`);
+  io.stdout(`Run ID: ${data.runId}`);
+  io.stdout(`Commit SHA: ${data.commitSha}`);
+  io.stdout(`Approval artifact: ${path.relative(cwd, data.approvalArtifactPath)}`);
+
+  if (data.waveSummaryPath) {
+    io.stdout(`Wave summary: ${path.relative(cwd, data.waveSummaryPath)}`);
+  }
+
+  if (data.isProgramComplete) {
+    io.stdout("Program is complete.");
+  } else {
+    io.stdout(`Next unit: ${data.nextUnit ?? "none"}`);
+  }
+
+  return 0;
+}
+
+function runRejectCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
+  const definition = getRemediationProgramDefinition(parsed.programId);
+  const result = rejectRemediationUnit(definition, cwd, parsed.unitId);
+  const data: RejectCommandData = {
+    command: "reject",
+    programId: definition.program.programId,
+    displayName: definition.program.displayName,
+    unit: result.unit,
+    runId: result.runId,
+    rejectionArtifactPath: result.rejectionArtifactPath,
+  };
+
+  if (parsed.json) {
+    writeJson(io, data);
+    return 0;
+  }
+
+  io.stdout(`Program: ${data.displayName} (${data.programId})`);
+  io.stdout(`Rejected unit: ${data.unit.id} - ${data.unit.title}`);
+  io.stdout(`Run ID: ${data.runId}`);
+  io.stdout(`Rejection artifact: ${path.relative(cwd, data.rejectionArtifactPath)}`);
+  io.stdout(`Next unit: ${data.unit.id}`);
+  return 0;
+}
+
+function runRollbackCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
+  if (!parsed.unitId) {
+    throw new Error("Rollback requires --unit <unit-id>.");
+  }
+
+  const definition = getRemediationProgramDefinition(parsed.programId);
+  const result = rollbackRemediationUnit(definition, cwd, parsed.unitId);
+  const data: RollbackCommandData = {
+    command: "rollback",
+    programId: definition.program.programId,
+    displayName: definition.program.displayName,
+    unit: result.unit,
+    originalCommitSha: result.originalCommitSha,
+    rollbackCommitSha: result.rollbackCommitSha,
+    rollbackArtifactPath: result.rollbackArtifactPath,
+    nextUnit: result.nextUnit,
+  };
+
+  if (parsed.json) {
+    writeJson(io, data);
+    return 0;
+  }
+
+  io.stdout(`Program: ${data.displayName} (${data.programId})`);
+  io.stdout(`Rolled back unit: ${data.unit.id} - ${data.unit.title}`);
+  io.stdout(`Original commit SHA: ${data.originalCommitSha}`);
+  io.stdout(`Rollback commit SHA: ${data.rollbackCommitSha}`);
+  io.stdout(`Rollback artifact: ${path.relative(cwd, data.rollbackArtifactPath)}`);
+  io.stdout(`Next unit: ${data.nextUnit ?? "none"}`);
+  return 0;
+}
+
 function writeHelp(io: CliIo): number {
   io.stdout(
-    "Usage: remediation <validate|next|prompt|preflight|unlock-stale|run> [--program <program-id>] [--json] [--unit <unit-id>] [--runner <codex|claude|fake>]",
+    "Usage: remediation <validate|next|prompt|preflight|unlock-stale|run|approve|reject|rollback> [--program <program-id>] [--json] [--unit <unit-id>] [--runner <codex|claude|fake>]",
   );
   io.stdout(`Available programs: ${listRemediationProgramIds().join(", ")}`);
   return 0;
@@ -649,6 +794,12 @@ export function runCli(argv: string[], options: { cwd?: string; io?: CliIo } = {
         return runUnlockStale(parsed, cwd, io);
       case "run":
         return runUnitCommand(parsed, cwd, io);
+      case "approve":
+        return runApproveCommand(parsed, cwd, io);
+      case "reject":
+        return runRejectCommand(parsed, cwd, io);
+      case "rollback":
+        return runRollbackCommand(parsed, cwd, io);
       default:
         return writeHelp(io);
     }

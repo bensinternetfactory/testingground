@@ -1,7 +1,11 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
+import { approveRemediationUnit } from "@/scripts/remediation/orchestrator/approval";
+import { rejectRemediationUnit } from "@/scripts/remediation/orchestrator/rejection";
+import { rollbackRemediationUnit } from "@/scripts/remediation/orchestrator/rollback";
 import { runSingleRemediationUnit } from "@/scripts/remediation/orchestrator/run-unit";
 import { createFakeRunner } from "@/scripts/remediation/runners/fake";
 import type { RemediationProgramDefinition } from "@/scripts/remediation/types";
@@ -18,6 +22,23 @@ function writeRepoFile(root: string, relativePath: string, contents = "") {
   const filePath = path.join(root, relativePath);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, contents);
+}
+
+function runGit(root: string, args: string[], options: { input?: string } = {}) {
+  return execFileSync("git", args, {
+    cwd: root,
+    encoding: "utf8",
+    stdio: options.input ? ["pipe", "pipe", "pipe"] : ["ignore", "pipe", "pipe"],
+    ...(options.input ? { input: options.input } : {}),
+  }).trim();
+}
+
+function initGitRepo(root: string) {
+  runGit(root, ["init"]);
+  runGit(root, ["config", "user.name", "Test User"]);
+  runGit(root, ["config", "user.email", "test@example.com"]);
+  runGit(root, ["add", "."]);
+  runGit(root, ["commit", "-m", "Initial commit"]);
 }
 
 function createTestProgram(root: string, attemptBudget = 3): RemediationProgramDefinition {
@@ -230,5 +251,152 @@ describe("remediation orchestrator", () => {
         attemptCount: 1,
       }),
     );
+  });
+
+  it("approves a staged remediation unit into a real commit and writes a wave-close artifact", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+    initGitRepo(root);
+
+    const runResult = runSingleRemediationUnit(definition, root, {
+      now: new Date("2026-04-05T19:00:00.000Z"),
+      runner: createFakeRunner({
+        scenario: "success",
+        fileWrites: {
+          "app/example.tsx": "export default function Example() { return 'approved'; }\n",
+        },
+      }),
+      getWorktreeSnapshot: () => ({
+        changedFiles: ["app/example.tsx"],
+        worktreeState: "unstaged",
+      }),
+      ...createSuccessfulExecutors(),
+    });
+
+    expect(runResult.runtime.finalState).toBe("passed");
+    expect(runGit(root, ["diff", "--cached", "--name-only"])).toBe("app/example.tsx");
+
+    const approvalResult = approveRemediationUnit(definition, root, undefined, {
+      now: new Date("2026-04-05T19:05:00.000Z"),
+    });
+
+    expect(approvalResult.commitSha).toMatch(/[0-9a-f]{40}/);
+    expect(approvalResult.isProgramComplete).toBe(true);
+    expect(approvalResult.waveSummaryPath).toBeDefined();
+
+    const tracker = JSON.parse(
+      fs.readFileSync(path.join(root, definition.program.trackerPath), "utf8"),
+    );
+    expect(tracker.entries).toContainEqual(
+      expect.objectContaining({
+        unitId: "UNIT-001",
+        state: "fixed",
+        commitSha: approvalResult.commitSha,
+      }),
+    );
+
+    const approvalArtifact = JSON.parse(fs.readFileSync(approvalResult.approvalArtifactPath, "utf8"));
+    expect(approvalArtifact.commitSha).toBe(approvalResult.commitSha);
+
+    const waveSummary = JSON.parse(fs.readFileSync(approvalResult.waveSummaryPath!, "utf8"));
+    expect(waveSummary).toMatchObject({
+      wave: 1,
+      closingUnitId: "UNIT-001",
+      isProgramComplete: true,
+      fixedUnitIds: ["UNIT-001"],
+    });
+    expect(runGit(root, ["show", "--pretty=format:%s", "--quiet", "HEAD"])).toBe("Fix UNIT-001: Fixture remediation unit");
+  });
+
+  it("rejects a staged remediation unit, preserves artifacts, and makes the unit retryable", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+    initGitRepo(root);
+
+    const runResult = runSingleRemediationUnit(definition, root, {
+      now: new Date("2026-04-05T19:10:00.000Z"),
+      runner: createFakeRunner({
+        scenario: "success",
+        fileWrites: {
+          "app/example.tsx": "export default function Example() { return 'rejected'; }\n",
+        },
+      }),
+      getWorktreeSnapshot: () => ({
+        changedFiles: ["app/example.tsx"],
+        worktreeState: "unstaged",
+      }),
+      ...createSuccessfulExecutors(),
+    });
+
+    expect(runResult.runtime.finalState).toBe("passed");
+
+    const rejectionResult = rejectRemediationUnit(definition, root, undefined, {
+      now: new Date("2026-04-05T19:12:00.000Z"),
+    });
+
+    const tracker = JSON.parse(
+      fs.readFileSync(path.join(root, definition.program.trackerPath), "utf8"),
+    );
+    expect(tracker.entries).toContainEqual(
+      expect.objectContaining({
+        unitId: "UNIT-001",
+        state: "not-started",
+        attemptCount: 1,
+      }),
+    );
+    expect(runGit(root, ["diff", "--cached", "--name-only"])).toBe("");
+    expect(runGit(root, ["diff", "--name-only"])).toContain("app/example.tsx");
+
+    const rejectionArtifact = JSON.parse(fs.readFileSync(rejectionResult.rejectionArtifactPath, "utf8"));
+    expect(rejectionArtifact.runId).toBe(runResult.runtime.runId);
+  });
+
+  it("rolls back an approved remediation unit and blocks it pending human review", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+    initGitRepo(root);
+
+    runSingleRemediationUnit(definition, root, {
+      now: new Date("2026-04-05T19:20:00.000Z"),
+      runner: createFakeRunner({
+        scenario: "success",
+        fileWrites: {
+          "app/example.tsx": "export default function Example() { return 'rolled forward'; }\n",
+        },
+      }),
+      getWorktreeSnapshot: () => ({
+        changedFiles: ["app/example.tsx"],
+        worktreeState: "unstaged",
+      }),
+      ...createSuccessfulExecutors(),
+    });
+
+    const approvalResult = approveRemediationUnit(definition, root, undefined, {
+      now: new Date("2026-04-05T19:22:00.000Z"),
+    });
+    const rollbackResult = rollbackRemediationUnit(definition, root, "UNIT-001", {
+      now: new Date("2026-04-05T19:25:00.000Z"),
+    });
+
+    expect(rollbackResult.originalCommitSha).toBe(approvalResult.commitSha);
+    expect(rollbackResult.rollbackCommitSha).toMatch(/[0-9a-f]{40}/);
+    expect(fs.readFileSync(path.join(root, "app/example.tsx"), "utf8")).toContain("return null");
+
+    const tracker = JSON.parse(
+      fs.readFileSync(path.join(root, definition.program.trackerPath), "utf8"),
+    );
+    expect(tracker.entries).toContainEqual(
+      expect.objectContaining({
+        unitId: "UNIT-001",
+        state: "blocked",
+        commitSha: approvalResult.commitSha,
+      }),
+    );
+
+    const rollbackArtifact = JSON.parse(fs.readFileSync(rollbackResult.rollbackArtifactPath, "utf8"));
+    expect(rollbackArtifact).toMatchObject({
+      originalCommitSha: approvalResult.commitSha,
+      rollbackCommitSha: rollbackResult.rollbackCommitSha,
+    });
   });
 });

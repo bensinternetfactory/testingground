@@ -232,6 +232,8 @@ describe("remediation persistence", () => {
     const reviewPacketPath = writeLatestReviewPacket(definition, root, {
       programId: "test-program",
       unitId: "UNIT-001",
+      runId: "run-001",
+      wave: 1,
       title: "Fixture remediation unit",
       type: "bugfix-nonvisual",
       filesChanged: ["app/example.tsx"],

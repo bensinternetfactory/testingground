@@ -421,6 +421,8 @@ export interface FailureArtifact {
 export interface ReviewPacket {
   programId: string;
   unitId: string;
+  runId: string;
+  wave: RemediationWave;
   title: string;
   type: RemediationUnitType;
   filesChanged: string[];
@@ -437,6 +439,60 @@ export interface ReviewPacket {
   promptTemplateVersion: string;
   artifactPaths: string[];
   nextUnit?: string;
+}
+
+export interface ApprovalArtifact {
+  programId: string;
+  unitId: string;
+  runId: string;
+  approvedAt: string;
+  commitSha: string;
+  attemptNumber: number;
+  draftCommitMessage: string;
+  changedFiles: string[];
+  reviewPacketPath: string;
+  fixReportPath?: string;
+  waveSummaryPath?: string;
+  nextUnit?: string;
+}
+
+export interface RejectionArtifact {
+  programId: string;
+  unitId: string;
+  runId: string;
+  rejectedAt: string;
+  attemptNumber: number;
+  changedFiles: string[];
+  draftCommitMessage: string;
+  reviewPacketPath: string;
+  fixReportPath?: string;
+  reason?: string;
+  rejectedCommitSha?: string;
+}
+
+export interface RollbackArtifact {
+  programId: string;
+  unitId: string;
+  rolledBackAt: string;
+  wave: RemediationWave;
+  originalCommitSha: string;
+  rollbackCommitSha: string;
+  changedFiles: string[];
+  reason?: string;
+  nextUnit?: string;
+}
+
+export interface WaveSummaryArtifact {
+  programId: string;
+  wave: RemediationWave;
+  closedAt: string;
+  closingUnitId: string;
+  fixedUnitIds: string[];
+  deferredUnitIds: string[];
+  commitShas: Record<string, string>;
+  nextWave?: RemediationWave;
+  nextUnitId?: string;
+  isProgramComplete: boolean;
 }
 
 export interface BaselineSnapshot {

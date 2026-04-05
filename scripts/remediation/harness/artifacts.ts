@@ -1,15 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
 import type {
+  ApprovalArtifact,
   BaselineSnapshot,
   FailureArtifact,
   FixReportArtifact,
+  RejectionArtifact,
   RemediationProgramDefinition,
   ReviewPacket,
+  RollbackArtifact,
+  WaveSummaryArtifact,
 } from "../types.ts";
 
 const BASELINE_SNAPSHOT_FILE = "baseline-snapshot.json";
 const LATEST_REVIEW_PACKET_FILE = "latest-review-packet.md";
+const LATEST_REVIEW_PACKET_DATA_FILE = "latest-review-packet.json";
 
 function toBoolLabel(value: boolean): string {
   return value ? "yes" : "no";
@@ -21,6 +26,11 @@ function sanitizeFileToken(value: string): string {
 
 function ensureParentDir(filePath: string) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
+}
+
+function writeJsonFile(filePath: string, value: unknown) {
+  ensureParentDir(filePath);
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
 }
 
 function renderValidationSummary(
@@ -65,6 +75,8 @@ function renderReviewPacketMarkdown(packet: ReviewPacket): string {
     `# Review Packet: ${packet.unitId}`,
     "",
     `- Program: ${packet.programId}`,
+    `- Run ID: ${packet.runId}`,
+    `- Wave: ${packet.wave}`,
     `- Title: ${packet.title}`,
     `- Type: ${packet.type}`,
     `- Visual surface changed: ${toBoolLabel(packet.visualSurfaceChanged)}`,
@@ -128,14 +140,20 @@ export function getLatestReviewPacketPath(
   return path.join(ensureProgramArtifactRoot(definition, cwd), LATEST_REVIEW_PACKET_FILE);
 }
 
+export function getLatestReviewPacketDataPath(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+): string {
+  return path.join(ensureProgramArtifactRoot(definition, cwd), LATEST_REVIEW_PACKET_DATA_FILE);
+}
+
 export function writeBaselineSnapshot(
   definition: RemediationProgramDefinition,
   cwd: string,
   snapshot: BaselineSnapshot,
 ): string {
   const artifactPath = getBaselineSnapshotPath(definition, cwd);
-  ensureParentDir(artifactPath);
-  fs.writeFileSync(artifactPath, `${JSON.stringify(snapshot, null, 2)}\n`);
+  writeJsonFile(artifactPath, snapshot);
   return artifactPath;
 }
 
@@ -172,7 +190,7 @@ export function writeFailureArtifact(
   const unitDir = ensureUnitArtifactDir(definition, cwd, artifact.unitId);
   const stamp = sanitizeFileToken(artifact.timestamp);
   const artifactPath = path.join(unitDir, `failure-${stamp || "artifact"}.json`);
-  fs.writeFileSync(artifactPath, `${JSON.stringify(artifact, null, 2)}\n`);
+  writeJsonFile(artifactPath, artifact);
   return artifactPath;
 }
 
@@ -184,5 +202,69 @@ export function writeLatestReviewPacket(
   const artifactPath = getLatestReviewPacketPath(definition, cwd);
   ensureParentDir(artifactPath);
   fs.writeFileSync(artifactPath, renderReviewPacketMarkdown(packet));
+  writeJsonFile(getLatestReviewPacketDataPath(definition, cwd), packet);
+  return artifactPath;
+}
+
+export function readLatestReviewPacket(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+): ReviewPacket | undefined {
+  const artifactPath = getLatestReviewPacketDataPath(definition, cwd);
+
+  if (!fs.existsSync(artifactPath)) {
+    return undefined;
+  }
+
+  return JSON.parse(fs.readFileSync(artifactPath, "utf8")) as ReviewPacket;
+}
+
+export function writeApprovalArtifact(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+  artifact: ApprovalArtifact,
+): string {
+  const unitDir = ensureUnitArtifactDir(definition, cwd, artifact.unitId);
+  const stamp = sanitizeFileToken(artifact.approvedAt);
+  const artifactPath = path.join(unitDir, `approval-${stamp || "artifact"}.json`);
+  writeJsonFile(artifactPath, artifact);
+  return artifactPath;
+}
+
+export function writeRejectionArtifact(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+  artifact: RejectionArtifact,
+): string {
+  const unitDir = ensureUnitArtifactDir(definition, cwd, artifact.unitId);
+  const stamp = sanitizeFileToken(artifact.rejectedAt);
+  const artifactPath = path.join(unitDir, `rejection-${stamp || "artifact"}.json`);
+  writeJsonFile(artifactPath, artifact);
+  return artifactPath;
+}
+
+export function writeRollbackArtifact(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+  artifact: RollbackArtifact,
+): string {
+  const unitDir = ensureUnitArtifactDir(definition, cwd, artifact.unitId);
+  const stamp = sanitizeFileToken(artifact.rolledBackAt);
+  const artifactPath = path.join(unitDir, `rollback-${stamp || "artifact"}.json`);
+  writeJsonFile(artifactPath, artifact);
+  return artifactPath;
+}
+
+export function writeWaveSummaryArtifact(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+  artifact: WaveSummaryArtifact,
+): string {
+  const artifactPath = path.join(
+    ensureProgramArtifactRoot(definition, cwd),
+    "wave-summaries",
+    `wave-${artifact.wave}.json`,
+  );
+  writeJsonFile(artifactPath, artifact);
   return artifactPath;
 }

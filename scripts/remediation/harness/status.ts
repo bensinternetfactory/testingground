@@ -5,6 +5,7 @@ import type { RemediationProgramDefinition, RemediationRuntimeResult } from "../
 const RUNTIME_SECTION_HEADING = "## Remediation Runtime";
 
 export interface RuntimeStatusUpdate {
+  operation?: "run" | "approve" | "reject" | "rollback";
   runId: string;
   unitId: string;
   title: string;
@@ -14,6 +15,7 @@ export interface RuntimeStatusUpdate {
   nextUnit?: string;
   artifactPaths: string[];
   updatedAt: string;
+  details?: string[];
 }
 
 function ensureParentDir(filePath: string) {
@@ -24,6 +26,7 @@ function renderRuntimeSection(update: RuntimeStatusUpdate): string {
   return [
     RUNTIME_SECTION_HEADING,
     "",
+    `- Last action: ${update.operation ?? "run"}`,
     `- Last run ID: ${update.runId}`,
     `- Unit: ${update.unitId}`,
     `- Title: ${update.title}`,
@@ -33,6 +36,7 @@ function renderRuntimeSection(update: RuntimeStatusUpdate): string {
     `- Next eligible unit: ${update.nextUnit ?? "none"}`,
     `- Artifact paths: ${update.artifactPaths.length > 0 ? update.artifactPaths.join(", ") : "none"}`,
     `- Updated at: ${update.updatedAt}`,
+    ...(update.details && update.details.length > 0 ? ["- Details:", ...update.details.map((detail) => `  - ${detail}`)] : []),
     "",
   ].join("\n");
 }

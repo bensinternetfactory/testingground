@@ -751,6 +751,8 @@ export function runSingleRemediationUnit(
     const reviewPacket: ReviewPacket = {
       programId: definition.program.programId,
       unitId: unit.id,
+      runId,
+      wave: unit.wave,
       title: unit.title,
       type: unit.type,
       filesChanged: allowlistResult.changedFiles,

@@ -8,6 +8,13 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "../../..");
 
 describe("remediation CLI", () => {
+  it("lists the post-run workflow commands in help output", () => {
+    const result = runCliForTest(["help"], repoRoot);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout.join("\n")).toContain("approve|reject|rollback");
+  });
+
   it("validates the finance program and tolerates a missing bootstrap tracker", () => {
     const result = runCliForTest(["validate", "--program", "finance-pages", "--json"], repoRoot);
 
