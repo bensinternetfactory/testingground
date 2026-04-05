@@ -45,17 +45,6 @@ const ROTATOR_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig = {
 export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "rotator-financing",
-  metadata: {
-    title: "Rotator Financing — Pre-Approved in 30 Seconds | TowLoans",
-    description:
-      "Finance heavy-recovery rotators with zero down options, up to 84 months on new, longer terms on used units, and deferred payments up to 180 days.",
-    openGraph: {
-      title: "Rotator Financing — Pre-Approved in 30 Seconds | TowLoans",
-      description:
-        "Commercial rotator financing for heavy-recovery replacement units, used deals, operator-to-operator sales, and fleet expansion.",
-      type: "website",
-    },
-  },
 
   /* ── Visual sections — top to bottom ───────────────────── */
   hero: {

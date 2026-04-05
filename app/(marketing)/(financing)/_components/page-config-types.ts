@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import type { HeroConvertFramedConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramed";
 import type { HeroConvertFramedOutlineConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline";
 import type { HeroConvertFramedPrimaryOnlyConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedPrimaryOnly";
@@ -55,7 +54,6 @@ export type EquipmentHeroConfig =
 export interface EquipmentFinancingPageConfig {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "rollback-financing" | "wrecker-financing" | "rotator-financing" | "used-tow-truck-financing";
-  metadata: Metadata;
 
   /* ── Visual sections — top to bottom ───────────────────── */
   hero: EquipmentHeroConfig;

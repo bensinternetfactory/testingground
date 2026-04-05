@@ -49,17 +49,6 @@ const WRECKER_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig = {
 export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "wrecker-financing",
-  metadata: {
-    title: "Wrecker Financing — Pre-Approved in 30 Seconds | TowLoans",
-    description:
-      "Finance light-duty wreckers and heavy wreckers with zero down options, longer terms on used units, up to 84 months on new, and deferred payments up to 180 days.",
-    openGraph: {
-      title: "Wrecker Financing — Pre-Approved in 30 Seconds | TowLoans",
-      description:
-        "Commercial wrecker financing for light-duty, heavy-duty recovery, used, private seller, and fleet expansion deals.",
-      type: "website",
-    },
-  },
 
   /* ── Visual sections — top to bottom ───────────────────── */
   hero: {
