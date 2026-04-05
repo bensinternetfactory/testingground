@@ -1,16 +1,18 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveNextUnit, validateTrackerEntries } from "./harness/dependencies.ts";
+import { runPreflight } from "./harness/preflight.ts";
 import { createNextPromptPayload, createPromptPayload } from "./harness/prompt.ts";
 import { assertValidProgramDefinition, validateProgramDefinition } from "./harness/registry.ts";
 import { readTrackerState } from "./harness/tracker.ts";
+import { unlockStaleProgramLock } from "./harness/lockfile.ts";
 import { getRemediationProgramDefinition, listRemediationProgramIds } from "./programs/index.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const defaultRepoRoot = path.resolve(__dirname, "../..");
 
-type CliCommand = "validate" | "next" | "prompt";
+type CliCommand = "validate" | "next" | "prompt" | "preflight" | "unlock-stale";
 
 interface ParsedCliArgs {
   command: CliCommand | "help";
@@ -68,6 +70,21 @@ interface PromptCommandData {
   payload?: ReturnType<typeof createPromptPayload>;
 }
 
+interface PreflightCommandData extends ReturnType<typeof runPreflight> {
+  command: "preflight";
+}
+
+interface UnlockStaleCommandData {
+  command: "unlock-stale";
+  programId: string;
+  displayName: string;
+  unlocked: boolean;
+  lockPath: string;
+  unitId?: string;
+  runner?: string;
+  timestamp?: string;
+}
+
 function createIo(): CliIo {
   return {
     stdout: (line) => console.log(line),
@@ -104,7 +121,14 @@ function parseArgs(argv: string[]): ParsedCliArgs {
   const firstArg = args[0];
 
   if (firstArg && !firstArg.startsWith("-")) {
-    if (firstArg === "help" || firstArg === "validate" || firstArg === "next" || firstArg === "prompt") {
+    if (
+      firstArg === "help"
+      || firstArg === "validate"
+      || firstArg === "next"
+      || firstArg === "prompt"
+      || firstArg === "preflight"
+      || firstArg === "unlock-stale"
+    ) {
       command = firstArg;
       args.shift();
     } else {
@@ -420,8 +444,90 @@ function runPrompt(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
   return 0;
 }
 
+function runPreflightCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
+  const definition = getRemediationProgramDefinition(parsed.programId);
+  const data: PreflightCommandData = {
+    command: "preflight",
+    ...runPreflight(definition, cwd),
+  };
+
+  if (parsed.json) {
+    writeJson(io, data);
+    return data.ok ? 0 : 1;
+  }
+
+  io.stdout(`Program: ${data.displayName} (${data.programId})`);
+  io.stdout(`Lock path: ${path.relative(cwd, data.lockPath)} (${data.lockStatus})`);
+  io.stdout(`Tracker file: ${data.trackerFilePresent ? "present" : "missing"}`);
+
+  if (data.currentWave) {
+    io.stdout(`Current wave: ${data.currentWave}`);
+  }
+
+  if (data.nextUnitId) {
+    io.stdout(`Next unit: ${data.nextUnitId}`);
+  }
+
+  if (data.baselineSnapshotPath) {
+    io.stdout(`Baseline snapshot: ${path.relative(cwd, data.baselineSnapshotPath)}`);
+  }
+
+  for (const check of data.checks) {
+    const line = `[${check.status.toUpperCase()}] ${check.name}: ${check.summary}`;
+
+    if (check.status === "fail") {
+      io.stderr(line);
+    } else {
+      io.stdout(line);
+    }
+
+    for (const detail of check.details ?? []) {
+      if (check.status === "fail") {
+        io.stderr(`  - ${detail}`);
+      } else {
+        io.stdout(`  - ${detail}`);
+      }
+    }
+  }
+
+  for (const warning of data.warnings) {
+    io.stdout(`WARNING: ${warning}`);
+  }
+
+  return data.ok ? 0 : 1;
+}
+
+function runUnlockStale(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
+  const definition = getRemediationProgramDefinition(parsed.programId);
+  const clearedLock = unlockStaleProgramLock(definition, cwd);
+  const data: UnlockStaleCommandData = {
+    command: "unlock-stale",
+    programId: definition.program.programId,
+    displayName: definition.program.displayName,
+    unlocked: true,
+    lockPath: path.resolve(cwd, definition.program.artifactRoot, "active-lock.json"),
+    unitId: clearedLock.unitId,
+    runner: clearedLock.runner,
+    timestamp: clearedLock.timestamp,
+  };
+
+  if (parsed.json) {
+    writeJson(io, data);
+    return 0;
+  }
+
+  io.stdout(`Cleared stale lock for ${data.displayName} (${data.programId}).`);
+  io.stdout(`Unit: ${data.unitId}`);
+  io.stdout(`Runner: ${data.runner}`);
+  io.stdout(`Timestamp: ${data.timestamp}`);
+  io.stdout(`Lock path: ${path.relative(cwd, data.lockPath)}`);
+  return 0;
+}
+
 function writeHelp(io: CliIo): number {
-  io.stdout("Usage: remediation <validate|next|prompt> [--program <program-id>] [--json] [--unit <unit-id>]");
+  io.stdout(
+    "Usage: remediation <validate|next|prompt|preflight|unlock-stale> [--program <program-id>] [--json] [--unit <unit-id>]",
+  );
   io.stdout(`Available programs: ${listRemediationProgramIds().join(", ")}`);
   return 0;
 }
@@ -449,6 +555,10 @@ export function runCli(argv: string[], options: { cwd?: string; io?: CliIo } = {
         return runNext(parsed, cwd, io);
       case "prompt":
         return runPrompt(parsed, cwd, io);
+      case "preflight":
+        return runPreflightCommand(parsed, cwd, io);
+      case "unlock-stale":
+        return runUnlockStale(parsed, cwd, io);
       default:
         return writeHelp(io);
     }

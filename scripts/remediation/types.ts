@@ -48,6 +48,7 @@ export const VISUAL_POLICY_MODES = [
 ] as const;
 
 export const VIEWPORT_TARGETS = ["desktop", "mobile", "both"] as const;
+export const PREFLIGHT_CHECK_STATUSES = ["pass", "warn", "fail"] as const;
 
 export type RemediationUnitType = (typeof REMEDIATION_UNIT_TYPES)[number];
 export type RemediationWave = (typeof REMEDIATION_WAVES)[number];
@@ -59,6 +60,7 @@ export type SourceKind = (typeof SOURCE_KINDS)[number];
 export type VisualChangeScope = (typeof VISUAL_CHANGE_SCOPES)[number];
 export type VisualPolicyMode = (typeof VISUAL_POLICY_MODES)[number];
 export type ViewportTarget = (typeof VIEWPORT_TARGETS)[number];
+export type PreflightCheckStatus = (typeof PREFLIGHT_CHECK_STATUSES)[number];
 
 export interface RunnerPolicy {
   mode: RunnerMode;
@@ -326,4 +328,55 @@ export interface ReviewPacket {
   promptTemplateVersion: string;
   artifactPaths: string[];
   nextUnit?: string;
+}
+
+export interface BaselineSnapshot {
+  programId: string;
+  timestamp: string;
+  gitSha?: string;
+  currentWave?: RemediationWave;
+  nextUnitId?: string;
+  trackerPath: string;
+  statusPath: string;
+  nodeVersion: string;
+  workingTree: {
+    status: "clean" | "dirty" | "unavailable";
+    changedFiles: string[];
+  };
+  lint: {
+    status: "pending" | "passed" | "failed" | "warning-count-recorded";
+    warningCount?: number;
+    notes?: string;
+  };
+  build: {
+    status: "pending" | "passed" | "failed";
+    notes?: string;
+  };
+  visual: {
+    status: "pending" | "not-required" | "captured";
+    routes: string[];
+    viewports: Array<Exclude<ViewportTarget, "both">>;
+    notes?: string;
+  };
+}
+
+export interface PreflightCheck {
+  name: string;
+  status: PreflightCheckStatus;
+  summary: string;
+  details?: string[];
+}
+
+export interface RemediationPreflightResult {
+  programId: string;
+  displayName: string;
+  ok: boolean;
+  trackerFilePresent: boolean;
+  currentWave?: RemediationWave;
+  nextUnitId?: string;
+  lockPath: string;
+  lockStatus: "clear" | "active" | "stale";
+  baselineSnapshotPath?: string;
+  warnings: string[];
+  checks: PreflightCheck[];
 }

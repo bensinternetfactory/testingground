@@ -9,9 +9,11 @@
     "lint": "eslint",
     "test": "vitest run",
     "remediation:next": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs next",
+    "remediation:preflight": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs preflight",
     "remediation:prompt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs prompt",
     "remediation:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs validate",
     "review:financing:next": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs next --program finance-pages",
+    "review:financing:preflight": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs preflight --program finance-pages",
     "review:financing:prompt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs prompt --program finance-pages",
     "review:financing:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs validate --program finance-pages",
     "review:financing:guard": "node scripts/financing-review-harness.mjs guard"

@@ -6,7 +6,7 @@
 - [x] Module 2: dependency + policy core
 - [x] Module 3: prompt payload generation
 - [x] Module 4: CLI wiring for `validate`, `next`, and `prompt`
-- [ ] Module 5: locks, artifacts, and preflight
+- [x] Module 5: locks, artifacts, and preflight
 - [ ] Module 6: validators
 - [ ] Module 7: orchestrator + fake runner
 - [ ] Module 8: real runner adapters
@@ -117,3 +117,32 @@
   - `npm run build`
 - Next module boundary:
   - add locks, stale-lock handling, artifact persistence, and preflight flows without introducing runner execution yet
+
+## Module 5
+
+- Date: `2026-04-05`
+- Scope:
+  - added reusable lockfile lifecycle helpers in `scripts/remediation/harness/lockfile.ts`
+  - added reusable artifact persistence helpers for baseline snapshots, fix reports, failure artifacts, and latest review packets in `scripts/remediation/harness/artifacts.ts`
+  - added reusable preflight checks and baseline capture in `scripts/remediation/harness/preflight.ts`
+  - extended the remediation CLI with `preflight` and `unlock-stale`
+  - added focused persistence/preflight coverage in `scripts/__tests__/remediation/persistence.test.ts`
+- Decisions:
+  - the active program lock lives at `<artifactRoot>/active-lock.json`
+  - stale locks fail preflight closed and must be removed explicitly with `unlock-stale`
+  - baseline snapshots are persisted as JSON now, while lint/build/visual execution details remain `pending` until validator modules land
+  - missing runner/browser binaries remain warnings during module 5 because runner adapters and validators are not implemented yet
+- Outputs:
+  - `scripts/remediation/types.ts`
+  - `scripts/remediation/harness/lockfile.ts`
+  - `scripts/remediation/harness/artifacts.ts`
+  - `scripts/remediation/harness/preflight.ts`
+  - `scripts/remediation/cli-core.ts`
+  - `scripts/__tests__/remediation/persistence.test.ts`
+  - `package.json`
+- Verification:
+  - `npm test -- scripts/__tests__/remediation`
+  - `npm run lint -- scripts/remediation scripts/__tests__/remediation`
+  - `npm run build`
+- Next module boundary:
+  - implement normalized validators for lint, build, test, browser, visual regression, and baseline comparison without introducing real runner execution yet
