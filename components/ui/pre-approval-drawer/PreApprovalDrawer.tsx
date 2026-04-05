@@ -14,31 +14,29 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
   AnimatePresence,
-  animate,
   motion,
   useDragControls,
-  useMotionValue,
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
 import { useDrawer } from "./DrawerContext";
 import { AmountSlider } from "./AmountSlider";
+import { unlockBodyScroll, updateScrollableRef } from "./scroll-lock";
 import { buildDrawerContinueHref } from "./triggers";
 
 const PORTAL_ROOT_ID = "pre-approval-drawer-root";
-const BACKDROP_Z_INDEX = "z-[80]";
-const DIALOG_Z_INDEX = "z-[81]";
+const BACKDROP_Z_INDEX = "z-[200]";
+const DIALOG_Z_INDEX = "z-[201]";
 const MD_BREAKPOINT = "(min-width: 768px)";
-const DRAG_DISMISS_VELOCITY = 900;
-const DRAG_DISMISS_DISTANCE = 120;
-const DRAG_DISMISS_EXIT_DURATION = 0.18;
+const DRAG_DISMISS_VELOCITY = 500;
+const DRAG_DISMISS_DISTANCE = 100;
 
 const backdropVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 };
 
-const sheetSpring = { type: "spring" as const, damping: 36, stiffness: 420 };
+const sheetSpring = { type: "spring" as const, damping: 30, stiffness: 320 };
 
 const sheetVariants = {
   hidden: { y: "100%" },
@@ -46,7 +44,7 @@ const sheetVariants = {
   exit: { y: "100%" },
 };
 
-const modalSpring = { type: "spring" as const, damping: 28, stiffness: 340 };
+const modalSpring = { type: "spring" as const, damping: 25, stiffness: 300 };
 
 const modalVariants = {
   hidden: { scale: 0.96, opacity: 0 },
@@ -90,78 +88,6 @@ function usePortalRoot(id: string) {
   document.body.append(root);
 
   return root;
-}
-
-function useBodyScrollLock(isOpen: boolean) {
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const scrollY = window.scrollY;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousBodyPosition = document.body.style.position;
-    const previousBodyTop = document.body.style.top;
-    const previousBodyWidth = document.body.style.width;
-    const previousBodyPaddingRight = document.body.style.paddingRight;
-
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
-
-    return () => {
-      document.documentElement.style.overflow = previousHtmlOverflow;
-      document.body.style.overflow = previousBodyOverflow;
-      document.body.style.position = previousBodyPosition;
-      document.body.style.top = previousBodyTop;
-      document.body.style.width = previousBodyWidth;
-      document.body.style.paddingRight = previousBodyPaddingRight;
-      window.scrollTo({ top: scrollY, behavior: "auto" });
-    };
-  }, [isOpen]);
-}
-
-function useDocumentInert(
-  isOpen: boolean,
-  portalRoot: HTMLElement | null,
-) {
-  useEffect(() => {
-    if (!isOpen || !portalRoot) {
-      return;
-    }
-
-    const siblings = Array.from(document.body.children).filter(
-      (element): element is HTMLElement => element instanceof HTMLElement && element !== portalRoot,
-    );
-    const previousAriaHidden = new Map<HTMLElement, string | null>();
-
-    for (const element of siblings) {
-      previousAriaHidden.set(element, element.getAttribute("aria-hidden"));
-      element.setAttribute("aria-hidden", "true");
-      element.inert = true;
-    }
-
-    return () => {
-      for (const element of siblings) {
-        element.inert = false;
-        const previousValue = previousAriaHidden.get(element);
-        if (previousValue == null) {
-          element.removeAttribute("aria-hidden");
-        } else {
-          element.setAttribute("aria-hidden", previousValue);
-        }
-      }
-    };
-  }, [isOpen, portalRoot]);
 }
 
 function useDialogA11y({
@@ -238,48 +164,6 @@ function useDialogA11y({
   }, [close, dialogRef, isOpen]);
 }
 
-function useMobileSheetReset({
-  isDesktop,
-  isOpen,
-  sheetY,
-}: {
-  isDesktop: boolean;
-  isOpen: boolean;
-  sheetY: ReturnType<typeof useMotionValue<number>>;
-}) {
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    if (isDesktop) {
-      sheetY.stop();
-      sheetY.set(0);
-      return;
-    }
-
-    const resetSheetPosition = () => {
-      sheetY.stop();
-      sheetY.set(0);
-    };
-
-    const visualViewport = window.visualViewport;
-
-    resetSheetPosition();
-    window.addEventListener("resize", resetSheetPosition, { passive: true });
-    window.addEventListener("orientationchange", resetSheetPosition);
-    visualViewport?.addEventListener("resize", resetSheetPosition);
-    visualViewport?.addEventListener("scroll", resetSheetPosition);
-
-    return () => {
-      window.removeEventListener("resize", resetSheetPosition);
-      window.removeEventListener("orientationchange", resetSheetPosition);
-      visualViewport?.removeEventListener("resize", resetSheetPosition);
-      visualViewport?.removeEventListener("scroll", resetSheetPosition);
-    };
-  }, [isDesktop, isOpen, sheetY]);
-}
-
 export function PreApprovalDrawer() {
   const { amount, close, heroTruckType, isOpen, setAmount, source, title } =
     useDrawer();
@@ -289,85 +173,62 @@ export function PreApprovalDrawer() {
   const portalRoot = usePortalRoot(PORTAL_ROOT_ID);
   const dialogRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const mobileCloseInFlightRef = useRef(false);
   const dragControls = useDragControls();
   const titleId = useId();
   const descriptionId = useId();
-  const sheetY = useMotionValue(0);
 
-  useBodyScrollLock(isOpen);
-  useDocumentInert(isOpen, portalRoot);
-  useMobileSheetReset({ isDesktop, isOpen, sheetY });
-
+  // Update the scrollable ref in the imperative scroll-lock module once the
+  // drawer content div has mounted. This lets the touchmove handler allow
+  // touches inside the inner scrollable area.
   useEffect(() => {
-    if (isOpen) {
-      mobileCloseInFlightRef.current = false;
+    if (isOpen && contentRef.current) {
+      updateScrollableRef(contentRef.current);
     }
   }, [isOpen]);
 
+  // Safety net: if the drawer was open when the provider unmounted (route
+  // change via MarketingDrawerProvider key={pathname}), ensure the scroll
+  // lock is released.
+  useEffect(() => {
+    return () => {
+      unlockBodyScroll();
+    };
+  }, []);
+
   const requestClose = useCallback(() => {
-    if (isDesktop) {
-      close();
-      return;
-    }
-
-    if (mobileCloseInFlightRef.current) {
-      return;
-    }
-
-    mobileCloseInFlightRef.current = true;
-
-    const sheetHeight = dialogRef.current?.offsetHeight ?? window.innerHeight;
-    const exitTarget = Math.max(sheetHeight, window.innerHeight);
-
-    sheetY.stop();
-
-    if (prefersReducedMotion) {
-      sheetY.set(exitTarget);
-      mobileCloseInFlightRef.current = false;
-      close();
-      return;
-    }
-
-    animate(sheetY, exitTarget, {
-      duration: DRAG_DISMISS_EXIT_DURATION,
-      ease: "easeOut",
-      onComplete: () => {
-        mobileCloseInFlightRef.current = false;
-        close();
-      },
-    });
-  }, [close, isDesktop, prefersReducedMotion, sheetY]);
+    close();
+  }, [close]);
 
   useDialogA11y({ dialogRef, isOpen, close: requestClose });
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     const sheetHeight = dialogRef.current?.offsetHeight ?? 480;
-    const dragDistance = Math.max(info.offset.y, sheetY.get());
     const shouldDismiss =
       info.velocity.y >= DRAG_DISMISS_VELOCITY ||
-      dragDistance >= Math.min(DRAG_DISMISS_DISTANCE, sheetHeight * 0.25);
+      info.offset.y >= Math.min(DRAG_DISMISS_DISTANCE, sheetHeight * 0.25);
 
     if (shouldDismiss) {
-      requestClose();
-      return;
+      close();
     }
-
-    if (prefersReducedMotion) {
-      sheetY.set(0);
-      return;
-    }
-
-    animate(sheetY, 0, sheetSpring);
+    // When not dismissed, framer-motion automatically snaps back to the
+    // animate="visible" target (y: 0) using the sheet's transition spring.
   };
 
-  const handleHandlePointerDown = (
+  const handleSheetPointerDown = (
     event: ReactPointerEvent<HTMLDivElement>,
   ) => {
     if (prefersReducedMotion || isDesktop) {
       return;
     }
 
+    if (!event.isPrimary) {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    if (target?.closest("[data-slider-root]")) {
+      return;
+    }
     if ((contentRef.current?.scrollTop ?? 0) > 0) {
       return;
     }
@@ -406,7 +267,8 @@ export function PreApprovalDrawer() {
               prefersReducedMotion ? { duration: 0 } : { duration: 0.18 }
             }
             onClick={requestClose}
-            className={`fixed inset-0 ${BACKDROP_Z_INDEX} bg-black/55`}
+            className={`fixed inset-0 ${BACKDROP_Z_INDEX} bg-black/35`}
+            style={{ touchAction: "none" }}
             aria-hidden="true"
           />
 
@@ -429,11 +291,10 @@ export function PreApprovalDrawer() {
               descriptionId={descriptionId}
               dragControls={dragControls}
               prefersReducedMotion={prefersReducedMotion}
-              sheetY={sheetY}
               titleId={titleId}
               onContinue={handleContinue}
               onDragEnd={handleDragEnd}
-              onHandlePointerDown={handleHandlePointerDown}
+              onSheetPointerDown={handleSheetPointerDown}
               amount={amount}
               onAmountChange={setAmount}
               title={title}
@@ -528,9 +389,8 @@ function MobileDrawerFrame({
   onAmountChange,
   onContinue,
   onDragEnd,
-  onHandlePointerDown,
+  onSheetPointerDown,
   prefersReducedMotion,
-  sheetY,
   title,
   titleId,
 }: {
@@ -542,9 +402,8 @@ function MobileDrawerFrame({
   onAmountChange: (amount: number) => void;
   onContinue: () => void;
   onDragEnd: (_: unknown, info: PanInfo) => void;
-  onHandlePointerDown: (event: ReactPointerEvent<HTMLDivElement>) => void;
+  onSheetPointerDown: (event: ReactPointerEvent<HTMLDivElement>) => void;
   prefersReducedMotion: boolean;
-  sheetY: ReturnType<typeof useMotionValue<number>>;
   title: string;
   titleId: string;
 }) {
@@ -566,16 +425,15 @@ function MobileDrawerFrame({
       dragControls={dragControls}
       dragListener={false}
       dragConstraints={{ top: 0, bottom: 0 }}
-      dragElastic={{ top: 0, bottom: 0.18 }}
-      dragMomentum={false}
+      dragElastic={{ top: 0.1, bottom: 0.28 }}
+      onPointerDown={onSheetPointerDown}
       onDragEnd={onDragEnd}
       className={`fixed inset-x-0 bottom-0 ${DIALOG_Z_INDEX} flex max-h-[calc(100dvh-0.75rem)] flex-col rounded-t-[2rem] bg-white shadow-2xl outline-none`}
-      style={{ y: sheetY }}
+      style={{ touchAction: "none" }}
     >
       <div className="shrink-0 px-6 pt-3">
         <div
-          onPointerDown={onHandlePointerDown}
-          className="mx-auto flex h-9 w-full cursor-grab touch-none select-none items-start justify-center active:cursor-grabbing"
+          className="mx-auto flex h-9 w-full items-start justify-center"
           aria-hidden="true"
         >
           <div className="h-1.5 w-10 rounded-full bg-[#D1D5DB]" />

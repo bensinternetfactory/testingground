@@ -12,7 +12,7 @@ export function StickyNav() {
     <div data-sticky-nav-root>
       <nav
         data-nav-shell
-        className="fixed top-0 right-0 left-0 z-50 border-b border-[#E9E9E9] bg-white/95 backdrop-blur-md"
+        className="fixed top-0 right-0 left-0 z-50 border-b border-[#E9E9E9] bg-white/95 pr-[var(--scrollbar-gutter,0px)] backdrop-blur-md"
         aria-label="Main navigation"
       >
         <div className="mx-auto flex h-[var(--nav-height)] max-w-7xl items-center justify-between px-6">

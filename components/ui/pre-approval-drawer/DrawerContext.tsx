@@ -12,6 +12,7 @@ import {
 } from "react";
 import { DRAWER_HASH } from "./config";
 import { PreApprovalDrawer } from "./PreApprovalDrawer";
+import { lockBodyScroll, unlockBodyScroll } from "./scroll-lock";
 import {
   createDrawerSession,
   getClosedDrawerSession,
@@ -134,10 +135,12 @@ export function DrawerProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<DrawerSessionState>(getClosedDrawerSession);
 
   const open = useCallback((trigger?: DrawerTriggerPayload) => {
+    lockBodyScroll(null);
     setState(createDrawerSession(trigger));
   }, []);
 
   const close = useCallback(() => {
+    unlockBodyScroll();
     setState((current) => ({ ...current, isOpen: false }));
   }, []);
 
