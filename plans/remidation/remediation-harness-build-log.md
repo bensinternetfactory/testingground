@@ -9,7 +9,7 @@
 - [x] Module 5: locks, artifacts, and preflight
 - [x] Module 6: validators
 - [x] Module 7: orchestrator + fake runner
-- [ ] Module 8: real runner adapters
+- [x] Module 8: real runner adapters
 
 ## Module 1
 
@@ -214,3 +214,32 @@
   - `npm run build`
 - Next module boundary:
   - implement the real `codex` and `claude` runner adapters, then thread approval/commit handling through the staged orchestrator result
+
+## Module 8
+
+- Date: `2026-04-05`
+- Scope:
+  - added shared subprocess runner utilities for timeout handling, structured-output parsing, and before/after git-status diff capture in `scripts/remediation/runners/shared.ts`
+  - added real local CLI adapters for `codex exec` and `claude --print` in `scripts/remediation/runners/`
+  - rewired the orchestrator so configured `codex` and `claude` runners resolve without test-only injection
+  - tightened preflight so missing configured runner binaries now fail closed instead of warning
+  - added focused runner adapter coverage in `scripts/__tests__/remediation/runners.test.ts`
+- Decisions:
+  - real adapters shell out to the locally authenticated CLIs rather than calling provider APIs directly
+  - prompt payloads are injected over stdin, not argv, to avoid quoting and length hazards
+  - adapter `changedFiles` come from git-status snapshots before and after the subprocess run instead of trusting model self-reporting
+  - `visualSurfaceChanged` defaults to the structured runner output, but the harness still treats visual validation as the authoritative post-run enforcement layer
+- Outputs:
+  - `scripts/remediation/runners/adapter.ts`
+  - `scripts/remediation/runners/shared.ts`
+  - `scripts/remediation/runners/codex.ts`
+  - `scripts/remediation/runners/claude.ts`
+  - `scripts/remediation/orchestrator/run-unit.ts`
+  - `scripts/remediation/harness/preflight.ts`
+  - `scripts/__tests__/remediation/runners.test.ts`
+- Verification:
+  - `npm test -- scripts/__tests__/remediation`
+  - `npm run lint -- scripts/remediation scripts/__tests__/remediation`
+  - `npm run build`
+- Next module boundary:
+  - add approval/rejection handling, rollback guidance, and post-approval commit state transitions on top of the staged orchestrator result

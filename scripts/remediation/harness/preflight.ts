@@ -323,8 +323,8 @@ export function runPreflight(
           ? createCheck("runner-binary", "pass", `Runner binary ${runnerAdapter} is available at ${binaryPath}.`)
           : createCheck(
               "runner-binary",
-              "warn",
-              `Runner binary ${runnerAdapter} was not found. This remains warning-only until the runner adapter module lands.`,
+              "fail",
+              `Runner binary ${runnerAdapter} was not found for the selected remediation unit.`,
             ),
       );
     }

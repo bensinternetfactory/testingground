@@ -14,6 +14,8 @@ import { createPromptPayload, PROMPT_TEMPLATE_VERSION } from "../harness/prompt.
 import { assertValidProgramDefinition } from "../harness/registry.ts";
 import { writeRuntimeStatusSection } from "../harness/status.ts";
 import { readTrackerState, upsertTrackerEntry, writeTrackerState } from "../harness/tracker.ts";
+import { createClaudeRunner } from "../runners/claude.ts";
+import { createCodexRunner } from "../runners/codex.ts";
 import { createFakeRunner } from "../runners/fake.ts";
 import type { RemediationRunner } from "../runners/adapter.ts";
 import type {
@@ -294,10 +296,12 @@ function resolveRunner(
     return environment.runner;
   }
 
-  if (adapterName !== "fake") {
-    throw new Error(
-      `Runner adapter ${adapterName} is not available yet. Module 7 only supports the fake runner unless a test runner is injected.`,
-    );
+  if (adapterName === "codex") {
+    return createCodexRunner();
+  }
+
+  if (adapterName === "claude") {
+    return createClaudeRunner();
   }
 
   return createFakeRunner();
