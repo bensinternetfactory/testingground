@@ -1,16 +1,15 @@
 import type { EquipmentFinancingPageConfig } from "../_components/page-config-types";
 import truck2 from "@/public/truck-2.jpg";
 import {
+  buildFaqSection,
   SHARED_FINANCING_FOOTNOTES_CONFIG,
-  equipmentFaqCore,
 } from "../_components/shared-config";
 import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
-import {
-  buildFaqSchema,
-  type FaqItemData,
-} from "@/components/sections/page/faq/config";
+import type { FaqItemData } from "@/components/sections/page/faq/config";
 
 /* ── Page Config ─────────────────────────────────────────────────── */
+
+const usedTowTruckFaqContent = buildUsedTowTruckFaqContent();
 
 export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
@@ -167,11 +166,7 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
       ],
     },
   },
-  faqSection: {
-    eyebrow: "FAQ",
-    heading: "Used tow truck financing questions, straight answers.",
-    faqs: buildUsedTowTruckFaqContent().faqs,
-  },
+  faqSection: usedTowTruckFaqContent.section,
   footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
   closingCta: {
     iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-light.svg",
@@ -196,7 +191,7 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
   },
 
   /* ── Structured data (invisible JsonLd) ────────────────── */
-  faqSchema: buildUsedTowTruckFaqContent().schema,
+  faqSchema: usedTowTruckFaqContent.schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -237,8 +232,6 @@ function buildUsedTowTruckFaqContent() {
       id: "age-mileage-limit",
       question:
         "Is there an age or mileage limit on used tow trucks you finance?",
-      answerText:
-        "No age or mileage cutoffs. If the truck is operational and the deal structure makes sense, model year and odometer are not disqualifiers.",
       answerContent: [
         {
           type: "text",
@@ -251,8 +244,6 @@ function buildUsedTowTruckFaqContent() {
       id: "marketplace-auction",
       question:
         "Can I finance a used tow truck from Facebook Marketplace or at auction?",
-      answerText:
-        "Yes. As long as the truck and title can be verified, we can work with the transaction.",
       answerContent: [
         {
           type: "text",
@@ -265,8 +256,6 @@ function buildUsedTowTruckFaqContent() {
       id: "used-vs-new-terms",
       question:
         "Are financing terms worse on used tow trucks than new?",
-      answerText:
-        "Not necessarily. Used trucks can qualify for competitive terms, zero down, and deferred payments.",
       answerContent: [
         {
           type: "text",
@@ -278,8 +267,6 @@ function buildUsedTowTruckFaqContent() {
     {
       id: "heavy-wrecker-rotator",
       question: "Will you finance a used heavy wrecker or rotator?",
-      answerText:
-        "Yes. Heavy wreckers and rotators over 33,000 lbs GVW carry a 12% federal excise tax when purchased new. Buy used and that tax is already paid.",
       answerContent: [
         {
           type: "text",
@@ -290,10 +277,9 @@ function buildUsedTowTruckFaqContent() {
     },
   ];
 
-  const faqs = [...customFaqs, ...equipmentFaqCore];
-
-  return {
-    faqs,
-    schema: buildFaqSchema(faqs),
-  };
+  return buildFaqSection(
+    "Used tow truck financing questions, straight answers.",
+    customFaqs,
+    "after"
+  );
 }

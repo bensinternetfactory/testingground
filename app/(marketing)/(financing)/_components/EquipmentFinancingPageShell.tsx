@@ -3,9 +3,6 @@ import { JsonLd } from "@/components/shared/JsonLd";
 
 import { BrandMarquee } from "@/components/sections/page/brand-marquee";
 import { ContentImageSplit } from "@/components/sections/page/content-image-split";
-import { TrustBridge } from "@/components/sections/page/trust-bridge";
-import { ProgramCards } from "@/components/sections/page/program-cards/ProgramCards";
-import { EquipmentDealsSection } from "@/components/sections/page/equipment-deals";
 import { FaqSection } from "@/components/sections/page/faq";
 import { Footer, FOOTER_CONFIG } from "@/components/sections/page/footer";
 import {
@@ -57,7 +54,6 @@ export function EquipmentFinancingPageShell({
         {config.financingOffers ? (
           <FinancingOffersSplit config={config.financingOffers} />
         ) : null}
-        {config.programs ? <ProgramCards config={config.programs} /> : null}
         <BrandMarquee />
         {config.financingOffersSecondary ? (
           <FinancingOffersSplit config={config.financingOffersSecondary} />
@@ -71,14 +67,8 @@ export function EquipmentFinancingPageShell({
         {config.contentImageSplit ? (
           <ContentImageSplit config={config.contentImageSplit} />
         ) : null}
-        {config.trustBridge ? (
-          <TrustBridge config={config.trustBridge} />
-        ) : null}
         {config.purchaseAndTermsSecondary ? (
           <PurchaseAndTermsSection config={config.purchaseAndTermsSecondary} />
-        ) : null}
-        {config.dealsSection ? (
-          <EquipmentDealsSection config={config.dealsSection} />
         ) : null}
         <FaqSection config={config.faqSection} />
         <FinancingFootnotes config={config.footnotes} />

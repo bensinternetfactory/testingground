@@ -13,8 +13,6 @@ const deferredPaymentFaqs: FaqItemData[] = [
   {
     id: "extra-interest",
     question: "Does deferring cost me more in interest overall?",
-    answerText:
-      "Marginally, yes. You're accruing carrying cost during the deferral window, and the remaining payments compress into fewer months. Over a 74-month term, most operators see a modest total interest increase. In exchange you keep several thousand dollars of working capital free during the ramp. Most operators take that trade.",
     answerContent: [
       {
         type: "text",
@@ -26,8 +24,6 @@ const deferredPaymentFaqs: FaqItemData[] = [
   {
     id: "rate-impact",
     question: "Does choosing deferred affect my interest rate?",
-    answerText:
-      "It can, slightly. The lender is taking a bit more risk by deferring real payments for 60, 90, or 120 days, and that can show up as a small rate bump. The difference is marginal and will be spelled out on your approval \u2014 you'll see the deferred and standard numbers side by side before you choose.",
     answerContent: [
       {
         type: "text",
@@ -39,8 +35,6 @@ const deferredPaymentFaqs: FaqItemData[] = [
   {
     id: "touch-payment-credit",
     question: "Are touch payments real payments on my credit file?",
-    answerText:
-      "Yes. $99 hits on-time every month and reports as an on-time payment. Clean payment history before the real payment even starts. That matters when you come back for truck #2.",
     answerContent: [
       {
         type: "text",
@@ -52,8 +46,6 @@ const deferredPaymentFaqs: FaqItemData[] = [
   {
     id: "credit-score",
     question: "What credit score do I need for deferred payments?",
-    answerText:
-      "640 is the baseline, same as our standard tow truck financing. The deferred option is available across our qualification range.",
     answerContent: [
       {
         type: "text",
@@ -65,8 +57,6 @@ const deferredPaymentFaqs: FaqItemData[] = [
   {
     id: "pair-with-zero-down",
     question: "Can I pair deferred payments with zero down?",
-    answerText:
-      "Yes. Zero down plus deferred payments is a common structure for operators adding a truck without gutting reserves during the ramp-up.",
     answerContent: [
       {
         type: "text",
@@ -87,8 +77,6 @@ const deferredPaymentFaqs: FaqItemData[] = [
   {
     id: "approval-speed",
     question: "How fast can I get approved and take delivery?",
-    answerText:
-      "Pre-approval in 30 seconds. Full approval and funding typically closes within 2 hours of submitting the application, depending on time of day.",
     answerContent: [
       {
         type: "text",

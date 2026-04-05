@@ -14,8 +14,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
     id: "borrowing-history",
     question:
       "Do I need to have financed trucks before to qualify for fleet financing?",
-    answerText:
-      "No. One of the things that sets this program apart: we don't require deep borrowing history. If you've been running a tow operation for years and the trucks on the road prove it, that operating history carries real weight. Apply and we'll tell you what you qualify for.",
     answerContent: [
       {
         type: "text",
@@ -28,8 +26,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
     id: "fleet-size",
     question:
       "How many trucks do I need to be running to apply for fleet financing?",
-    answerText:
-      "Fleet financing starts at 3 or more trucks and 2+ years in business. That's the entry point. Whether you're going from 3 trucks to 4, or from 8 to 12, the program is built for operators who've already proven they can run a fleet.",
     answerContent: [
       {
         type: "text",
@@ -41,8 +37,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
   {
     id: "truck-types",
     question: "What kind of trucks can I finance in a fleet deal?",
-    answerText:
-      "Any combination. Rollbacks, wreckers, heavy wreckers, rotators. New, used, any age, any mileage. From a dealer, an auction, or a private seller. Fleet financing doesn't asterisk the truck type or the source.",
     answerContent: [
       {
         type: "text",
@@ -54,8 +48,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
   {
     id: "all-at-once",
     question: "Do I have to finance all my new trucks at once?",
-    answerText:
-      "No. Fleet financing is a relationship, not a single transaction. Add one truck now, another in three months, another next year. Once you're in as a fleet customer, subsequent approvals move faster because we already know the operation.",
     answerContent: [
       {
         type: "text",
@@ -67,8 +59,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
   {
     id: "approval-speed",
     question: "What does the approval process look like?",
-    answerText:
-      "Pre-approval takes less than 30 seconds and does not impact your credit. Full approval and funding typically happens within hours of a complete application, depending on time of day.",
     answerContent: [
       {
         type: "text",
@@ -80,8 +70,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
   {
     id: "credit-profile",
     question: "Can I get fleet financing if my credit isn't perfect?",
-    answerText:
-      "Yes. Credit is one input, not the only one. We weigh operating history, the fleet you're already running, and the economics of the business. If there's a path to approval, we'll find it. Apply and we'll tell you where you stand.",
     answerContent: [
       {
         type: "text",
@@ -93,8 +81,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
   {
     id: "older-trucks",
     question: "What if I want to finance an older or higher-mileage truck in the deal?",
-    answerText:
-      "No cap. No odometer ceiling. If the truck makes business sense and it's going into a working fleet, we'll finance it. The operation is what we're underwriting.",
     answerContent: [
       {
         type: "text",
@@ -115,8 +101,6 @@ const fleetFinancingFaqs: FaqItemData[] = [
   {
     id: "vs-single-truck",
     question: "Is fleet financing different from single-truck financing?",
-    answerText:
-      "Structurally, yes. Fleet financing factors in the business you're already running — the trucks, the drivers, the calls, the years of operation. That typically means access to more capital and more flexible terms than a single-truck approval. The more established the operation, the more room we have to work with.",
     answerContent: [
       {
         type: "text",

@@ -13,8 +13,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "seller-has-loan",
     question: "What if the seller still has a loan on the truck?",
-    answerText:
-      "We handle it. The seller gets a 10\u201315 day payoff letter from their lender. We wire the payoff amount to their bank, send the remaining equity to the seller, and the title releases clean. It adds a few days to the timeline and doesn't change the outcome.",
     answerContent: [
       {
         type: "text",
@@ -26,8 +24,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "valuation",
     question: "How do you determine what the truck is worth?",
-    answerText:
-      "We run comps on similar trucks \u2014 recent sales and current listings for the same year, make, model, and configuration. If the agreed price is in range, the deal moves. If it's well over market, we'll tell you and you can renegotiate before committing.",
     answerContent: [
       {
         type: "text",
@@ -39,8 +35,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "seller-effort",
     question: "How much does the seller actually have to do?",
-    answerText:
-      "Not much. Electronic docs to sign, roughly 15 minutes of their time. They ship the title to us once funds hit their account. If there's a lien on the truck, they also pull a payoff letter from their bank. That's the full list.",
     answerContent: [
       {
         type: "text",
@@ -52,8 +46,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "close-speed",
     question: "How fast can you close a private-party deal?",
-    answerText:
-      "Same-day is possible when your docs are signed, insurance is in place, and the seller is ready to go through the process with us. Most deals close in a few days. Deals with a lien payoff take a little longer because of the 10\u201315 day payoff window.",
     answerContent: [
       {
         type: "text",
@@ -65,8 +57,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "older-trucks",
     question: "Do you finance older trucks or high-mileage equipment?",
-    answerText:
-      "Yes. No age cap. No mileage cap. If the truck still runs, makes business sense, and fits the $20,000 minimum, we finance it. Private-party is often the only way to get specific older equipment that's earned its reputation.",
     answerContent: [
       {
         type: "text",
@@ -78,8 +68,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "auctions",
     question: "Can you finance trucks from auctions?",
-    answerText:
-      "Yes. Auction purchases are private-party deals \u2014 same process. You provide the auction paperwork alongside the financing docs, we verify the title, fund the seller, and the truck is yours.",
     answerContent: [
       {
         type: "text",
@@ -91,8 +79,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "heavy-wreckers",
     question: "Can I finance a heavy wrecker or rotator from a private seller?",
-    answerText:
-      "Yes \u2014 and private-party is actually the right fit for a lot of heavy equipment. The best heavy wreckers and rotators often come from operators exiting the business or fleets consolidating. Our $20,000 minimum means the program is built for higher-ticket equipment like this.",
     answerContent: [
       {
         type: "text",
@@ -122,7 +108,6 @@ const privatePartyFaqs: FaqItemData[] = [
   {
     id: "states",
     question: "What states do you cover?",
-    answerText: "All 50 states.",
     answerContent: [
       {
         type: "text",

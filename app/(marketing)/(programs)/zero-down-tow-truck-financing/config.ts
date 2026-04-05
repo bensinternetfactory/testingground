@@ -13,8 +13,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "higher-rates",
     question: "Does zero down mean higher interest rates?",
-    answerText:
-      "No. Your rate is based on your credit profile and business history, not your down payment amount. $0 down doesn't mean you pay a premium \u2014 the rate is the same whether you put money down or not.",
     answerContent: [
       {
         type: "text",
@@ -26,8 +24,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "put-money-down",
     question: "Can I still put money down if I want to?",
-    answerText:
-      "Yes. Some operators prefer a lower monthly payment and choose to put 10-20% down. The option is yours. We don't require it.",
     answerContent: [
       {
         type: "text",
@@ -39,8 +35,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "credit-score",
     question: "What credit score do I actually need?",
-    answerText:
-      "640 is the baseline for both qualification paths. If you're close but not quite there, apply anyway \u2014 we look at the full picture, not just the number.",
     answerContent: [
       {
         type: "text",
@@ -52,8 +46,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "approval-speed",
     question: "How fast is the approval process?",
-    answerText:
-      "Pre-approval takes less than 30 seconds and does not impact your credit score. Full approval and funding typically takes 2 hours after you submit your application depending on the time of day.",
     answerContent: [
       {
         type: "text",
@@ -65,8 +57,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "private-sellers",
     question: "Do you finance trucks from private sellers?",
-    answerText:
-      "Yes. Dealer, private party, auction \u2014 the source doesn't matter. Same terms, same zero-down availability regardless of where the truck comes from.",
     answerContent: [
       {
         type: "text",
@@ -87,8 +77,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "comparable-debt",
     question: "What's \u201Ccomparable debt\u201D exactly?",
-    answerText:
-      "It means you've made at least 12 on-time payments on an auto loan or installment loan worth at least half of what you're looking to borrow. If you're borrowing $80,000, we want to see 12 payments on a $40,000+ loan. It's proof you can manage the payment.",
     answerContent: [
       {
         type: "text",
@@ -100,8 +88,6 @@ const zeroDownFaqs: FaqItemData[] = [
   {
     id: "max-loan-amount",
     question: "Is there a maximum loan amount with zero down?",
-    answerText:
-      "We finance tow trucks from $25,000 to $3,000,000+. Zero down is available across the full range for qualified operators.",
     answerContent: [
       {
         type: "text",

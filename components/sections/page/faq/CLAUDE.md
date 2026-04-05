@@ -39,8 +39,7 @@ const faqSchema = buildFaqSchema(HOMEPAGE_FAQ_SECTION_CONFIG.faqs);
 |---|---|---|
 | `id` | `string` | Stable key |
 | `question` | `string` | Visible question |
-| `answerText` | `string` | Plain-text answer for JSON-LD |
-| `answerContent` | `FaqContentPart[]` | Rendered answer content |
+| `answerContent` | `FaqContentPart[]` | Canonical answer content for UI and JSON-LD |
 
 ### `FaqContentPart`
 
@@ -65,5 +64,7 @@ const faqSchema = buildFaqSchema(HOMEPAGE_FAQ_SECTION_CONFIG.faqs);
 
 - Use `buildFaqSchema()` for FAQPage JSON-LD instead of hand-building schema in
   route files.
+- Each page still owns its own FAQ list in its config; the shared helper only
+  renders the accordion and derives schema from that authored content.
 - Internal links in answers render with `next/link`; other hrefs fall back to
   `<a>`.

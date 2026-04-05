@@ -46,6 +46,8 @@ const WRECKER_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig = {
 
 /* ── Page Config ─────────────────────────────────────────────────── */
 
+const wreckerFaqContent = buildWreckerFaqContent();
+
 export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "wrecker-financing",
@@ -154,7 +156,7 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   } satisfies TertiaryStripConfig,
-  faqSection: buildWreckerFaqContent().section,
+  faqSection: wreckerFaqContent.section,
   footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
   closingCta: {
     iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-light.svg",
@@ -183,7 +185,7 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
   },
 
   /* ── Structured data (invisible JsonLd) ────────────────── */
-  faqSchema: buildWreckerFaqContent().schema,
+  faqSchema: wreckerFaqContent.schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -223,8 +225,6 @@ function buildWreckerFaqContent() {
     {
       id: "heavy-wreckers",
       question: "Do you finance heavy wreckers?",
-      answerText:
-        "Yes. Heavy wrecker financing covers integrated heavy-recovery units when the truck, deal structure, and business profile fit the program.",
       answerContent: [
         {
           type: "text",
@@ -236,8 +236,6 @@ function buildWreckerFaqContent() {
     {
       id: "used-wreckers",
       question: "Do you finance used wrecker trucks?",
-      answerText:
-        "Yes. Used wrecker financing is common, including service trucks bought from dealers, auctions, and private sellers.",
       answerContent: [
         {
           type: "text",
@@ -249,8 +247,6 @@ function buildWreckerFaqContent() {
     {
       id: "private-party-wrecker",
       question: "Can I finance a wrecker from a private seller?",
-      answerText:
-        "Yes. TowLoans finances private-party wrecker deals when the truck details and transaction structure fit.",
       answerContent: [
         {
           type: "text",

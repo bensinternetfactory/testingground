@@ -42,6 +42,8 @@ const ROTATOR_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig = {
 
 /* ── Page Config ─────────────────────────────────────────────────── */
 
+const rotatorFaqContent = buildRotatorFaqContent();
+
 export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "rotator-financing",
@@ -127,7 +129,7 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   } satisfies TertiaryStripConfig,
-  faqSection: buildRotatorFaqContent().section,
+  faqSection: rotatorFaqContent.section,
   footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
   closingCta: {
     iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-light.svg",
@@ -156,7 +158,7 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
   },
 
   /* ── Structured data (invisible JsonLd) ────────────────── */
-  faqSchema: buildRotatorFaqContent().schema,
+  faqSchema: rotatorFaqContent.schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -196,8 +198,6 @@ function buildRotatorFaqContent() {
     {
       id: "used-rotators",
       question: "Do you finance used rotators?",
-      answerText:
-        "Yes. Used rotators hold their value well and are common financing candidates when the truck, seller, and business profile fit.",
       answerContent: [
         {
           type: "text",
@@ -209,8 +209,6 @@ function buildRotatorFaqContent() {
     {
       id: "operator-to-operator",
       question: "Can I buy a rotator from another operator?",
-      answerText:
-        "Yes. TowLoans finances operator-to-operator rotator deals when the truck details and transaction structure fit.",
       answerContent: [
         {
           type: "text",
@@ -222,8 +220,6 @@ function buildRotatorFaqContent() {
     {
       id: "replacement-or-expansion",
       question: "Is rotator financing available for replacement or fleet expansion?",
-      answerText:
-        "Yes. Rotator financing can work for both replacement purchases and heavy-recovery fleet expansion.",
       answerContent: [
         {
           type: "text",

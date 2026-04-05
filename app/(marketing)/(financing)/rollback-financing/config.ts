@@ -18,6 +18,8 @@ import type {
 
 /* ── Page Config ─────────────────────────────────────────────────── */
 
+const rollbackFaqContent = buildRollbackFaqContent();
+
 export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "rollback-financing",
@@ -126,7 +128,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       },
     ],
   },
-  faqSection: buildRollbackFaqContent().section,
+  faqSection: rollbackFaqContent.section,
   footnotes: SHARED_FINANCING_FOOTNOTES_CONFIG,
   closingCta: {
     iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-light.svg",
@@ -155,7 +157,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
   },
 
   /* ── Structured data (invisible JsonLd) ────────────────── */
-  faqSchema: buildRollbackFaqContent().schema,
+  faqSchema: rollbackFaqContent.schema,
   financialProductSchema: {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",
@@ -197,8 +199,6 @@ function buildRollbackFaqContent() {
       {
         id: "private-party-auction",
         question: "Can I finance a rollback from a private seller or auction?",
-        answerText:
-          "Yes. TowLoans finances private-party and auction rollback deals when the truck details and transaction structure fit.",
         answerContent: [
           {
             type: "text",
@@ -210,8 +210,6 @@ function buildRollbackFaqContent() {
       {
         id: "rollback-vs-flatbed",
         question: "What is the difference between a rollback and a flatbed?",
-        answerText:
-          "Rollback and flatbed are interchangeable terms for a tow truck with a tilting carrier bed.",
         answerContent: [
           {
             type: "text",

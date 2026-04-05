@@ -3,7 +3,6 @@ import type { HeroConvertFramedOutlineConfig } from "@/components/sections/heroe
 import type { HeroConvertFramedPrimaryOnlyConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedPrimaryOnly";
 import type { HeroConvertFramedTileRightConfig } from "@/components/sections/heroes/hero-convert-framed/HeroConvertFramedTileRight";
 import type { HeroLeadGenConfig } from "@/components/sections/heroes/hero-lead-gen/config";
-import type { EquipmentDealsSectionConfig } from "@/components/sections/page/equipment-deals";
 import type { EquipmentClosingCtaConfig } from "@/components/sections/page/equipment-closing-cta/config";
 import {
   buildFaqSchema,
@@ -11,12 +10,10 @@ import {
 } from "@/components/sections/page/faq/config";
 import type { FinancingFootnotesConfig } from "@/components/sections/page/financing-footnotes/config";
 import type { FinancingOffersSplitConfig } from "@/components/sections/page/financing-offers-split/config";
-import type { ProgramCardsConfig } from "@/components/sections/page/program-cards/config";
 import type { PurchaseAndTermsConfig } from "@/components/sections/page/purchase-and-terms/config";
 import type { RelatedLinksStripConfig } from "@/components/sections/page/related-links-strip/config";
 import type { TertiaryStripConfig } from "@/components/sections/page/tertiary-strip/config";
 import type { ContentImageSplitConfig } from "@/components/sections/page/content-image-split/config";
-import type { TrustBridgeConfig } from "@/components/sections/page/trust-bridge/config";
 
 export interface FramedEquipmentHeroConfig {
   kind: "framed";
@@ -59,14 +56,11 @@ export interface EquipmentFinancingPageConfig {
   hero: EquipmentHeroConfig;
   tertiaryStrip?: TertiaryStripConfig;
   financingOffers?: FinancingOffersSplitConfig;
-  programs?: ProgramCardsConfig;
   financingOffersSecondary?: FinancingOffersSplitConfig;
   purchaseAndTerms?: PurchaseAndTermsConfig;
   purchaseTermsTertiaryStrip?: TertiaryStripConfig;
   contentImageSplit?: ContentImageSplitConfig;
-  trustBridge?: TrustBridgeConfig;
   purchaseAndTermsSecondary?: PurchaseAndTermsConfig;
-  dealsSection?: EquipmentDealsSectionConfig;
   faqSection: FaqSectionConfig;
   footnotes: FinancingFootnotesConfig;
   closingCta: EquipmentClosingCtaConfig;
