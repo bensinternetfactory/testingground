@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "review:financing:next": "node scripts/financing-review-harness.mjs next",
-    "review:financing:prompt": "node scripts/financing-review-harness.mjs prompt",
-    "review:financing:validate": "node scripts/financing-review-harness.mjs validate",
+    "remediation:next": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs next",
+    "remediation:prompt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs prompt",
+    "remediation:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs validate",
+    "review:financing:next": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs next --program finance-pages",
+    "review:financing:prompt": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs prompt --program finance-pages",
+    "review:financing:validate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/remediation/cli.mjs validate --program finance-pages",
     "review:financing:guard": "node scripts/financing-review-harness.mjs guard"
   },
   "dependencies": {

@@ -1,12 +1,12 @@
-import { isCompositeUnit, resolveNextUnit } from "./dependencies";
-import { resolveUnitPolicies } from "./policies";
+import { isCompositeUnit, resolveNextUnit } from "./dependencies.ts";
+import { resolveUnitPolicies } from "./policies.ts";
 import type {
   BrowserCheck,
   RemediationProgramDefinition,
   RemediationPromptPayload,
   RemediationTrackerEntry,
   RemediationUnit,
-} from "../types";
+} from "../types.ts";
 
 export const PROMPT_TEMPLATE_VERSION = "remediation-prompt.v1";
 

@@ -149,6 +149,11 @@ export interface RemediationTrackerEntry {
   notes?: string;
 }
 
+export interface RemediationTrackerFile {
+  programId: string;
+  entries: RemediationTrackerEntry[];
+}
+
 export interface RegistryValidationIssue {
   code: string;
   message: string;

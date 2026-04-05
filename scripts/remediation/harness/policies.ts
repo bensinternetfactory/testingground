@@ -3,7 +3,7 @@ import type {
   RemediationProgramConfig,
   RemediationUnit,
   VisualPolicy,
-} from "../types";
+} from "../types.ts";
 
 function cloneVisualPolicy(policy: VisualPolicy): VisualPolicy {
   return {

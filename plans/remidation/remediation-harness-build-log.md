@@ -5,7 +5,7 @@
 - [x] Module 1: registry foundation
 - [x] Module 2: dependency + policy core
 - [x] Module 3: prompt payload generation
-- [ ] Module 4: CLI wiring for `validate`, `next`, and `prompt`
+- [x] Module 4: CLI wiring for `validate`, `next`, and `prompt`
 - [ ] Module 5: locks, artifacts, and preflight
 - [ ] Module 6: validators
 - [ ] Module 7: orchestrator + fake runner
@@ -88,3 +88,32 @@
   - `npm run build`
 - Next module boundary:
   - add CLI wiring for `validate`, `next`, and `prompt` on top of the pure registry, dependency, policy, and prompt helpers without adding locks or persistence flows yet
+
+## Module 4
+
+- Date: `2026-04-05`
+- Scope:
+  - added reusable tracker-file parsing and bootstrap loading in `scripts/remediation/harness/tracker.ts`
+  - added program registration/loading in `scripts/remediation/programs/index.ts`
+  - added reusable CLI wiring for `validate`, `next`, and `prompt` in `scripts/remediation/cli-core.ts` with a thin node entrypoint in `scripts/remediation/cli.mjs`
+  - rewired the finance package scripts to call the reusable remediation CLI instead of the finance-only harness for `validate`, `next`, and `prompt`
+  - added focused CLI coverage in `scripts/__tests__/remediation/cli.test.ts`
+- Decisions:
+  - the tracker file schema is an explicit JSON object with `programId` and `entries`
+  - missing tracker files are treated as an empty bootstrap state with a warning instead of a hard failure
+  - the CLI supports both human-readable output and `--json` output without adding runner, lock, or artifact behavior yet
+  - `prompt` may target either the next eligible unit or an explicit `--unit` for inspection/debugging
+- Outputs:
+  - `scripts/remediation/types.ts`
+  - `scripts/remediation/harness/tracker.ts`
+  - `scripts/remediation/programs/index.ts`
+  - `scripts/remediation/cli-core.ts`
+  - `scripts/remediation/cli.mjs`
+  - `scripts/__tests__/remediation/cli.test.ts`
+  - `package.json`
+- Verification:
+  - `npm test -- scripts/__tests__/remediation`
+  - `npm run lint -- scripts/remediation scripts/__tests__/remediation`
+  - `npm run build`
+- Next module boundary:
+  - add locks, stale-lock handling, artifact persistence, and preflight flows without introducing runner execution yet

@@ -3,7 +3,7 @@ import type {
   RemediationProgramDefinition,
   RemediationUnit,
   RunnerPolicy,
-} from "../types";
+} from "../types.ts";
 
 const PROGRAM_ID = "finance-pages";
 const ARTIFACT_ROOT = "plans/remidation/artifacts/finance-pages";

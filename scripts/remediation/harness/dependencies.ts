@@ -4,7 +4,7 @@ import type {
   RemediationTrackerState,
   RemediationUnit,
   RemediationWave,
-} from "../types";
+} from "../types.ts";
 
 export interface TrackerValidationIssue {
   code: string;
