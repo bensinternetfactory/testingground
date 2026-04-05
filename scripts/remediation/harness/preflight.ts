@@ -14,6 +14,9 @@ import { DEFAULT_STALE_LOCK_MS, inspectProgramLock } from "./lockfile.ts";
 import { resolveUnitPolicies } from "./policies.ts";
 import { validateProgramDefinition } from "./registry.ts";
 import { readTrackerState } from "./tracker.ts";
+import { createBaselineBuildSnapshot, runBuildValidator } from "../validators/build.ts";
+import type { CommandExecutor } from "../validators/command.ts";
+import { createBaselineLintSnapshot, runLintValidator } from "../validators/lint.ts";
 
 export const MIN_SUPPORTED_NODE_MAJOR = 20;
 
@@ -29,6 +32,8 @@ export interface PreflightEnvironment {
   getGitSha?: (cwd: string) => string | undefined;
   getGitStatus?: (cwd: string) => GitStatusSnapshot;
   resolveBinary?: (binary: string, cwd: string) => string | undefined;
+  lintExecutor?: CommandExecutor;
+  buildExecutor?: CommandExecutor;
 }
 
 function createCheck(
@@ -121,6 +126,8 @@ export function buildBaselineSnapshot(
     gitStatus: GitStatusSnapshot;
     currentWave?: RemediationWave;
     nextUnitId?: string;
+    lint: BaselineSnapshot["lint"];
+    build: BaselineSnapshot["build"];
   },
 ): BaselineSnapshot {
   return {
@@ -133,14 +140,8 @@ export function buildBaselineSnapshot(
     statusPath: definition.program.statusPath,
     nodeVersion: process.version,
     workingTree: data.gitStatus,
-    lint: {
-      status: "pending",
-      notes: "Baseline lint capture will be added with the validator module.",
-    },
-    build: {
-      status: "pending",
-      notes: "Baseline build capture will be added with the validator module.",
-    },
+    lint: data.lint,
+    build: data.build,
     visual: collectVisualBaselinePlan(definition),
   };
 }
@@ -241,8 +242,9 @@ export function runPreflight(
   );
 
   const nodeModulesPath = path.resolve(cwd, "node_modules");
+  const dependenciesInstalled = fs.existsSync(nodeModulesPath);
   checks.push(
-    fs.existsSync(nodeModulesPath)
+    dependenciesInstalled
       ? createCheck("dependencies", "pass", "Installed dependencies were detected in node_modules.")
       : createCheck("dependencies", "fail", "Dependencies are not installed; node_modules is missing."),
   );
@@ -270,6 +272,46 @@ export function runPreflight(
       ? resolveNextUnit(definition, trackerState.tracker.entries)
       : undefined;
   const nextUnit = resolution?.nextUnit;
+  let baselineLint: BaselineSnapshot["lint"] = {
+    status: "pending",
+    notes: "Baseline lint capture is pending.",
+  };
+  let baselineBuild: BaselineSnapshot["build"] = {
+    status: "pending",
+    notes: "Baseline build capture is pending.",
+  };
+
+  if (dependenciesInstalled && registryValidation.issues.length === 0 && trackerValidation.issues.length === 0) {
+    const lintResult = runLintValidator(cwd, {
+      executor: environment.lintExecutor,
+    });
+    baselineLint = createBaselineLintSnapshot(lintResult);
+    checks.push(
+      lintResult.ok
+        ? createCheck("lint-baseline", "pass", lintResult.summary)
+        : createCheck(
+            "lint-baseline",
+            "fail",
+            lintResult.summary,
+            lintResult.issues.flatMap((issue) => issue.details ?? issue.message),
+          ),
+    );
+
+    const buildResult = runBuildValidator(cwd, {
+      executor: environment.buildExecutor,
+    });
+    baselineBuild = createBaselineBuildSnapshot(buildResult);
+    checks.push(
+      buildResult.ok
+        ? createCheck("build-baseline", "pass", buildResult.summary)
+        : createCheck(
+            "build-baseline",
+            "fail",
+            buildResult.summary,
+            buildResult.issues.flatMap((issue) => issue.details ?? issue.message),
+          ),
+    );
+  }
 
   if (nextUnit) {
     const runnerAdapter = resolveUnitPolicies(definition.program, nextUnit).runnerPolicy.adapter;
@@ -294,8 +336,8 @@ export function runPreflight(
           ? createCheck("browser-tooling", "pass", `Browser tooling is available at ${browserBinary}.`)
           : createCheck(
               "browser-tooling",
-              "warn",
-              "Browser tooling was not found. This remains warning-only until the validator module lands.",
+              "fail",
+              "Browser tooling was not found for a unit that requires browser validation.",
             ),
       );
       checks.push(
@@ -319,6 +361,8 @@ export function runPreflight(
       gitStatus,
       currentWave: resolution?.currentWave,
       nextUnitId: resolution?.nextUnit?.id,
+      lint: baselineLint,
+      build: baselineBuild,
     });
     baselineSnapshotPath = writeBaselineSnapshot(definition, cwd, snapshot);
     checks.push(

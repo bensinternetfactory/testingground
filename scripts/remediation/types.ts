@@ -49,6 +49,15 @@ export const VISUAL_POLICY_MODES = [
 
 export const VIEWPORT_TARGETS = ["desktop", "mobile", "both"] as const;
 export const PREFLIGHT_CHECK_STATUSES = ["pass", "warn", "fail"] as const;
+export const VALIDATOR_NAMES = [
+  "lint",
+  "build",
+  "test",
+  "browser",
+  "visual",
+  "baseline",
+] as const;
+export const VALIDATOR_STATUSES = ["passed", "failed", "not-required"] as const;
 
 export type RemediationUnitType = (typeof REMEDIATION_UNIT_TYPES)[number];
 export type RemediationWave = (typeof REMEDIATION_WAVES)[number];
@@ -61,6 +70,8 @@ export type VisualChangeScope = (typeof VISUAL_CHANGE_SCOPES)[number];
 export type VisualPolicyMode = (typeof VISUAL_POLICY_MODES)[number];
 export type ViewportTarget = (typeof VIEWPORT_TARGETS)[number];
 export type PreflightCheckStatus = (typeof PREFLIGHT_CHECK_STATUSES)[number];
+export type ValidatorName = (typeof VALIDATOR_NAMES)[number];
+export type ValidatorStatus = (typeof VALIDATOR_STATUSES)[number];
 
 export interface RunnerPolicy {
   mode: RunnerMode;
@@ -180,6 +191,87 @@ export interface RemediationLockFile {
   pid: number;
   runner: RunnerAdapterName;
   timestamp: string;
+}
+
+export interface ValidationIssue {
+  code: string;
+  message: string;
+  details?: string[];
+}
+
+export interface ValidatorResultBase {
+  validator: ValidatorName;
+  status: ValidatorStatus;
+  ok: boolean;
+  summary: string;
+  issues: ValidationIssue[];
+}
+
+export interface LintValidatorResult extends ValidatorResultBase {
+  validator: "lint";
+  command: string[];
+  warningCount: number;
+  errorCount: number;
+}
+
+export interface BuildValidatorResult extends ValidatorResultBase {
+  validator: "build";
+  command: string[];
+}
+
+export interface TestValidatorResult extends ValidatorResultBase {
+  validator: "test";
+  required: boolean;
+  command?: string[];
+}
+
+export interface BrowserCheckObservation {
+  route: string;
+  viewport: Exclude<ViewportTarget, "both">;
+  assertionsPassed: string[];
+  status: "passed" | "failed";
+  notes?: string[];
+}
+
+export interface BrowserValidatorResult extends ValidatorResultBase {
+  validator: "browser";
+  required: boolean;
+  expectedCheckCount: number;
+  observedCheckCount: number;
+  missingChecks: string[];
+  failedChecks: string[];
+}
+
+export interface VisualCheckObservation {
+  route: string;
+  viewport: Exclude<ViewportTarget, "both">;
+  comparison: "matched" | "approved-change" | "unexpected-change" | "error";
+  changed: boolean;
+  artifactPath?: string;
+  notes?: string[];
+}
+
+export interface VisualValidatorResult extends ValidatorResultBase {
+  validator: "visual";
+  required: boolean;
+  expectedCaptureCount: number;
+  observedCaptureCount: number;
+  visualSurfaceChanged: boolean;
+  artifactPaths: string[];
+  missingCaptures: string[];
+}
+
+export interface BaselineComparisonCheck {
+  metric: "lint" | "build";
+  ok: boolean;
+  message: string;
+  baselineValue?: string;
+  currentValue?: string;
+}
+
+export interface BaselineComparatorResult extends ValidatorResultBase {
+  validator: "baseline";
+  checks: BaselineComparisonCheck[];
 }
 
 export interface RemediationRuntimeResult {

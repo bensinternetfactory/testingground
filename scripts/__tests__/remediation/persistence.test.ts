@@ -266,6 +266,23 @@ describe("remediation persistence", () => {
         status: "clean",
         changedFiles: [],
       }),
+      lintExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: JSON.stringify([
+          {
+            warningCount: 2,
+            errorCount: 0,
+          },
+        ]),
+        stderr: "",
+      }),
+      buildExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: "build ok",
+        stderr: "",
+      }),
     });
 
     expect(result.ok).toBe(true);
@@ -288,10 +305,11 @@ describe("remediation persistence", () => {
       currentWave: 1,
       nextUnitId: "UNIT-001",
       lint: {
-        status: "pending",
+        status: "warning-count-recorded",
+        warningCount: 2,
       },
       build: {
-        status: "pending",
+        status: "passed",
       },
       visual: {
         status: "not-required",

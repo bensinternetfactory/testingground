@@ -7,7 +7,7 @@
 - [x] Module 3: prompt payload generation
 - [x] Module 4: CLI wiring for `validate`, `next`, and `prompt`
 - [x] Module 5: locks, artifacts, and preflight
-- [ ] Module 6: validators
+- [x] Module 6: validators
 - [ ] Module 7: orchestrator + fake runner
 - [ ] Module 8: real runner adapters
 
@@ -146,3 +146,37 @@
   - `npm run build`
 - Next module boundary:
   - implement normalized validators for lint, build, test, browser, visual regression, and baseline comparison without introducing real runner execution yet
+
+## Module 6
+
+- Date: `2026-04-05`
+- Scope:
+  - added reusable validator result contracts in `scripts/remediation/types.ts`
+  - added independent validator modules for lint, build, test, browser, visual regression, and baseline comparison in `scripts/remediation/validators/`
+  - upgraded preflight baseline capture to record real lint/build outcomes instead of placeholder `pending` markers
+  - tightened preflight browser-tooling checks so missing `agent-browser` now fails closed for units that require browser validation
+  - added focused validator coverage in `scripts/__tests__/remediation/validators.test.ts` and updated persistence/preflight coverage
+- Decisions:
+  - lint baseline enforcement compares warning counts, not just pass/fail state
+  - build baseline enforcement only accepts a passing baseline snapshot; unusable baseline state fails closed
+  - browser and visual validators are normalized result checkers now, with orchestration/execution wiring deferred to the later runner/orchestrator modules
+  - visual regression validation treats missing captures and unexpected changes as hard failures when policy says to fail on unexpected change
+- Outputs:
+  - `scripts/remediation/types.ts`
+  - `scripts/remediation/harness/preflight.ts`
+  - `scripts/remediation/validators/command.ts`
+  - `scripts/remediation/validators/shared.ts`
+  - `scripts/remediation/validators/lint.ts`
+  - `scripts/remediation/validators/build.ts`
+  - `scripts/remediation/validators/test.ts`
+  - `scripts/remediation/validators/browser.ts`
+  - `scripts/remediation/validators/visual.ts`
+  - `scripts/remediation/validators/baseline.ts`
+  - `scripts/__tests__/remediation/persistence.test.ts`
+  - `scripts/__tests__/remediation/validators.test.ts`
+- Verification:
+  - `npm test -- scripts/__tests__/remediation`
+  - `npm run lint -- scripts/remediation scripts/__tests__/remediation`
+  - `npm run build`
+- Next module boundary:
+  - implement the one-unit orchestrator and fake runner so a single remediation unit can acquire a lock, run validators in order, write artifacts, and stop for approval
