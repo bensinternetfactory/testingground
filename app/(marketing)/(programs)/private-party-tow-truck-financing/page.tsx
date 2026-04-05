@@ -1,11 +1,8 @@
-import type { Metadata } from "next";
-import { MinimalNavPage } from "@/app/(marketing)/_components/MinimalNavPage";
+import { ProgramPageShell } from "../_components/ProgramPageShell";
+import { privatePartyPageConfig } from "./config";
 
-export const metadata: Metadata = {
-  title: "Private Party Tow Truck Financing | TowLoans",
-  description: "Private party tow truck financing information from TowLoans.",
-};
+export const metadata = privatePartyPageConfig.metadata;
 
 export default function PrivatePartyTowTruckFinancingPage() {
-  return <MinimalNavPage title="Private Party Tow Truck Financing" />;
+  return <ProgramPageShell config={privatePartyPageConfig} />;
 }
