@@ -19,6 +19,14 @@ export const COMMIT_MODES = [
   "auto-commit-allowed",
 ] as const;
 
+export const REMEDIATION_TRACKER_STATES = [
+  "not-started",
+  "in-progress",
+  "fixed",
+  "blocked",
+  "deferred",
+] as const;
+
 export const SOURCE_KINDS = [
   "ledger",
   "review-doc",
@@ -34,6 +42,11 @@ export const VISUAL_CHANGE_SCOPES = [
   "declared-scope",
 ] as const;
 
+export const VISUAL_POLICY_MODES = [
+  "preserve-appearance",
+  "strict-minimum-only",
+] as const;
+
 export const VIEWPORT_TARGETS = ["desktop", "mobile", "both"] as const;
 
 export type RemediationUnitType = (typeof REMEDIATION_UNIT_TYPES)[number];
@@ -41,8 +54,10 @@ export type RemediationWave = (typeof REMEDIATION_WAVES)[number];
 export type RunnerAdapterName = (typeof RUNNER_ADAPTERS)[number];
 export type RunnerMode = (typeof RUNNER_MODES)[number];
 export type CommitMode = (typeof COMMIT_MODES)[number];
+export type RemediationTrackerState = (typeof REMEDIATION_TRACKER_STATES)[number];
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 export type VisualChangeScope = (typeof VISUAL_CHANGE_SCOPES)[number];
+export type VisualPolicyMode = (typeof VISUAL_POLICY_MODES)[number];
 export type ViewportTarget = (typeof VIEWPORT_TARGETS)[number];
 
 export interface RunnerPolicy {
@@ -123,6 +138,17 @@ export interface RemediationProgramDefinition {
   units: RemediationUnit[];
 }
 
+export interface RemediationTrackerEntry {
+  unitId: string;
+  state: RemediationTrackerState;
+  attemptCount: number;
+  commitSha?: string;
+  lastRunId?: string;
+  blockedReason?: string;
+  unblockAction?: string;
+  notes?: string;
+}
+
 export interface RegistryValidationIssue {
   code: string;
   message: string;
@@ -174,6 +200,71 @@ export interface RemediationRuntimeResult {
   visualSurfaceChanged: boolean;
   finalState: "passed" | "failed" | "blocked" | "invalid" | "crashed";
   nextUnit?: string;
+}
+
+export interface VisualPolicy {
+  mode: VisualPolicyMode;
+  declaredScope: VisualChangeScope;
+  failOnUnexpectedChange: boolean;
+  allowOpportunisticStyling: false;
+  reviewRequiresVisualSurfaceChanged: true;
+  promptDirectives: string[];
+}
+
+export interface ResolvedRemediationPolicies {
+  runnerPolicy: RunnerPolicy;
+  commitPolicy: CommitPolicy;
+  attemptBudget: number;
+  visualPolicy: VisualPolicy;
+}
+
+export interface PromptUnitDescriptor {
+  id: string;
+  title: string;
+  type: RemediationUnitType;
+  wave: RemediationWave;
+  branch: string;
+  ownerSurface: string;
+  tags: string[];
+  sourceRef: RemediationSourceRef;
+  findingIds: string[];
+  evidencePaths: string[];
+  isComposite: boolean;
+}
+
+export interface PromptConstraints {
+  allowedFiles: string[];
+  dependsOn: string[];
+  requiredSkills: string[];
+  claudeMdHints: string[];
+  requiredControlFiles: string[];
+  rollbackHints: string[];
+  fixReportPath: string;
+}
+
+export interface PromptValidationPlan {
+  requiresLint: true;
+  requiresBuild: true;
+  requiresTests: boolean;
+  requiresBrowserValidation: boolean;
+  requiresVisualRegression: boolean;
+  browserChecks: BrowserCheck[];
+  baselineRoutes: string[];
+  baselineViewports: Array<Exclude<ViewportTarget, "both">>;
+  enforceLintBaseline: boolean;
+  enforceBuildBaseline: boolean;
+}
+
+export interface RemediationPromptPayload {
+  templateVersion: string;
+  programId: string;
+  programDisplayName: string;
+  unit: PromptUnitDescriptor;
+  currentWave: RemediationWave;
+  execution: ResolvedRemediationPolicies;
+  constraints: PromptConstraints;
+  validation: PromptValidationPlan;
+  renderedPrompt: string;
 }
 
 export interface FixReportArtifact {
