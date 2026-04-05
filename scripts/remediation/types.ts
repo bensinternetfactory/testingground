@@ -114,6 +114,7 @@ export interface BaselineConfig {
 export interface RemediationProgramConfig {
   programId: string;
   displayName: string;
+  baseBranch: string;
   registryPath: string;
   trackerPath: string;
   statusPath: string;
@@ -525,6 +526,24 @@ export interface BaselineSnapshot {
   };
 }
 
+export interface DevServerState {
+  port: number;
+  pid: number;
+  url: string;
+  startedAt: string;
+  logPath: string;
+}
+
+export interface DevServerResolution {
+  status: "not-required" | "reused" | "started";
+  port?: number;
+  pid?: number;
+  url?: string;
+  logPath?: string;
+  statePath?: string;
+  summary: string;
+}
+
 export interface PreflightCheck {
   name: string;
   status: PreflightCheckStatus;
@@ -542,6 +561,7 @@ export interface RemediationPreflightResult {
   lockPath: string;
   lockStatus: "clear" | "active" | "stale";
   baselineSnapshotPath?: string;
+  devServer?: DevServerResolution;
   warnings: string[];
   checks: PreflightCheck[];
 }

@@ -45,6 +45,7 @@ function createRunnerFixture(root: string): {
     program: {
       programId: "test-program",
       displayName: "Test Program",
+      baseBranch: "main",
       registryPath: "scripts/remediation/programs/test-program.ts",
       trackerPath: "plans/remidation/test-program-tracker.json",
       statusPath: "plans/remidation/status.md",

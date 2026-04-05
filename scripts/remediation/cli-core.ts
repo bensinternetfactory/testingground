@@ -31,6 +31,7 @@ type CliCommand =
 interface ParsedCliArgs {
   command: CliCommand | "help";
   json: boolean;
+  allowStale: boolean;
   programId: string;
   unitId?: string;
   runnerOverride?: RunnerAdapterName;
@@ -176,6 +177,7 @@ function parseArgs(argv: string[]): ParsedCliArgs {
   const args = [...argv];
   let command: ParsedCliArgs["command"] = "next";
   let json = false;
+  let allowStale = false;
   let programId = "finance-pages";
   let unitId: string | undefined;
   let runnerOverride: RunnerAdapterName | undefined;
@@ -207,6 +209,11 @@ function parseArgs(argv: string[]): ParsedCliArgs {
 
     if (arg === "--json") {
       json = true;
+      continue;
+    }
+
+    if (arg === "--allow-stale") {
+      allowStale = true;
       continue;
     }
 
@@ -261,6 +268,7 @@ function parseArgs(argv: string[]): ParsedCliArgs {
   return {
     command,
     json,
+    allowStale,
     programId,
     unitId,
     runnerOverride,
@@ -531,7 +539,9 @@ function runPreflightCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): num
   const definition = getRemediationProgramDefinition(parsed.programId);
   const data: PreflightCommandData = {
     command: "preflight",
-    ...runPreflight(definition, cwd),
+    ...runPreflight(definition, cwd, {
+      allowStale: parsed.allowStale,
+    }),
   };
 
   if (parsed.json) {
@@ -610,6 +620,7 @@ function runUnlockStale(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
 function runUnitCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
   const definition = getRemediationProgramDefinition(parsed.programId);
   const result = runSingleRemediationUnit(definition, cwd, {
+    allowStale: parsed.allowStale,
     ...(parsed.runnerOverride ? { runnerOverride: parsed.runnerOverride } : {}),
   });
   const data: RunCommandData = {
@@ -759,7 +770,7 @@ function runRollbackCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): numb
 
 function writeHelp(io: CliIo): number {
   io.stdout(
-    "Usage: remediation <validate|next|prompt|preflight|unlock-stale|run|approve|reject|rollback> [--program <program-id>] [--json] [--unit <unit-id>] [--runner <codex|claude|fake>]",
+    "Usage: remediation <validate|next|prompt|preflight|unlock-stale|run|approve|reject|rollback> [--program <program-id>] [--json] [--unit <unit-id>] [--runner <codex|claude|fake>] [--allow-stale]",
   );
   io.stdout(`Available programs: ${listRemediationProgramIds().join(", ")}`);
   return 0;

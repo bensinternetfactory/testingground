@@ -3,13 +3,16 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import type {
   BaselineSnapshot,
+  DevServerResolution,
   PreflightCheck,
   RemediationPreflightResult,
   RemediationProgramDefinition,
   RemediationWave,
 } from "../types.ts";
 import { ensureProgramArtifactRoot, writeBaselineSnapshot } from "./artifacts.ts";
+import { evaluateWaveBranchGate, type BranchGateEnvironment } from "./branch-gating.ts";
 import { resolveNextUnit, validateTrackerEntries } from "./dependencies.ts";
+import { ensureDevServerForUnit, type DevServerEnvironment } from "./dev-server.ts";
 import { DEFAULT_STALE_LOCK_MS, inspectProgramLock } from "./lockfile.ts";
 import { resolveUnitPolicies } from "./policies.ts";
 import { validateProgramDefinition } from "./registry.ts";
@@ -28,12 +31,20 @@ interface GitStatusSnapshot {
 export interface PreflightEnvironment {
   now?: Date;
   staleAfterMs?: number;
+  allowStale?: boolean;
   isProcessAlive?: (pid: number) => boolean;
   getGitSha?: (cwd: string) => string | undefined;
   getGitStatus?: (cwd: string) => GitStatusSnapshot;
   resolveBinary?: (binary: string, cwd: string) => string | undefined;
   lintExecutor?: CommandExecutor;
   buildExecutor?: CommandExecutor;
+  isPortAvailable?: DevServerEnvironment["isPortAvailable"];
+  isServerResponsive?: DevServerEnvironment["isServerResponsive"];
+  spawnDevServer?: DevServerEnvironment["spawnDevServer"];
+  getCurrentBranch?: BranchGateEnvironment["getCurrentBranch"];
+  branchExists?: BranchGateEnvironment["branchExists"];
+  countCommitsBehind?: BranchGateEnvironment["countCommitsBehind"];
+  isCommitMergedIntoBranch?: BranchGateEnvironment["isCommitMergedIntoBranch"];
 }
 
 function createCheck(
@@ -154,6 +165,7 @@ export function runPreflight(
   const now = environment.now ?? new Date();
   const checks: PreflightCheck[] = [];
   const warnings: string[] = [];
+  let devServer: DevServerResolution | undefined;
 
   const registryValidation = validateProgramDefinition(definition, cwd);
 
@@ -315,6 +327,17 @@ export function runPreflight(
 
   if (nextUnit) {
     const runnerAdapter = resolveUnitPolicies(definition.program, nextUnit).runnerPolicy.adapter;
+    const branchGate = evaluateWaveBranchGate(definition, cwd, nextUnit, {
+      allowStale: environment.allowStale,
+      environment: {
+        getCurrentBranch: environment.getCurrentBranch,
+        branchExists: environment.branchExists,
+        countCommitsBehind: environment.countCommitsBehind,
+        isCommitMergedIntoBranch: environment.isCommitMergedIntoBranch,
+      },
+    });
+
+    checks.push(...branchGate.checks);
 
     if (runnerAdapter && runnerAdapter !== "fake") {
       const binaryPath = (environment.resolveBinary ?? defaultResolveBinary)(runnerAdapter, cwd);
@@ -337,16 +360,37 @@ export function runPreflight(
           : createCheck(
               "browser-tooling",
               "fail",
-              "Browser tooling was not found for a unit that requires browser validation.",
+            "Browser tooling was not found for a unit that requires browser validation.",
             ),
       );
-      checks.push(
-        createCheck(
-          "dev-port",
-          "warn",
-          "Open-port probing is deferred until the browser validator module is implemented.",
-        ),
-      );
+
+      if (browserBinary) {
+        try {
+          devServer = ensureDevServerForUnit(definition, cwd, nextUnit, {
+            now,
+            isProcessAlive: environment.isProcessAlive,
+            isPortAvailable: environment.isPortAvailable,
+            isServerResponsive: environment.isServerResponsive,
+            spawnDevServer: environment.spawnDevServer,
+          });
+          checks.push(
+            createCheck(
+              "dev-port",
+              "pass",
+              devServer.summary,
+              devServer.url ? [devServer.url] : undefined,
+            ),
+          );
+        } catch (error) {
+          checks.push(
+            createCheck(
+              "dev-port",
+              "fail",
+              error instanceof Error ? error.message : String(error),
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -384,6 +428,7 @@ export function runPreflight(
     lockPath: lockInspection.path,
     lockStatus,
     baselineSnapshotPath,
+    ...(devServer ? { devServer } : {}),
     warnings,
     checks,
   };

@@ -62,6 +62,7 @@ function createTestProgram(root: string, attemptBudget = 3): RemediationProgramD
     program: {
       programId,
       displayName: "Test Program",
+      baseBranch: "main",
       registryPath: "scripts/remediation/programs/test-program.ts",
       trackerPath: "plans/remidation/test-program-tracker.json",
       statusPath: "plans/remidation/status.md",
@@ -251,6 +252,68 @@ describe("remediation orchestrator", () => {
         attemptCount: 1,
       }),
     );
+  });
+
+  it("fails when browser-required assertions do not produce passing observations", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+    definition.units[0] = {
+      ...definition.units[0],
+      requiresBrowserValidation: true,
+      browserChecks: [
+        {
+          route: "/example",
+          viewport: "desktop",
+          assertions: ["Drawer still opens from a financing route after the provider moves out of RootLayout."],
+        },
+      ],
+    };
+
+    let evalCount = 0;
+    const result = runSingleRemediationUnit(definition, root, {
+      now: new Date("2026-04-05T18:30:00.000Z"),
+      resolveBinary: (binary) => (binary === "agent-browser" ? "/usr/local/bin/agent-browser" : undefined),
+      isPortAvailable: () => true,
+      spawnDevServer: () => ({ pid: 4242 }),
+      isServerResponsive: () => true,
+      browserCommandExecutor: (command, args) => {
+        if (command !== "agent-browser") {
+          throw new Error(`Unexpected browser command: ${command}`);
+        }
+
+        const subcommand = args[2];
+
+        if (subcommand === "eval") {
+          evalCount += 1;
+          return {
+            command: [command, ...args],
+            exitCode: 0,
+            stdout: evalCount === 1
+              ? JSON.stringify({ pass: true, notes: ["page rendered"] })
+              : JSON.stringify({ pass: false, notes: ["drawer did not open"] }),
+            stderr: "",
+          };
+        }
+
+        return {
+          command: [command, ...args],
+          exitCode: 0,
+          stdout: "",
+          stderr: "",
+        };
+      },
+      runner: createFakeRunner({
+        scenario: "success",
+        fileWrites: {
+          "app/example.tsx": "export default function Example() { return 'updated'; }\n",
+        },
+      }),
+      ...createSuccessfulExecutors(),
+    });
+
+    expect(result.runtime.finalState).toBe("failed");
+    expect(result.runtime.browserOk).toBe(false);
+    expect(result.failureArtifactPath).toBeDefined();
   });
 
   it("approves a staged remediation unit into a real commit and writes a wave-close artifact", () => {

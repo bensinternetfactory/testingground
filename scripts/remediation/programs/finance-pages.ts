@@ -82,6 +82,7 @@ export const financePagesProgram: RemediationProgramDefinition = {
   program: {
     programId: PROGRAM_ID,
     displayName: "Finance Pages Remediation",
+    baseBranch: "main",
     registryPath: "scripts/remediation/programs/finance-pages.ts",
     trackerPath: "plans/remidation/finance-pages-tracker.json",
     statusPath: "plans/financing-pages/financing-status.md",

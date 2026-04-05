@@ -7,6 +7,7 @@ import {
   writeLatestReviewPacket,
 } from "../harness/artifacts.ts";
 import { evaluateAllowlist } from "../harness/allowlist.ts";
+import { executeDeclaredBrowserChecks, type BrowserExecutionEnvironment } from "../harness/browser-execution.ts";
 import { resolveNextUnit } from "../harness/dependencies.ts";
 import { acquireProgramLock, releaseProgramLock } from "../harness/lockfile.ts";
 import { runPreflight, type PreflightEnvironment } from "../harness/preflight.ts";
@@ -49,6 +50,7 @@ interface WorktreeSnapshot {
 interface RunUnitEnvironment extends PreflightEnvironment {
   now?: Date;
   pid?: number;
+  allowStale?: boolean;
   runner?: RemediationRunner;
   runnerOverride?: RunnerAdapterName;
   preflightLintExecutor?: CommandExecutor;
@@ -56,6 +58,8 @@ interface RunUnitEnvironment extends PreflightEnvironment {
   lintExecutor?: CommandExecutor;
   buildExecutor?: CommandExecutor;
   testExecutor?: CommandExecutor;
+  browserCommandExecutor?: BrowserExecutionEnvironment["commandExecutor"];
+  browserSessionName?: BrowserExecutionEnvironment["sessionName"];
   getWorktreeSnapshot?: (cwd: string) => WorktreeSnapshot;
   stageFiles?: (cwd: string, changedFiles: string[]) => void;
 }
@@ -315,6 +319,7 @@ export function runSingleRemediationUnit(
   assertValidProgramDefinition(definition, cwd);
   const preflight = runPreflight(definition, cwd, {
     ...environment,
+    allowStale: environment.allowStale,
     lintExecutor: environment.preflightLintExecutor ?? environment.lintExecutor,
     buildExecutor: environment.preflightBuildExecutor ?? environment.buildExecutor,
   });
@@ -574,10 +579,16 @@ export function runSingleRemediationUnit(
         executor: environment.testExecutor,
       }),
     );
+    const browserObservations = preflight.devServer?.url
+      ? executeDeclaredBrowserChecks(cwd, unit, preflight.devServer.url, {
+          commandExecutor: environment.browserCommandExecutor,
+          sessionName: environment.browserSessionName,
+        })
+      : runnerResult.browserObservations;
     const browserResult = runBrowserValidator({
       required: unit.requiresBrowserValidation,
       checks: unit.browserChecks,
-      observations: runnerResult.browserObservations,
+      observations: browserObservations,
     });
     const visualResult = runVisualValidator({
       required: unit.requiresVisualRegression,

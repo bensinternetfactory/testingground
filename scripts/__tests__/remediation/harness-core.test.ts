@@ -6,6 +6,7 @@ import {
   resolveNextUnit,
   validateTrackerEntries,
 } from "@/scripts/remediation/harness/dependencies";
+import { executeDeclaredBrowserChecks } from "@/scripts/remediation/harness/browser-execution";
 import { resolveUnitPolicies, resolveVisualPolicy } from "@/scripts/remediation/harness/policies";
 import {
   createNextPromptPayload,
@@ -211,6 +212,81 @@ describe("policy resolution", () => {
     expect(policy.promptDirectives.join(" ")).toContain(
       "Only the minimum typography and color changes needed for disclosure readability are allowed.",
     );
+  });
+});
+
+describe("browser execution", () => {
+  it("clears runtime errors between declared checks in a shared session", () => {
+    let clearCount = 0;
+    let evalCount = 0;
+    let errorBuffer = "";
+
+    const observations = executeDeclaredBrowserChecks(
+      process.cwd(),
+      {
+        id: "UNIT-001",
+        browserChecks: [
+          {
+            route: "/example-one",
+            viewport: "desktop",
+            assertions: ["Drawer still opens from a financing route after the provider moves out of RootLayout."],
+          },
+          {
+            route: "/example-two",
+            viewport: "desktop",
+            assertions: ["Drawer still opens from a financing route after the provider moves out of RootLayout."],
+          },
+        ],
+      },
+      "http://127.0.0.1:3005",
+      {
+        commandExecutor: (command, args) => {
+          expect(command).toBe("agent-browser");
+
+          const subcommand = args[2];
+
+          if (subcommand === "eval") {
+            evalCount += 1;
+
+            if (evalCount === 2) {
+              errorBuffer = "ReferenceError: drawer exploded";
+            }
+
+            return {
+              command: [command, ...args],
+              exitCode: 0,
+              stdout: JSON.stringify({ pass: true, notes: ["ok"] }),
+              stderr: "",
+            };
+          }
+
+          if (subcommand === "errors" && args[3] === "--clear") {
+            clearCount += 1;
+            errorBuffer = "";
+          }
+
+          return {
+            command: [command, ...args],
+            exitCode: 0,
+            stdout: subcommand === "errors" && args[3] !== "--clear" ? errorBuffer : "",
+            stderr: "",
+          };
+        },
+      },
+    );
+
+    expect(clearCount).toBe(2);
+    expect(observations).toHaveLength(2);
+    expect(observations[0]).toMatchObject({
+      route: "/example-one",
+      viewport: "desktop",
+      status: "failed",
+    });
+    expect(observations[1]).toMatchObject({
+      route: "/example-two",
+      viewport: "desktop",
+      status: "passed",
+    });
   });
 });
 

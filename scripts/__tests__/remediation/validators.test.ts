@@ -172,6 +172,7 @@ describe("remediation validators", () => {
       program: {
         programId: "test-program",
         displayName: "Test Program",
+        baseBranch: "main",
         registryPath: "registry.ts",
         trackerPath: "tracker.json",
         statusPath: "status.md",

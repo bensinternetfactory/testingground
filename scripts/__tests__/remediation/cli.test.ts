@@ -13,6 +13,7 @@ describe("remediation CLI", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout.join("\n")).toContain("approve|reject|rollback");
+    expect(result.stdout.join("\n")).toContain("--allow-stale");
   });
 
   it("validates the finance program and tolerates a missing bootstrap tracker", () => {

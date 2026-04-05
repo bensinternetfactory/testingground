@@ -11,7 +11,7 @@
 - [x] Module 7: orchestrator + fake runner
 - [x] Module 8: real runner adapters
 - [x] Module 9: approval, rejection, rollback, and wave-close state transitions
-- [ ] Module 10: browser execution, dev-port orchestration, and wave branch gating
+- [x] Module 10: browser execution, dev-port orchestration, and wave branch gating
 
 ## Module 1
 
@@ -296,18 +296,31 @@
 
 ## Module 10
 
-- Status: `planned`
+- Date: `2026-04-05`
 - Scope:
-  - add a real post-run browser execution layer that runs declared browser checks and produces normalized `BrowserCheckObservation[]` for the existing browser validator
-  - implement non-`3000` dev-port discovery and reuse, and start a persistent `npm run dev` server on an open port when browser-required units need one
-  - fail preflight and orchestration closed when a browser-required unit cannot obtain a usable dev server or browser observations
-  - enforce the wave-branch protocol from `plan.md`: Wave N+1 cannot begin until Wave N is merged, stale branches must warn/fail closed, and `--allow-stale` must be an explicit override
-- Why this is required after module 9:
-  - `validators/browser.ts` is currently a pure result checker and does not execute browser automation on its own
-  - `preflight.ts` still treats dev-port probing as deferred work, so browser-required units do not yet have a reliable validation environment
-  - finance pages contain many units with `requiresBrowserValidation: true`, so the program is not production-complete until this path is real
-- Acceptance criteria:
-  - browser-required units can run a dev server, execute declared checks through the browser automation layer, and pass/fail based on recorded observations
-  - preflight reuses an existing compatible non-`3000` dev server when possible and otherwise boots one on an open port
-  - Wave N+1 execution is blocked until Wave N merge state is satisfied, unless the operator explicitly passes `--allow-stale` where policy permits it
-  - tests cover missing browser observations, missing dev server, stale branch warnings, and `--allow-stale` overrides
+  - added a harness-owned browser execution layer in `scripts/remediation/harness/browser-execution.ts` that expands declared route/viewport checks, drives `agent-browser`, and emits normalized `BrowserCheckObservation[]`
+  - added reusable non-`3000` dev-server lifecycle management in `scripts/remediation/harness/dev-server.ts` with persisted state, port probing, background `npm run dev` boot, and reuse of a compatible running server
+  - added reusable wave branch gating in `scripts/remediation/harness/branch-gating.ts` to block Wave N+1 before Wave N merge state is satisfied and to fail closed on stale branches unless `--allow-stale` is explicitly provided
+  - threaded dev-server resolution and branch gating through `preflight`, browser execution through the orchestrator, and `--allow-stale` through the CLI/run path
+  - added focused coverage for missing dev server, stale-branch override behavior, and failed browser observations in the remediation test suite
+- Decisions:
+  - browser automation remains harness-owned even when the remediation runner is `codex` or `claude`; the runner no longer needs to be the source of browser observations for browser-required units
+  - browser assertion execution is keyed off the declared finance assertions so the first deployed program gets deterministic post-run checks without inventing a second registry format midstream
+  - dev-server reuse is persisted under the program artifact root so repeated preflight/run passes can share the same non-`3000` `npm run dev` instance
+  - branch gating uses wave summary artifacts plus commit ancestry into the configured base branch to decide when a later wave is eligible to start
+- Outputs:
+  - `scripts/remediation/types.ts`
+  - `scripts/remediation/harness/browser-execution.ts`
+  - `scripts/remediation/harness/dev-server.ts`
+  - `scripts/remediation/harness/branch-gating.ts`
+  - `scripts/remediation/harness/preflight.ts`
+  - `scripts/remediation/orchestrator/run-unit.ts`
+  - `scripts/remediation/cli-core.ts`
+  - `scripts/remediation/programs/finance-pages.ts`
+  - `scripts/__tests__/remediation/persistence.test.ts`
+  - `scripts/__tests__/remediation/orchestrator.test.ts`
+  - `scripts/__tests__/remediation/cli.test.ts`
+- Verification:
+  - `npm test -- scripts/__tests__/remediation`
+  - `npm run lint -- scripts/remediation scripts/__tests__/remediation`
+  - `npm run build`

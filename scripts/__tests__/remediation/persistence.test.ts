@@ -51,6 +51,7 @@ function createTestProgram(root: string): RemediationProgramDefinition {
     program: {
       programId,
       displayName: "Test Program",
+      baseBranch: "main",
       registryPath: "scripts/remediation/programs/test-program.ts",
       trackerPath: "plans/remidation/test-program-tracker.json",
       statusPath: "plans/remidation/status.md",
@@ -317,5 +318,155 @@ describe("remediation persistence", () => {
         status: "not-required",
       },
     });
+  });
+
+  it("fails preflight closed when a browser-required unit cannot obtain a dev server", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+    definition.units[0] = {
+      ...definition.units[0],
+      requiresBrowserValidation: true,
+      browserChecks: [
+        {
+          route: "/example",
+          viewport: "desktop",
+          assertions: ["Drawer still opens from a financing route after the provider moves out of RootLayout."],
+        },
+      ],
+    };
+
+    const result = runPreflight(definition, root, {
+      now: new Date("2026-04-05T16:00:00.000Z"),
+      resolveBinary: (binary) => (binary === "agent-browser" ? "/usr/local/bin/agent-browser" : undefined),
+      getGitStatus: () => ({
+        status: "clean",
+        changedFiles: [],
+      }),
+      lintExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: JSON.stringify([{ warningCount: 0, errorCount: 0 }]),
+        stderr: "",
+      }),
+      buildExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: "build ok",
+        stderr: "",
+      }),
+      isPortAvailable: () => false,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.checks).toContainEqual(
+      expect.objectContaining({
+        name: "dev-port",
+        status: "fail",
+      }),
+    );
+  });
+
+  it("fails preflight on stale target branches unless allow-stale is set", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+
+    const strictResult = runPreflight(definition, root, {
+      now: new Date("2026-04-05T16:10:00.000Z"),
+      getGitStatus: () => ({
+        status: "clean",
+        changedFiles: [],
+      }),
+      lintExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: JSON.stringify([{ warningCount: 0, errorCount: 0 }]),
+        stderr: "",
+      }),
+      buildExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: "build ok",
+        stderr: "",
+      }),
+      branchExists: () => true,
+      getCurrentBranch: () => "remediation/test-program/wave-1/unit-001",
+      countCommitsBehind: () => 12,
+    });
+
+    expect(strictResult.ok).toBe(false);
+    expect(strictResult.checks).toContainEqual(
+      expect.objectContaining({
+        name: "wave-branch-staleness",
+        status: "fail",
+      }),
+    );
+
+    const overrideResult = runPreflight(definition, root, {
+      now: new Date("2026-04-05T16:15:00.000Z"),
+      allowStale: true,
+      getGitStatus: () => ({
+        status: "clean",
+        changedFiles: [],
+      }),
+      lintExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: JSON.stringify([{ warningCount: 0, errorCount: 0 }]),
+        stderr: "",
+      }),
+      buildExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: "build ok",
+        stderr: "",
+      }),
+      branchExists: () => true,
+      getCurrentBranch: () => "remediation/test-program/wave-1/unit-001",
+      countCommitsBehind: () => 12,
+    });
+
+    expect(overrideResult.ok).toBe(true);
+    expect(overrideResult.checks).toContainEqual(
+      expect.objectContaining({
+        name: "wave-branch-staleness",
+        status: "warn",
+      }),
+    );
+  });
+
+  it("fails preflight closed when branch staleness cannot be determined", () => {
+    const root = createTempRoot();
+    const definition = createTestProgram(root);
+
+    const result = runPreflight(definition, root, {
+      now: new Date("2026-04-05T16:20:00.000Z"),
+      getGitStatus: () => ({
+        status: "clean",
+        changedFiles: [],
+      }),
+      lintExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: JSON.stringify([{ warningCount: 0, errorCount: 0 }]),
+        stderr: "",
+      }),
+      buildExecutor: (command, args) => ({
+        command: [command, ...args],
+        exitCode: 0,
+        stdout: "build ok",
+        stderr: "",
+      }),
+      branchExists: () => true,
+      getCurrentBranch: () => "remediation/test-program/wave-1/unit-001",
+      countCommitsBehind: () => undefined,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.checks).toContainEqual(
+      expect.objectContaining({
+        name: "wave-branch-staleness",
+        status: "fail",
+      }),
+    );
   });
 });

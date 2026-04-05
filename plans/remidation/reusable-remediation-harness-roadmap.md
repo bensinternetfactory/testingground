@@ -224,7 +224,7 @@ Use one result contract for all programs and all runners:
 
 ## Build Strategy
 
-Build the system in eight steps. Do not start with real runner integration.
+Build the system in ten steps. Do not start with real runner integration.
 
 ### Step 1: Freeze interfaces and schemas
 
@@ -371,7 +371,25 @@ Acceptance criteria:
 - attempt-budget exhaustion moves the unit to blocked and writes an aggregated
   failure artifact
 
-### Step 7: Add real runner adapters
+### Step 7: Harden the staged review handoff
+
+Implement:
+
+- review packet persistence for successful staged runs
+- explicit stage-only success semantics with no implicit commit
+- next-unit preview metadata in the review output
+- tracker/status transitions that preserve "awaiting approval" state without
+  pretending the unit is already fixed
+
+Acceptance criteria:
+
+- successful units stop with staged changes, a draft commit message, and a
+  review packet every time
+- no successful run is marked `fixed` until approval/commit logic runs
+- the review packet contains enough context for a later approve/reject command
+  to resume without recomputing intent
+
+### Step 8: Add real runner adapters
 
 Implement:
 
@@ -390,21 +408,48 @@ Acceptance criteria:
 - changing runner does not change harness behavior
 - runner-specific code exists only in adapter modules
 
-### Step 8: Add rollback and rejection workflows
+### Step 9: Add approval, rejection, rollback, and wave-close workflows
 
 Implement:
 
+- approval state recording and commit finalization
 - rejection state recording
 - relock for retry
 - rejected commit SHA preservation
 - rollback guidance or execution helpers
+- wave-close summary artifact writing
 
 Acceptance criteria:
 
+- a successful staged run can be approved into a real commit that records
+  `commitSha` and transitions the unit to `fixed`
 - a previously approved unit can be reverted without losing traceability
 - rejection history remains attached to the unit
 - retries cannot resume after a blocked state until a human rewrites the fix
   direction, splits the unit, or marks it deferred
+
+### Step 10: Add browser execution, dev-port orchestration, and wave branch gating
+
+Implement:
+
+- a harness-owned browser execution layer that runs declared browser checks and
+  emits normalized `BrowserCheckObservation[]`
+- non-`3000` dev-port discovery and reuse for browser-required units
+- persistent `npm run dev` boot logic when no compatible dev server is already
+  running
+- wave branch gating so Wave N+1 cannot begin until Wave N merge requirements
+  are satisfied
+- stale-branch warnings/fail-closed behavior plus an explicit `--allow-stale`
+  override where policy allows it
+
+Acceptance criteria:
+
+- browser-required units no longer depend on runner self-reporting for browser
+  observations
+- preflight can prove that a usable non-`3000` dev server exists or can be
+  started before browser-required units run
+- browser validation fails closed when observations are missing or incomplete
+- wave branch policy is enforced in code rather than documentation only
 
 ## Suggested Delivery Milestones
 
@@ -487,6 +532,32 @@ Scope:
 Outcome:
 
 - supervised production execution becomes possible
+
+### Milestone G: Approval-complete supervised execution
+
+Scope:
+
+- approval/rejection CLI
+- rollback workflow
+- wave-close artifacts
+
+Outcome:
+
+- the harness can advance past the first successfully staged unit with
+  auditable commit-state transitions
+
+### Milestone H: Browser-complete finance rollout
+
+Scope:
+
+- browser execution layer
+- dev-port orchestration
+- wave branch gating
+
+Outcome:
+
+- browser-required finance units can run end to end under the same supervised
+  harness without manual server setup or undocumented branch exceptions
 
 ## Finance As The First Program
 
