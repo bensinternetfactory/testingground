@@ -3,22 +3,25 @@ import { fileURLToPath } from "node:url";
 import { resolveNextUnit, validateTrackerEntries } from "./harness/dependencies.ts";
 import { runPreflight } from "./harness/preflight.ts";
 import { createNextPromptPayload, createPromptPayload } from "./harness/prompt.ts";
+import { runSingleRemediationUnit } from "./orchestrator/run-unit.ts";
 import { assertValidProgramDefinition, validateProgramDefinition } from "./harness/registry.ts";
 import { readTrackerState } from "./harness/tracker.ts";
 import { unlockStaleProgramLock } from "./harness/lockfile.ts";
 import { getRemediationProgramDefinition, listRemediationProgramIds } from "./programs/index.ts";
+import type { RunnerAdapterName } from "./types.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const defaultRepoRoot = path.resolve(__dirname, "../..");
 
-type CliCommand = "validate" | "next" | "prompt" | "preflight" | "unlock-stale";
+type CliCommand = "validate" | "next" | "prompt" | "preflight" | "unlock-stale" | "run";
 
 interface ParsedCliArgs {
   command: CliCommand | "help";
   json: boolean;
   programId: string;
   unitId?: string;
+  runnerOverride?: RunnerAdapterName;
 }
 
 interface CliIo {
@@ -85,6 +88,19 @@ interface UnlockStaleCommandData {
   timestamp?: string;
 }
 
+interface RunCommandData {
+  command: "run";
+  programId: string;
+  displayName: string;
+  runtime: ReturnType<typeof runSingleRemediationUnit>["runtime"];
+  unit: ReturnType<typeof runSingleRemediationUnit>["unit"];
+  draftCommitMessage?: string;
+  fixReportPath?: string;
+  failureArtifactPath?: string;
+  reviewPacketPath?: string;
+  baselineSnapshotPath?: string;
+}
+
 function createIo(): CliIo {
   return {
     stdout: (line) => console.log(line),
@@ -117,6 +133,7 @@ function parseArgs(argv: string[]): ParsedCliArgs {
   let json = false;
   let programId = "finance-pages";
   let unitId: string | undefined;
+  let runnerOverride: RunnerAdapterName | undefined;
 
   const firstArg = args[0];
 
@@ -128,6 +145,7 @@ function parseArgs(argv: string[]): ParsedCliArgs {
       || firstArg === "prompt"
       || firstArg === "preflight"
       || firstArg === "unlock-stale"
+      || firstArg === "run"
     ) {
       command = firstArg;
       args.shift();
@@ -173,6 +191,22 @@ function parseArgs(argv: string[]): ParsedCliArgs {
       continue;
     }
 
+    if (arg === "--runner") {
+      const value = args[index + 1];
+
+      if (!value) {
+        throw new Error("Missing value for --runner.");
+      }
+
+      if (value !== "codex" && value !== "claude" && value !== "fake") {
+        throw new Error(`Unsupported runner override: ${value}`);
+      }
+
+      runnerOverride = value;
+      index += 1;
+      continue;
+    }
+
     throw new Error(`Unknown argument: ${arg}`);
   }
 
@@ -181,6 +215,7 @@ function parseArgs(argv: string[]): ParsedCliArgs {
     json,
     programId,
     unitId,
+    runnerOverride,
   };
 }
 
@@ -524,9 +559,62 @@ function runUnlockStale(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
   return 0;
 }
 
+function runUnitCommand(parsed: ParsedCliArgs, cwd: string, io: CliIo): number {
+  const definition = getRemediationProgramDefinition(parsed.programId);
+  const result = runSingleRemediationUnit(definition, cwd, {
+    ...(parsed.runnerOverride ? { runnerOverride: parsed.runnerOverride } : {}),
+  });
+  const data: RunCommandData = {
+    command: "run",
+    programId: definition.program.programId,
+    displayName: definition.program.displayName,
+    runtime: result.runtime,
+    unit: result.unit,
+    draftCommitMessage: result.draftCommitMessage,
+    fixReportPath: result.fixReportPath,
+    failureArtifactPath: result.failureArtifactPath,
+    reviewPacketPath: result.reviewPacketPath,
+    baselineSnapshotPath: result.baselineSnapshotPath,
+  };
+
+  if (parsed.json) {
+    writeJson(io, data);
+    return result.runtime.finalState === "passed" ? 0 : 1;
+  }
+
+  io.stdout(`Program: ${data.displayName} (${data.programId})`);
+  io.stdout(`Unit: ${data.unit.id} - ${data.unit.title}`);
+  io.stdout(`Final state: ${data.runtime.finalState}`);
+  io.stdout(`Runner: ${data.runtime.runner}`);
+  io.stdout(`Changed files: ${data.runtime.changedFiles.length}`);
+
+  if (data.baselineSnapshotPath) {
+    io.stdout(`Baseline snapshot: ${path.relative(cwd, data.baselineSnapshotPath)}`);
+  }
+
+  if (data.fixReportPath) {
+    io.stdout(`Fix report: ${path.relative(cwd, data.fixReportPath)}`);
+  }
+
+  if (data.failureArtifactPath) {
+    io.stdout(`Failure artifact: ${path.relative(cwd, data.failureArtifactPath)}`);
+  }
+
+  if (data.reviewPacketPath) {
+    io.stdout(`Review packet: ${path.relative(cwd, data.reviewPacketPath)}`);
+  }
+
+  if (data.draftCommitMessage) {
+    io.stdout("Draft commit message:");
+    io.stdout(data.draftCommitMessage);
+  }
+
+  return result.runtime.finalState === "passed" ? 0 : 1;
+}
+
 function writeHelp(io: CliIo): number {
   io.stdout(
-    "Usage: remediation <validate|next|prompt|preflight|unlock-stale> [--program <program-id>] [--json] [--unit <unit-id>]",
+    "Usage: remediation <validate|next|prompt|preflight|unlock-stale|run> [--program <program-id>] [--json] [--unit <unit-id>] [--runner <codex|claude|fake>]",
   );
   io.stdout(`Available programs: ${listRemediationProgramIds().join(", ")}`);
   return 0;
@@ -559,6 +647,8 @@ export function runCli(argv: string[], options: { cwd?: string; io?: CliIo } = {
         return runPreflightCommand(parsed, cwd, io);
       case "unlock-stale":
         return runUnlockStale(parsed, cwd, io);
+      case "run":
+        return runUnitCommand(parsed, cwd, io);
       default:
         return writeHelp(io);
     }

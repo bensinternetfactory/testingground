@@ -8,7 +8,7 @@
 - [x] Module 4: CLI wiring for `validate`, `next`, and `prompt`
 - [x] Module 5: locks, artifacts, and preflight
 - [x] Module 6: validators
-- [ ] Module 7: orchestrator + fake runner
+- [x] Module 7: orchestrator + fake runner
 - [ ] Module 8: real runner adapters
 
 ## Module 1
@@ -180,3 +180,37 @@
   - `npm run build`
 - Next module boundary:
   - implement the one-unit orchestrator and fake runner so a single remediation unit can acquire a lock, run validators in order, write artifacts, and stop for approval
+
+## Module 7
+
+- Date: `2026-04-05`
+- Scope:
+  - added reusable allowlist evaluation in `scripts/remediation/harness/allowlist.ts`
+  - added tracker write helpers and a generic runtime status-section writer for persisted orchestrator state
+  - added a reusable fake runner adapter in `scripts/remediation/runners/`
+  - added the one-unit orchestrator in `scripts/remediation/orchestrator/run-unit.ts` covering preflight, lock lifecycle, fake-runner execution, allowlist enforcement, ordered validators, baseline comparison, artifact writes, tracker/status updates, staging, and review packet generation
+  - extended the CLI with `run` plus package scripts for generic and finance-program execution
+  - added focused orchestrator integration coverage in `scripts/__tests__/remediation/orchestrator.test.ts`
+- Decisions:
+  - successful stage-and-approve runs remain `in-progress` in the tracker until a later approval/commit step can write a real `commitSha`
+  - the status file is updated via an appended `## Remediation Runtime` section so the reusable harness can coexist with pre-existing program status formats
+  - module 7 only resolves real execution through the fake runner unless a custom runner is injected; codex/claude adapters remain module 8 work
+  - nonvisual units fail closed when the runner reports a visual surface change even if no visual-regression capture was required for that unit
+- Outputs:
+  - `scripts/remediation/types.ts`
+  - `scripts/remediation/harness/allowlist.ts`
+  - `scripts/remediation/harness/artifacts.ts`
+  - `scripts/remediation/harness/tracker.ts`
+  - `scripts/remediation/harness/status.ts`
+  - `scripts/remediation/runners/adapter.ts`
+  - `scripts/remediation/runners/fake.ts`
+  - `scripts/remediation/orchestrator/run-unit.ts`
+  - `scripts/remediation/cli-core.ts`
+  - `scripts/__tests__/remediation/orchestrator.test.ts`
+  - `package.json`
+- Verification:
+  - `npm test -- scripts/__tests__/remediation`
+  - `npm run lint -- scripts/remediation scripts/__tests__/remediation`
+  - `npm run build`
+- Next module boundary:
+  - implement the real `codex` and `claude` runner adapters, then thread approval/commit handling through the staged orchestrator result

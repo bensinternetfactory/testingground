@@ -77,6 +77,10 @@ export interface LoadedTrackerState {
   warnings: string[];
 }
 
+function ensureParentDir(filePath: string) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+}
+
 export function readTrackerState(
   definition: RemediationProgramDefinition,
   cwd: string,
@@ -111,4 +115,24 @@ export function readTrackerState(
     tracker,
     warnings: [],
   };
+}
+
+export function upsertTrackerEntry(
+  entries: RemediationTrackerEntry[],
+  entry: RemediationTrackerEntry,
+): RemediationTrackerEntry[] {
+  const nextEntries = entries.filter((candidate) => candidate.unitId !== entry.unitId);
+  nextEntries.push(entry);
+  return nextEntries;
+}
+
+export function writeTrackerState(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+  tracker: RemediationTrackerFile,
+): string {
+  const trackerPath = path.resolve(cwd, definition.program.trackerPath);
+  ensureParentDir(trackerPath);
+  fs.writeFileSync(trackerPath, `${JSON.stringify(tracker, null, 2)}\n`);
+  return trackerPath;
 }

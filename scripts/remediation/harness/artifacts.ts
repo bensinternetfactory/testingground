@@ -139,6 +139,19 @@ export function writeBaselineSnapshot(
   return artifactPath;
 }
 
+export function readBaselineSnapshot(
+  definition: RemediationProgramDefinition,
+  cwd: string,
+): BaselineSnapshot | undefined {
+  const artifactPath = getBaselineSnapshotPath(definition, cwd);
+
+  if (!fs.existsSync(artifactPath)) {
+    return undefined;
+  }
+
+  return JSON.parse(fs.readFileSync(artifactPath, "utf8")) as BaselineSnapshot;
+}
+
 export function writeFixReportArtifact(
   definition: RemediationProgramDefinition,
   cwd: string,

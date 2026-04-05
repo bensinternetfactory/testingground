@@ -58,6 +58,12 @@ export const VALIDATOR_NAMES = [
   "baseline",
 ] as const;
 export const VALIDATOR_STATUSES = ["passed", "failed", "not-required"] as const;
+export const RUNNER_EXECUTION_STATUSES = [
+  "completed",
+  "timed-out",
+  "malformed-output",
+  "crashed",
+] as const;
 
 export type RemediationUnitType = (typeof REMEDIATION_UNIT_TYPES)[number];
 export type RemediationWave = (typeof REMEDIATION_WAVES)[number];
@@ -72,6 +78,7 @@ export type ViewportTarget = (typeof VIEWPORT_TARGETS)[number];
 export type PreflightCheckStatus = (typeof PREFLIGHT_CHECK_STATUSES)[number];
 export type ValidatorName = (typeof VALIDATOR_NAMES)[number];
 export type ValidatorStatus = (typeof VALIDATOR_STATUSES)[number];
+export type RunnerExecutionStatus = (typeof RUNNER_EXECUTION_STATUSES)[number];
 
 export interface RunnerPolicy {
   mode: RunnerMode;
@@ -299,6 +306,16 @@ export interface RemediationRuntimeResult {
   visualSurfaceChanged: boolean;
   finalState: "passed" | "failed" | "blocked" | "invalid" | "crashed";
   nextUnit?: string;
+}
+
+export interface RunnerExecutionResult {
+  status: RunnerExecutionStatus;
+  summary: string;
+  changedFiles: string[];
+  browserObservations?: BrowserCheckObservation[];
+  visualObservations?: VisualCheckObservation[];
+  visualSurfaceChanged?: boolean;
+  details?: string[];
 }
 
 export interface VisualPolicy {
