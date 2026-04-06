@@ -1,4 +1,5 @@
-export { DrawerProvider, useDrawer } from "./DrawerContext";
+export { DrawerProvider } from "./DrawerProvider";
+export { useDrawer } from "./DrawerContext";
 export { MarketingDrawerProvider } from "./MarketingDrawerProvider";
 export {
   buildPreApprovalHref,
