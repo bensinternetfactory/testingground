@@ -20,6 +20,7 @@ import {
 interface DrawerActions {
   open: (trigger?: DrawerTriggerPayload) => void;
   close: () => void;
+  reset: () => void;
   setAmount: (amount: number) => void;
 }
 
@@ -49,6 +50,7 @@ export function useDrawer() {
     heroTruckType: ctx.state.heroTruckType,
     open: ctx.actions.open,
     close: ctx.actions.close,
+    reset: ctx.actions.reset,
     setAmount: ctx.actions.setAmount,
   };
 }
@@ -69,6 +71,10 @@ export function DrawerStateProvider({ children }: { children: ReactNode }) {
     setState((current) => ({ ...current, isOpen: false }));
   }, []);
 
+  const reset = useCallback(() => {
+    setState(getClosedDrawerSession);
+  }, []);
+
   const setAmount = useCallback((amount: number) => {
     setState((current) =>
       current.amount === amount ? current : { ...current, amount },
@@ -78,10 +84,10 @@ export function DrawerStateProvider({ children }: { children: ReactNode }) {
   const contextValue = useMemo<DrawerContextValue>(
     () => ({
       state,
-      actions: { open, close, setAmount },
+      actions: { open, close, reset, setAmount },
       meta: { triggerHash: DRAWER_HASH },
     }),
-    [close, open, setAmount, state],
+    [close, open, reset, setAmount, state],
   );
 
   return (

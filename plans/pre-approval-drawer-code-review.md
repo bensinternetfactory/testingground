@@ -14,21 +14,21 @@ Validation snapshot:
 
 ## Findings
 
-### 1. High: `PreApprovalDrawer` mutates the DOM during render and never cleans up its portal node
+### ~~1. High: `PreApprovalDrawer` mutates the DOM during render and never cleans up its portal node~~ ✅ (c80b17d)
 - Lens: React/Next
 - File: `components/ui/pre-approval-drawer/PreApprovalDrawer.tsx:80-95`
 - What I found: `usePortalRoot()` reads from `document`, creates a new `div`, and appends it to `document.body` during render. The node is never removed on unmount.
 - Why it matters: this makes render impure, which is exactly the kind of work React expects to happen in an effect or in pre-existing DOM structure. It is harder to reason about in Strict Mode, introduces lifecycle surprises, and leaks a portal root if the provider is mounted and unmounted repeatedly.
 - Recommended improvement: move portal-root creation and cleanup into an effect-based hook or provide a stable portal mount point higher in the app shell.
 
-### 2. High: the provider is doing state, orchestration, event interception, and rendering in one place
+### ~~2. High: the provider is doing state, orchestration, event interception, and rendering in one place~~ ✅ (76e19a2)
 - Lens: Composition
 - File: `components/ui/pre-approval-drawer/DrawerContext.tsx:79-170`
 - What I found: `DrawerProvider` owns session state, body-scroll locking, global hash/click listeners, and the actual `PreApprovalDrawer` render. `DrawerHashListener` is embedded inside the same provider contract.
 - Why it matters: this is the monolithic shape the composition skill warns against. It hides behavior behind one provider, makes the drawer difficult to reuse outside the marketing layout, and couples UI structure to a specific trigger mechanism.
 - Recommended improvement: split the module into a smaller state provider plus explicit trigger/listener/render pieces, or expose a compound API such as `Drawer.Provider`, `Drawer.TriggerListener`, and `Drawer.Content`.
 
-### 3. Medium: route changes are handled by forced remounts instead of explicit lifecycle logic
+### ~~3. Medium: route changes are handled by forced remounts instead of explicit lifecycle logic~~ ✅
 - Lens: Composition / React
 - File: `components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx:7-14`
 - What I found: `MarketingDrawerProvider` uses `key={pathname}` to remount the entire drawer provider on every pathname change.

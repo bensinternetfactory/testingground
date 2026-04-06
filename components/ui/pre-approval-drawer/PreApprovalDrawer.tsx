@@ -181,9 +181,10 @@ export function PreApprovalDrawer() {
     }
   }, [isOpen]);
 
-  // Safety net: if the drawer was open when the provider unmounted (route
-  // change via MarketingDrawerProvider key={pathname}), ensure the scroll
-  // lock is released.
+  // Safety net: if the provider unmounts (e.g. navigating away from the
+  // marketing layout), ensure the scroll lock is released. During normal
+  // route changes within the marketing layout, reset() triggers the exit
+  // animation and onExitComplete handles unlock.
   useEffect(() => {
     return () => {
       unlockBodyScroll();

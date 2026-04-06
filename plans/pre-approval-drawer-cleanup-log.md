@@ -27,6 +27,22 @@ Updated import paths in `index.ts` and `MarketingDrawerProvider.tsx`. No consume
 
 ---
 
+## Finding #3: Replace key={pathname} with explicit route-sync logic
+
+**Status:** Done (pending commit)
+**What changed:** Removed the `key={pathname}` forced remount from `MarketingDrawerProvider` and replaced it with explicit lifecycle logic:
+
+- **`DrawerContext.tsx`** — added `reset()` action that returns all session state to defaults (`getClosedDrawerSession`). Exposed in `DrawerActions` interface and `useDrawer()` hook.
+- **`RouteResetListener.tsx`** (new) — watches `usePathname()` via a ref-based previous-value pattern. On route change: calls `open()` if destination has `#get-pre-approved` hash, otherwise calls `reset()` to close and clear session state.
+- **`MarketingDrawerProvider.tsx`** — removed `key={pathname}` and `usePathname()`. Now renders a `MarketingRouteSync` bridge component inside `DrawerProvider` that wires `RouteResetListener` to the drawer context.
+- **`PreApprovalDrawer.tsx`** — updated safety-net comment to reflect new design (comment-only).
+
+**Behavior improvement:** The drawer now exits with a smooth animation on route change instead of being instantly destroyed by the forced remount.
+
+**Verification:** tsc clean, eslint clean, trigger tests pass, production build succeeds. Browser-validated: open+navigate closes drawer and unlocks scroll, direct URL with hash opens drawer, session state resets after navigation, no stuck scroll lock.
+
+---
+
 ## Roadmap Step 3: Normalize slider API and scroll-lock ownership (Issues #4, #5)
 
 **Status:** Next up
