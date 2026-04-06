@@ -80,6 +80,63 @@ describe("NavHeaderActions", () => {
       "sticky-nav",
     );
   });
+
+  it("emits the full canonical pre-approval schema without legacy drawer attributes", () => {
+    render(
+      <NavHeaderActions
+        dialogId="sticky-nav-dialog"
+        mobileOpen={false}
+        onToggleMobile={vi.fn()}
+        primaryCtaHref="#get-pre-approved"
+        primaryCtaTrigger={{
+          origin: {
+            pageId: "rollback-financing",
+            sectionId: "sticky-nav-primary",
+            ctaId: "sticky-nav-apply-now",
+            placement: "sticky-nav",
+          },
+          drawer: {
+            title: "How much is the rollback you found?",
+          },
+          handoff: {
+            truckType: "rollback",
+          },
+        }}
+        toggleButtonRef={createRef<HTMLButtonElement>()}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: /Apply Now/ });
+
+    expect(link).toHaveAttribute("data-pre-approval-version", "2");
+    expect(link).toHaveAttribute(
+      "data-pre-approval-origin-page-id",
+      "rollback-financing",
+    );
+    expect(link).toHaveAttribute(
+      "data-pre-approval-origin-section-id",
+      "sticky-nav-primary",
+    );
+    expect(link).toHaveAttribute(
+      "data-pre-approval-origin-cta-id",
+      "sticky-nav-apply-now",
+    );
+    expect(link).toHaveAttribute(
+      "data-pre-approval-origin-placement",
+      "sticky-nav",
+    );
+    expect(link).toHaveAttribute(
+      "data-pre-approval-drawer-title",
+      "How much is the rollback you found?",
+    );
+    expect(link).toHaveAttribute(
+      "data-pre-approval-handoff-truck-type",
+      "rollback",
+    );
+    expect(link.hasAttribute("data-drawer-title")).toBe(false);
+    expect(link.hasAttribute("data-drawer-source")).toBe(false);
+    expect(link.hasAttribute("data-drawer-truck-type")).toBe(false);
+  });
 });
 
 describe("NavMobileOverlay", () => {
