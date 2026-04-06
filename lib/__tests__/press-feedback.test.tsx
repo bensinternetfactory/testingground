@@ -139,6 +139,30 @@ describe("usePressFeedback", () => {
     expect(button.getAttribute("data-ripple-id")).not.toBe("");
   });
 
+  it("does not let haptics failures block click commits", () => {
+    const onPress = vi.fn();
+
+    triggerMock.mockImplementation(() => {
+      throw new Error("no haptics");
+    });
+
+    render(<PressHarness onPress={onPress} />);
+
+    const button = screen.getByTestId("press-target");
+    setElementRect(button);
+
+    expect(() =>
+      fireEvent.click(button, {
+        detail: 1,
+        clientX: 28,
+        clientY: 42,
+      }),
+    ).not.toThrow();
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(onPress.mock.calls[0][0]).toBe("mouse");
+    expect(button.getAttribute("data-ripple-id")).not.toBe("");
+  });
+
   it("suppresses the next click after a swipe cancel", () => {
     const onPress = vi.fn();
 

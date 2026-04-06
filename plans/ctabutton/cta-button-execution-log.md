@@ -428,3 +428,122 @@ Next required action:
 
 - Phase 1 is closed. Do not start Phase 2 in this batch.
 - If work resumes, begin a separate Phase 2 batch that converts the wrapper into a compatibility facade without deleting the legacy import paths yet.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: Phase 2
+- Batch / scope: Convert `RippleCtaLink` into a canonical-runtime compatibility facade and verify Phase 2 invariants
+- Status: PASS
+
+Changes made:
+
+- Moved the live CTA interaction/rendering ownership into [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) so canonical `CtaLink` now owns the single-anchor internal link, external link, disabled button, ripple, analytics, and pre-approval trigger behavior.
+- Converted [RippleCtaLink.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) into a compatibility facade that maps legacy props (`label`, `variant`, `justify`, `section`, `cardId`, `children`, `preApprovalTrigger`) onto the canonical CTA runtime without changing the wrapper import paths.
+- Removed `next/link` `legacyBehavior` and `passHref` from the wrapper path by rendering the internal CTA as a single `next/link` anchor through the canonical runtime.
+- Added fire-and-forget isolation for legacy analytics observers in [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and for haptics in [press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) so failures do not block CTA commit handling.
+- Expanded [RippleCtaLink.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx), [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx), and [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) for the Phase 2 facade invariants, single-anchor DOM shape, analytics isolation, and haptics isolation.
+- Fixed [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx) to encode the calculator `known` query flag as the calculator’s canonical boolean value (`1` instead of `true`) so the live compatibility-facade CTA preserves the intended “I know my payment” mode during client navigation.
+- Added [MiniROI.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/__tests__/MiniROI.test.tsx) to lock the homepage wrapper CTA href to the canonical calculator query encoding.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-03`
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-06`
+- `CTA-INV-08`
+- `CTA-INV-09`
+- `CTA-INV-10`
+- `CTA-INV-11`
+- `CTA-INV-15`
+- `CTA-INV-19`
+- `CTA-INV-25`
+- `CTA-INV-26`
+
+Commands run:
+
+- `npm test -- lib/__tests__/press-feedback.test.tsx components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx features/cta/__tests__/public-api.test.tsx components/sections/nav/sticky-nav-rm/__tests__/NavPressable.test.tsx app/'(marketing)'/'(programs)'/_components/__tests__/ProgramNavCardLink.test.tsx features/pre-approval/__tests__/PreApprovalDrawerView.press-feedback.test.tsx components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx app/'(marketing)'/'(programs)'/_components/__tests__/preApprovalConfigRenderers.test.tsx components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx components/sections/page/mini-roi/__tests__/MiniROI.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `rg -n "legacyBehavior|passHref" components/ui/ripple-cta-link features/cta`
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'https?://' components/sections app/'(marketing)'`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900 && agent-browser open http://127.0.0.1:3001 && agent-browser wait --load networkidle && agent-browser eval "(() => { const calculatorLink = Array.from(document.querySelectorAll('a[href^=\"/tow-truck-calculator\"]')).find((el) => el.textContent?.includes('Build Your Full Profit Plan')); const preApprovalLink = Array.from(document.querySelectorAll('a[href=\"#get-pre-approved\"]')).find((el) => el.textContent?.includes('It Takes 30')); return { calculator: calculatorLink ? { href: calculatorLink.getAttribute('href'), text: calculatorLink.textContent?.trim() } : null, preApproval: preApprovalLink ? { href: preApprovalLink.getAttribute('href'), text: preApprovalLink.textContent?.trim() } : null, nestedAnchors: document.querySelectorAll('a a').length }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a[href^=\"/tow-truck-calculator\"]')).find((el) => el.textContent?.includes('Build Your Full Profit Plan')); if (!link) return null; link.scrollIntoView({ block: 'center' }); link.click(); return { href: link.getAttribute('href') }; })()" && agent-browser wait --load networkidle && agent-browser eval "({ href: window.location.href, pathname: window.location.pathname, search: window.location.search, knowsPaymentChecked: document.querySelector('#knows-payment')?.getAttribute('aria-checked') === 'true' })"`
+- `agent-browser open 'http://127.0.0.1:3001/tow-truck-calculator?rev=200&pmt=1200&known=1' && agent-browser wait --load networkidle && agent-browser eval "({ href: window.location.href, pathname: window.location.pathname, search: window.location.search, knowsPaymentChecked: document.querySelector('#knows-payment')?.getAttribute('aria-checked') === 'true' })"`
+- `agent-browser open http://127.0.0.1:3001 && agent-browser wait --load networkidle && agent-browser snapshot -i`
+- `agent-browser fill @e91 260 && agent-browser click @e52 && agent-browser fill @e92 1450 && agent-browser press Enter && agent-browser eval "(() => { const link = document.querySelector('a[href^=\"/tow-truck-calculator\"]'); return link ? { href: link.getAttribute('href'), text: link.textContent?.trim() } : null; })()"`
+- `agent-browser click @e53 && agent-browser wait --load networkidle && agent-browser eval "({ href: window.location.href, pathname: window.location.pathname, search: window.location.search, knowsPaymentChecked: document.querySelector('#knows-payment')?.getAttribute('aria-checked') === 'true' })"`
+- `agent-browser set viewport 1440 900 && agent-browser open http://127.0.0.1:3001 && agent-browser wait --load networkidle && agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a[href=\"#get-pre-approved\"]')).find((el) => el.textContent?.includes('It Takes 30')); if (!link) return null; link.scrollIntoView({ block: 'center' }); link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()" && agent-browser wait 500 && agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))) })"`
+- `agent-browser set device 'iPhone 14' && agent-browser open http://127.0.0.1:3001 && agent-browser wait --load networkidle && agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a[href^=\"/tow-truck-calculator\"]')).find((el) => el.textContent?.includes('Build Your Full Profit Plan')); if (!link) return null; link.scrollIntoView({ block: 'center' }); link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()" && agent-browser wait --load networkidle && agent-browser eval "({ href: window.location.href, pathname: window.location.pathname, search: window.location.search, knowsPaymentChecked: document.querySelector('#knows-payment')?.getAttribute('aria-checked') === 'true' })"`
+- `agent-browser set device 'iPhone 14' && agent-browser open http://127.0.0.1:3001 && agent-browser wait --load networkidle && agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a[href=\"#get-pre-approved\"]')).find((el) => el.textContent?.includes('It Takes 30')); if (!link) return null; link.scrollIntoView({ block: 'center' }); link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()" && agent-browser wait 500 && agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))) })"`
+
+Automated verification results:
+
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, including the new haptics failure isolation case (`CTA-INV-10`) while preserving commit-on-click, swipe cancel, duplicate-commit suppression, and reduced-motion behavior.
+- `components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx`: 7 tests passed, including the new single-anchor internal DOM assertion (`CTA-INV-01`) and analytics failure isolation (`CTA-INV-11`) while preserving disabled rendering, canonical pre-approval attributes, and legacy analytics payload identity (`CTA-INV-03`, `CTA-INV-04`, `CTA-INV-19`).
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, confirming the canonical `CtaLink` and `LeadCta` surfaces render through the canonical runtime and stay free of nested anchors.
+- `components/sections/page/mini-roi/__tests__/MiniROI.test.tsx`: 1 test passed, freezing the homepage compatibility-facade CTA on the calculator’s canonical boolean query encoding.
+- The full targeted CTA verification suite passed: 13 files, 44 tests total, including the protected adjacent surfaces for direct `usePressFeedback` consumers and direct trigger builders (`CTA-INV-25`, `CTA-INV-26`).
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed after restoring the deep-path compatibility type export.
+- `rg -n "legacyBehavior|passHref" components/ui/ripple-cta-link features/cta` returned no matches.
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'https?://' components/sections app/'(marketing)'` returned only schema metadata URLs and SVG namespaces; no production `RippleCtaLink` caller with an `http(s)` destination exists in the current inventory, so there is no representative external compatibility-facade browser path to exercise in Phase 2.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: `MiniROI` internal CTA `Build Your Full Profit Plan` through the compatibility facade with default homepage values
+- Observed behavior: the live CTA anchor rendered `href="/tow-truck-calculator?rev=200&pmt=1200&known=1"` with `document.querySelectorAll('a a').length === 0`; clicking it navigated to `/tow-truck-calculator?known=1` with the calculator’s `I know my payment` toggle checked. The destination canonicalized away default `rev` and `pmt` values but preserved the intended state.
+
+- Route: `/` -> `/tow-truck-calculator?known=1&pmt=1450&rev=260`
+- Viewport: desktop `1440x900`
+- Trigger path: `MiniROI` internal CTA after editing revenue-per-tow to `260` and monthly payment to `1450`
+- Observed behavior: the live wrapper CTA updated to `href="/tow-truck-calculator?rev=260&pmt=1450&known=1"` and browser activation preserved the non-default calculator state on the destination route with `knowsPaymentChecked: true`.
+
+- Route: `/tow-truck-calculator?rev=200&pmt=1200&known=1`
+- Viewport: desktop `1440x900`
+- Trigger path: direct open of the same calculator href for discrepancy comparison
+- Observed behavior: direct open preserved the full search string, confirming the remaining difference after CTA activation is destination-page canonicalization of default values rather than a lost-state regression in the compatibility facade.
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: closing-section pre-approval CTA `Get Pre-Approved — It Takes 30 Seconds` through the compatibility facade
+- Observed behavior: after scrolling the live wrapper link into view and invoking a DOM click on the real anchor, the pre-approval drawer opened on the same route and exposed `Continue to Pre-Approval`.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: `MiniROI` internal CTA `Build Your Full Profit Plan` through the compatibility facade with default homepage values
+- Observed behavior: tapping the live CTA navigated to `/tow-truck-calculator?known=1` and the calculator stayed in `I know my payment` mode, matching the desktop preserved-state result.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: closing-section pre-approval CTA `Get Pre-Approved — It Takes 30 Seconds` through the compatibility facade
+- Observed behavior: activating the live mobile CTA kept the user on the same route and exposed the pre-approval continue action (`continueVisible: true`), confirming the wrapper still composes with the drawer entry path on mobile.
+
+Evidence summary:
+
+- `CTA-INV-01`: automated proof exists in [RippleCtaLink.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx) and [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx); the live DOM also showed a single anchor with no nested anchors and no `legacyBehavior`/`passHref` remnants.
+- `CTA-INV-03`, `CTA-INV-04`, `CTA-INV-15`, and `CTA-INV-19` remain covered by the wrapper tests plus code review of [RippleCtaLink.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) delegating directly to [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx).
+- `CTA-INV-10` and `CTA-INV-11` now have explicit automated failure-isolation proof in [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) and [RippleCtaLink.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx).
+- `CTA-INV-25` and `CTA-INV-26` were rechecked because Phase 2 touched the shared press-feedback subsystem and the wrapper-to-pre-approval composition path.
+- The prior homepage discrepancy was caused by [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx) emitting `known=true` while the calculator runtime only recognizes canonical boolean query values (`known=1` / `known=0`). After correcting the wrapper CTA href, browser activation preserves the calculator mode on desktop and mobile, and non-default calculator values survive client navigation through the compatibility facade.
+- The remaining difference between CTA activation (`?known=1` for default values) and direct open (`?rev=200&pmt=1200&known=1`) is explained by the calculator destination canonicalizing default-valued params away during client navigation; this is not a lost-state regression because the destination state and non-default-value preservation both verify correctly.
+- No live production `RippleCtaLink` caller with an `http(s)` destination exists in the current inventory. Phase 2 therefore has no representative external compatibility-facade browser path to exercise, and the absence is proven by code search rather than by omission.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Phase 2 is closed. Do not start Phase 3 in this batch; if migration work resumes, open a separate Phase 3 batch and limit it to one revenue-critical caller group at a time.

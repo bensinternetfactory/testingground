@@ -111,9 +111,13 @@ export function usePressFeedback<T extends HTMLElement>({
         }
 
         lastTapRef.current = now;
-        trigger([{ duration: 35 }], {
-          intensity: shouldReduceMotion ? 0.4 : 1,
-        });
+        try {
+          trigger([{ duration: 35 }], {
+            intensity: shouldReduceMotion ? 0.4 : 1,
+          });
+        } catch {
+          // Haptics are optional feedback and must never block the CTA commit.
+        }
       }
 
       const rect = event.currentTarget.getBoundingClientRect();

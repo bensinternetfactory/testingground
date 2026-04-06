@@ -13,7 +13,7 @@ vi.mock("web-haptics/react", () => ({
 }));
 
 vi.mock("framer-motion", () => {
-  function createMotionComponent(tag: string) {
+  function createMotionComponent(tagOrComponent: React.ElementType) {
     const MotionComponent = React.forwardRef(function MockMotionComponent(
       props: Record<string, unknown>,
       ref: React.ForwardedRef<unknown>,
@@ -28,23 +28,52 @@ vi.mock("framer-motion", () => {
       delete domProps.variants;
       delete domProps.whileTap;
 
-      return React.createElement(tag, { ...domProps, ref });
+      return React.createElement(tagOrComponent, { ...domProps, ref });
     });
 
-    MotionComponent.displayName = `motion.${tag}`;
+    MotionComponent.displayName =
+      typeof tagOrComponent === "string"
+        ? `motion.${tagOrComponent}`
+        : `motion.${tagOrComponent.displayName ?? tagOrComponent.name ?? "component"}`;
     return MotionComponent;
   }
 
+  const motionTarget = {
+    create: (component: React.ElementType) => createMotionComponent(component),
+  };
+
   return {
-    motion: new Proxy(
-      {},
-      { get: (_target: object, tag: string) => createMotionComponent(tag) },
-    ),
+    motion: new Proxy(motionTarget, {
+      get: (target, prop: string) => {
+        if (prop in target) {
+          return target[prop as keyof typeof target];
+        }
+
+        return createMotionComponent(prop);
+      },
+    }),
     useReducedMotion: () => reduceMotion,
   };
 });
 
 import { RippleCtaLink } from "../RippleCtaLink";
+
+function setElementRect(element: HTMLElement) {
+  Object.defineProperty(element, "getBoundingClientRect", {
+    configurable: true,
+    value: () => ({
+      x: 10,
+      y: 20,
+      top: 20,
+      left: 10,
+      right: 110,
+      bottom: 60,
+      width: 100,
+      height: 40,
+      toJSON: () => "",
+    }),
+  });
+}
 
 afterEach(() => {
   cleanup();
@@ -56,6 +85,18 @@ beforeEach(() => {
 });
 
 describe("RippleCtaLink", () => {
+  it("renders internal CTAs as a single anchor without nested anchor usage", () => {
+    const { container } = render(
+      <RippleCtaLink href="/apply" label="Apply now" />,
+    );
+
+    const link = screen.getByRole("link", { name: "Apply now" });
+
+    expect(link).toHaveAttribute("href", "/apply");
+    expect(container.querySelectorAll("a")).toHaveLength(1);
+    expect(container.querySelector("a a")).toBeNull();
+  });
+
   it("emits canonical pre-approval trigger attributes when provided", () => {
     render(
       <RippleCtaLink
@@ -150,6 +191,39 @@ describe("RippleCtaLink", () => {
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 
+  it("does not let analytics observer failures block click commits", () => {
+    const onAnalyticsEvent = vi.fn(() => {
+      throw new Error("analytics offline");
+    });
+
+    render(
+      <RippleCtaLink
+        href="https://example.com"
+        label="Apply now"
+        section="hero"
+        onAnalyticsEvent={onAnalyticsEvent}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: "Apply now" });
+    let nativeClickSeen = false;
+
+    setElementRect(link);
+    link.addEventListener("click", () => {
+      nativeClickSeen = true;
+    });
+
+    expect(() =>
+      fireEvent.click(link, {
+        detail: 1,
+        clientX: 24,
+        clientY: 12,
+      }),
+    ).not.toThrow();
+    expect(onAnalyticsEvent).toHaveBeenCalledTimes(1);
+    expect(nativeClickSeen).toBe(true);
+  });
+
   it("preserves analytics identity from label even when children override the visible content", () => {
     const onAnalyticsEvent = vi.fn();
 
@@ -166,6 +240,7 @@ describe("RippleCtaLink", () => {
     );
 
     const link = screen.getByRole("link", { name: "Visible override" });
+    setElementRect(link);
     link.addEventListener("click", (event) => event.preventDefault());
 
     fireEvent.keyDown(link, { key: "Enter" });

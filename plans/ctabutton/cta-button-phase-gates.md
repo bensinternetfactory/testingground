@@ -89,29 +89,30 @@ Preconditions:
 
 Execution checklist:
 
-- [ ] `RippleCtaLink` delegates to canonical CTA runtime instead of owning the canonical behavior.
-- [ ] `next/link` `legacyBehavior` removed.
-- [ ] `next/link` `passHref` removed.
-- [ ] Disabled compatibility behavior preserved.
-- [ ] Pre-approval trigger attribute emission preserved.
-- [ ] Legacy analytics payload compatibility preserved.
-- [ ] Analytics failure isolation verified.
-- [ ] Haptics failure isolation verified.
-- [ ] Browser validation completed for affected CTA paths.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with evidence for `CTA-INV-01` `CTA-INV-03` `CTA-INV-04` `CTA-INV-10` `CTA-INV-11` `CTA-INV-15` `CTA-INV-19` and relevant baseline invariants.
+- [x] `RippleCtaLink` delegates to canonical CTA runtime instead of owning the canonical behavior.
+- [x] `next/link` `legacyBehavior` removed.
+- [x] `next/link` `passHref` removed.
+- [x] Disabled compatibility behavior preserved.
+- [x] Pre-approval trigger attribute emission preserved.
+- [x] Legacy analytics payload compatibility preserved.
+- [x] Analytics failure isolation verified.
+- [x] Haptics failure isolation verified.
+- [x] Live inventory search confirmed there is no production `RippleCtaLink` caller with an `http(s)` destination; external browser validation is not applicable in this phase.
+- [x] Browser validation completed for affected CTA paths.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with evidence for `CTA-INV-01` `CTA-INV-03` `CTA-INV-04` `CTA-INV-10` `CTA-INV-11` `CTA-INV-15` `CTA-INV-19` and relevant baseline invariants.
 
 Go / no-go gate:
 
-- [ ] Go: the compatibility facade points at canonical logic and preserves caller behavior.
-- [ ] No-go conditions checked: no lost pre-approval attributes, no duplicate commit regression, no analytics-blocked navigation, no haptics-coupled commit path.
+- [x] Go: the compatibility facade points at canonical logic and preserves caller behavior.
+- [x] No-go conditions checked: no lost pre-approval attributes, no duplicate commit regression, no analytics-blocked navigation, no haptics-coupled commit path.
 
 ## Phase 3: Migrate Revenue-Critical Callers First
 
 Preconditions:
 
-- [ ] Phase 2 gate passed.
+- [x] Phase 2 gate passed.
 
 Execution checklist:
 

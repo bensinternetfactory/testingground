@@ -19,7 +19,7 @@ vi.mock("web-haptics/react", () => ({
 }));
 
 vi.mock("framer-motion", () => {
-  function createMotionComponent(tag: string) {
+  function createMotionComponent(tagOrComponent: React.ElementType) {
     const MotionComponent = React.forwardRef(function MockMotionComponent(
       props: Record<string, unknown>,
       ref: React.ForwardedRef<unknown>,
@@ -34,18 +34,30 @@ vi.mock("framer-motion", () => {
       delete domProps.variants;
       delete domProps.whileTap;
 
-      return React.createElement(tag, { ...domProps, ref });
+      return React.createElement(tagOrComponent, { ...domProps, ref });
     });
 
-    MotionComponent.displayName = `motion.${tag}`;
+    MotionComponent.displayName =
+      typeof tagOrComponent === "string"
+        ? `motion.${tagOrComponent}`
+        : `motion.${tagOrComponent.displayName ?? tagOrComponent.name ?? "component"}`;
     return MotionComponent;
   }
 
+  const motionTarget = {
+    create: (component: React.ElementType) => createMotionComponent(component),
+  };
+
   return {
-    motion: new Proxy(
-      {},
-      { get: (_target: object, tag: string) => createMotionComponent(tag) },
-    ),
+    motion: new Proxy(motionTarget, {
+      get: (target, prop: string) => {
+        if (prop in target) {
+          return target[prop as keyof typeof target];
+        }
+
+        return createMotionComponent(prop);
+      },
+    }),
     useReducedMotion: () => reduceMotion,
   };
 });
@@ -91,14 +103,19 @@ describe("CTA public API", () => {
     );
   });
 
-  it("renders canonical CtaLink and LeadCta surfaces through the existing wrapper runtime", () => {
+  it("renders canonical CtaLink and LeadCta surfaces through the canonical CTA runtime", () => {
     const entry = createPreApprovalEntry({
       pathname: "/rollback-financing",
       trigger,
     });
 
-    render(
+    const { container } = render(
       <>
+        <CtaLink
+          href="/contact"
+          copy={{ label: "Talk to lending" }}
+          appearance={{ tone: "primary" }}
+        />
         <CtaLink
           href="https://example.com"
           copy={{ label: "Visit partner site" }}
@@ -112,9 +129,12 @@ describe("CTA public API", () => {
       </>,
     );
 
+    const internalLink = screen.getByRole("link", { name: "Talk to lending" });
     const externalLink = screen.getByRole("link", { name: "Visit partner site" });
     const leadLink = screen.getByRole("link", { name: "Apply now" });
 
+    expect(internalLink).toHaveAttribute("href", "/contact");
+    expect(container.querySelector("a a")).toBeNull();
     expect(externalLink).toHaveAttribute("href", "https://example.com");
     expect(externalLink).toHaveAttribute("target", "_blank");
     expect(externalLink.className).toContain("w-full");

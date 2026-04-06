@@ -150,7 +150,7 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
   const ctaHref = `${config.cta.basePath}?${new URLSearchParams({
     rev: String(typedRevenuePerTow),
     pmt: String(manualPmt),
-    known: "true",
+    known: "1",
   }).toString()}`;
 
   if (MINI_ROI_DEBUG) {
