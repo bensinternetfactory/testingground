@@ -5,8 +5,8 @@ import truck12 from "@/public/truck-12.jpg";
 import truck14 from "@/public/truck-14.jpg";
 import {
   DRAWER_HASH,
-  WRECKER_HERO_DRAWER,
 } from "@/components/ui/pre-approval-drawer";
+import { wreckerHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
@@ -68,7 +68,7 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       cta: {
         label: "Get Pre-Approved",
         href: DRAWER_HASH,
-        drawer: WRECKER_HERO_DRAWER,
+        preApprovalSelectionTrigger: wreckerHeroPreApprovalSelectionTrigger,
       },
       footnoteMarkers: {
         "30 seconds": "¹",

@@ -172,9 +172,9 @@ Execution checklist:
 - [x] Migrated callers recorded in the execution log.
 - [x] `RippleCtaLink` migration status recorded.
 - [x] Nav/footer helper migration status recorded.
-- [ ] Route-only consumer migration status recorded.
-- [ ] Hero preset migration status recorded.
-- [ ] Tile-selection helper migration status recorded.
+- [x] Route-only consumer migration status recorded.
+- [x] Hero preset migration status recorded.
+- [x] Tile-selection helper migration status recorded.
 - [ ] Shared CSS consumer migration status recorded.
 - [ ] Route/page config migration status recorded.
 - [x] Browser validation completed for each changed caller batch.

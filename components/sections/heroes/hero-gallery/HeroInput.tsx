@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { CircleDollarSign } from "lucide-react";
-import { buildPreApprovalHref } from "@/components/ui/pre-approval-drawer";
+import { buildPreApprovalHref } from "@/features/pre-approval/routes";
 
 function formatCurrency(value: string): string {
   const digits = value.replace(/\D/g, "");

@@ -1,7 +1,6 @@
 import truck12 from "@/public/truck-12.jpg";
 import {
   DRAWER_HASH,
-  ROTATOR_HERO_DRAWER,
 } from "@/components/ui/pre-approval-drawer";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
@@ -61,7 +60,17 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       cta: {
         label: "Get Pre-Approved",
         href: DRAWER_HASH,
-        drawer: ROTATOR_HERO_DRAWER,
+        preApprovalTrigger: {
+          origin: {
+            pageId: "rotator-financing",
+            sectionId: "hero-primary",
+            ctaId: "hero-main-cta",
+            placement: "hero",
+          },
+          handoff: {
+            truckType: "rotator",
+          },
+        },
       },
       phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
       trustBadges: [

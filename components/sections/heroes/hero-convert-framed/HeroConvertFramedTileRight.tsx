@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
-import type { DrawerSelectionTrigger } from "@/components/ui/pre-approval-drawer";
+import type { HeroConvertCtaConfig } from "../hero-convert-geico/config";
 
 export interface HeroConvertFramedTileRightConfig {
   headline: string;
@@ -9,7 +9,7 @@ export interface HeroConvertFramedTileRightConfig {
   selectionPrompt: string;
   selectionRequiredMessage: string;
   tiles: FramedHeroTileData[];
-  cta: { label: string; href: string; drawer?: DrawerSelectionTrigger };
+  cta: HeroConvertCtaConfig;
   microcopy?: string;
   disclaimer?: string;
 }

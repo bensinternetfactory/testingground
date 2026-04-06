@@ -6,6 +6,13 @@ import {
   type PreApprovalDrawerSessionState,
 } from "@/features/pre-approval/drawer/runtime/session";
 import {
+  resolvePreApprovalSelectionTruckType,
+  rollbackHeroPreApprovalSelectionTrigger,
+  rotatorHeroPreApprovalSelectionTrigger,
+  usedTowTruckHeroPreApprovalSelectionTrigger,
+  wreckerHeroPreApprovalSelectionTrigger,
+} from "@/features/pre-approval/selection";
+import {
   type LegacyDrawerHeroTruckType,
   type LegacyDrawerTriggerPayload,
   type LegacyDrawerTriggerSource,
@@ -127,9 +134,13 @@ export function resolveSelectionDrawerTrigger(
     return undefined;
   }
 
-  const resolvedTruckType =
-    (selectedTileId ? trigger.truckTypeByTileId?.[selectedTileId] : undefined) ??
-    trigger.truckType;
+  const resolvedTruckType = resolvePreApprovalSelectionTruckType(
+    {
+      truckType: trigger.truckType,
+      truckTypeByTileId: trigger.truckTypeByTileId,
+    },
+    selectedTileId,
+  );
   const payload: DrawerTriggerPayload = {
     title: trigger.title,
     source: trigger.source,
@@ -146,28 +157,21 @@ export function resolveSelectionDrawerTrigger(
 
 export const ROLLBACK_HERO_DRAWER: DrawerSelectionTrigger = {
   source: HERO_DRAWER_SOURCE,
-  truckType: "rollback",
+  truckType: rollbackHeroPreApprovalSelectionTrigger.handoff?.truckType,
 };
 
 export const WRECKER_HERO_DRAWER: DrawerSelectionTrigger = {
   source: HERO_DRAWER_SOURCE,
-  truckTypeByTileId: {
-    "light-duty": "wrecker",
-    "heavy-wrecker": "heavy-wrecker",
-  },
+  truckTypeByTileId: wreckerHeroPreApprovalSelectionTrigger.truckTypeByTileId,
 };
 
 export const ROTATOR_HERO_DRAWER: DrawerSelectionTrigger = {
   source: HERO_DRAWER_SOURCE,
-  truckType: "rotator",
+  truckType: rotatorHeroPreApprovalSelectionTrigger.handoff?.truckType,
 };
 
 export const USED_TOW_TRUCK_HERO_DRAWER: DrawerSelectionTrigger = {
   source: HERO_DRAWER_SOURCE,
-  truckTypeByTileId: {
-    rollback: "rollback",
-    wrecker: "wrecker",
-    "heavy-wrecker": "heavy-wrecker",
-    rotator: "rotator",
-  },
+  truckTypeByTileId:
+    usedTowTruckHeroPreApprovalSelectionTrigger.truckTypeByTileId,
 };

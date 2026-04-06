@@ -3,6 +3,9 @@ import {
   DRAWER_HASH,
   type DrawerTriggerPayload,
 } from "@/components/ui/pre-approval-drawer";
+import type {
+  PreApprovalTrigger,
+} from "@/features/pre-approval/contract";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -16,7 +19,12 @@ export interface TrustBadgeData {
 export interface HeroLeadGenConfig {
   headline: string;
   subheadline: string;
-  cta: { label: string; href: string; drawer?: DrawerTriggerPayload };
+  cta: {
+    label: string;
+    href: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+    drawer?: DrawerTriggerPayload;
+  };
   phone?: { display: string; href: string };
   trustBadges: TrustBadgeData[];
   heroImage: string;

@@ -18,8 +18,6 @@ import {
   type PressModality,
 } from "@/lib/press-feedback";
 
-const MotionLink = motion.create(Link);
-
 export interface RippleCtaLinkAnalyticsPayload {
   component: "RippleCtaLink";
   section: string;
@@ -201,19 +199,19 @@ export function RippleCtaLink({
       );
 
   return (
-    <MotionLink
-      href={href}
-      prefetch={prefetch}
-      {...handlers}
-      whileTap={
-        shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
-      }
-      transition={tapSpring}
-      aria-label={ariaLabel}
-      {...drawerAttributes}
-      className={sharedClassName}
-    >
-      {content}
-    </MotionLink>
+    <Link href={href} prefetch={prefetch} legacyBehavior passHref>
+      <motion.a
+        {...handlers}
+        whileTap={
+          shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
+        }
+        transition={tapSpring}
+        aria-label={ariaLabel}
+        {...drawerAttributes}
+        className={sharedClassName}
+      >
+        {content}
+      </motion.a>
+    </Link>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { resolvePreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   DRAWER_HASH,
   resolveSelectionDrawerTrigger,
@@ -28,6 +29,10 @@ export function TileSelector({
   // Initial value MUST be null (not read from URL/localStorage) to avoid hydration mismatch
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const selectedLabel = tiles.find((tile) => tile.id === selectedTile)?.label;
+  const preApprovalTrigger = resolvePreApprovalSelectionTrigger(
+    cta.preApprovalSelectionTrigger,
+    selectedTile,
+  );
   const drawer = resolveSelectionDrawerTrigger(cta.drawer, selectedTile);
 
   return (
@@ -77,6 +82,7 @@ export function TileSelector({
       <RippleCtaLink
         href={cta.href === DRAWER_HASH ? DRAWER_HASH : cta.href}
         label={cta.label}
+        preApprovalTrigger={preApprovalTrigger}
         drawer={drawer}
         size="md"
         disabled={!selectedTile}

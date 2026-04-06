@@ -6,8 +6,8 @@ import {
 } from "../_components/shared-config";
 import {
   DRAWER_HASH,
-  USED_TOW_TRUCK_HERO_DRAWER,
 } from "@/components/ui/pre-approval-drawer";
+import { usedTowTruckHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import type { FaqItemData } from "@/components/sections/page/faq/config";
 
 /* ── Page Config ─────────────────────────────────────────────────── */
@@ -31,7 +31,8 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
       cta: {
         label: "Get Pre-Approved",
         href: DRAWER_HASH,
-        drawer: USED_TOW_TRUCK_HERO_DRAWER,
+        preApprovalSelectionTrigger:
+          usedTowTruckHeroPreApprovalSelectionTrigger,
       },
       microcopy: "Checking won't affect your credit score.\u00B9",
       disclaimer:

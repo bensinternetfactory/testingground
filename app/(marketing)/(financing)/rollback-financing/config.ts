@@ -10,8 +10,8 @@ import {
 } from "../_components/shared-config";
 import {
   DRAWER_HASH,
-  ROLLBACK_HERO_DRAWER,
 } from "@/components/ui/pre-approval-drawer";
+import { rollbackHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
 } from "@/components/sections/page/financing-offers-split/config";
@@ -40,7 +40,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       cta: {
         label: "Get Pre-Approved",
         href: DRAWER_HASH,
-        drawer: ROLLBACK_HERO_DRAWER,
+        preApprovalSelectionTrigger: rollbackHeroPreApprovalSelectionTrigger,
       },
       footnoteMarkers: {
         "30 seconds": "¹",

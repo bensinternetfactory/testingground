@@ -84,6 +84,280 @@ Next required action:
 - Date: 2026-04-06
 - Agent: Codex
 - Phase: `Phase 5`
+- Batch / scope: Batch 5 only: migrate the rollback, wrecker, and used-truck tile-selection hero callers to a feature-owned, server-safe canonical trigger helper while preserving the legacy tile-selection compatibility path
+- Status: `PASS`
+
+Changes made:
+
+- Added the feature-owned server-safe tile-selection helper [`features/pre-approval/selection.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/selection.ts) with canonical hero trigger constants for rollback, wrecker, rotator, and used-tow-truck flows plus the shared `resolvePreApprovalSelectionTrigger()` resolution path.
+- Added focused helper coverage in [`features/pre-approval/__tests__/selection.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/selection.test.ts) for the rollback, wrecker, and used-truck canonical truck-type mappings.
+- Updated the legacy compatibility facade in [`components/ui/pre-approval-drawer/triggers.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/triggers.ts) so the old `resolveSelectionDrawerTrigger()` and exported hero constants stay available while reusing the feature-owned truck-type resolution rules.
+- Updated [`components/sections/heroes/hero-convert-geico/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/config.ts), [`components/sections/heroes/hero-convert-geico/TileSelector.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx), [`components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx), and [`components/sections/heroes/hero-convert-framed/HeroConvertFramedTileRight.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedTileRight.tsx) so shared tile-selector callers can author `preApprovalSelectionTrigger`, prefer the canonical feature path, and still fall back to the legacy `drawer` path for untouched callers.
+- Migrated only the authorized hero configs to the canonical feature helper: [`app/(marketing)/(financing)/rollback-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rollback-financing/config.ts), [`app/(marketing)/(financing)/wrecker-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/wrecker-financing/config.ts), and [`app/(marketing)/(financing)/used-tow-truck-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/used-tow-truck-financing/config.ts).
+- Added focused selector coverage in [`components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx) and [`components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx) for both canonical migrated callers and preserved legacy compatibility callers.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-03`
+- `PA-INV-04`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+
+Commands run:
+
+- `rg -n "preApprovalSelectionTrigger|ROLLBACK_HERO_DRAWER|WRECKER_HERO_DRAWER|USED_TOW_TRUCK_HERO_DRAWER|resolveSelectionDrawerTrigger|resolvePreApprovalSelectionTrigger" app components features --glob '!**/__tests__/**' --glob '!**/*test*'`
+- `npm test -- features/pre-approval/__tests__/selection.test.ts components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx components/ui/pre-approval-drawer/__tests__/triggers.test.ts components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx features/pre-approval/__tests__/public-api.test.ts`
+- `npm run lint`
+- `npm run build`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser click @e38`
+- `agent-browser eval '(() => { const link = document.querySelector("#hero a[href=\"#get-pre-approved\"]"); if (!(link instanceof HTMLAnchorElement)) return null; return { href: link.getAttribute("href"), dataset: { ...link.dataset } }; })()'`
+- `agent-browser click @e14`
+- `agent-browser click @e59`
+- `agent-browser open http://127.0.0.1:3001/wrecker-financing`
+- `agent-browser click @e40`
+- `agent-browser eval '(() => { const link = document.querySelector("#hero a[href=\"#get-pre-approved\"]"); if (!(link instanceof HTMLAnchorElement)) return null; return { href: link.getAttribute("href"), dataset: { ...link.dataset } }; })()'`
+- `agent-browser click @e14`
+- `agent-browser click @e60`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3001/used-tow-truck-financing`
+- `agent-browser click @e44`
+- `agent-browser eval '(() => { const link = document.querySelector("#hero a[href=\"#get-pre-approved\"]"); if (!(link instanceof HTMLAnchorElement)) return null; return { href: link.getAttribute("href"), dataset: { ...link.dataset } }; })()'`
+- `agent-browser click @e12`
+- `agent-browser click @e42`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser click @e15`
+- `agent-browser click @e59`
+
+Automated verification results:
+
+- `PA-INV-04` and `PA-INV-10`: [`selection.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/selection.test.ts) passed `2` tests verifying the canonical rollback, wrecker, and used-truck tile-selection truck-type mappings and the shared feature-owned truck-type resolver behavior.
+- `PA-INV-10`: [`TileSelector.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx) and [`FramedTileSelector.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx) passed `4` tests verifying that migrated tile-selector callers now emit canonical `data-pre-approval-*` attributes with the resolved hero truck type.
+- `PA-INV-09`: the same selector test files also verify the preserved legacy fallback path, showing untouched callers still emit `data-drawer-*` attributes through the compatibility helper when they continue to author `drawer`.
+- `PA-INV-09`, `PA-INV-10`, and `PA-INV-11`: rerunning [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx), [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts), and [`triggers.test.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/triggers.test.ts) passed `34` additional tests, confirming legacy trigger parsing still works, canonical trigger attributes still work, the new schema still wins when both schemas are present, and the compatibility facade remains aligned with the feature-owned contracts. The same existing happy-dom `localhost:3000` fetch noise appeared during the direct-hash suite, but no assertion failed.
+- `PA-INV-17`: `npm run build` passed after the tile-selection caller cutover, confirming the compatibility facade and untouched callers still compile while later Phase 5 batches remain pending.
+- `rg -n "preApprovalSelectionTrigger|ROLLBACK_HERO_DRAWER|WRECKER_HERO_DRAWER|USED_TOW_TRUCK_HERO_DRAWER|resolveSelectionDrawerTrigger|resolvePreApprovalSelectionTrigger" app components features --glob '!**/__tests__/**' --glob '!**/*test*'` shows only the three authorized hero configs now author `preApprovalSelectionTrigger`, while the shared selectors retain the legacy `resolveSelectionDrawerTrigger()` fallback and the compatibility module still exports the legacy tile-selection constants for untouched callers.
+- `npm run lint`: passed with the same pre-existing unused-variable warnings in the pre-approval drawer motion-mock tests; no new tile-selection batch lint issues were introduced.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: select `Light-Duty Rollback`, inspect the hero CTA DOM attributes, open the drawer, then Continue
+- Observed behavior: the hero CTA becomes an in-page link with canonical `data-pre-approval-*` attributes including `data-pre-approval-origin-page-id="rollback-financing"` and `data-pre-approval-handoff-truck-type="rollback"`, the drawer opens with the default title `Estimate how much financing you need.`, and Continue navigates to `http://127.0.0.1:3001/pre-approval?amount=100000&trucktype=rollback`.
+
+- Route: `/wrecker-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: select `Heavy Wrecker`, inspect the hero CTA DOM attributes, open the drawer, then Continue
+- Observed behavior: the hero CTA emits canonical `data-pre-approval-*` attributes with `data-pre-approval-origin-page-id="wrecker-financing"` and `data-pre-approval-handoff-truck-type="heavy-wrecker"`, the drawer opens with the default title, and Continue navigates to `http://127.0.0.1:3001/pre-approval?amount=100000&trucktype=heavy-wrecker`.
+
+- Route: `/used-tow-truck-financing`
+- Viewport: mobile (`iPhone 14`)
+- Trigger path: select `Rotator`, inspect the hero CTA DOM attributes, open the drawer, then Continue
+- Observed behavior: the hero CTA emits canonical `data-pre-approval-*` attributes with `data-pre-approval-origin-page-id="used-tow-truck-financing"` and `data-pre-approval-handoff-truck-type="rotator"`, the drawer opens correctly on mobile, and Continue navigates to `http://127.0.0.1:3001/pre-approval?amount=100000&trucktype=rotator`.
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the untouched tertiary CTA `I found a truck and need financing`, confirm the drawer title, then Continue
+- Observed behavior: the untouched compatibility caller still opens the drawer with the legacy title `How much is the rollback you found?`, and Continue navigates to the legacy amount-only handoff `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- This batch stayed within the allowed Phase 5 tile-selection scope: only the rollback, wrecker, and used-truck hero callers were migrated to the canonical feature-owned helper, with no shared CSS changes, route/page-config migration, compatibility removal, or Phase 6 cleanup mixed in.
+- Tile-selection trigger resolution now has a feature-owned, server-safe canonical surface in [`selection.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/selection.ts), and the shared tile-selector components prefer that canonical path while still preserving the legacy fallback for untouched callers.
+- Mixed old/new callers still coexist after the batch: the authorized hero flows now emit canonical production trigger attributes and preserve exact truck-type handoff, while untouched legacy callers continue to open and continue through the compatibility path.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. Browser automation required escalated execution for `agent-browser` because its socket directory lives under `~/.agent-browser`, but the validation completed successfully once run outside the sandbox.
+
+Next required action:
+
+- Move to the next allowed Phase 5 caller batch only: shared CSS consumer migration. Do not start route/page-config work, compatibility removal, or Phase 6 cleanup until the shared CSS batch reaches its own `GO` gate.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 5`
+- Batch / scope: Batch 4 only: migrate the fixed hero-preset caller path for the rotator lead-gen hero to the canonical trigger contract, and repair the shared CTA primitive when browser validation exposed dropped canonical data attributes
+- Status: `PASS`
+
+Changes made:
+
+- Updated [`components/sections/heroes/hero-lead-gen/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/config.ts) so lead-gen hero CTAs can author `preApprovalTrigger` while retaining the legacy `drawer` compatibility prop.
+- Updated [`components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) to prefer the canonical `preApprovalTrigger` path when rendering the hero CTA and keep the legacy drawer path intact for untouched callers.
+- Updated [`app/(marketing)/(financing)/rotator-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rotator-financing/config.ts) so the rotator hero CTA now authors an explicit canonical `PreApprovalTrigger` with stable hero origin IDs and `handoff.truckType = "rotator"` instead of relying on the legacy preset constant.
+- Added focused hero-preset coverage in [`HeroLeadGen.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx) for canonical hero attribute emission and the preserved legacy compatibility path.
+- Updated [`components/ui/ripple-cta-link/RippleCtaLink.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) to render internal links through `next/link` with a real `<a>` child so the canonical `data-pre-approval-*` and legacy `data-drawer-*` attributes reach the DOM in the browser. This regression fix was required after the initial Batch 4 browser run showed the rotator hero CTA opened via bare hash fallback and lost its truck-type handoff.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to record the completed hero-preset batch while leaving the tile-selection helper, shared-CSS, and route/page-config batches open.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-03`
+- `PA-INV-04`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+
+Commands run:
+
+- `npm test -- components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx features/pre-approval/__tests__/public-api.test.ts components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`
+- `rg -n "ROTATOR_HERO_DRAWER|preApprovalTrigger|DrawerSelectionTrigger|resolveSelectionDrawerTrigger" app components --glob '!**/*test*'`
+- `npm run lint`
+- `npm run build`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rotator-financing`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'Get Pre-Approved'); if (!(link instanceof HTMLAnchorElement)) return null; return { href: link.getAttribute('href'), dataset: { ...link.dataset } }; })()"`
+- `agent-browser click @e14`
+- `agent-browser wait --text "Estimate how much financing you need."`
+- `agent-browser click @e59`
+- `agent-browser get url`
+- `agent-browser open http://127.0.0.1:3001/rotator-financing`
+- `agent-browser click @e15`
+- `agent-browser wait --text "How much is the rotator you found?"`
+- `agent-browser click @e59`
+- `agent-browser get url`
+
+Automated verification results:
+
+- `PA-INV-10` and `PA-INV-04`: [`HeroLeadGen.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx) passed `2` tests verifying that the rotator hero CTA emits canonical production attributes with `data-pre-approval-handoff-truck-type="rotator"` and that the legacy `drawer` compatibility path remains available for untouched lead-gen callers.
+- `PA-INV-09`, `PA-INV-10`, and `PA-INV-11`: the targeted rerun of [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx), [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts), and [`PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx) passed `44` tests across `4` files, confirming canonical parsing still works, legacy compatibility still works, schema precedence remains intact, and the drawer continue path still preserves hero truck-type handoff. The same existing happy-dom `localhost:3000` fetch noise appeared during the direct-hash suite, but no assertion failed.
+- `PA-INV-17`: `npm run build` passed after the hero-preset cutover and the shared CTA fix, confirming the remaining compatibility surface and untouched later-batch callers still compile.
+- `rg -n "ROTATOR_HERO_DRAWER|preApprovalTrigger|DrawerSelectionTrigger|resolveSelectionDrawerTrigger" app components --glob '!**/*test*'` shows [`rotator-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rotator-financing/config.ts) now uses `preApprovalTrigger`, while the remaining `DrawerSelectionTrigger` / `resolveSelectionDrawerTrigger` usages are isolated to later tile-selection batches.
+- `npm run lint`: passed with the same pre-existing unused-variable warnings in the pre-approval drawer motion-mock tests; no new hero-preset batch lint issues were introduced.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/rotator-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the hero CTA `Get Pre-Approved`, wait for the drawer, then Continue
+- Observed behavior: after the shared CTA fix, the rendered hero CTA exposes canonical `data-pre-approval-*` attributes in the DOM, the drawer opens with the default title `Estimate how much financing you need.`, and Continue navigates to `http://127.0.0.1:3001/pre-approval?amount=100000&trucktype=rotator`.
+
+- Route: `/rotator-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the untouched legacy tertiary CTA `Already have a rotator in mind? I found a truck and need financing`, confirm the drawer title, then Continue
+- Observed behavior: the untouched compatibility caller still opens the drawer with the title `How much is the rotator you found?`, and Continue navigates immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- This batch stayed within the allowed fixed hero-preset scope: the only authored caller migrated was the rotator lead-gen hero path, and the tile-selection helper consumers for rollback, wrecker, and used-truck heroes were intentionally left on their existing compatibility path for the next Phase 5 batch.
+- The initial browser run exposed a real regression in the shared internal CTA rendering path: canonical data attributes authored through `RippleCtaLink` were not reaching the DOM, so the drawer fell back to a plain hash open and lost the truck-type handoff. Repairing [`RippleCtaLink.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) was strictly required by that discovered regression and did not broaden the batch beyond the necessary fix.
+- Mixed old/new callers still coexist after the fix: the rotator hero CTA now uses the canonical production trigger contract end-to-end, while the untouched legacy tertiary CTA on the same page still opens and continues through the compatibility path.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None after the shared CTA fix. The dropped-DOM-attributes regression discovered during the first browser pass was corrected within this batch and reverified to green before the gate decision.
+
+Next required action:
+
+- Move to the next allowed Phase 5 caller batch only: tile-selection helper migration. Do not start the shared CSS consumer batch, route/page config batch, compatibility removal, or Phase 6 work until the tile-selection helper batch reaches its own `GO` gate.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 5`
+- Batch / scope: Batch 3 only: migrate the route-only hero-gallery consumer to the canonical feature route contract and verify untouched drawer callers still work through compatibility
+- Status: `PASS`
+
+Changes made:
+
+- Updated [`HeroInput.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroInput.tsx) so the desktop route-only submit path imports `buildPreApprovalHref()` directly from [`@/features/pre-approval/routes`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/routes.ts) instead of the legacy drawer facade.
+- Added focused route-only coverage in [`HeroInput.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/__tests__/HeroInput.test.tsx) for canonical href navigation, `onSubmit` precedence, and the empty-amount no-op behavior.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to record the completed Phase 5 route-only consumer batch while leaving later hero-preset, tile-selection, shared-CSS, and route/page-config batches open.
+
+Verification matrix IDs covered:
+
+- `PA-INV-03`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+- `PA-INV-24`
+
+Commands run:
+
+- `npm test -- components/sections/heroes/hero-gallery/__tests__/HeroInput.test.tsx components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx features/pre-approval/__tests__/public-api.test.ts`
+- `npm run lint`
+- `npm run build`
+- `rg -n "buildPreApprovalHref|@/components/ui/pre-approval-drawer|@/features/pre-approval/routes" components/sections/heroes app components --glob '!**/*test*'`
+- `lsof -nP -iTCP -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001`
+- `agent-browser fill @e39 155000`
+- `agent-browser eval "document.getElementById('hero-amount')?.value"`
+- `agent-browser click @e40`
+- `agent-browser get url`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser click @e15`
+- `agent-browser wait --text "How much is the rollback you found?"`
+- `agent-browser click @e59`
+- `agent-browser get url`
+
+Automated verification results:
+
+- `PA-INV-24`: [`HeroInput.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/__tests__/HeroInput.test.tsx) passed `3` tests covering route-only submit navigation through the canonical route builder, `onSubmit` precedence over navigation, and the empty-input no-op path.
+- `PA-INV-09`, `PA-INV-10`, and `PA-INV-11`: the targeted rerun of [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx), [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), and [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts) passed `26` tests across `3` files, confirming the canonical and legacy trigger schemas still coexist and untouched drawer callers remain supported. The same existing happy-dom `localhost:3000` fetch noise appeared during the direct-hash suite, but no assertion failed.
+- `PA-INV-17`: `npm run build` passed after the route-only consumer cutover, confirming the compatibility facade and remaining untouched callers still compile while later Phase 5 batches remain pending.
+- `PA-INV-24`: `rg -n "buildPreApprovalHref|@/components/ui/pre-approval-drawer|@/features/pre-approval/routes" components/sections/heroes app components --glob '!**/*test*'` shows [`HeroInput.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroInput.tsx) now imports from the feature route contract, while the remaining legacy imports are concentrated in later hero-preset, tile-selection, shared-CSS, and route/page-config consumers that are intentionally deferred to later Phase 5 batches.
+- `npm run lint`: passed with the same pre-existing unused-variable warnings in the pre-approval drawer motion-mock tests; no new route-only batch lint issues were introduced.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop (`1440x900`)
+- Trigger path: enter raw digits `155000` into the hero-gallery amount field and click `Get Pre-Approved`
+- Observed behavior: the controlled input formatted to `$155,000`, and submission navigated directly to `http://127.0.0.1:3001/pre-approval?amount=155000`. The destination route remains intentionally absent in this repo, so the URL handoff rather than page content is the required assertion for this batch.
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the untouched legacy CTA `Already have a truck in mind? I found a truck and need financing`, confirm the drawer title, then Continue
+- Observed behavior: the untouched compatibility caller still opened the drawer with the title `How much is the rollback you found?`, and Continue navigated immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- This batch stayed within the allowed Phase 5 route-only scope: only the direct route consumer [`HeroInput.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroInput.tsx) and its focused regression test changed, with no hero preset, tile-selection, shared-CSS, compatibility-removal, or later config migration mixed in.
+- The route-only desktop hero input now depends on the canonical feature route contract directly, which satisfies the named Phase 5 migration requirement for [`HeroInput.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroInput.tsx).
+- Mixed old/new callers still coexist after the batch: the route-only hero input uses the feature route contract directly, while untouched legacy drawer CTAs still open and continue through the compatibility path.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. An initial browser automation attempt that filled the input with a preformatted currency string produced `amount=0`; rerunning with raw digit entry verified the controlled input value and the canonical `amount=155000` handoff, so no product regression remains for this batch.
+
+Next required action:
+
+- Move to the next allowed Phase 5 caller batch only: hero preset migration. Do not start the tile-selection helper, shared CSS consumer, route/page config, compatibility removal, or Phase 6 work until the hero preset batch reaches its own `GO` gate.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 5`
 - Batch / scope: Batch 2 only: migrate the shared sticky-nav CTA helper path to the canonical pre-approval trigger contract, confirm no production footer CTA helper exists to migrate in this batch, and keep untouched callers on the compatibility path
 - Status: `PASS`
 
