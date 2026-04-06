@@ -8,37 +8,9 @@ export {
 } from "@/features/pre-approval/drawer/client";
 export {
   buildPreApprovalHref,
-  DRAWER_FALLBACK_HREF,
-  DRAWER_HASH,
   normalizePreApprovalAmount,
-  PRE_APPROVAL_PATH,
-  resolveDrawerTriggerHref,
-} from "./config";
-export {
-  buildPreApprovalEntryHref,
-  buildPreApprovalTriggerAttributes,
-  preApprovalEntryHash,
-  preApprovalFallbackEntryHref,
-} from "@/features/pre-approval/drawer/server";
-export {
-  buildDrawerContinueHref,
-  buildDrawerTriggerDataAttributes,
-  createDrawerSession,
-  getClosedDrawerSession,
-  parseDrawerTriggerDataAttributes,
-  resolveSelectionDrawerTrigger,
-  ROLLBACK_HERO_DRAWER,
-  ROTATOR_HERO_DRAWER,
-  USED_TOW_TRUCK_HERO_DRAWER,
-  WRECKER_HERO_DRAWER,
-} from "./triggers";
-export type {
-  DrawerHeroTruckType,
-  DrawerSelectionTrigger,
-  DrawerSessionState,
-  DrawerTriggerPayload,
-  DrawerTriggerSource,
-} from "./triggers";
+  preApprovalPath as PRE_APPROVAL_PATH,
+} from "@/features/pre-approval/routes";
 export type {
   PreApprovalCloseReason,
   PreApprovalEvent,
@@ -47,4 +19,20 @@ export type {
   PreApprovalSession,
   PreApprovalTrigger,
   PreApprovalTruckType,
+} from "@/features/pre-approval/contract";
+export {
+  buildPreApprovalEntryHref,
+  buildPreApprovalEntryHref as resolveDrawerTriggerHref,
+  buildPreApprovalTriggerAttributes,
+  preApprovalEntryHash,
+  preApprovalEntryHash as DRAWER_HASH,
+  preApprovalFallbackEntryHref,
+  preApprovalFallbackEntryHref as DRAWER_FALLBACK_HREF,
+} from "@/features/pre-approval/drawer/server";
+export {
+  preApprovalAmountStep as SLIDER_STEP,
+  preApprovalDefaultAmount as SLIDER_DEFAULT,
+  preApprovalDefaultTitle as DRAWER_DEFAULT_TITLE,
+  preApprovalMaxAmount as SLIDER_MAX,
+  preApprovalMinAmount as SLIDER_MIN,
 } from "@/features/pre-approval/contract";

@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe("HeroConvertFramed tertiary actions", () => {
-  it("prefers canonical trigger attributes but preserves the legacy fallback link", () => {
+  it("renders canonical trigger attributes for configured tertiary links", () => {
     render(
       <HeroConvertFramed
         config={{
@@ -42,14 +42,6 @@ describe("HeroConvertFramed tertiary actions", () => {
                 },
               },
             },
-            {
-              label: "Legacy fallback link",
-              href: "#get-pre-approved",
-              drawer: {
-                title: "Legacy title",
-                source: "hero",
-              },
-            },
           ],
           heroImage,
           heroImageAlt: "Rollback tow truck",
@@ -70,16 +62,11 @@ describe("HeroConvertFramed tertiary actions", () => {
       "Estimate your buying power",
     );
     expect(canonicalLink.hasAttribute("data-drawer-title")).toBe(false);
-
-    const legacyLink = screen.getByRole("link", { name: "Legacy fallback link" });
-    expect(legacyLink).toHaveAttribute("data-drawer-title", "Legacy title");
-    expect(legacyLink).toHaveAttribute("data-drawer-source", "hero");
-    expect(legacyLink.hasAttribute("data-pre-approval-version")).toBe(false);
   });
 });
 
 describe("HeroConvertFramedOutline tertiary actions", () => {
-  it("passes canonical and legacy tertiary action wiring through RippleCtaLink", () => {
+  it("passes canonical tertiary action wiring through RippleCtaLink", () => {
     render(
       <HeroConvertFramedOutline
         config={{
@@ -107,13 +94,9 @@ describe("HeroConvertFramedOutline tertiary actions", () => {
               },
             },
             {
-              eyebrow: "Compatibility path",
-              label: "Legacy fallback action",
-              href: "#get-pre-approved",
-              drawer: {
-                title: "Legacy title",
-                source: "hero",
-              },
+              eyebrow: "Talk through the deal",
+              label: "Talk to a specialist",
+              href: "/contact",
             },
           ],
           heroImage,
@@ -136,9 +119,8 @@ describe("HeroConvertFramedOutline tertiary actions", () => {
     );
     expect(canonicalLink.hasAttribute("data-drawer-title")).toBe(false);
 
-    const legacyLink = screen.getByRole("link", { name: "Legacy fallback action" });
-    expect(legacyLink).toHaveAttribute("data-drawer-title", "Legacy title");
-    expect(legacyLink).toHaveAttribute("data-drawer-source", "hero");
-    expect(legacyLink.hasAttribute("data-pre-approval-version")).toBe(false);
+    const plainLink = screen.getByRole("link", { name: "Talk to a specialist" });
+    expect(plainLink.hasAttribute("data-pre-approval-version")).toBe(false);
+    expect(plainLink.hasAttribute("data-drawer-title")).toBe(false);
   });
 });

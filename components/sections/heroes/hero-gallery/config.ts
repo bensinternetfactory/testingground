@@ -1,6 +1,5 @@
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
-import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -10,7 +9,6 @@ export interface TertiaryLink {
   label: string;
   href: string;
   preApprovalTrigger?: PreApprovalTrigger;
-  drawer?: DrawerTriggerPayload;
 }
 
 export interface HeroGalleryConfig {
@@ -23,7 +21,6 @@ export interface HeroGalleryConfig {
     label: string;
     href: string;
     preApprovalTrigger?: PreApprovalTrigger;
-    drawer?: DrawerTriggerPayload;
   };
   tertiaryLinks: TertiaryLink[];
   images: { row1: string[]; row2: string[] };

@@ -10,28 +10,21 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { DRAWER_HASH } from "./config";
-import { lockBodyScroll } from "./scroll-lock";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import {
-  createDrawerSession,
-  getClosedDrawerSession,
-  type DrawerSessionState,
-  type DrawerTriggerPayload,
-} from "./triggers";
+  createClosedPreApprovalDrawerSession,
+  createPreApprovalDrawerSession,
+  type PreApprovalDrawerOpenTrigger,
+  type PreApprovalDrawerSessionState,
+} from "@/features/pre-approval/drawer/runtime/session";
 import type {
   PreApprovalCloseReason,
   PreApprovalEvent,
-  PreApprovalTrigger,
 } from "@/features/pre-approval/contract";
-import type { NormalizedPreApprovalTrigger } from "@/features/pre-approval/drawer/runtime/parser";
-
-type DrawerOpenTrigger =
-  | DrawerTriggerPayload
-  | NormalizedPreApprovalTrigger
-  | PreApprovalTrigger;
+import { lockBodyScroll } from "./scroll-lock";
 
 interface DrawerActions {
-  open: (trigger?: DrawerOpenTrigger) => void;
+  open: (trigger?: PreApprovalDrawerOpenTrigger) => void;
   close: (reason?: PreApprovalCloseReason) => void;
   continueTo: (href: string) => void;
   reset: (reason?: PreApprovalCloseReason) => void;
@@ -43,14 +36,14 @@ interface DrawerMeta {
 }
 
 interface DrawerContextValue {
-  state: DrawerSessionState;
+  state: PreApprovalDrawerSessionState;
   actions: DrawerActions;
   meta: DrawerMeta;
 }
 
 const DrawerContext = createContext<DrawerContextValue | null>(null);
 
-function getEventBase(state: DrawerSessionState) {
+function getEventBase(state: PreApprovalDrawerSessionState) {
   if (!state.sessionId) {
     return null;
   }
@@ -76,8 +69,6 @@ export function useDrawer() {
     title: ctx.state.title,
     amount: ctx.state.amount,
     origin: ctx.state.origin,
-    source: ctx.state.source,
-    heroTruckType: ctx.state.heroTruckType,
     truckType: ctx.state.truckType,
     open: ctx.actions.open,
     close: ctx.actions.close,
@@ -94,7 +85,9 @@ export function DrawerStateProvider({
   children: ReactNode;
   onEvent?: (event: PreApprovalEvent) => void;
 }) {
-  const [state, setState] = useState<DrawerSessionState>(getClosedDrawerSession);
+  const [state, setState] = useState<PreApprovalDrawerSessionState>(
+    createClosedPreApprovalDrawerSession,
+  );
   const onEventRef = useRef(onEvent);
   const stateRef = useRef(state);
 
@@ -114,25 +107,28 @@ export function DrawerStateProvider({
     }
   }, []);
 
-  const open = useCallback((trigger?: DrawerOpenTrigger) => {
-    lockBodyScroll(null);
-    const nextState = createDrawerSession(trigger, {
-      pathname:
-        typeof window !== "undefined" ? window.location.pathname : undefined,
-    });
-
-    stateRef.current = nextState;
-    setState(nextState);
-
-    const base = getEventBase(nextState);
-    if (base) {
-      emitEvent({
-        ...base,
-        title: nextState.title,
-        type: "drawer_opened",
+  const open = useCallback(
+    (trigger?: PreApprovalDrawerOpenTrigger) => {
+      lockBodyScroll(null);
+      const nextState = createPreApprovalDrawerSession(trigger, {
+        pathname:
+          typeof window !== "undefined" ? window.location.pathname : undefined,
       });
-    }
-  }, [emitEvent]);
+
+      stateRef.current = nextState;
+      setState(nextState);
+
+      const base = getEventBase(nextState);
+      if (base) {
+        emitEvent({
+          ...base,
+          title: nextState.title,
+          type: "drawer_opened",
+        });
+      }
+    },
+    [emitEvent],
+  );
 
   const close = useCallback(
     (reason: PreApprovalCloseReason = "programmatic") => {
@@ -152,31 +148,29 @@ export function DrawerStateProvider({
 
       const nextState = { ...current, isOpen: false };
       stateRef.current = nextState;
-
-      // Scroll unlock is deferred to AnimatePresence.onExitComplete in
-      // PreApprovalDrawer so the scrollbar doesn't reappear mid-exit-animation
-      // (which shifts the centered modal by half the scrollbar width).
-      // Safety-net: PreApprovalDrawer's unmount cleanup also calls unlock.
       setState(nextState);
     },
     [emitEvent],
   );
 
-  const continueTo = useCallback((href: string) => {
-    const current = stateRef.current;
-    if (!current.isOpen) {
-      return;
-    }
+  const continueTo = useCallback(
+    (href: string) => {
+      const current = stateRef.current;
+      if (!current.isOpen) {
+        return;
+      }
 
-    const base = getEventBase(current);
-    if (base) {
-      emitEvent({
-        ...base,
-        href,
-        type: "drawer_continued",
-      });
-    }
-  }, [emitEvent]);
+      const base = getEventBase(current);
+      if (base) {
+        emitEvent({
+          ...base,
+          href,
+          type: "drawer_continued",
+        });
+      }
+    },
+    [emitEvent],
+  );
 
   const reset = useCallback(
     (reason: PreApprovalCloseReason = "programmatic") => {
@@ -192,37 +186,40 @@ export function DrawerStateProvider({
         }
       }
 
-      const nextState = getClosedDrawerSession();
+      const nextState = createClosedPreApprovalDrawerSession();
       stateRef.current = nextState;
       setState(nextState);
     },
     [emitEvent],
   );
 
-  const setAmount = useCallback((amount: number) => {
-    const current = stateRef.current;
-    if (current.amount === amount) {
-      return;
-    }
+  const setAmount = useCallback(
+    (amount: number) => {
+      const current = stateRef.current;
+      if (current.amount === amount) {
+        return;
+      }
 
-    const nextState = { ...current, amount };
-    stateRef.current = nextState;
-    setState(nextState);
+      const nextState = { ...current, amount };
+      stateRef.current = nextState;
+      setState(nextState);
 
-    const base = getEventBase(nextState);
-    if (base && current.isOpen) {
-      emitEvent({
-        ...base,
-        type: "amount_changed",
-      });
-    }
-  }, [emitEvent]);
+      const base = getEventBase(nextState);
+      if (base && current.isOpen) {
+        emitEvent({
+          ...base,
+          type: "amount_changed",
+        });
+      }
+    },
+    [emitEvent],
+  );
 
   const contextValue = useMemo<DrawerContextValue>(
     () => ({
       state,
       actions: { open, close, continueTo, reset, setAmount },
-      meta: { triggerHash: DRAWER_HASH },
+      meta: { triggerHash: preApprovalEntryHash },
     }),
     [close, continueTo, open, reset, setAmount, state],
   );

@@ -6,27 +6,22 @@ import {
   type PreApprovalTruckType,
 } from "../../contract";
 import {
-  createLegacyCompatibilityOrigin,
+  createHashCompatibilityOrigin,
   normalizePreApprovalTriggerInput,
-  type LegacyDrawerTriggerPayload,
-  type LegacyDrawerTriggerSource,
   type NormalizedPreApprovalTrigger,
 } from "./parser";
 
 export type PreApprovalDrawerOpenTrigger =
-  | LegacyDrawerTriggerPayload
   | NormalizedPreApprovalTrigger
   | PreApprovalTrigger
   | undefined;
 
 export interface PreApprovalDrawerSessionState {
   amount: number;
-  heroTruckType?: PreApprovalTruckType;
   isOpen: boolean;
   openedAt?: number;
   origin: PreApprovalOrigin;
   sessionId?: string;
-  source: LegacyDrawerTriggerSource;
   title: string;
   truckType?: PreApprovalTruckType;
 }
@@ -47,22 +42,18 @@ export function createPreApprovalDrawerSession(
   trigger?: PreApprovalDrawerOpenTrigger,
   options?: CreatePreApprovalDrawerSessionOptions,
 ): PreApprovalDrawerSessionState {
-  const normalized = normalizePreApprovalTriggerInput(trigger, options);
-  const source = normalized?.compatibilitySource ?? "standard";
-  const truckType = normalized?.trigger.handoff?.truckType;
+  const normalized = normalizePreApprovalTriggerInput(trigger);
 
   return {
     amount: preApprovalDefaultAmount,
-    heroTruckType: source === "hero" ? truckType : undefined,
     isOpen: true,
     openedAt: Date.now(),
     origin:
       normalized?.trigger.origin ??
-      createLegacyCompatibilityOrigin(options?.pathname),
+      createHashCompatibilityOrigin(options?.pathname),
     sessionId: createPreApprovalSessionId(),
-    source,
     title: normalized?.trigger.drawer?.title ?? preApprovalDefaultTitle,
-    truckType,
+    truckType: normalized?.trigger.handoff?.truckType,
   };
 }
 
@@ -72,8 +63,7 @@ export function createClosedPreApprovalDrawerSession(
   return {
     amount: preApprovalDefaultAmount,
     isOpen: false,
-    origin: createLegacyCompatibilityOrigin(pathname),
-    source: "standard",
+    origin: createHashCompatibilityOrigin(pathname),
     title: preApprovalDefaultTitle,
   };
 }

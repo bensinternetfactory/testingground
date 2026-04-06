@@ -25,10 +25,10 @@ import {
   usePressFeedback,
 } from "@/lib/press-feedback";
 import type { PreApprovalCloseReason } from "@/features/pre-approval/contract";
+import { buildPreApprovalHref } from "@/features/pre-approval/routes";
 import { useDrawer } from "./DrawerContext";
 import { AmountSlider } from "./AmountSlider";
 import { unlockBodyScroll, updateScrollableRef } from "./scroll-lock";
-import { buildDrawerContinueHref } from "./triggers";
 
 const PORTAL_ROOT_ID = "pre-approval-drawer-root";
 const BACKDROP_Z_INDEX = "z-[200]";
@@ -165,10 +165,8 @@ export function PreApprovalDrawer() {
     amount,
     close,
     continueTo,
-    heroTruckType,
     isOpen,
     setAmount,
-    source,
     title,
     truckType,
   } = useDrawer();
@@ -246,12 +244,7 @@ export function PreApprovalDrawer() {
   };
 
   const handleContinue = () => {
-    const href = buildDrawerContinueHref({
-      amount,
-      heroTruckType,
-      source,
-      truckType,
-    });
+    const href = buildPreApprovalHref({ amount, truckType });
 
     continueTo(href);
 

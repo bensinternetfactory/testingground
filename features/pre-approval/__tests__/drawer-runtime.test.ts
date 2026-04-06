@@ -1,40 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { buildDrawerContinueHref } from "@/components/ui/pre-approval-drawer/triggers";
+import { buildPreApprovalHref } from "@/features/pre-approval/routes";
 import {
   createHashOpenPreApprovalTrigger,
   parsePreApprovalTriggerDataset,
 } from "@/features/pre-approval/drawer/runtime/parser";
 import { createPreApprovalDrawerSession } from "@/features/pre-approval/drawer/runtime/session";
 
-describe("pre-approval drawer runtime compatibility", () => {
-  it("normalizes legacy trigger attributes into the canonical trigger contract", () => {
+describe("pre-approval drawer runtime", () => {
+  it("ignores legacy trigger attributes once the canonical-only parser is active", () => {
     expect(
-      parsePreApprovalTriggerDataset(
-        {
-          drawerSource: "hero",
-          drawerTitle: "Pick your truck",
-          drawerTruckType: "heavy-wrecker",
-        },
-        { pathname: "/wrecker-financing" },
-      ),
-    ).toEqual({
-      compatibilitySource: "hero",
-      schema: "legacy",
-      trigger: {
-        drawer: {
-          title: "Pick your truck",
-        },
-        handoff: {
-          truckType: "heavy-wrecker",
-        },
-        origin: {
-          ctaId: "legacy-cta",
-          pageId: "wrecker-financing",
-          placement: "inline",
-          sectionId: "legacy-section",
-        },
-      },
-    });
+      parsePreApprovalTriggerDataset({
+        drawerSource: "hero",
+        drawerTitle: "Pick your truck",
+        drawerTruckType: "heavy-wrecker",
+      }),
+    ).toBeUndefined();
   });
 
   it("normalizes the new production trigger attributes into the canonical trigger contract", () => {
@@ -69,21 +49,18 @@ describe("pre-approval drawer runtime compatibility", () => {
 
   it("gives the new schema precedence when both schemas are present", () => {
     expect(
-      parsePreApprovalTriggerDataset(
-        {
-          drawerSource: "hero",
-          drawerTitle: "Legacy Title",
-          drawerTruckType: "wrecker",
-          preApprovalVersion: "2",
-          preApprovalOriginPageId: "rollback-financing",
-          preApprovalOriginSectionId: "hero-primary",
-          preApprovalOriginCtaId: "hero-main-cta",
-          preApprovalOriginPlacement: "section",
-          preApprovalDrawerTitle: "Production Title",
-          preApprovalHandoffTruckType: "rollback",
-        },
-        { pathname: "/wrecker-financing" },
-      ),
+      parsePreApprovalTriggerDataset({
+        drawerSource: "hero",
+        drawerTitle: "Legacy Title",
+        drawerTruckType: "wrecker",
+        preApprovalVersion: "2",
+        preApprovalOriginPageId: "rollback-financing",
+        preApprovalOriginSectionId: "hero-primary",
+        preApprovalOriginCtaId: "hero-main-cta",
+        preApprovalOriginPlacement: "section",
+        preApprovalDrawerTitle: "Production Title",
+        preApprovalHandoffTruckType: "rollback",
+      }),
     ).toEqual({
       schema: "production",
       trigger: {
@@ -103,62 +80,52 @@ describe("pre-approval drawer runtime compatibility", () => {
     });
   });
 
-  it("keeps malformed legacy data inert while still supporting partial legacy titles", () => {
+  it("keeps malformed or legacy-only datasets inert", () => {
     expect(
-      parsePreApprovalTriggerDataset(
-        {
-          drawerSource: "invalid",
-          drawerTitle: "   ",
-          drawerTruckType: "rotator",
-        },
-        { pathname: "/rollback-financing" },
-      ),
+      parsePreApprovalTriggerDataset({
+        drawerSource: "invalid",
+        drawerTitle: "   ",
+        drawerTruckType: "rotator",
+      }),
     ).toBeUndefined();
 
     expect(
-      parsePreApprovalTriggerDataset(
-        {
-          drawerTitle: "Estimate your buying power",
-        },
-        { pathname: "/rollback-financing" },
-      ),
-    ).toEqual({
-      schema: "legacy",
-      trigger: {
-        drawer: {
-          title: "Estimate your buying power",
-        },
-        origin: {
-          ctaId: "legacy-cta",
-          pageId: "rollback-financing",
-          placement: "inline",
-          sectionId: "legacy-section",
-        },
-      },
-    });
+      parsePreApprovalTriggerDataset({
+        drawerTitle: "Estimate your buying power",
+      }),
+    ).toBeUndefined();
   });
 
-  it("preserves the legacy hero truck handoff exactly in the normalized session", () => {
+  it("builds canonical session state directly from a production trigger", () => {
     const session = createPreApprovalDrawerSession(
       {
-        source: "hero",
-        title: "How much is the truck you found?",
-        truckType: "heavy-wrecker",
+        origin: {
+          pageId: "wrecker-financing",
+          sectionId: "hero-primary",
+          ctaId: "hero-main-cta",
+          placement: "hero",
+        },
+        drawer: {
+          title: "How much is the truck you found?",
+        },
+        handoff: {
+          truckType: "heavy-wrecker",
+        },
       },
       { pathname: "/wrecker-financing" },
     );
 
-    expect(session.source).toBe("hero");
-    expect(session.heroTruckType).toBe("heavy-wrecker");
+    expect(session.origin).toEqual({
+      ctaId: "hero-main-cta",
+      pageId: "wrecker-financing",
+      placement: "hero",
+      sectionId: "hero-primary",
+    });
+    expect(session.title).toBe("How much is the truck you found?");
     expect(session.truckType).toBe("heavy-wrecker");
-    expect(
-      buildDrawerContinueHref({
-        amount: 155_000,
-        heroTruckType: session.heroTruckType,
-        source: session.source,
-        truckType: session.truckType,
-      }),
-    ).toBe("/pre-approval?amount=155000&trucktype=heavy-wrecker");
+    expect(buildPreApprovalHref({ amount: 155_000, truckType: session.truckType })).toBe(
+      "/pre-approval?amount=155000&trucktype=heavy-wrecker",
+    );
   });
 
   it("creates the required compatibility origin for non-click hash opens", () => {

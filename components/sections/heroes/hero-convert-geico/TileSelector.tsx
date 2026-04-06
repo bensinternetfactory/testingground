@@ -3,10 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { resolvePreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
-import {
-  DRAWER_HASH,
-  resolveSelectionDrawerTrigger,
-} from "@/components/ui/pre-approval-drawer";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { SelectionTile } from "./SelectionTile";
 import type { HeroConvertConfig, SelectionTileData } from "./config";
@@ -33,7 +29,6 @@ export function TileSelector({
     cta.preApprovalSelectionTrigger,
     selectedTile,
   );
-  const drawer = resolveSelectionDrawerTrigger(cta.drawer, selectedTile);
 
   return (
     <>
@@ -80,10 +75,9 @@ export function TileSelector({
 
       {/* Primary CTA */}
       <RippleCtaLink
-        href={cta.href === DRAWER_HASH ? DRAWER_HASH : cta.href}
+        href={cta.href}
         label={cta.label}
         preApprovalTrigger={preApprovalTrigger}
-        drawer={drawer}
         size="md"
         disabled={!selectedTile}
         section="rollback-hero"

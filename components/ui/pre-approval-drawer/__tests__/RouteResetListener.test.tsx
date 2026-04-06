@@ -2,14 +2,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import {
+  preApprovalDefaultAmount,
+  preApprovalDefaultTitle,
+  type PreApprovalEvent,
+} from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import { DrawerStateProvider, useDrawer } from "../DrawerContext";
 import { RouteResetListener } from "../RouteResetListener";
-import type { PreApprovalEvent } from "@/features/pre-approval/contract";
-import {
-  DRAWER_DEFAULT_TITLE,
-  DRAWER_HASH,
-  SLIDER_DEFAULT,
-} from "../config";
 
 // Mock next/navigation
 let mockPathname = "/";
@@ -26,14 +26,13 @@ vi.mock("../scroll-lock", () => ({
 function RouteSyncHarness() {
   const {
     amount,
-    heroTruckType,
     isOpen,
     open,
     origin,
     reset,
     setAmount,
-    source,
     title,
+    truckType,
   } = useDrawer();
 
   return (
@@ -45,14 +44,18 @@ function RouteSyncHarness() {
       <span data-testid="originPageId">{origin.pageId}</span>
       <span data-testid="originSectionId">{origin.sectionId}</span>
       <span data-testid="originCtaId">{origin.ctaId}</span>
-      <span data-testid="source">{source}</span>
-      <span data-testid="heroTruckType">{heroTruckType ?? "none"}</span>
+      <span data-testid="truckType">{truckType ?? "none"}</span>
       <button
         onClick={() =>
           open({
-            source: "hero",
-            title: "Custom Title",
-            truckType: "wrecker",
+            origin: {
+              pageId: "wrecker-financing",
+              sectionId: "hero-primary",
+              ctaId: "hero-main-cta",
+              placement: "hero",
+            },
+            drawer: { title: "Custom Title" },
+            handoff: { truckType: "wrecker" },
           })
         }
       >
@@ -107,7 +110,7 @@ describe("RouteResetListener", () => {
 
     const { rerender } = render(<RouteResetListener open={open} reset={reset} />);
 
-    window.location.hash = DRAWER_HASH;
+    window.location.hash = preApprovalEntryHash;
     mockPathname = "/rollback-financing";
     rerender(<RouteResetListener open={open} reset={reset} />);
 
@@ -135,10 +138,9 @@ describe("RouteResetListener", () => {
     expect(screen.getByTestId("isOpen")).toHaveTextContent("true");
     expect(screen.getByTestId("title")).toHaveTextContent("Custom Title");
     expect(screen.getByTestId("amount")).toHaveTextContent("250000");
-    expect(screen.getByTestId("source")).toHaveTextContent("hero");
-    expect(screen.getByTestId("heroTruckType")).toHaveTextContent("wrecker");
+    expect(screen.getByTestId("truckType")).toHaveTextContent("wrecker");
 
-    window.location.hash = DRAWER_HASH;
+    window.location.hash = preApprovalEntryHash;
     mockPathname = "/rollback-financing";
     rerender(
       <DrawerStateProvider>
@@ -147,8 +149,12 @@ describe("RouteResetListener", () => {
     );
 
     expect(screen.getByTestId("isOpen")).toHaveTextContent("true");
-    expect(screen.getByTestId("title")).toHaveTextContent(DRAWER_DEFAULT_TITLE);
-    expect(screen.getByTestId("amount")).toHaveTextContent(String(SLIDER_DEFAULT));
+    expect(screen.getByTestId("title")).toHaveTextContent(
+      preApprovalDefaultTitle,
+    );
+    expect(screen.getByTestId("amount")).toHaveTextContent(
+      String(preApprovalDefaultAmount),
+    );
     expect(screen.getByTestId("originPageId")).toHaveTextContent(
       "rollback-financing",
     );
@@ -156,8 +162,7 @@ describe("RouteResetListener", () => {
       "hash-entry",
     );
     expect(screen.getByTestId("originCtaId")).toHaveTextContent("direct-url");
-    expect(screen.getByTestId("source")).toHaveTextContent("standard");
-    expect(screen.getByTestId("heroTruckType")).toHaveTextContent("none");
+    expect(screen.getByTestId("truckType")).toHaveTextContent("none");
   });
 
   it("resets to the closed defaults when a new pathname drops the drawer hash", async () => {
@@ -175,15 +180,20 @@ describe("RouteResetListener", () => {
     );
 
     expect(screen.getByTestId("isOpen")).toHaveTextContent("false");
-    expect(screen.getByTestId("title")).toHaveTextContent(DRAWER_DEFAULT_TITLE);
-    expect(screen.getByTestId("amount")).toHaveTextContent(String(SLIDER_DEFAULT));
-    expect(screen.getByTestId("originPageId")).toHaveTextContent("unknown-page");
-    expect(screen.getByTestId("originSectionId")).toHaveTextContent(
-      "legacy-section",
+    expect(screen.getByTestId("title")).toHaveTextContent(
+      preApprovalDefaultTitle,
     );
-    expect(screen.getByTestId("originCtaId")).toHaveTextContent("legacy-cta");
-    expect(screen.getByTestId("source")).toHaveTextContent("standard");
-    expect(screen.getByTestId("heroTruckType")).toHaveTextContent("none");
+    expect(screen.getByTestId("amount")).toHaveTextContent(
+      String(preApprovalDefaultAmount),
+    );
+    expect(screen.getByTestId("originPageId")).toHaveTextContent(
+      "unknown-page",
+    );
+    expect(screen.getByTestId("originSectionId")).toHaveTextContent(
+      "hash-entry",
+    );
+    expect(screen.getByTestId("originCtaId")).toHaveTextContent("direct-url");
+    expect(screen.getByTestId("truckType")).toHaveTextContent("none");
   });
 
   it("records the route-change close reason when route sync resets an open session", async () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent } from "react";
-import { DRAWER_HASH } from "./config";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import {
   createHashOpenPreApprovalTrigger,
   parsePreApprovalTriggerDataset,
@@ -23,7 +23,7 @@ function isDrawerTarget(anchor: HTMLAnchorElement) {
   return (
     targetUrl.origin === currentUrl.origin &&
     targetUrl.pathname === currentUrl.pathname &&
-    targetUrl.hash === DRAWER_HASH
+    targetUrl.hash === preApprovalEntryHash
   );
 }
 
@@ -38,7 +38,7 @@ export function DrawerHashListener({
   });
 
   const handleHashChange = useEffectEvent(() => {
-    if (window.location.hash === DRAWER_HASH) {
+    if (window.location.hash === preApprovalEntryHash) {
       openFromHash();
     }
   });
@@ -64,11 +64,7 @@ export function DrawerHashListener({
     }
 
     event.preventDefault();
-    open(
-      parsePreApprovalTriggerDataset(anchor.dataset, {
-        pathname: window.location.pathname,
-      }),
-    );
+    open(parsePreApprovalTriggerDataset(anchor.dataset) ?? createHashOpenPreApprovalTrigger(window.location.pathname));
   });
 
   useEffect(() => {

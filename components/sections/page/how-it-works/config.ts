@@ -1,6 +1,5 @@
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
-import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 
 export interface HowItWorksStep {
   number: string;
@@ -15,7 +14,6 @@ export interface HowItWorksConfig {
     label: string;
     href: string;
     preApprovalTrigger?: PreApprovalTrigger;
-    drawer?: DrawerTriggerPayload;
   };
 }
 

@@ -3,11 +3,7 @@ import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import type { PreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
-import {
-  DRAWER_HASH,
-  type DrawerSelectionTrigger,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -23,7 +19,6 @@ export interface HeroConvertCtaConfig {
   label: string;
   href: string;
   preApprovalSelectionTrigger?: PreApprovalSelectionTrigger;
-  drawer?: DrawerSelectionTrigger;
 }
 
 export interface HeroConvertConfig {
@@ -37,7 +32,6 @@ export interface HeroConvertConfig {
     label: string;
     href: string;
     preApprovalTrigger?: PreApprovalTrigger;
-    drawer?: DrawerTriggerPayload;
   }[];
   viewAllLink?: { label: string; href: string };
   microcopy?: string;
@@ -61,7 +55,24 @@ export const HERO_CONVERT_CONFIG: HeroConvertConfig = {
     { id: "heavy-wrecker", label: "Heavy Wrecker" },
     { id: "rotator", label: "Rotator" },
   ],
-  cta: { label: "Check Your Options", href: DRAWER_HASH },
+  cta: {
+    label: "Check Your Options",
+    href: preApprovalEntryHash,
+    preApprovalSelectionTrigger: {
+      origin: {
+        pageId: "hero-convert-geico",
+        sectionId: "hero-primary",
+        ctaId: "hero-main-cta",
+        placement: "hero",
+      },
+      truckTypeByTileId: {
+        rollback: "rollback",
+        wrecker: "wrecker",
+        "heavy-wrecker": "heavy-wrecker",
+        rotator: "rotator",
+      },
+    },
+  },
   tertiaryLinks: [
     { label: "Continue Your Saved Application", href: "#saved" },
     { label: "Talk to a Specialist", href: "#specialist" },

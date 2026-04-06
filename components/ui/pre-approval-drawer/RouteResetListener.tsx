@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { DRAWER_HASH } from "./config";
 import type { PreApprovalCloseReason } from "@/features/pre-approval/contract";
 import { createHashOpenPreApprovalTrigger } from "@/features/pre-approval/drawer/runtime/parser";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 export function RouteResetListener({
   open,
@@ -22,7 +22,7 @@ export function RouteResetListener({
     }
     previousPathnameRef.current = pathname;
 
-    if (window.location.hash === DRAWER_HASH) {
+    if (window.location.hash === preApprovalEntryHash) {
       // Navigated to a page with the drawer hash — open a fresh session.
       // If already open, lockBodyScroll is a no-op and createDrawerSession
       // refreshes the session state.

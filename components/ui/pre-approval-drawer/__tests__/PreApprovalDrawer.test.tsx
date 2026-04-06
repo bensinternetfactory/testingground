@@ -125,9 +125,18 @@ function OpenButton() {
       <button
         onClick={() =>
           open({
-            source: "hero",
-            title: "How much is the truck you found?",
-            truckType: "heavy-wrecker",
+            origin: {
+              pageId: "wrecker-financing",
+              sectionId: "hero-primary",
+              ctaId: "hero-main-cta",
+              placement: "hero",
+            },
+            drawer: {
+              title: "How much is the truck you found?",
+            },
+            handoff: {
+              truckType: "heavy-wrecker",
+            },
           })
         }
       >

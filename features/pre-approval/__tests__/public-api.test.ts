@@ -20,7 +20,7 @@ import {
   preApprovalFallbackEntryHref,
 } from "@/features/pre-approval/drawer/server";
 import {
-  buildPreApprovalHref as buildLegacyPreApprovalHref,
+  buildPreApprovalHref as buildBarrelPreApprovalHref,
   DRAWER_DEFAULT_TITLE,
   DRAWER_FALLBACK_HREF,
   DRAWER_HASH,
@@ -30,12 +30,6 @@ import {
   SLIDER_MAX,
   SLIDER_MIN,
   SLIDER_STEP,
-} from "@/components/ui/pre-approval-drawer/config";
-import {
-  buildPreApprovalEntryHref as buildBarrelPreApprovalEntryHref,
-  buildPreApprovalTriggerAttributes as buildBarrelPreApprovalTriggerAttributes,
-  preApprovalEntryHash as barrelPreApprovalEntryHash,
-  preApprovalFallbackEntryHref as barrelPreApprovalFallbackEntryHref,
 } from "@/components/ui/pre-approval-drawer";
 
 describe("pre-approval feature public modules", () => {
@@ -51,11 +45,16 @@ describe("pre-approval feature public modules", () => {
 
   it("builds and parses pre-approval hrefs with the current normalization rules", () => {
     expect(preApprovalPath).toBe("/pre-approval");
+    expect(normalizePreApprovalAmount("$5,000")).toBe("20000");
     expect(normalizePreApprovalAmount("$500,000")).toBe("500000");
+    expect(normalizePreApprovalAmount("$999,000")).toBe("500000");
     expect(normalizePreApprovalAmount("")).toBe("100000");
     expect(
       buildPreApprovalHref({ amount: "$155,000", truckType: "heavy-wrecker" }),
     ).toBe("/pre-approval?amount=155000&trucktype=heavy-wrecker");
+    expect(buildPreApprovalHref({ amount: "$10,000" })).toBe(
+      "/pre-approval?amount=20000",
+    );
     expect(
       parsePreApprovalSearchParams(
         new URLSearchParams("amount=%24500%2C000&trucktype=rollback"),
@@ -69,6 +68,16 @@ describe("pre-approval feature public modules", () => {
         amount: 100_000,
       },
     );
+    expect(
+      parsePreApprovalSearchParams(new URLSearchParams("amount=1000")),
+    ).toEqual({
+      amount: 20_000,
+    });
+    expect(
+      parsePreApprovalSearchParams(new URLSearchParams("amount=900000")),
+    ).toEqual({
+      amount: 500_000,
+    });
   });
 
   it("keeps the entry hash behavior compatible with the legacy runtime", () => {
@@ -108,7 +117,7 @@ describe("pre-approval feature public modules", () => {
     });
   });
 
-  it("keeps the legacy config facade aligned with the feature-owned route and entry contracts", () => {
+  it("keeps the drawer barrel aliases aligned with the feature-owned route and entry contracts", () => {
     expect(SLIDER_MIN).toBe(preApprovalMinAmount);
     expect(SLIDER_MAX).toBe(preApprovalMaxAmount);
     expect(SLIDER_STEP).toBe(preApprovalAmountStep);
@@ -125,7 +134,7 @@ describe("pre-approval feature public modules", () => {
       buildPreApprovalEntryHref(null),
     );
     expect(
-      buildLegacyPreApprovalHref({
+      buildBarrelPreApprovalHref({
         amount: "$155,000",
         truckType: "heavy-wrecker",
       }),
@@ -153,12 +162,12 @@ describe("pre-approval feature public modules", () => {
       },
     };
 
-    expect(barrelPreApprovalEntryHash).toBe(preApprovalEntryHash);
-    expect(barrelPreApprovalFallbackEntryHref).toBe(preApprovalFallbackEntryHref);
-    expect(buildBarrelPreApprovalEntryHref(null)).toBe(
+    expect(DRAWER_HASH).toBe(preApprovalEntryHash);
+    expect(DRAWER_FALLBACK_HREF).toBe(preApprovalFallbackEntryHref);
+    expect(buildPreApprovalEntryHref(null)).toBe(
       buildPreApprovalEntryHref(null),
     );
-    expect(buildBarrelPreApprovalTriggerAttributes(trigger)).toEqual(
+    expect(buildPreApprovalTriggerAttributes(trigger)).toEqual(
       buildPreApprovalTriggerAttributes(trigger),
     );
   });

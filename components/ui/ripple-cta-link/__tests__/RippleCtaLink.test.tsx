@@ -54,79 +54,12 @@ describe("RippleCtaLink", () => {
     expect(link.hasAttribute("data-drawer-title")).toBe(false);
   });
 
-  it("preserves the legacy compatibility attributes when only legacy props are provided", () => {
-    render(
-      <RippleCtaLink
-        href="#get-pre-approved"
-        label="Apply now"
-        drawer={{
-          title: "Estimate your buying power",
-          source: "hero",
-          truckType: "wrecker",
-        }}
-      />,
-    );
+  it("stays free of pre-approval attributes when no trigger is provided", () => {
+    render(<RippleCtaLink href="#get-pre-approved" label="Apply now" />);
 
     const link = screen.getByRole("link", { name: "Apply now" });
 
-    expect(link.getAttribute("data-drawer-title")).toBe(
-      "Estimate your buying power",
-    );
-    expect(link.getAttribute("data-drawer-source")).toBe("hero");
-    expect(link.getAttribute("data-drawer-truck-type")).toBe("wrecker");
     expect(link.hasAttribute("data-pre-approval-version")).toBe(false);
-  });
-
-  it("treats drawerTitle as a legacy-only compatibility path", () => {
-    render(
-      <RippleCtaLink
-        href="#get-pre-approved"
-        label="Apply now"
-        drawerTitle="Estimate your buying power"
-      />,
-    );
-
-    const link = screen.getByRole("link", { name: "Apply now" });
-
-    expect(link.getAttribute("data-drawer-title")).toBe(
-      "Estimate your buying power",
-    );
-    expect(link.hasAttribute("data-pre-approval-version")).toBe(false);
-  });
-
-  it("prefers canonical trigger attributes over legacy compatibility props", () => {
-    render(
-      <RippleCtaLink
-        href="#get-pre-approved"
-        label="Apply now"
-        preApprovalTrigger={{
-          origin: {
-            pageId: "homepage",
-            sectionId: "hero-primary",
-            ctaId: "hero-main-cta",
-            placement: "hero",
-          },
-          drawer: {
-            title: "Estimate how much financing you need.",
-          },
-        }}
-        drawer={{
-          title: "Legacy title",
-          source: "hero",
-          truckType: "rollback",
-        }}
-        drawerTitle="Older legacy title"
-      />,
-    );
-
-    const link = screen.getByRole("link", { name: "Apply now" });
-
-    expect(link.getAttribute("data-pre-approval-origin-page-id")).toBe(
-      "homepage",
-    );
-    expect(link.getAttribute("data-pre-approval-drawer-title")).toBe(
-      "Estimate how much financing you need.",
-    );
     expect(link.hasAttribute("data-drawer-title")).toBe(false);
     expect(link.hasAttribute("data-drawer-source")).toBe(false);
     expect(link.hasAttribute("data-drawer-truck-type")).toBe(false);

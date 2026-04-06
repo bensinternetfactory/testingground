@@ -3,10 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { resolvePreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
-import {
-  DRAWER_HASH,
-  resolveSelectionDrawerTrigger,
-} from "@/components/ui/pre-approval-drawer";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { FramedSelectionTile } from "./FramedSelectionTile";
 import type { HeroConvertCtaConfig } from "../hero-convert-geico/config";
@@ -46,7 +42,6 @@ export function FramedTileSelector({
     cta.preApprovalSelectionTrigger,
     selectedTile,
   );
-  const drawer = resolveSelectionDrawerTrigger(cta.drawer, selectedTile);
 
   return (
     <div className="flex flex-col gap-4 rounded-3xl border border-[#E9E9E9] bg-white p-5 shadow-sm sm:gap-5 sm:p-8">
@@ -96,10 +91,9 @@ export function FramedTileSelector({
       ) : null}
 
       <RippleCtaLink
-        href={cta.href === DRAWER_HASH ? DRAWER_HASH : cta.href}
+        href={cta.href}
         label={cta.label}
         preApprovalTrigger={preApprovalTrigger}
-        drawer={drawer}
         size="md"
         disabled={!selectedTile}
         section={section}

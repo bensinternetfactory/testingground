@@ -5,7 +5,6 @@ import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelecto
 import { HeroGallery } from "./HeroGallery";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
-import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
 
 interface HeroTertiaryAction {
@@ -13,7 +12,6 @@ interface HeroTertiaryAction {
   label: string;
   href: string;
   preApprovalTrigger?: PreApprovalTrigger;
-  drawer?: DrawerTriggerPayload;
 }
 
 interface HeroGalleryImage {
@@ -91,7 +89,6 @@ function TertiaryActionCard({
       justify="between"
       icon={<ArrowRight className="h-4 w-4" />}
       preApprovalTrigger={action.preApprovalTrigger}
-      drawer={action.drawer}
       prefetch={false}
       section="hero"
       className={compact ? "w-full lg:w-auto" : "w-full rounded-2xl border-gray-200 px-6 py-5"}

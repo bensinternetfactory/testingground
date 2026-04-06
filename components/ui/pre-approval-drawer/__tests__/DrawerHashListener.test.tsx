@@ -1,12 +1,11 @@
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { render, cleanup, act } from "@testing-library/react";
+import { act, cleanup, render } from "@testing-library/react";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import { DrawerHashListener } from "../DrawerHashListener";
-import { DRAWER_HASH } from "../config";
 
 afterEach(() => {
   cleanup();
-  // Reset hash
   window.location.hash = "";
 });
 
@@ -21,9 +20,9 @@ function setPathname(pathname: string) {
 
 describe("DrawerHashListener", () => {
   describe("initial mount", () => {
-    it("calls open() and clears hash when mounted with drawer hash", () => {
+    it("calls open() and clears hash when mounted with the entry hash", () => {
       const replaceStateSpy = vi.spyOn(history, "replaceState");
-      setPathname(`/rollback-financing${DRAWER_HASH}`);
+      setPathname(`/rollback-financing${preApprovalEntryHash}`);
 
       const open = renderListener();
 
@@ -42,7 +41,7 @@ describe("DrawerHashListener", () => {
       replaceStateSpy.mockRestore();
     });
 
-    it("does not call open when mounted without drawer hash", () => {
+    it("does not call open when mounted without the entry hash", () => {
       window.location.hash = "";
       const open = renderListener();
       expect(open).not.toHaveBeenCalled();
@@ -50,12 +49,12 @@ describe("DrawerHashListener", () => {
   });
 
   describe("hashchange event", () => {
-    it("calls open() when hash changes to drawer hash", () => {
+    it("calls open() when hash changes to the entry hash", () => {
       setPathname("/rollback-financing");
       const open = renderListener();
 
       act(() => {
-        window.location.hash = DRAWER_HASH;
+        window.location.hash = preApprovalEntryHash;
         window.dispatchEvent(new HashChangeEvent("hashchange"));
       });
 
@@ -99,9 +98,11 @@ describe("DrawerHashListener", () => {
       document.querySelectorAll("a").forEach((a) => a.remove());
     });
 
-    it("intercepts click on same-page drawer-target anchor", () => {
+    it("intercepts click on a same-page entry-hash anchor", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`);
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
 
       const event = new MouseEvent("click", {
         bubbles: true,
@@ -114,53 +115,17 @@ describe("DrawerHashListener", () => {
       expect(event.defaultPrevented).toBe(true);
     });
 
-    it("passes parsed data attributes to open()", () => {
+    it("passes canonical trigger data to open()", () => {
       setPathname("/rollback-financing");
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`, {
-        "data-drawer-source": "hero",
-        "data-drawer-title": "Pick your truck",
-        "data-drawer-truck-type": "rotator",
-      });
-
-      anchor.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
-      );
-
-      expect(open).toHaveBeenCalledWith({
-        compatibilitySource: "hero",
-        schema: "legacy",
-        trigger: {
-          drawer: {
-            title: "Pick your truck",
-          },
-          handoff: {
-            truckType: "rotator",
-          },
-          origin: {
-            ctaId: "legacy-cta",
-            pageId: "rollback-financing",
-            placement: "inline",
-            sectionId: "legacy-section",
-          },
-        },
-      });
-    });
-
-    it("prefers production trigger attributes when both schemas are present", () => {
-      setPathname("/rollback-financing");
-      const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`, {
-        "data-drawer-source": "hero",
-        "data-drawer-title": "Legacy Title",
-        "data-drawer-truck-type": "rotator",
+      const anchor = createAnchor(`${window.location.pathname}${preApprovalEntryHash}`, {
         "data-pre-approval-version": "2",
         "data-pre-approval-origin-page-id": "rollback-financing",
         "data-pre-approval-origin-section-id": "hero-primary",
         "data-pre-approval-origin-cta-id": "hero-main-cta",
         "data-pre-approval-origin-placement": "hero",
-        "data-pre-approval-drawer-title": "Production Title",
-        "data-pre-approval-handoff-truck-type": "rollback",
+        "data-pre-approval-drawer-title": "Pick your truck",
+        "data-pre-approval-handoff-truck-type": "rotator",
       });
 
       anchor.dispatchEvent(
@@ -171,10 +136,10 @@ describe("DrawerHashListener", () => {
         schema: "production",
         trigger: {
           drawer: {
-            title: "Production Title",
+            title: "Pick your truck",
           },
           handoff: {
-            truckType: "rollback",
+            truckType: "rotator",
           },
           origin: {
             ctaId: "hero-main-cta",
@@ -186,12 +151,43 @@ describe("DrawerHashListener", () => {
       });
     });
 
-    it("does not intercept clicks with meta key", () => {
+    it("falls back to a hash-open trigger when an anchor has no canonical dataset", () => {
+      setPathname("/rollback-financing");
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`);
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
 
       anchor.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, metaKey: true }),
+        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
+      );
+
+      expect(open).toHaveBeenCalledWith({
+        schema: "hash",
+        trigger: {
+          origin: {
+            ctaId: "direct-url",
+            pageId: "rollback-financing",
+            placement: "inline",
+            sectionId: "hash-entry",
+          },
+        },
+      });
+    });
+
+    it("does not intercept clicks with meta key", () => {
+      const open = renderListener();
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
+
+      anchor.dispatchEvent(
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          button: 0,
+          metaKey: true,
+        }),
       );
 
       expect(open).not.toHaveBeenCalled();
@@ -199,10 +195,17 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept clicks with ctrl key", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`);
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
 
       anchor.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, ctrlKey: true }),
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          button: 0,
+          ctrlKey: true,
+        }),
       );
 
       expect(open).not.toHaveBeenCalled();
@@ -210,10 +213,17 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept clicks with shift key", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`);
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
 
       anchor.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, shiftKey: true }),
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          button: 0,
+          shiftKey: true,
+        }),
       );
 
       expect(open).not.toHaveBeenCalled();
@@ -221,10 +231,17 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept clicks with alt key", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`);
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
 
       anchor.dispatchEvent(
-        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, altKey: true }),
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          button: 0,
+          altKey: true,
+        }),
       );
 
       expect(open).not.toHaveBeenCalled();
@@ -232,7 +249,9 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept right clicks", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`);
+      const anchor = createAnchor(
+        `${window.location.pathname}${preApprovalEntryHash}`,
+      );
 
       anchor.dispatchEvent(
         new MouseEvent("click", { bubbles: true, cancelable: true, button: 2 }),
@@ -243,7 +262,7 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept anchors with target=_blank", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`, {
+      const anchor = createAnchor(`${window.location.pathname}${preApprovalEntryHash}`, {
         target: "_blank",
       });
 
@@ -256,7 +275,7 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept anchors with download attribute", () => {
       const open = renderListener();
-      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`, {
+      const anchor = createAnchor(`${window.location.pathname}${preApprovalEntryHash}`, {
         download: "",
       });
 
@@ -269,7 +288,7 @@ describe("DrawerHashListener", () => {
 
     it("does not intercept anchors to different pathnames", () => {
       const open = renderListener();
-      const anchor = createAnchor(`/different-page${DRAWER_HASH}`);
+      const anchor = createAnchor(`/different-page${preApprovalEntryHash}`);
 
       anchor.dispatchEvent(
         new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
@@ -278,7 +297,7 @@ describe("DrawerHashListener", () => {
       expect(open).not.toHaveBeenCalled();
     });
 
-    it("does not intercept anchors with non-drawer hash", () => {
+    it("does not intercept anchors with non-entry hashes", () => {
       const open = renderListener();
       const anchor = createAnchor(`${window.location.pathname}#other-hash`);
 

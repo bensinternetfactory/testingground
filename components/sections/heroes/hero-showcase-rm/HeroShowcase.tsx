@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import "./hero-showcase.css";
 
 /* ------------------------------------------------------------------ */
@@ -16,7 +18,12 @@ export interface HeroShowcaseProps {
   images: readonly HeroImage[];
   headline: string;
   phrases: readonly string[];
-  cta: { label: string; href: string; subtext?: string };
+  cta: {
+    label: string;
+    href: string;
+    subtext?: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+  };
   footer?: React.ReactNode;
   arcConfig?: {
     spacing?: number;
@@ -223,6 +230,9 @@ function HeroCTA({ cta }: { cta: HeroShowcaseProps["cta"] }) {
     <div className="mt-4 self-stretch min-[470px]:self-center lg:mt-10">
       <Link
         href={cta.href}
+        {...(cta.preApprovalTrigger
+          ? buildPreApprovalTriggerAttributes(cta.preApprovalTrigger)
+          : undefined)}
         className="flex h-14 w-full items-center justify-center rounded-full bg-[#111111] px-6 py-4 text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 min-[470px]:inline-flex min-[470px]:h-[4.5rem] min-[470px]:w-auto"
       >
         {cta.label}

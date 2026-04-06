@@ -70,27 +70,4 @@ describe("HeroLeadGen", () => {
     );
     expect(link.hasAttribute("data-drawer-source")).toBe(false);
   });
-
-  it("keeps the legacy drawer compatibility path available", () => {
-    render(
-      <HeroLeadGen
-        config={{
-          ...baseConfig,
-          cta: {
-            ...baseConfig.cta,
-            drawer: {
-              source: "hero",
-              truckType: "rotator",
-            },
-          },
-        }}
-      />,
-    );
-
-    const link = screen.getByRole("link", { name: "Get Pre-Approved" });
-
-    expect(link).toHaveAttribute("data-drawer-source", "hero");
-    expect(link).toHaveAttribute("data-drawer-truck-type", "rotator");
-    expect(link.hasAttribute("data-pre-approval-version")).toBe(false);
-  });
 });

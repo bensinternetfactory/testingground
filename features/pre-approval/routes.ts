@@ -1,5 +1,7 @@
 import {
   preApprovalDefaultAmount,
+  preApprovalMaxAmount,
+  preApprovalMinAmount,
   type PreApprovalTruckType,
 } from "./contract";
 
@@ -12,6 +14,10 @@ export interface PreApprovalHandoffParams {
 
 export interface PreApprovalSearchParamsReader {
   get(name: string): string | null | undefined;
+}
+
+function clampPreApprovalAmount(value: number): number {
+  return Math.min(preApprovalMaxAmount, Math.max(preApprovalMinAmount, value));
 }
 
 function isPreApprovalTruckType(
@@ -27,7 +33,8 @@ function isPreApprovalTruckType(
 
 export function normalizePreApprovalAmount(value: number | string): string {
   const digits = String(value).replace(/\D/g, "");
-  return digits || String(preApprovalDefaultAmount);
+  const normalized = digits ? Number(digits) : preApprovalDefaultAmount;
+  return String(clampPreApprovalAmount(normalized));
 }
 
 export function buildPreApprovalHref({

@@ -3,14 +3,8 @@
 import { useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  type PreApprovalTrigger,
-} from "@/features/pre-approval/contract";
+import { type PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
-import {
-  buildDrawerTriggerDataAttributes,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer/triggers";
 import {
   PressFeedbackRipple,
   tapSpring,
@@ -47,10 +41,6 @@ export interface RippleCtaLinkProps {
   cardId?: string;
   disabled?: boolean;
   preApprovalTrigger?: PreApprovalTrigger;
-  /** @deprecated Compatibility-only legacy trigger payload. Prefer `preApprovalTrigger`. */
-  drawer?: DrawerTriggerPayload;
-  /** @deprecated Compatibility-only legacy title override. Prefer `preApprovalTrigger.drawer.title`. */
-  drawerTitle?: string;
 }
 
 const sizeClasses = {
@@ -86,8 +76,6 @@ export function RippleCtaLink({
   cardId,
   disabled = false,
   preApprovalTrigger,
-  drawer,
-  drawerTitle,
 }: RippleCtaLinkProps) {
   const fireAnalytics = useCallback(
     (modality: PressModality) => {
@@ -194,9 +182,7 @@ export function RippleCtaLink({
 
   const drawerAttributes = preApprovalTrigger
     ? buildPreApprovalTriggerAttributes(preApprovalTrigger)
-    : buildDrawerTriggerDataAttributes(
-        drawer ?? (drawerTitle ? { title: drawerTitle } : undefined),
-      );
+    : undefined;
 
   return (
     <Link href={href} prefetch={prefetch} legacyBehavior passHref>

@@ -35,7 +35,6 @@ export function EquipmentClosingCta({
               href={config.cta.href}
               label={config.cta.label}
               preApprovalTrigger={config.cta.preApprovalTrigger}
-              drawer={config.cta.drawer}
               size="lg"
               section="closing-cta"
               className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"

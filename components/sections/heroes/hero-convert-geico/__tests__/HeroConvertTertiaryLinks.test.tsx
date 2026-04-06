@@ -15,7 +15,7 @@ afterEach(() => {
 });
 
 describe("HeroConvert tertiary links", () => {
-  it("prefers canonical trigger attributes but preserves the legacy drawer fallback", () => {
+  it("renders canonical trigger attributes for configured tertiary links", () => {
     render(
       <HeroConvert
         config={{
@@ -44,14 +44,6 @@ describe("HeroConvert tertiary links", () => {
                 },
               },
             },
-            {
-              label: "Legacy fallback link",
-              href: "#get-pre-approved",
-              drawer: {
-                title: "Legacy title",
-                source: "hero",
-              },
-            },
           ],
           microcopy: "Checking will not affect your credit score.",
           disclaimer:
@@ -75,10 +67,5 @@ describe("HeroConvert tertiary links", () => {
       "Estimate your buying power",
     );
     expect(canonicalLink.hasAttribute("data-drawer-title")).toBe(false);
-
-    const legacyLink = screen.getByRole("link", { name: "Legacy fallback link" });
-    expect(legacyLink).toHaveAttribute("data-drawer-title", "Legacy title");
-    expect(legacyLink).toHaveAttribute("data-drawer-source", "hero");
-    expect(legacyLink.hasAttribute("data-pre-approval-version")).toBe(false);
   });
 });

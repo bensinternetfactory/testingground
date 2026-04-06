@@ -18,8 +18,8 @@ Rules:
 - [ ] `Phase 2` active
 - [ ] `Phase 3` active
 - [ ] `Phase 4` active
-- [x] `Phase 5` active
-- [ ] `Phase 6` active
+- [ ] `Phase 5` active
+- [x] `Phase 6` active
 
 Exactly one phase should be marked active while work is in progress.
 
@@ -191,26 +191,26 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 5 gate passed.
-- [ ] Search confirms no remaining production callers depend on legacy authoring APIs.
-- [ ] Search confirms no remaining deep imports of legacy `config.ts` or `triggers.ts`.
-- [ ] Search confirms no remaining imports of the legacy CSS path.
+- [x] Phase 5 gate passed.
+- [x] Search confirms no remaining production callers depend on legacy authoring APIs.
+- [x] Search confirms no remaining deep imports of legacy `config.ts` or `triggers.ts`.
+- [x] Search confirms no remaining imports of the legacy CSS path.
 
 Execution checklist:
 
-- [ ] Legacy `source === "hero"` business rule removed.
-- [ ] Legacy `DrawerTriggerPayload` authoring type removed.
-- [ ] Legacy `data-drawer-*` primary emission removed.
-- [ ] Compatibility layer deletion or shrink plan recorded.
-- [ ] Legacy deep-import compatibility files removed or intentionally retained with a dated follow-up.
-- [ ] Legacy CSS compatibility path removed or intentionally retained with a dated follow-up.
-- [ ] Route-contract clamping implemented and verified.
+- [x] Legacy `source === "hero"` business rule removed.
+- [x] Legacy `DrawerTriggerPayload` authoring type removed.
+- [x] Legacy `data-drawer-*` primary emission removed.
+- [x] Compatibility layer deletion or shrink plan recorded.
+- [x] Legacy deep-import compatibility files removed or intentionally retained with a dated follow-up.
+- [x] Legacy CSS compatibility path removed or intentionally retained with a dated follow-up.
+- [x] Route-contract clamping implemented and verified.
 - [ ] Final automated regression checks passed.
 - [ ] Final desktop browser validation passed.
 - [ ] Final mobile browser validation passed.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with final evidence and removal search results.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with final evidence and removal search results.
 
 Go / no-go gate:
 

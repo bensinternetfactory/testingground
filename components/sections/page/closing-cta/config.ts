@@ -1,6 +1,5 @@
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
-import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 
 interface BaseClosingCtaBenefitIcon {
   src: string;
@@ -36,7 +35,6 @@ export interface ClosingCtaConfig {
     shortLabel: string;
     href: string;
     preApprovalTrigger?: PreApprovalTrigger;
-    drawer?: DrawerTriggerPayload;
   };
   contactBlock?: {
     phone: { label: string; href: string };

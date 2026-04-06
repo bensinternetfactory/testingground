@@ -83,6 +83,82 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 6`
+- Batch / scope: Partial Phase 6 stopping point only: remove shared production compatibility authoring, delete legacy deep-import/CSS facades, land route clamping, and stop before final browser validation / final gate
+- Status: `PARTIAL`
+
+Changes made:
+
+- Updated the Phase 6 runtime surface in [`features/pre-approval/routes.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/routes.ts), [`features/pre-approval/drawer/runtime/parser.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/parser.ts), and [`features/pre-approval/drawer/runtime/session.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/session.ts) so route amounts clamp to the contract min/max, the parser accepts canonical production/hash inputs only, and session state no longer carries legacy `source` / `heroTruckType` semantics.
+- Updated the mounted drawer runtime in [`components/ui/pre-approval-drawer/DrawerContext.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerContext.tsx), [`components/ui/pre-approval-drawer/DrawerHashListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerHashListener.tsx), [`components/ui/pre-approval-drawer/PreApprovalDrawer.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/PreApprovalDrawer.tsx), [`components/ui/pre-approval-drawer/RouteResetListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/RouteResetListener.tsx), and [`components/ui/pre-approval-drawer/AmountSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/AmountSlider.tsx) to consume the feature-owned canonical modules directly, continue with `buildPreApprovalHref({ amount, truckType })`, and import the feature-owned slider stylesheet.
+- Removed legacy authoring from the shared CTA surfaces and shared/default configs in [`components/ui/ripple-cta-link/RippleCtaLink.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx), [`components/sections/heroes/hero-gallery/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/config.ts), [`components/sections/heroes/hero-gallery/HeroGallery.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx), [`components/sections/heroes/hero-convert-geico/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/config.ts), [`components/sections/heroes/hero-convert-geico/TileSelector.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx), [`components/sections/heroes/hero-convert-geico/HeroConvert.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/HeroConvert.tsx), [`components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx), [`components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx), [`components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx), [`components/sections/page/tertiary-strip/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/config.ts), [`components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx), [`components/sections/page/closing-cta/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/config.ts), [`components/sections/page/closing-cta/ClosingCta.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx), [`components/sections/page/how-it-works/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/how-it-works/config.ts), [`components/sections/page/how-it-works/HowItWorks.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/how-it-works/HowItWorks.tsx), [`components/sections/page/equipment-closing-cta/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/config.ts), [`components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx), [`components/sections/heroes/hero-showcase-rm/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-showcase-rm/config.ts), and [`components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx).
+- Removed the legacy deep-import and CSS compatibility files [`components/ui/pre-approval-drawer/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/config.ts), [`components/ui/pre-approval-drawer/triggers.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/triggers.ts), and [`components/ui/pre-approval-drawer/amount-slider.css`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/amount-slider.css), and rewired the surviving public aliases through [`components/ui/pre-approval-drawer/index.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/index.ts).
+- Updated the directly impacted tests in [`features/pre-approval/__tests__/public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts), [`features/pre-approval/__tests__/drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts), [`components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx), [`components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), [`components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx), [`components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx), [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx), [`components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx), [`components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx), [`components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx), [`components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx), and [`components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx); deleted the obsolete legacy-helper suite [`components/ui/pre-approval-drawer/__tests__/triggers.test.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/triggers.test.ts).
+
+Verification matrix IDs covered:
+
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+- `PA-INV-21`
+- `PA-INV-23`
+- `PA-INV-24`
+- `PA-INV-26`
+
+Commands run:
+
+- `git diff -- features/pre-approval/routes.ts features/pre-approval/drawer/runtime/parser.ts features/pre-approval/drawer/runtime/session.ts components/ui/pre-approval-drawer/DrawerHashListener.tsx components/ui/pre-approval-drawer/DrawerContext.tsx components/ui/pre-approval-drawer/PreApprovalDrawer.tsx components/ui/pre-approval-drawer/AmountSlider.tsx components/ui/ripple-cta-link/RippleCtaLink.tsx components/sections/heroes/hero-lead-gen/config.ts components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx`
+- `rg -n "drawer\\??:|drawer:|drawerTitle|DRAWER_HASH|preApprovalSelectionTrigger|preApprovalTrigger" 'app/(marketing)' components/sections --glob 'config.ts' --glob '!**/__tests__/**'`
+- `rg -n "resolveSelectionDrawerTrigger|buildDrawerTriggerDataAttributes|buildDrawerContinueHref|parseDrawerTriggerDataAttributes|createDrawerSession|getClosedDrawerSession|DrawerTriggerPayload|DrawerSelectionTrigger|DrawerSessionState|drawer=|drawerTitle=|data-drawer-" components features app --glob '!**/__tests__/**'`
+- `rg -n "@/components/ui/pre-approval-drawer/config|@/components/ui/pre-approval-drawer/triggers" components features app`
+- `rg -n "data-drawer-|DrawerTriggerPayload|DrawerSelectionTrigger|buildDrawerContinueHref|resolveSelectionDrawerTrigger|buildDrawerTriggerDataAttributes|parseDrawerTriggerDataAttributes|heroTruckType" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'`
+- `rg -n "./amount-slider.css|@/components/ui/pre-approval-drawer/amount-slider.css|@/features/pre-approval/amount-slider.css" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'`
+- `npm run lint`
+- `npm test -- 'features/pre-approval/__tests__/public-api.test.ts' 'features/pre-approval/__tests__/drawer-runtime.test.ts' 'components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx' 'components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx' 'components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx' 'components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx' 'components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx' 'components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx' 'components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx' 'components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx' 'components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx' 'components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx' 'app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx' 'app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx' 'components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx' 'components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx'`
+- `npm test -- 'components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx'`
+- `npm run build`
+
+Automated verification results:
+
+- `npm run lint` passed with only the existing unused-variable warnings in the pre-approval drawer motion-mock tests; no new Phase 6 lint errors were introduced.
+- `PA-INV-26`: [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts) now verifies min/max amount clamping in `normalizePreApprovalAmount()`, `buildPreApprovalHref()`, and `parsePreApprovalSearchParams()`, covering below-min and above-max values.
+- `PA-INV-09`, `PA-INV-10`, `PA-INV-11`, and `PA-INV-21`: the targeted Phase 6 run passed `15` files and `79` tests before one stale expectation failed in [`RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx) after the session-origin cleanup changed the closed default `pageId` back to `unknown-page`.
+- Updated that stale expectation in [`RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx), then reran the file and it passed `6` tests. I did not rerun the full impacted suite after that fix because this batch is intentionally stopping early.
+- `PA-INV-17`: `npm run build` passed after the cleanup, confirming the canonical-only runtime surface, removed deep-import files, and removed CSS shim compile successfully together.
+- `PA-INV-24`: `rg -n "@/components/ui/pre-approval-drawer/config|@/components/ui/pre-approval-drawer/triggers" components features app` returned no matches, confirming the legacy deep-import paths are no longer referenced.
+- `PA-INV-09`, `PA-INV-23`, and `PA-INV-24`: `rg -n "data-drawer-|DrawerTriggerPayload|DrawerSelectionTrigger|buildDrawerContinueHref|resolveSelectionDrawerTrigger|buildDrawerTriggerDataAttributes|parseDrawerTriggerDataAttributes|heroTruckType" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'` returned no matches, confirming the production code no longer depends on the removed legacy authoring APIs.
+- `PA-INV-23`: `rg -n "./amount-slider.css|@/components/ui/pre-approval-drawer/amount-slider.css|@/features/pre-approval/amount-slider.css" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'` now matches only the feature-owned stylesheet import in [`AmountSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/AmountSlider.tsx) and [`TermLengthSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/term-length-slider/TermLengthSlider.tsx); the legacy CSS path is gone.
+
+Browser verification results:
+
+- Route: not yet rerun for this partial Phase 6 stopping point
+- Viewport: not yet rerun
+- Trigger path: existing dev server remains available on `http://127.0.0.1:3001`
+- Observed behavior: no new desktop/mobile Phase 6 browser evidence recorded in this batch
+
+Evidence summary:
+
+- This is a controlled Phase 6 stopping point, not a phase close. The shared production compatibility authoring has been removed, the legacy deep-import/CSS shims have been deleted, the route contract now clamps amount inputs, and the canonical barrel surface still compiles.
+- The removal searches are clean for production code: no production `data-drawer-*` emission, no `DrawerTriggerPayload` / `DrawerSelectionTrigger` authoring, no deep imports of the deleted `config.ts` / `triggers.ts`, and no remaining imports of the deleted legacy CSS path.
+- Automated verification is partially complete: lint and build are green, route clamping is covered, and the directly impacted suite was mostly green before a single stale expectation was fixed locally. The consolidated impacted-suite rerun and the required desktop/mobile browser validation are still pending.
+
+Gate decision:
+
+- `NO-GO`
+
+Blockers / regressions:
+
+- No active implementation blocker. The phase remains `NO-GO` only because the full post-fix impacted-suite rerun and the required desktop/mobile browser validation were intentionally deferred at this stopping point.
+
+Next required action:
+
+- Resume Phase 6 from this checkpoint only: rerun the full impacted automated suite after the `RouteResetListener` expectation fix, complete desktop and mobile browser validation against the running dev server on port `3001`, then update the Phase 6 checklist and decide `GO` / `NO-GO` from that final evidence.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 5`
 - Batch / scope: Final Phase 5 batch only: verify route/page config migration callers, remaining shared renderers, and preserved compatibility paths without starting Phase 6 cleanup
 - Status: `PASS`

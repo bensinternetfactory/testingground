@@ -5,20 +5,8 @@ import type {
   PreApprovalTruckType,
 } from "../../contract";
 
-export type LegacyDrawerTriggerSource = "standard" | "hero";
-export type LegacyDrawerHeroTruckType = PreApprovalTruckType;
-
-export type LegacyDrawerTriggerPayload = {
-  title?: string;
-  source?: LegacyDrawerTriggerSource;
-  truckType?: LegacyDrawerHeroTruckType;
-};
-
 export type PreApprovalTriggerDataset = Partial<
   Record<
-    | "drawerTitle"
-    | "drawerSource"
-    | "drawerTruckType"
     | "preApprovalVersion"
     | "preApprovalOriginPageId"
     | "preApprovalOriginSectionId"
@@ -31,17 +19,10 @@ export type PreApprovalTriggerDataset = Partial<
 >;
 
 export interface NormalizedPreApprovalTrigger {
-  compatibilitySource?: LegacyDrawerTriggerSource;
-  schema: "canonical" | "hash" | "legacy" | "production";
+  schema: "canonical" | "hash" | "production";
   trigger: PreApprovalTrigger;
 }
 
-interface NormalizePreApprovalTriggerOptions {
-  pathname?: string | null;
-}
-
-const legacyCompatibilitySectionId = "legacy-section";
-const legacyCompatibilityCtaId = "legacy-cta";
 const hashCompatibilitySectionId = "hash-entry";
 const hashCompatibilityCtaId = "direct-url";
 
@@ -71,12 +52,6 @@ function isPreApprovalPlacement(
     value === "footer" ||
     value === "inline"
   );
-}
-
-function isLegacyDrawerTriggerSource(
-  value: string | undefined,
-): value is LegacyDrawerTriggerSource {
-  return value === "standard" || value === "hero";
 }
 
 function hasProductionSchema(dataset: PreApprovalTriggerDataset): boolean {
@@ -143,16 +118,6 @@ function createCompatibilityOrigin(
   };
 }
 
-export function createLegacyCompatibilityOrigin(
-  pathname?: string | null,
-): PreApprovalOrigin {
-  return createCompatibilityOrigin(
-    pathname,
-    legacyCompatibilitySectionId,
-    legacyCompatibilityCtaId,
-  );
-}
-
 export function createHashCompatibilityOrigin(
   pathname?: string | null,
 ): PreApprovalOrigin {
@@ -172,42 +137,6 @@ export function createHashOpenPreApprovalTrigger(
       origin: createHashCompatibilityOrigin(pathname),
     },
   };
-}
-
-function normalizeLegacyDrawerTrigger(
-  trigger: LegacyDrawerTriggerPayload | undefined,
-  options?: NormalizePreApprovalTriggerOptions,
-): NormalizedPreApprovalTrigger | undefined {
-  const title = trimToUndefined(trigger?.title);
-  const source = isLegacyDrawerTriggerSource(trigger?.source)
-    ? trigger.source
-    : undefined;
-  const truckType =
-    source === "hero" && isPreApprovalTruckType(trigger?.truckType)
-      ? trigger.truckType
-      : undefined;
-
-  if (!title && !source && !truckType) {
-    return undefined;
-  }
-
-  const normalized: NormalizedPreApprovalTrigger = {
-    compatibilitySource: source,
-    schema: "legacy",
-    trigger: {
-      origin: createLegacyCompatibilityOrigin(options?.pathname),
-    },
-  };
-
-  if (title) {
-    normalized.trigger.drawer = { title };
-  }
-
-  if (truckType) {
-    normalized.trigger.handoff = { truckType };
-  }
-
-  return normalized;
 }
 
 function parseProductionTriggerDataset(
@@ -254,33 +183,14 @@ function parseProductionTriggerDataset(
 
 export function parsePreApprovalTriggerDataset(
   dataset: PreApprovalTriggerDataset,
-  options?: NormalizePreApprovalTriggerOptions,
 ): NormalizedPreApprovalTrigger | undefined {
-  if (hasProductionSchema(dataset)) {
-    return parseProductionTriggerDataset(dataset);
-  }
-
-  return normalizeLegacyDrawerTrigger(
-    {
-      title: dataset.drawerTitle,
-      source: isLegacyDrawerTriggerSource(dataset.drawerSource)
-        ? dataset.drawerSource
-        : undefined,
-      truckType: isPreApprovalTruckType(dataset.drawerTruckType)
-        ? dataset.drawerTruckType
-        : undefined,
-    },
-    options,
-  );
+  return hasProductionSchema(dataset)
+    ? parseProductionTriggerDataset(dataset)
+    : undefined;
 }
 
 export function normalizePreApprovalTriggerInput(
-  trigger:
-    | LegacyDrawerTriggerPayload
-    | NormalizedPreApprovalTrigger
-    | PreApprovalTrigger
-    | undefined,
-  options?: NormalizePreApprovalTriggerOptions,
+  trigger: NormalizedPreApprovalTrigger | PreApprovalTrigger | undefined,
 ): NormalizedPreApprovalTrigger | undefined {
   if (!trigger) {
     return undefined;
@@ -297,5 +207,5 @@ export function normalizePreApprovalTriggerInput(
     };
   }
 
-  return normalizeLegacyDrawerTrigger(trigger, options);
+  return undefined;
 }

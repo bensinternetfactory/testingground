@@ -2,8 +2,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import {
+  preApprovalDefaultAmount,
+  preApprovalDefaultTitle,
+} from "@/features/pre-approval/contract";
 import { DrawerStateProvider, useDrawer } from "../DrawerContext";
-import { SLIDER_DEFAULT, DRAWER_DEFAULT_TITLE } from "../config";
 
 // Spy on scroll-lock to verify timing
 vi.mock("../scroll-lock", () => ({
@@ -18,7 +21,7 @@ afterEach(cleanup);
 
 // Test consumer that exposes context state and provides action buttons
 function TestConsumer() {
-  const { isOpen, title, amount, source, heroTruckType, open, close, reset, setAmount } =
+  const { isOpen, title, amount, origin, truckType, open, close, reset, setAmount } =
     useDrawer();
 
   return (
@@ -26,10 +29,25 @@ function TestConsumer() {
       <span data-testid="isOpen">{String(isOpen)}</span>
       <span data-testid="title">{title}</span>
       <span data-testid="amount">{amount}</span>
-      <span data-testid="source">{source}</span>
-      <span data-testid="heroTruckType">{heroTruckType ?? "none"}</span>
+      <span data-testid="originPageId">{origin.pageId}</span>
+      <span data-testid="originSectionId">{origin.sectionId}</span>
+      <span data-testid="originCtaId">{origin.ctaId}</span>
+      <span data-testid="truckType">{truckType ?? "none"}</span>
       <button onClick={() => open()}>open-default</button>
-      <button onClick={() => open({ source: "hero", title: "Custom Title", truckType: "wrecker" })}>
+      <button
+        onClick={() =>
+          open({
+            origin: {
+              pageId: "wrecker-financing",
+              sectionId: "hero-primary",
+              ctaId: "hero-main-cta",
+              placement: "hero",
+            },
+            drawer: { title: "Custom Title" },
+            handoff: { truckType: "wrecker" },
+          })
+        }
+      >
         open-hero
       </button>
       <button onClick={() => close()}>close</button>
@@ -52,7 +70,9 @@ describe("DrawerStateProvider", () => {
     renderWithProvider();
 
     expect(screen.getByTestId("isOpen")).toHaveTextContent("false");
-    expect(screen.getByTestId("amount")).toHaveTextContent(String(SLIDER_DEFAULT));
+    expect(screen.getByTestId("amount")).toHaveTextContent(
+      String(preApprovalDefaultAmount),
+    );
   });
 
   it("open() sets isOpen true with default session", async () => {
@@ -62,11 +82,11 @@ describe("DrawerStateProvider", () => {
     await user.click(screen.getByText("open-default"));
 
     expect(screen.getByTestId("isOpen")).toHaveTextContent("true");
-    expect(screen.getByTestId("title")).toHaveTextContent(DRAWER_DEFAULT_TITLE);
-    expect(screen.getByTestId("source")).toHaveTextContent("standard");
+    expect(screen.getByTestId("title")).toHaveTextContent(preApprovalDefaultTitle);
+    expect(screen.getByTestId("originSectionId")).toHaveTextContent("hash-entry");
   });
 
-  it("open(trigger) applies custom title, source, heroTruckType", async () => {
+  it("open(trigger) applies custom title, origin, and truckType", async () => {
     const user = userEvent.setup();
     renderWithProvider();
 
@@ -74,8 +94,10 @@ describe("DrawerStateProvider", () => {
 
     expect(screen.getByTestId("isOpen")).toHaveTextContent("true");
     expect(screen.getByTestId("title")).toHaveTextContent("Custom Title");
-    expect(screen.getByTestId("source")).toHaveTextContent("hero");
-    expect(screen.getByTestId("heroTruckType")).toHaveTextContent("wrecker");
+    expect(screen.getByTestId("originPageId")).toHaveTextContent(
+      "wrecker-financing",
+    );
+    expect(screen.getByTestId("truckType")).toHaveTextContent("wrecker");
   });
 
   it("close() sets isOpen false but preserves other state", async () => {
@@ -100,8 +122,10 @@ describe("DrawerStateProvider", () => {
     await user.click(screen.getByText("reset"));
 
     expect(screen.getByTestId("isOpen")).toHaveTextContent("false");
-    expect(screen.getByTestId("amount")).toHaveTextContent(String(SLIDER_DEFAULT));
-    expect(screen.getByTestId("source")).toHaveTextContent("standard");
+    expect(screen.getByTestId("amount")).toHaveTextContent(
+      String(preApprovalDefaultAmount),
+    );
+    expect(screen.getByTestId("originSectionId")).toHaveTextContent("hash-entry");
   });
 
   it("setAmount() updates amount without changing other state", async () => {

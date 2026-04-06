@@ -48,7 +48,6 @@ export function ClosingCta({ config }: { config: ClosingCtaConfig }) {
             href={primaryCta.href}
             label={primaryCta.label}
             preApprovalTrigger={primaryCta.preApprovalTrigger}
-            drawer={primaryCta.drawer}
             ariaLabel={primaryCta.label}
             size="lg"
             section="closing-cta"
