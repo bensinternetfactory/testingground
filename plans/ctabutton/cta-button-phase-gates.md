@@ -29,30 +29,30 @@ When no phase work is in progress, every checkbox in this section should be unch
 
 Preconditions:
 
-- [ ] Current `RippleCtaLink` behavior is treated as baseline.
-- [ ] Current production CTA flows can be reproduced locally.
+- [x] Current `RippleCtaLink` behavior is treated as baseline.
+- [x] Current production CTA flows can be reproduced locally.
 
 Execution checklist:
 
-- [ ] `plans/ctabutton/checklist.md` matches the live CTA inventory.
-- [ ] Baseline tests exist for internal hash-link CTA behavior.
-- [ ] Baseline tests exist for external navigation CTA behavior.
-- [ ] Baseline tests exist for disabled CTA rendering.
-- [ ] Baseline tests exist for pre-approval trigger attribute emission.
-- [ ] Baseline tests exist for analytics identity when `children` override visible copy.
-- [ ] Baseline tests exist for touch or pointer cancel behavior.
-- [ ] Baseline tests exist for duplicate-commit prevention.
-- [ ] Baseline tests exist for reduced-motion press behavior.
-- [ ] Desktop browser validation completed.
-- [ ] Mobile browser validation completed.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with evidence for `CTA-INV-02` `CTA-INV-03` `CTA-INV-04` `CTA-INV-05` `CTA-INV-06` `CTA-INV-07` `CTA-INV-08` `CTA-INV-09`.
+- [x] `plans/ctabutton/checklist.md` matches the live CTA inventory.
+- [x] Baseline tests exist for internal hash-link CTA behavior.
+- [x] Baseline tests exist for external navigation CTA behavior.
+- [x] Baseline tests exist for disabled CTA rendering.
+- [x] Baseline tests exist for pre-approval trigger attribute emission.
+- [x] Baseline tests exist for analytics identity when `children` override visible copy.
+- [x] Baseline tests exist for touch or pointer cancel behavior.
+- [x] Baseline tests exist for duplicate-commit prevention.
+- [x] Baseline tests exist for reduced-motion press behavior.
+- [x] Desktop browser validation completed.
+- [x] Mobile browser validation completed.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with evidence for `CTA-INV-02` `CTA-INV-03` `CTA-INV-04` `CTA-INV-05` `CTA-INV-06` `CTA-INV-07` `CTA-INV-08` `CTA-INV-09`.
 
 Go / no-go gate:
 
-- [ ] Go: baseline CTA invariants have evidence.
-- [ ] No-go conditions checked: no missing evidence, no unverified lead-entry path, no unverified press-cancel path, no false press-on-down baseline.
+- [x] Go: baseline CTA invariants have evidence.
+- [x] No-go conditions checked: no missing evidence, no unverified lead-entry path, no unverified press-cancel path, no false press-on-down baseline.
 
 ## Phase 1: Introduce Canonical Feature Modules
 

@@ -188,4 +188,25 @@ describe("ProgramNavCardLink", () => {
     expect(triggerMock).not.toHaveBeenCalled();
     expect(link.querySelector("span[aria-hidden='true']")).toBeNull();
   });
+
+  it("keeps keyboard activation semantic for the link path", () => {
+    render(
+      <ProgramNavCardLink href="#get-pre-approved" label="Apply now" />,
+    );
+
+    const link = screen.getByRole("link", { name: "Apply now" });
+    setElementRect(link);
+
+    fireEvent.keyDown(link, { key: "Enter" });
+
+    expect(triggerMock).not.toHaveBeenCalled();
+    expect(link.querySelector("span[aria-hidden='true']")).toBeNull();
+
+    fireEvent.click(link, {
+      detail: 0,
+    });
+
+    expect(triggerMock).not.toHaveBeenCalled();
+    expect(link.querySelector("span[aria-hidden='true']")).not.toBeNull();
+  });
 });

@@ -290,4 +290,37 @@ describe("PreApprovalDrawerView press feedback", () => {
     );
     expect(continueButton.querySelector("span[aria-hidden='true']")).toBeNull();
   });
+
+  it("keeps keyboard activation semantic for the continue button path", async () => {
+    render(<TestHarness />);
+
+    fireEvent.click(screen.getByRole("button", { name: "open-drawer" }));
+
+    const continueButton = screen.getByRole("button", {
+      name: "Continue to Pre-Approval",
+    });
+    setElementRect(continueButton);
+
+    fireEvent.keyDown(continueButton, { key: " " });
+
+    expect(mockPush).not.toHaveBeenCalled();
+    expect(triggerMock).not.toHaveBeenCalled();
+    expect(continueButton.querySelector("span[aria-hidden='true']")).toBeNull();
+
+    fireEvent.click(continueButton, {
+      detail: 0,
+    });
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith("/pre-approval?amount=100000");
+    });
+    expect(triggerMock).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(
+        screen
+          .getByRole("button", { name: "Continue to Pre-Approval" })
+          .querySelector("span[aria-hidden='true']"),
+      ).not.toBeNull();
+    });
+  });
 });

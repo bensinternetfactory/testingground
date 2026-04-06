@@ -39,7 +39,7 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
 
 ## Regeneration Commands
 
-- Wrapper import inventory: `rg -n '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- Wrapper import inventory: `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
 - Direct press-feedback consumers: `rg -n 'usePressFeedback<' components app features`
 - Direct trigger surfaces: `rg -n 'buildPreApprovalTriggerAttributes\\(' components app`
-- Route-based pre-approval entry: `rg -n 'buildPreApprovalHref\\(' components app`
+- Route-based pre-approval entry: `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'buildPreApprovalHref\\(' components app`
