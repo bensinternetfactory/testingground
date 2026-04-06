@@ -32,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <div id="pre-approval-drawer-root" />
       </body>
     </html>
   );

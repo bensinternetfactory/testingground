@@ -82,17 +82,7 @@ function usePortalRoot(id: string) {
     return null;
   }
 
-  const existingRoot = document.getElementById(id);
-  if (existingRoot) {
-    return existingRoot;
-  }
-
-  const root = document.createElement("div");
-  root.id = id;
-  root.setAttribute("data-pre-approval-portal", "true");
-  document.body.append(root);
-
-  return root;
+  return document.getElementById(id);
 }
 
 function useDialogA11y({
