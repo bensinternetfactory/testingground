@@ -15,6 +15,20 @@ Agent rule: never start validation or preview servers on port `3000`; use `3001+
 
 For user-facing changes, browser/DOM validation is required after standard checks. Use the globally installed `agent-browser` skill or CLI against a local server on a non-`3000` port, preferably `3005` in this repo. Minimum validation: open the changed page, wait for load completion, confirm the page renders, and verify at least one relevant DOM interaction or assertion for the changed feature.
 
+For the pre-approval drawer migration, execute from the plan set instead of improvising:
+
+- `plans/pre-approval-drawer-migration-spec.md` is the governing spec.
+- `plans/pre-approval-drawer-verification-matrix.md` maps requirements to verification.
+- `plans/pre-approval-drawer-phase-gates.md` is the active go/no-go checklist.
+- `plans/pre-approval-drawer-execution-log.md` is the required evidence log.
+
+For that migration, every implementation batch must:
+
+- identify the current phase before editing
+- verify the required checks for that phase before moving on
+- update the phase gate checklist and execution log in the same batch
+- stop immediately if a gate is not satisfied, evidence is missing, or a regression is found
+
 ## Architecture
 
 This is a Next.js 16 landing page using the App Router architecture with React 19.
