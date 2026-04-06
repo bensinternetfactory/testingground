@@ -273,28 +273,28 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 8 gate passed.
+- [x] Phase 8 gate passed.
 
 Execution checklist:
 
-- [ ] `PreApprovalDrawer.tsx` moved to `features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`.
-- [ ] `AmountSlider.tsx` moved to `features/pre-approval/drawer/ui/AmountSlider.tsx`.
-- [ ] All test files from `components/ui/pre-approval-drawer/__tests__/` moved to `features/pre-approval/__tests__/`.
-- [ ] Import paths in moved test files updated to reference canonical locations.
-- [ ] Import paths in moved UI files updated (e.g., `scroll-lock` import in drawer view, CSS import in AmountSlider).
-- [ ] Runtime files updated to import from new UI paths where needed.
-- [ ] `grep -rn "from.*@/components/ui" features/pre-approval/` returns zero results.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] `npm test -- features/pre-approval` passed (all moved tests green from the consolidated feature-owned suite).
-- [ ] Browser validation on desktop: same-page hash open, amount adjust, continue navigation.
-- [ ] Browser validation on mobile: direct-load hash open, close behavior, continue navigation.
-- [ ] Execution log updated with test, browser, and search evidence.
+- [x] `PreApprovalDrawer.tsx` moved to `features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`.
+- [x] `AmountSlider.tsx` moved to `features/pre-approval/drawer/ui/AmountSlider.tsx`.
+- [x] All test files from `components/ui/pre-approval-drawer/__tests__/` moved to `features/pre-approval/__tests__/`.
+- [x] Import paths in moved test files updated to reference canonical locations.
+- [x] Import paths in moved UI files updated (e.g., `scroll-lock` import in drawer view, CSS import in AmountSlider).
+- [x] Runtime files updated to import from new UI paths where needed.
+- [x] `grep -rn "from.*@/components/ui" features/pre-approval/` returns zero results.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] `npm test -- features/pre-approval` passed (all moved tests green from the consolidated feature-owned suite).
+- [x] Browser validation on desktop: same-page hash open, amount adjust, continue navigation.
+- [x] Browser validation on mobile: direct-load hash open, close behavior, continue navigation.
+- [x] Execution log updated with test, browser, and search evidence.
 
 Go / no-go gate:
 
-- [ ] Go: all UI and test files live under `features/pre-approval/` and the consolidated feature suite plus browser validation pass.
-- [ ] No-go conditions checked: no visual regression, no test failure, no missing file.
+- [x] Go: all UI and test files live under `features/pre-approval/` and the consolidated feature suite plus browser validation pass.
+- [x] No-go conditions checked: no visual regression, no test failure, no missing file.
 
 ## Phase 10: Delete Legacy Directory and Finalize Documentation
 

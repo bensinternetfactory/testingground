@@ -12,8 +12,8 @@ vi.mock("@/features/pre-approval/drawer/runtime/hash-listener", () => ({
   DrawerHashListener: () => null,
 }));
 
-vi.mock("@/components/ui/pre-approval-drawer/PreApprovalDrawer", () => ({
-  PreApprovalDrawer: () => null,
+vi.mock("@/features/pre-approval/drawer/ui/PreApprovalDrawerView", () => ({
+  PreApprovalDrawerView: () => null,
 }));
 
 vi.mock("@/features/pre-approval/drawer/runtime/route-sync", () => ({

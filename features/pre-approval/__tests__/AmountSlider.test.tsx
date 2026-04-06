@@ -2,7 +2,7 @@
 import * as React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import { AmountSlider } from "../AmountSlider";
+import { AmountSlider } from "@/features/pre-approval/drawer/ui/AmountSlider";
 
 afterEach(cleanup);
 

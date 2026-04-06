@@ -6,7 +6,7 @@ import {
   useDrawer,
 } from "@/features/pre-approval/drawer/runtime/context";
 import { DrawerHashListener } from "@/features/pre-approval/drawer/runtime/hash-listener";
-import { PreApprovalDrawer } from "./PreApprovalDrawer";
+import { PreApprovalDrawerView } from "@/features/pre-approval/drawer/ui/PreApprovalDrawerView";
 
 function DrawerProviderInner({ children }: { children: ReactNode }) {
   const { open } = useDrawer();
@@ -14,7 +14,7 @@ function DrawerProviderInner({ children }: { children: ReactNode }) {
     <>
       <DrawerHashListener open={open} />
       {children}
-      <PreApprovalDrawer />
+      <PreApprovalDrawerView />
     </>
   );
 }

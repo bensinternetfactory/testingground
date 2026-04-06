@@ -11,7 +11,7 @@ import {
   DrawerStateProvider,
   useDrawer,
 } from "@/features/pre-approval/drawer/runtime/context";
-import { PreApprovalDrawer } from "@/components/ui/pre-approval-drawer/PreApprovalDrawer";
+import { PreApprovalDrawerView } from "@/features/pre-approval/drawer/ui/PreApprovalDrawerView";
 import { RouteResetListener } from "@/features/pre-approval/drawer/runtime/route-sync";
 import type {
   PreApprovalCloseReason,
@@ -49,7 +49,7 @@ function PreApprovalDrawerRuntime() {
     <>
       <DrawerHashListener open={open} />
       <RouteResetListener open={open} reset={reset} />
-      <PreApprovalDrawer />
+      <PreApprovalDrawerView />
     </>
   );
 }

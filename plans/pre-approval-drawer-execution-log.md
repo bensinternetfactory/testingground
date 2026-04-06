@@ -83,6 +83,99 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 9`
+- Batch / scope: Move the remaining drawer UI files and legacy drawer tests into `features/pre-approval`, repair all affected imports and mocks, and verify the consolidated feature-owned suite plus live drawer behavior
+- Status: `PASS`
+
+Changes made:
+
+- Moved [`components/ui/pre-approval-drawer/PreApprovalDrawer.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/PreApprovalDrawer.tsx) to [`features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx) and renamed the exported component to `PreApprovalDrawerView`.
+- Moved [`components/ui/pre-approval-drawer/AmountSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/AmountSlider.tsx) to [`features/pre-approval/drawer/ui/AmountSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/ui/AmountSlider.tsx).
+- Moved the six legacy drawer test files from [`components/ui/pre-approval-drawer/__tests__/`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__) into [`features/pre-approval/__tests__/`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__), including renaming [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx) to [`features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx).
+- Updated [`features/pre-approval/drawer/client.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/client.tsx) and [`components/ui/pre-approval-drawer/DrawerProvider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerProvider.tsx) to import the moved feature-owned UI component from the new canonical path.
+- Updated the moved tests and the existing drawer-root tests at [`features/pre-approval/__tests__/drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx) and [`features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx) so all imports and `vi.mock` paths now target canonical modules under `@/features/pre-approval/`.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) and this execution log with the Phase 9 evidence and gate result.
+
+Verification matrix IDs covered:
+
+- `PA-INV-29`
+- `PA-INV-27`
+- `PA-INV-01`
+- `PA-INV-02`
+- `PA-INV-05`
+- `PA-INV-06`
+- `PA-INV-07`
+
+Commands run:
+
+- `rg -n "@/components/ui/pre-approval-drawer" features/pre-approval --glob '!**/__tests__/**'`
+- `grep -rn "from.*@/components/ui" features/pre-approval/`
+- `ls features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx features/pre-approval/drawer/ui/AmountSlider.tsx`
+- `find features/pre-approval/__tests__ -maxdepth 1 -type f | sort`
+- `npm test -- features/pre-approval`
+- `npm run lint`
+- `npm run build`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser eval "document.querySelector('a[href=\"#get-pre-approved\"]').click()"`
+- `agent-browser click @e62` plus repeated `agent-browser press ArrowRight`
+- `agent-browser click @e59`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing#get-pre-approved`
+- `agent-browser eval "const el=Array.from(document.querySelectorAll('[aria-hidden=\"true\"]')).find((node)=>node.className === 'fixed inset-0 z-[200] bg-black/35'); el && el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));"`
+- `agent-browser click @e37`
+
+Automated verification results:
+
+- `PA-INV-29`: `grep -rn "from.*@/components/ui" features/pre-approval/` returned zero results, confirming no feature-owned file still imports from `components/ui/`.
+- `PA-INV-27`: `npm run build` passed after the UI and test moves, confirming the canonical `@/features/pre-approval/*` modules still resolve cleanly in the production build.
+- The moved UI files exist at [`features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx) and [`features/pre-approval/drawer/ui/AmountSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/ui/AmountSlider.tsx), and `find features/pre-approval/__tests__ -maxdepth 1 -type f | sort` showed the consolidated feature-owned suite includes all moved legacy tests.
+- `npm test -- features/pre-approval` passed: 11 files, 83 tests, 0 failures. Vitest emitted the same pre-existing `happy-dom` `fetch("http://localhost:3000/...")` warning during hash-open tests, but the run completed successfully.
+- `npm run lint` exited `0` with the same 23 pre-existing test warnings now reported from [`features/pre-approval/__tests__/AmountSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/AmountSlider.test.tsx) and [`features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx); no new lint errors were introduced.
+- `rg -n "@/components/ui/pre-approval-drawer" features/pre-approval --glob '!**/__tests__/**'` returned zero matches, confirming the Phase 8 temporary feature-to-legacy UI import exception was fully removed in Phase 9.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: same-page hash CTA triggered in-browser with `document.querySelector('a[href="#get-pre-approved"]').click()`
+- Observed behavior: `PA-INV-01` and `PA-INV-06` satisfied. The drawer opened on the same page, focus moved into the dialog, the URL stayed on `/rollback-financing` after the hash was consumed, the slider responded to keyboard adjustment, and continue navigation went immediately to `/pre-approval?amount=315000` with no visible visual regression.
+- Route: `/rollback-financing#get-pre-approved`
+- Viewport: mobile `iPhone 14`
+- Trigger path: direct-load hash URL
+- Observed behavior: `PA-INV-02` satisfied. The drawer opened on initial load, the hash-open cleaned back to `/rollback-financing`, and the mobile sheet rendered correctly.
+- Route: `/rollback-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: backdrop-close after direct-load hash open
+- Observed behavior: `PA-INV-07` satisfied. Dispatching a click on the mobile backdrop closed the sheet and returned the page to its underlying content with no stuck overlay.
+- Route: `/rollback-financing#get-pre-approved`
+- Viewport: mobile `iPhone 14`
+- Trigger path: direct-load hash open followed by continue CTA
+- Observed behavior: `PA-INV-05` satisfied. Tapping Continue navigated immediately to `/pre-approval?amount=100000`, indicating the mobile continue path still unlocks and hands off without waiting on an exit animation.
+
+Evidence summary:
+
+- The remaining visible drawer UI now lives under `features/pre-approval/drawer/ui/`, and the legacy test directory is empty because all remaining UI/runtime tests were consolidated under `features/pre-approval/__tests__/`.
+- The Phase 8 temporary exception is gone: there are no remaining feature-owned imports from `components/ui/`, and the drawer-root tests now mock the canonical feature UI path.
+- The consolidated feature test suite, lint, production build, desktop validation, and mobile validation all passed after the move, with no missing moved files and no visible regression observed during the browser checks.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. The only noteworthy noise was the existing Vitest `happy-dom` network warning against `localhost:3000`, which did not cause any test failure and predates this phase.
+
+Next required action:
+
+- Stop here. Phase 9 is complete and recorded; do not begin Phase 10 until a separate batch starts.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 8`
 - Batch / scope: Move the four runtime modules into `features/pre-approval/drawer/runtime`, repair the directly affected import graph, and verify the temporary Phase 8 legacy-view exception
 - Status: `PASS`

@@ -163,7 +163,7 @@ function useDialogA11y({
   }, [close, dialogRef, isOpen]);
 }
 
-export function PreApprovalDrawer() {
+export function PreApprovalDrawerView() {
   const {
     amount,
     close,

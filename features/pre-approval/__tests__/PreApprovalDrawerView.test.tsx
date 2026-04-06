@@ -115,8 +115,8 @@ import {
   useDrawer,
 } from "@/features/pre-approval/drawer/runtime/context";
 import { unlockBodyScroll } from "@/features/pre-approval/drawer/runtime/scroll-lock";
-import { PreApprovalDrawer } from "../PreApprovalDrawer";
 import type { PreApprovalEvent } from "@/features/pre-approval/contract";
+import { PreApprovalDrawerView } from "@/features/pre-approval/drawer/ui/PreApprovalDrawerView";
 
 // ── Test Helpers ──────────────────────────────────────────────────────
 
@@ -160,7 +160,7 @@ function TestHarness({
   return (
     <DrawerStateProvider onEvent={onEvent}>
       <OpenButton />
-      <PreApprovalDrawer />
+      <PreApprovalDrawerView />
       {children}
     </DrawerStateProvider>
   );
@@ -200,7 +200,7 @@ afterEach(() => {
 
 // ── Tests ─────────────────────────────────────────────────────────────
 
-describe("PreApprovalDrawer", () => {
+describe("PreApprovalDrawerView", () => {
   it("does not render a dialog when closed", () => {
     render(<TestHarness />);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
