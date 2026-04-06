@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
 
@@ -11,6 +12,7 @@ interface HeroTertiaryAction {
   eyebrow: string;
   label: string;
   href: string;
+  preApprovalTrigger?: PreApprovalTrigger;
   drawer?: DrawerTriggerPayload;
 }
 
@@ -88,6 +90,7 @@ function TertiaryActionCard({
       size="sm"
       justify="between"
       icon={<ArrowRight className="h-4 w-4" />}
+      preApprovalTrigger={action.preApprovalTrigger}
       drawer={action.drawer}
       prefetch={false}
       section="hero"

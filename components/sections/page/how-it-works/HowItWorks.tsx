@@ -82,6 +82,7 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
           <RippleCtaLink
             href={config.cta.href}
             label={config.cta.label}
+            preApprovalTrigger={config.cta.preApprovalTrigger}
             drawer={config.cta.drawer}
             icon={ArrowIcon}
             section="how-it-works"

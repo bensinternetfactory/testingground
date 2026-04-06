@@ -84,6 +84,206 @@ Next required action:
 - Date: 2026-04-06
 - Agent: Codex
 - Phase: `Phase 5`
+- Batch / scope: Final Phase 5 batch only: verify route/page config migration callers, remaining shared renderers, and preserved compatibility paths without starting Phase 6 cleanup
+- Status: `PASS`
+
+Changes made:
+
+- Added focused Phase 5 caller coverage in [`app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) for the migrated homepage shared config authors in [`components/sections/heroes/hero-gallery/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/config.ts), [`components/sections/page/how-it-works/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/how-it-works/config.ts), and [`components/sections/page/closing-cta/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/config.ts).
+- Added focused renderer and caller coverage in [`app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx) for the migrated program-page hero/sidebar/inline CTA authors plus the still-shared promo-panel and bottom-link renderer plumbing.
+- Added financing and program closing-surface coverage in [`components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx) and [`components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx) to verify canonical trigger emission for the final route/page-config batch, including truck-type handoff on program closing tiles.
+- Added shared-surface fallback coverage in [`components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx) and [`components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx) so the canonical tertiary-link wiring and preserved legacy drawer fallback remain covered while those shared hero surfaces stay compatibility-capable.
+- Kept the implementation surface unchanged beyond these tests; no compatibility removal, legacy-prop deletion, or Phase 6 cleanup was attempted.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-02`
+- `PA-INV-03`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+- `PA-INV-21`
+- `PA-INV-24`
+
+Commands run:
+
+- `npm test -- app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx features/pre-approval/__tests__/public-api.test.ts`
+- `rg -n "DRAWER_HASH|drawer:" app/'(marketing)' components/sections --glob 'config.ts' --glob '!**/__tests__/**'`
+- `rg -n "preApprovalTrigger|preApprovalEntryHash" app/'(marketing)' components/sections --glob 'config.ts' --glob '!**/__tests__/**'`
+- `rg -n "drawer:" app/'(marketing)'/'(programs)' app/'(marketing)'/'(financing)' components/sections/heroes components/sections/page --glob 'config.ts' --glob '!**/__tests__/**'`
+- `rg -n "DRAWER_HASH" app/'(marketing)'/'(programs)' app/'(marketing)'/'(financing)' components/sections/heroes components/sections/page --glob 'config.ts' --glob '!**/__tests__/**'`
+- `npm run lint`
+- `npm run build`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rotator-financing`
+- `agent-browser eval '(() => { const link = document.querySelector("a[data-pre-approval-origin-section-id=\"tertiary-strip-primary\"]"); if (!(link instanceof HTMLAnchorElement)) return { found: false }; const payload = { href: link.getAttribute("href"), dataset: { ...link.dataset }, text: link.textContent?.trim() ?? null }; link.click(); return { found: true, payload }; })()'`
+- `agent-browser wait 500`
+- `agent-browser eval '(() => { const dialog = document.querySelector("[role=\"dialog\"]"); const continueButton = Array.from(document.querySelectorAll("button")).find((el) => /continue/i.test(el.textContent ?? "")); return { dialogOpen: Boolean(dialog), dialogText: dialog?.textContent?.slice(0, 120) ?? null, continueLabel: continueButton?.textContent?.trim() ?? null }; })()'`
+- `agent-browser eval '(() => { const button = Array.from(document.querySelectorAll("button")).find((el) => /continue to pre-approval/i.test(el.textContent ?? "")); if (!(button instanceof HTMLButtonElement)) return { clicked: false }; button.click(); return { clicked: true }; })()'`
+- `agent-browser wait 500`
+- `agent-browser get url`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser eval '(() => { const link = Array.from(document.querySelectorAll("a")).find((el) => /What.s my buying power\?/i.test(el.textContent ?? "")); if (!(link instanceof HTMLAnchorElement)) return { found: false }; const payload = { href: link.getAttribute("href"), dataset: { ...link.dataset }, text: link.textContent?.trim() ?? null }; link.click(); return { found: true, payload }; })()'`
+- `agent-browser wait 500`
+- `agent-browser eval '(() => { const dialog = document.querySelector("[role=\"dialog\"]"); return { dialogOpen: Boolean(dialog), dialogText: dialog?.textContent?.slice(0, 120) ?? null }; })()'`
+- `agent-browser eval '(() => { const button = Array.from(document.querySelectorAll("button")).find((el) => /continue to pre-approval/i.test(el.textContent ?? "")); if (!(button instanceof HTMLButtonElement)) return { clicked: false }; button.click(); return { clicked: true }; })()'`
+- `agent-browser wait 500`
+- `agent-browser get url`
+- `agent-browser open http://127.0.0.1:3001/deferred-payment-tow-truck-financing`
+- `agent-browser eval '(() => { const link = document.querySelector("a[aria-label=\"Get pre-approved for a rotator\"]"); if (!(link instanceof HTMLAnchorElement)) return { found: false }; const payload = { href: link.getAttribute("href"), dataset: { ...link.dataset }, text: link.textContent?.trim() ?? null }; link.click(); return { found: true, payload }; })()'`
+- `agent-browser wait 500`
+- `agent-browser eval '(() => { const dialog = document.querySelector("[role=\"dialog\"]"); return { dialogOpen: Boolean(dialog), dialogText: dialog?.textContent?.slice(0, 120) ?? null }; })()'`
+- `agent-browser eval '(() => { const button = Array.from(document.querySelectorAll("button")).find((el) => /continue to pre-approval/i.test(el.textContent ?? "")); if (!(button instanceof HTMLButtonElement)) return { clicked: false }; button.click(); return { clicked: true }; })()'`
+- `agent-browser wait 500`
+- `agent-browser get url`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing#get-pre-approved`
+- `agent-browser wait 500`
+- `agent-browser eval '(() => { const dialog = document.querySelector("[role=\"dialog\"]"); const continueButton = Array.from(document.querySelectorAll("button")).find((el) => /continue/i.test(el.textContent ?? "")); return { dialogOpen: Boolean(dialog), dialogText: dialog?.textContent?.slice(0, 120) ?? null, continueLabel: continueButton?.textContent?.trim() ?? null, currentHash: window.location.hash }; })()'`
+- `agent-browser eval '(() => { const button = Array.from(document.querySelectorAll("button")).find((el) => /continue to pre-approval/i.test(el.textContent ?? "")); if (!(button instanceof HTMLButtonElement)) return { clicked: false }; button.click(); return { clicked: true }; })()'`
+- `agent-browser wait 500`
+- `agent-browser get url`
+
+Automated verification results:
+
+- The targeted Phase 5 route/page-config suite passed `10` test files and `43` tests. The run emitted the same existing happy-dom `localhost:3000` fetch noise during [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), but all assertions passed and no test failed.
+- `PA-INV-10`: the new caller tests in [`homepagePreApprovalCallers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx), [`preApprovalConfigRenderers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx), [`preApprovalCallers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx), and [`preApprovalCallers.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx) verify that the homepage shared config callers, the final program-page config callers, and the final financing-page config callers now emit canonical `data-pre-approval-*` attributes from the authored `preApprovalTrigger` contract.
+- `PA-INV-09`: [`HeroConvertTertiaryLinks.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx) and [`HeroConvertTertiaryLinks.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx) confirm the untouched legacy `drawer` fallback remains available on shared hero tertiary-link surfaces while canonical trigger wiring is preferred where authored.
+- `PA-INV-11`: rerunning [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx) and [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts) reconfirmed that the canonical schema wins whenever both canonical and legacy compatibility props are present.
+- `PA-INV-21`: rerunning [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx) kept direct-hash compatibility-origin coverage in the suite while the batch validated untouched compatibility behavior around the migrated callers.
+- `PA-INV-24`: the residual search queries show the final Phase 5 route/page-config batch no longer depends on legacy route-page authoring semantics. `rg -n "DRAWER_HASH" ... --glob 'config.ts'` now matches only intentionally retained earlier-batch hero selection/default compatibility configs in [`components/sections/heroes/hero-lead-gen/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/config.ts), [`components/sections/heroes/hero-convert-geico/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/config.ts), and the earlier-batch financing hero selection configs in [`app/(marketing)/(financing)/rollback-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rollback-financing/config.ts), [`app/(marketing)/(financing)/wrecker-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/wrecker-financing/config.ts), [`app/(marketing)/(financing)/rotator-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rotator-financing/config.ts), and [`app/(marketing)/(financing)/used-tow-truck-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/used-tow-truck-financing/config.ts); none of the newly migrated homepage/program/financing route-page callers from this final batch remain on `DRAWER_HASH`.
+- `PA-INV-24`: `rg -n "drawer:" ... --glob 'config.ts'` now matches only canonical trigger-construction helpers that populate `trigger.drawer.title` inside the migrated config factories; it does not show any remaining legacy route-page caller authoring via `drawer: { ... }` payloads in the final-batch configs.
+- `npm run lint`: completed with the same existing unused-variable warnings in the legacy pre-approval drawer motion-mock tests; no new Phase 5 final-batch lint errors or warnings were introduced.
+- `PA-INV-17`: `npm run build` passed, confirming the final caller migration batch and preserved compatibility surfaces still compile cleanly.
+
+Browser verification results:
+
+- Route: `/rotator-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the canonical financing tertiary-strip CTA emitted from the final route-config batch (`Already have a rotator in mind? I found a truck and need financing`), then Continue
+- Observed behavior: the link exposed canonical `data-pre-approval-*` attributes with `pageId="rotator-financing"`, `sectionId="tertiary-strip-primary"`, `ctaId="found-truck-cta"`, and the legacy title override `How much is the rotator you found?`; clicking it opened the drawer on-page with that title, and Continue navigated immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+- Route: `/`
+- Viewport: mobile (`iPhone 14`)
+- Trigger path: click the canonical homepage tertiary link `What’s my buying power?`, then Continue
+- Observed behavior: the link exposed canonical homepage trigger metadata with `pageId="home"`, `sectionId="hero-tertiary-links"`, `ctaId="hero-tertiary-buying-power"`, and drawer title `Estimate your buying power`; the drawer opened correctly on mobile with that title, and Continue navigated to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+- Route: `/deferred-payment-tow-truck-financing`
+- Viewport: mobile (`iPhone 14`)
+- Trigger path: click the canonical program closing tile `Rotator`, then Continue
+- Observed behavior: the closing tile exposed canonical `data-pre-approval-*` attributes with `pageId="deferred-payment-tow-truck-financing"`, `sectionId="closing-cta-tiles"`, `ctaId="closing-tile-rotator"`, and `trucktype=rotator`; the drawer opened with the default title, and Continue navigated to `http://127.0.0.1:3001/pre-approval?amount=100000&trucktype=rotator`.
+
+- Route: `/rollback-financing#get-pre-approved`
+- Viewport: desktop (`1440x900`)
+- Trigger path: direct-load hash open for the untouched compatibility path, then Continue
+- Observed behavior: the drawer opened on first load with the default title `Estimate how much financing you need.`, the hash normalized away after the sheet opened, and Continue navigated to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- The final Phase 5 route/page-config batch is now verified end to end: targeted caller tests passed, residual searches show the migrated callers no longer rely on legacy authoring semantics, `npm run lint` and `npm run build` are green, and desktop/mobile browser validation covered canonical homepage, program-page, and financing-page flows plus an untouched compatibility path.
+- The preserved compatibility surfaces still behave as intended: canonical triggers are emitted for the migrated callers, legacy `drawer` fallback remains available on the shared hero surfaces that still expose it, and direct-hash entry continues to work without requiring a `/pre-approval` page implementation in this standalone marketing repo.
+- No Phase 6 cleanup was mixed into this batch. Compatibility props, deep imports, and legacy runtime support remain intentionally preserved pending the separate removal phase.
+- With earlier Phase 5 batches already recorded as `PASS`, this final route/page-config batch closes the remaining Phase 5 checklist item. `Phase 5` overall is `GO`.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None for the final `Phase 5` batch.
+
+Next required action:
+
+- Stop with `Phase 5` complete and do not start `Phase 6` until explicitly instructed.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 5`
+- Batch / scope: Batch 6 only: migrate the shared term-length-slider CSS consumer to a feature-owned amount-slider stylesheet while preserving the legacy drawer CSS path as a compatibility shim
+- Status: `PASS`
+
+Changes made:
+
+- Added the feature-owned shared slider stylesheet [`features/pre-approval/amount-slider.css`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/amount-slider.css) and moved the canonical shared slider rules there without changing the visual values or thumb sizing.
+- Updated the authorized shared external consumer [`components/sections/page/term-length-slider/TermLengthSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/term-length-slider/TermLengthSlider.tsx) to import the feature-owned stylesheet instead of the legacy drawer path.
+- Preserved the legacy CSS compatibility path by converting [`components/ui/pre-approval-drawer/amount-slider.css`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/amount-slider.css) into a shim that re-imports the feature-owned stylesheet, leaving the untouched drawer slider consumer on its existing `./amount-slider.css` import.
+- Added focused coverage in [`components/sections/page/term-length-slider/__tests__/TermLengthSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/term-length-slider/__tests__/TermLengthSlider.test.tsx) for the shared slider class usage and model-year-to-term interaction, and updated the local dependency note in [`components/sections/page/term-length-slider/CLAUDE.md`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/term-length-slider/CLAUDE.md).
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-09`
+- `PA-INV-17`
+- `PA-INV-23`
+
+Commands run:
+
+- `npm test -- components/sections/page/term-length-slider/__tests__/TermLengthSlider.test.tsx components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx`
+- `rg -n "@/components/ui/pre-approval-drawer/amount-slider.css|@/features/pre-approval/amount-slider.css|\./amount-slider.css" components app features --glob '!**/__tests__/**'`
+- `npm run lint`
+- `npm run build`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser eval '(() => { const slider = document.querySelector("input[aria-label=\"Select truck model year\"]"); if (!(slider instanceof HTMLInputElement)) return { found: false }; const result = Array.from(document.querySelectorAll("p")).find((el) => /months$/.test(el.textContent?.trim() ?? "")); return { found: true, value: slider.value, ariaValueText: slider.getAttribute("aria-valuetext"), className: slider.className, resultText: result?.textContent?.trim() ?? null }; })()'`
+- `agent-browser set viewport 390 844`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser eval '(() => { const slider = document.querySelector("input[aria-label=\"Select truck model year\"]"); if (!(slider instanceof HTMLInputElement)) return { found: false }; const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set; setValue?.call(slider, "2018"); slider.dispatchEvent(new Event("input", { bubbles: true })); slider.dispatchEvent(new Event("change", { bubbles: true })); const result = Array.from(document.querySelectorAll("p")).find((el) => /months$/.test(el.textContent?.trim() ?? "")); return { found: true, value: slider.value, ariaValueText: slider.getAttribute("aria-valuetext"), resultText: result?.textContent?.trim() ?? null, className: slider.className }; })()'`
+- `agent-browser eval '(() => { const link = Array.from(document.querySelectorAll("a")).find((el) => el.textContent?.includes("I found a truck and need financing")); if (!(link instanceof HTMLAnchorElement)) return { clicked: false }; link.click(); return { clicked: true, dataset: { ...link.dataset } }; })()'`
+- `agent-browser wait 500`
+- `agent-browser wait --text "How much is the rollback you found?"`
+- `agent-browser eval '(() => { const slider = document.querySelector("input[name=\"estimated-financing-amount\"]"); return { dialogOpen: Boolean(document.querySelector("[role=dialog]")), sliderClass: slider instanceof HTMLInputElement ? slider.className : null, sliderAriaValueText: slider instanceof HTMLInputElement ? slider.getAttribute("aria-valuetext") : null }; })()'`
+
+Automated verification results:
+
+- The new focused [`TermLengthSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/term-length-slider/__tests__/TermLengthSlider.test.tsx) passed `1` test verifying the shared `slider-thumb` class remains on the rendered control and that changing the model year updates the announced term length from `60 months` to `72 months` in the component logic.
+- [`AmountSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx) passed `5` tests after the legacy CSS file became a shim, confirming the untouched drawer slider still renders, formats currency, and exposes the expected accessibility attributes through the compatibility import path.
+- `PA-INV-23`: `rg -n "@/components/ui/pre-approval-drawer/amount-slider.css|@/features/pre-approval/amount-slider.css|\./amount-slider.css" components app features --glob '!**/__tests__/**'` shows the shared term-length-slider caller now imports the feature-owned stylesheet while [`AmountSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/AmountSlider.tsx) remains on `./amount-slider.css`, proving the legacy CSS path is still present for untouched consumers.
+- `npm run lint` completed with the same pre-existing unused-variable warnings in the pre-approval drawer motion-mock tests; no new shared-CSS batch warnings or errors were introduced.
+- `PA-INV-17`: `npm run build` passed, confirming the migrated external consumer and the untouched legacy drawer import both compile.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: load the purchase-and-terms section and inspect the term-length slider before interaction
+- Observed behavior: the term-length slider rendered on the page with the shared `slider-thumb` class, initial `aria-valuetext` of `2021 model year, up to 72 month term`, and visible result text `72 months`, confirming the migrated feature-owned stylesheet path applies on the live page.
+
+- Route: `/rollback-financing`
+- Viewport: mobile (`390x844`)
+- Trigger path: change the term-length slider year to `2018`, then click the untouched legacy CTA `I found a truck and need financing`
+- Observed behavior: the term-length slider updated live to `2018 model year, up to 60 month term` and `60 months`, then the untouched legacy CTA still opened the drawer with the expected legacy title `How much is the rollback you found?`; inside the open drawer, the amount slider remained present with the shared `slider-thumb` class and `aria-valuetext="$100,000"` through the compatibility CSS import path.
+
+Evidence summary:
+
+- This batch stayed within the authorized shared CSS scope: it migrated only the external shared stylesheet consumer to a feature-owned target and preserved the legacy drawer stylesheet path as a compatibility shim for untouched imports.
+- No route/page config work, CTA contract migration, compatibility removal, or Phase 6 cleanup was mixed into this batch.
+- The browser pass covered both sides of the compatibility requirement: the migrated shared page slider works from the new feature-owned stylesheet, and the untouched legacy drawer slider still works from the preserved legacy CSS import path.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Move to the final allowed Phase 5 batch only: route/page config migration. Do not start Phase 6 cleanup or remove the legacy CSS compatibility path.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 5`
 - Batch / scope: Batch 5 only: migrate the rollback, wrecker, and used-truck tile-selection hero callers to a feature-owned, server-safe canonical trigger helper while preserving the legacy tile-selection compatibility path
 - Status: `PASS`
 

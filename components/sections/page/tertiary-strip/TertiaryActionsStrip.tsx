@@ -20,6 +20,7 @@ export function TertiaryActionsStrip({
               size="sm"
               justify="between"
               icon={<ArrowRight className="h-4 w-4" />}
+              preApprovalTrigger={action.preApprovalTrigger}
               drawer={action.drawer}
               prefetch={false}
               section="tertiary-strip"

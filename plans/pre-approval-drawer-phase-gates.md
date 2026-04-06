@@ -175,8 +175,8 @@ Execution checklist:
 - [x] Route-only consumer migration status recorded.
 - [x] Hero preset migration status recorded.
 - [x] Tile-selection helper migration status recorded.
-- [ ] Shared CSS consumer migration status recorded.
-- [ ] Route/page config migration status recorded.
+- [x] Shared CSS consumer migration status recorded.
+- [x] Route/page config migration status recorded.
 - [x] Browser validation completed for each changed caller batch.
 - [x] `npm run lint` passed after each batch.
 - [x] `npm run build` passed after each batch.
@@ -184,8 +184,8 @@ Execution checklist:
 
 Go / no-go gate:
 
-- [ ] Go: migrated callers use the canonical contract and untouched callers still work.
-- [ ] No-go conditions checked: no broad uncontrolled migration, no early compatibility removal, no mixed-in redesign work, no unmigrated route-only/deep-import/CSS consumers assumed away.
+- [x] Go: migrated callers use the canonical contract and untouched callers still work.
+- [x] No-go conditions checked: no broad uncontrolled migration, no early compatibility removal, no mixed-in redesign work, no unmigrated route-only/deep-import/CSS consumers assumed away.
 
 ## Phase 6: Remove Legacy Semantics
 

@@ -1,7 +1,6 @@
-import {
-  DRAWER_HASH,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
+import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 
 export interface HowItWorksStep {
   number: string;
@@ -12,7 +11,29 @@ export interface HowItWorksStep {
 export interface HowItWorksConfig {
   headline: string;
   steps: HowItWorksStep[];
-  cta: { label: string; href: string; drawer?: DrawerTriggerPayload };
+  cta: {
+    label: string;
+    href: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+    drawer?: DrawerTriggerPayload;
+  };
+}
+
+function createHomepageTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "home",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
+  };
 }
 
 export const HOW_IT_WORKS_CONFIG: HowItWorksConfig = {
@@ -38,6 +59,11 @@ export const HOW_IT_WORKS_CONFIG: HowItWorksConfig = {
   ],
   cta: {
     label: "See Your Payment",
-    href: DRAWER_HASH,
+    href: preApprovalEntryHash,
+    preApprovalTrigger: createHomepageTrigger(
+      "how-it-works-primary",
+      "how-it-works-primary",
+      "section",
+    ),
   },
 };

@@ -1,5 +1,7 @@
 import type { EquipmentFinancingPageConfig } from "../_components/page-config-types";
 import truck2 from "@/public/truck-2.jpg";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import {
   buildFaqSection,
   SHARED_FINANCING_FOOTNOTES_CONFIG,
@@ -13,6 +15,23 @@ import type { FaqItemData } from "@/components/sections/page/faq/config";
 /* ── Page Config ─────────────────────────────────────────────────── */
 
 const usedTowTruckFaqContent = buildUsedTowTruckFaqContent();
+
+function createUsedTowTruckTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "used-tow-truck-financing",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
+  };
+}
 
 export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
@@ -182,7 +201,15 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
     eyebrow: "READY WHEN YOU ARE",
     headline: "See your payment in 30 seconds.",
     body: "You found the truck. You know it fits the business. Do not let the age, the mileage, or the seller type slow down the deal. Start with the payment and the structure.",
-    cta: { href: DRAWER_HASH, label: "Get Pre-Approved" },
+    cta: {
+      href: preApprovalEntryHash,
+      label: "Get Pre-Approved",
+      preApprovalTrigger: createUsedTowTruckTrigger(
+        "closing-cta-primary",
+        "closing-cta-primary",
+        "footer",
+      ),
+    },
     contactBlock: {
       prompt: "Prefer to talk?",
       phoneLabel: "(888) 555-0199",

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { TermSliderConfig } from "./config";
-import "@/components/ui/pre-approval-drawer/amount-slider.css";
+import "@/features/pre-approval/amount-slider.css";
 
 export function TermLengthSlider({
   config,

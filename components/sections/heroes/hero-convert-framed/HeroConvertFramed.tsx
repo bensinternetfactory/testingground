@@ -3,6 +3,7 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import { buildDrawerTriggerDataAttributes } from "@/components/ui/pre-approval-drawer";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
 
@@ -76,7 +77,9 @@ function TertiaryTextLinks({
           key={link.label}
           href={link.href}
           prefetch={false}
-          {...buildDrawerTriggerDataAttributes(link.drawer)}
+          {...(link.preApprovalTrigger
+            ? buildPreApprovalTriggerAttributes(link.preApprovalTrigger)
+            : buildDrawerTriggerDataAttributes(link.drawer))}
           className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
         >
           {link.label}

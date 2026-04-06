@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import {
   PressFeedbackRipple,
   tapSpring,
@@ -30,9 +32,11 @@ function ArrowIcon() {
 export function ProgramNavCardLink({
   href,
   label,
+  preApprovalTrigger,
 }: {
   href: string;
   label: string;
+  preApprovalTrigger?: PreApprovalTrigger;
 }) {
   const { clearRipple, handlers, ripple, shouldReduceMotion } =
     usePressFeedback<HTMLAnchorElement>({
@@ -43,6 +47,9 @@ export function ProgramNavCardLink({
     <MotionLink
       href={href}
       {...handlers}
+      {...(preApprovalTrigger
+        ? buildPreApprovalTriggerAttributes(preApprovalTrigger)
+        : {})}
       whileTap={
         shouldReduceMotion ? undefined : { scale: 0.98, opacity: 0.85 }
       }

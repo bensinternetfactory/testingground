@@ -1,7 +1,6 @@
-import {
-  DRAWER_HASH,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
+import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -10,6 +9,7 @@ import {
 export interface TertiaryLink {
   label: string;
   href: string;
+  preApprovalTrigger?: PreApprovalTrigger;
   drawer?: DrawerTriggerPayload;
 }
 
@@ -19,7 +19,12 @@ export interface HeroGalleryConfig {
   inputPlaceholder: string;
   ctaLabel: string;
   submitHref: string;
-  mobileCta: { label: string; href: string; drawer?: DrawerTriggerPayload };
+  mobileCta: {
+    label: string;
+    href: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+    drawer?: DrawerTriggerPayload;
+  };
   tertiaryLinks: TertiaryLink[];
   images: { row1: string[]; row2: string[] };
 }
@@ -28,6 +33,23 @@ export interface HeroGalleryConfig {
 /*  Config                                                             */
 /* ------------------------------------------------------------------ */
 
+function createHomepageTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "home",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
+  };
+}
+
 export const HERO_GALLERY_CONFIG: HeroGalleryConfig = {
   headline: "Fast & Easy Tow Truck Financing",
   subheadline:
@@ -35,17 +57,35 @@ export const HERO_GALLERY_CONFIG: HeroGalleryConfig = {
   inputPlaceholder: "How much do you need?",
   ctaLabel: "Get Pre-Approved",
   submitHref: "/pre-approval",
-  mobileCta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+  mobileCta: {
+    label: "Get Pre-Approved",
+    href: preApprovalEntryHash,
+    preApprovalTrigger: createHomepageTrigger(
+      "hero-mobile-primary",
+      "hero-mobile-primary",
+      "hero",
+    ),
+  },
   tertiaryLinks: [
     {
       label: "Found a truck? Get financing",
-      href: DRAWER_HASH,
-      drawer: { title: "How much is the tow truck you found?" },
+      href: preApprovalEntryHash,
+      preApprovalTrigger: createHomepageTrigger(
+        "hero-tertiary-links",
+        "hero-tertiary-found-truck",
+        "hero",
+        "How much is the tow truck you found?",
+      ),
     },
     {
       label: "What\u2019s my buying power?",
-      href: DRAWER_HASH,
-      drawer: { title: "Estimate your buying power" },
+      href: preApprovalEntryHash,
+      preApprovalTrigger: createHomepageTrigger(
+        "hero-tertiary-links",
+        "hero-tertiary-buying-power",
+        "hero",
+        "Estimate your buying power",
+      ),
     },
   ],
   images: {

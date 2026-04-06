@@ -4,10 +4,37 @@ import {
   buildFaqSchema,
   type FaqItemData,
 } from "@/components/sections/page/faq";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import type {
+  PreApprovalTrigger,
+  PreApprovalTruckType,
+} from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 const strongText = (text: string) =>
   createElement("span", { className: "font-semibold text-[#111]" }, text);
+
+const deferredPaymentPageId = "deferred-payment-tow-truck-financing";
+
+function createDeferredPaymentTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  options?: {
+    title?: string;
+    truckType?: PreApprovalTruckType;
+  },
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: deferredPaymentPageId,
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: options?.title ? { title: options.title } : undefined,
+    handoff: options?.truckType ? { truckType: options.truckType } : undefined,
+  };
+}
 
 const deferredPaymentFaqs: FaqItemData[] = [
   {
@@ -106,7 +133,15 @@ export const deferredPaymentPageConfig: ProgramPageConfig = {
     headline: "Take the Truck Today. Real Payments Start Later.",
     subheadline:
       "Finance the truck, take delivery, and make $99 touch payments for 60, 90, or 120 days while it gets on the road. When the real payment kicks in, the revenue is already there to meet it.",
-    cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+    cta: {
+      label: "Get Pre-Approved",
+      href: preApprovalEntryHash,
+      preApprovalTrigger: createDeferredPaymentTrigger(
+        "hero-primary",
+        "hero-main-cta",
+        "hero",
+      ),
+    },
     phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
     trustBadges: [
       { label: "60, 90, or 120 Day Options" },
@@ -120,7 +155,12 @@ export const deferredPaymentPageConfig: ProgramPageConfig = {
     headline: "See your deferred payment.",
     subhead: "Pre-approval in 30 seconds. No credit impact.",
     ctaLabel: "Get Pre-Approved",
-    ctaHref: DRAWER_HASH,
+    ctaHref: preApprovalEntryHash,
+    preApprovalTrigger: createDeferredPaymentTrigger(
+      "sidebar-cta",
+      "sidebar-main-cta",
+      "section",
+    ),
   },
   sections: [
     {
@@ -186,7 +226,12 @@ export const deferredPaymentPageConfig: ProgramPageConfig = {
         eyebrow: "TIME IT RIGHT.",
         message: "See your deferred payment in 30 seconds.",
         ctaLabel: "Get Pre-Approved",
-        ctaHref: DRAWER_HASH,
+        ctaHref: preApprovalEntryHash,
+        preApprovalTrigger: createDeferredPaymentTrigger(
+          "timing-inline-cta",
+          "timing-inline-cta",
+          "inline",
+        ),
         iconSrc:
           "/brand-assets/benefit-icons/deferment/deferment-90-light.svg",
         iconAlt: "",
@@ -313,7 +358,12 @@ export const deferredPaymentPageConfig: ProgramPageConfig = {
         eyebrow: "SEE THE NUMBERS ON YOUR DEAL.",
         message: "Deferred and standard payments, side by side in 30 seconds.",
         ctaLabel: "Get Pre-Approved",
-        ctaHref: DRAWER_HASH,
+        ctaHref: preApprovalEntryHash,
+        preApprovalTrigger: createDeferredPaymentTrigger(
+          "math-inline-cta",
+          "math-inline-cta",
+          "inline",
+        ),
         iconSrc:
           "/brand-assets/benefit-icons/fast/fast-funding-light.svg",
         iconAlt: "",
@@ -444,24 +494,48 @@ export const deferredPaymentPageConfig: ProgramPageConfig = {
     tiles: [
       {
         label: "Rollback",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/rollback/rollback-green.svg",
+        preApprovalTrigger: createDeferredPaymentTrigger(
+          "closing-cta-tiles",
+          "closing-tile-rollback",
+          "footer",
+          { truckType: "rollback" },
+        ),
       },
       {
         label: "Wrecker",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/wrecker/wrecker-green.svg",
+        preApprovalTrigger: createDeferredPaymentTrigger(
+          "closing-cta-tiles",
+          "closing-tile-wrecker",
+          "footer",
+          { truckType: "wrecker" },
+        ),
       },
       {
         label: "Heavy Wrecker",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc:
           "/brand-assets/truck-icons/heavywrecker/heavywrecker-green.svg",
+        preApprovalTrigger: createDeferredPaymentTrigger(
+          "closing-cta-tiles",
+          "closing-tile-heavy-wrecker",
+          "footer",
+          { truckType: "heavy-wrecker" },
+        ),
       },
       {
         label: "Rotator",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/rotator/rotator-green.svg",
+        preApprovalTrigger: createDeferredPaymentTrigger(
+          "closing-cta-tiles",
+          "closing-tile-rotator",
+          "footer",
+          { truckType: "rotator" },
+        ),
       },
     ],
   },

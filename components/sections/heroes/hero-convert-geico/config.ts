@@ -1,6 +1,7 @@
 import truck1 from "@/public/truck-1.jpg";
 import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import type { PreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   DRAWER_HASH,
@@ -32,7 +33,12 @@ export interface HeroConvertConfig {
   selectionRequiredMessage: string;
   tiles: SelectionTileData[];
   cta: HeroConvertCtaConfig;
-  tertiaryLinks: { label: string; href: string; drawer?: DrawerTriggerPayload }[];
+  tertiaryLinks: {
+    label: string;
+    href: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+    drawer?: DrawerTriggerPayload;
+  }[];
   viewAllLink?: { label: string; href: string };
   microcopy?: string;
   disclaimer?: string;

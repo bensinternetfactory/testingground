@@ -51,5 +51,5 @@ import { TermLengthSlider } from "@/components/sections/page/term-length-slider"
 ## Dependencies
 
 - `next/image` for icon
-- `amount-slider.css` from `@/components/ui/pre-approval-drawer` for shared slider styling
+- `amount-slider.css` from `@/features/pre-approval` for shared slider styling
 - Local config types from `config.ts`

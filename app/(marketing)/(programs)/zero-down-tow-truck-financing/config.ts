@@ -4,10 +4,37 @@ import {
   buildFaqSchema,
   type FaqItemData,
 } from "@/components/sections/page/faq";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import type {
+  PreApprovalTrigger,
+  PreApprovalTruckType,
+} from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 const strongText = (text: string) =>
   createElement("span", { className: "font-semibold text-[#111]" }, text);
+
+const zeroDownPageId = "zero-down-tow-truck-financing";
+
+function createZeroDownTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  options?: {
+    title?: string;
+    truckType?: PreApprovalTruckType;
+  },
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: zeroDownPageId,
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: options?.title ? { title: options.title } : undefined,
+    handoff: options?.truckType ? { truckType: options.truckType } : undefined,
+  };
+}
 
 const zeroDownFaqs: FaqItemData[] = [
   {
@@ -115,7 +142,15 @@ export const zeroDownPageConfig: ProgramPageConfig = {
     headline: "Keep Your Cash. Add a Truck. Let It Earn.",
     subheadline:
       "$0 down on nearly every approval. Any truck age. Any mileage. Any seller. Your working capital stays in the business while the truck starts earning on day one.",
-    cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+    cta: {
+      label: "Get Pre-Approved",
+      href: preApprovalEntryHash,
+      preApprovalTrigger: createZeroDownTrigger(
+        "hero-primary",
+        "hero-main-cta",
+        "hero",
+      ),
+    },
     phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
     trustBadges: [
       { label: "30-Second Pre-Approval" },
@@ -129,7 +164,12 @@ export const zeroDownPageConfig: ProgramPageConfig = {
     headline: "Ready to move?",
     subhead: "Pre-approval in 30 seconds. No credit impact.",
     ctaLabel: "Get Pre-Approved",
-    ctaHref: DRAWER_HASH,
+    ctaHref: preApprovalEntryHash,
+    preApprovalTrigger: createZeroDownTrigger(
+      "sidebar-cta",
+      "sidebar-main-cta",
+      "section",
+    ),
   },
   sections: [
     {
@@ -193,7 +233,12 @@ export const zeroDownPageConfig: ProgramPageConfig = {
         eyebrow: "STOP SAVING. START EARNING.",
         message: "Know your $0-down payment in 30 seconds.",
         ctaLabel: "Get Pre-Approved",
-        ctaHref: DRAWER_HASH,
+        ctaHref: preApprovalEntryHash,
+        preApprovalTrigger: createZeroDownTrigger(
+          "zero-down-inline-cta",
+          "zero-down-inline-cta",
+          "inline",
+        ),
         iconSrc:
           "/brand-assets/benefit-icons/zero-down/no-money-down-light.svg",
         iconAlt: "",
@@ -347,7 +392,12 @@ export const zeroDownPageConfig: ProgramPageConfig = {
         eyebrow: "KNOW YOUR PAYMENT. ZERO DOWN.",
         message: "See your payment before you commit to a truck.",
         ctaLabel: "Get Pre-Approved",
-        ctaHref: DRAWER_HASH,
+        ctaHref: preApprovalEntryHash,
+        preApprovalTrigger: createZeroDownTrigger(
+          "payment-inline-cta",
+          "payment-inline-cta",
+          "inline",
+        ),
         iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-light.svg",
         iconAlt: "",
       },
@@ -435,24 +485,48 @@ export const zeroDownPageConfig: ProgramPageConfig = {
     tiles: [
       {
         label: "Rollback",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/rollback/rollback-green.svg",
+        preApprovalTrigger: createZeroDownTrigger(
+          "closing-cta-tiles",
+          "closing-tile-rollback",
+          "footer",
+          { truckType: "rollback" },
+        ),
       },
       {
         label: "Wrecker",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/wrecker/wrecker-green.svg",
+        preApprovalTrigger: createZeroDownTrigger(
+          "closing-cta-tiles",
+          "closing-tile-wrecker",
+          "footer",
+          { truckType: "wrecker" },
+        ),
       },
       {
         label: "Heavy Wrecker",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc:
           "/brand-assets/truck-icons/heavywrecker/heavywrecker-green.svg",
+        preApprovalTrigger: createZeroDownTrigger(
+          "closing-cta-tiles",
+          "closing-tile-heavy-wrecker",
+          "footer",
+          { truckType: "heavy-wrecker" },
+        ),
       },
       {
         label: "Rotator",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/rotator/rotator-green.svg",
+        preApprovalTrigger: createZeroDownTrigger(
+          "closing-cta-tiles",
+          "closing-tile-rotator",
+          "footer",
+          { truckType: "rotator" },
+        ),
       },
     ],
   },

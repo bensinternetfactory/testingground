@@ -3,6 +3,8 @@ import truck8 from "@/public/truck-8.jpg";
 import truck9 from "@/public/truck-9.jpg";
 import truck12 from "@/public/truck-12.jpg";
 import truck14 from "@/public/truck-14.jpg";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import {
   DRAWER_HASH,
 } from "@/components/ui/pre-approval-drawer";
@@ -50,6 +52,23 @@ const WRECKER_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig = {
 /* ── Page Config ─────────────────────────────────────────────────── */
 
 const wreckerFaqContent = buildWreckerFaqContent();
+
+function createWreckerTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "wrecker-financing",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
+  };
+}
 
 export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
@@ -106,8 +125,13 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       {
         eyebrow: "Already have a truck in mind?",
         label: "I found a truck and need financing",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the wrecker you found?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createWreckerTrigger(
+          "tertiary-strip-primary",
+          "found-truck-cta",
+          "section",
+          "How much is the wrecker you found?",
+        ),
       },
       {
         eyebrow: "Haven\u2019t found a truck?",
@@ -158,8 +182,13 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
       {
         eyebrow: "Looking at an older wrecker?",
         label: "See if your truck year qualifies",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the wrecker you\u2019re looking at?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createWreckerTrigger(
+          "purchase-terms-tertiary-strip",
+          "truck-year-qualifier-cta",
+          "section",
+          "How much is the wrecker you\u2019re looking at?",
+        ),
       },
     ],
   } satisfies TertiaryStripConfig,
@@ -173,8 +202,13 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
     body:
       "You do not need corporate runaround. You need to know whether the wrecker works and what the payment looks like.",
     cta: {
-      href: DRAWER_HASH,
+      href: preApprovalEntryHash,
       label: "Get Pre-Approved",
+      preApprovalTrigger: createWreckerTrigger(
+        "closing-cta-primary",
+        "closing-cta-primary",
+        "footer",
+      ),
     },
     contactBlock: {
       prompt: "Prefer to talk?",

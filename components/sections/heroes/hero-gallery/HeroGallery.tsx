@@ -39,6 +39,7 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
             <RippleCtaLink
               href={config.mobileCta.href}
               label={config.mobileCta.label}
+              preApprovalTrigger={config.mobileCta.preApprovalTrigger}
               drawer={config.mobileCta.drawer}
               section="hero-gallery"
               className="w-full !bg-[#22C55E] hover:!bg-[#1EA94E]"
@@ -55,6 +56,7 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
                     size="sm"
                     justify="between"
                     icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
+                    preApprovalTrigger={link.preApprovalTrigger}
                     drawer={link.drawer}
                     prefetch={false}
                     section="hero-gallery"

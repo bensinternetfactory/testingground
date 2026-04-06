@@ -17,7 +17,11 @@ export function ProgramBottomLinks({
             <ul className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
               {group.links.map((link) => (
                 <li key={link.href}>
-                  <ProgramNavCardLink href={link.href} label={link.label} />
+                  <ProgramNavCardLink
+                    href={link.href}
+                    label={link.label}
+                    preApprovalTrigger={link.preApprovalTrigger}
+                  />
                 </li>
               ))}
             </ul>
