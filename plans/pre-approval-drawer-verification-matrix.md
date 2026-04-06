@@ -43,6 +43,13 @@ No phase is complete until each applicable requirement below has evidence record
 | `PA-INV-25` | Close-reason mapping is correct for backdrop, escape, close button, drag-dismiss, and route change | automated test and browser validation for representative paths | test name/file, interaction notes |
 | `PA-INV-26` | Route-contract clamping to min/max is added before final parity signoff | automated test | test name/file, clamp cases covered |
 | `PA-INV-27` | `@/features/pre-approval/*` resolves cleanly with the existing alias/tooling | `npm run build` | build result, modules verified |
+| `PA-INV-28` | No production import from `@/components/ui/pre-approval-drawer` barrel remains | `grep` search and `npm run build` | search query, results, build result |
+| `PA-INV-34` | During Phase 8 only, the sole allowed `features/pre-approval -> components/ui/pre-approval-drawer` import is the temporary `PreApprovalDrawer` view import retained in `features/pre-approval/drawer/client.tsx` until Phase 9 | targeted search | exact query, exact single allowed match, confirmation that no other matches remain |
+| `PA-INV-29` | No file under `features/pre-approval/` imports from `components/ui/` (broad scope — not just `pre-approval-drawer/`) | `grep` search | search query and results |
+| `PA-INV-30` | `components/ui/pre-approval-drawer/` directory does not exist | filesystem check | `ls` result |
+| `PA-INV-31` | `features/pre-approval/CLAUDE.md` documents the actual final architecture | code review | file exists, module table matches filesystem |
+| `PA-INV-32` | Zero re-export barrels, alias mappings, or compatibility wrappers under `features/pre-approval/` | `grep` search for `export.*from` patterns plus manual review of the 5 public API files | search query, results, and review notes for `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, `drawer/client.tsx` |
+| `PA-INV-33` | Public API is exactly: `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, `drawer/client.tsx` | filesystem inventory | `ls` output matches expected set |
 
 ## Phase Applicability
 
@@ -55,12 +62,17 @@ No phase is complete until each applicable requirement below has evidence record
 | `Phase 4` | `PA-INV-17` `PA-INV-22` `PA-INV-23` plus any user-facing invariants affected by facade rewiring |
 | `Phase 5` | applicable caller-path checks from `PA-INV-01` through `PA-INV-25`, including `PA-INV-24`, for each migrated batch |
 | `Phase 6` | all applicable IDs, with emphasis on `PA-INV-20` through `PA-INV-26` and final search-based removal checks |
+| `Phase 7` | `PA-INV-28` `PA-INV-27` |
+| `Phase 8` | `PA-INV-34` `PA-INV-27` `PA-INV-18` |
+| `Phase 9` | `PA-INV-29` `PA-INV-27` plus baseline user-facing invariants `PA-INV-01` `PA-INV-02` `PA-INV-05` `PA-INV-06` `PA-INV-07` |
+| `Phase 10` | `PA-INV-28` `PA-INV-29` `PA-INV-30` `PA-INV-31` `PA-INV-32` `PA-INV-33` |
 
 ## Standard Verification Commands
 
 - `npm run lint`
 - `npm run build`
 - targeted test command for the affected feature area
+- `npm test -- features/pre-approval` when Phases 9, 10, or final review require the consolidated feature-owned suite
 - browser validation on a non-`3000` dev server for user-facing phases
 
 ## Evidence Rules

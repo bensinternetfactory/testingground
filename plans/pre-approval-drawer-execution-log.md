@@ -83,6 +83,179 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: Pre-flight documentation review
+- Batch / scope: Review and reconcile the Phase 7 through Final Review markdown docs before migration execution begins
+- Status: `PASS`
+
+Changes made:
+
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md), [`plans/pre-approval-drawer-verification-matrix.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-verification-matrix.md), and [`plans/pre-approval-drawer-phase-prompts.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-prompts.md) for Phase 7 through Finish consistency only. No product code changed.
+- Resolved the Phase 8 temporary-exception mismatch by making the `PreApprovalDrawer` import the only explicitly allowed `features/pre-approval -> components/ui/pre-approval-drawer` dependency during Phase 8 and moving the zero-`components/ui` invariant to Phase 9 onward.
+- Corrected the final-review requirement so completed migration state means all Phase 0 through Phase 10 sections are complete while every checkbox in the `Active Phase` section is unchecked.
+- Corrected the remaining `client.tsxx` typos to `client.tsx`.
+- Added explicit final-phase checks for the consolidated `features/pre-approval/__tests__/` suite, `npm test -- features/pre-approval`, and manual public-API review so every completion criterion is directly auditable.
+
+Verification matrix IDs covered:
+
+- None. This was a documentation-only readiness review, not migration execution.
+
+Commands run:
+
+- `sed -n '1,260p' plans/pre-approval-drawer-phase-gates.md`
+- `sed -n '260,420p' plans/pre-approval-drawer-phase-gates.md`
+- `sed -n '1,260p' plans/pre-approval-drawer-verification-matrix.md`
+- `sed -n '1,260p' plans/pre-approval-drawer-execution-log.md`
+- `sed -n '1,320p' plans/pre-approval-drawer-phase-prompts.md`
+- `rg -n "client\\.tsxx|client\\.tsx" plans/pre-approval-drawer-phase-gates.md plans/pre-approval-drawer-verification-matrix.md plans/pre-approval-drawer-execution-log.md plans/pre-approval-drawer-phase-prompts.md`
+
+Automated verification results:
+
+- Not applicable. No application code, tests, or migration steps were executed in this review batch.
+
+Browser verification results:
+
+- Route: not applicable
+- Viewport: not applicable
+- Trigger path: not applicable
+- Observed behavior: not applicable
+
+Evidence summary:
+
+- The phase gates, verification matrix, and execution prompts now agree on the Phase 8 temporary exception, the Phase 9 zero-`components/ui` invariant, and the final review state for the `Active Phase` section.
+- The final completion criteria are now paired with explicit checks for feature-suite existence, feature-suite pass/fail, and manual confirmation that the public API files are canonical rather than compatibility wrappers.
+
+Gate decision:
+
+- `GO` for documentation readiness only
+
+Blockers / regressions:
+
+- None identified in the documentation set after the edits above.
+
+Next required action:
+
+- Begin Phase 7 execution using the updated Phase 7 prompt and gate definitions.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Claude Opus 4.6 + Codex (independent review)
+- Phase: Post-Phase 6 architectural review
+- Batch / scope: Principal-engineer-level review of the post-Phase-6 architecture to determine whether the migration is structurally complete
+- Status: `BLOCKED` — migration declared complete but architecture is half-migrated
+
+Findings:
+
+- **Bidirectional dependency.** `features/pre-approval/drawer/client.tsx` imports 4 concrete runtime modules from `components/ui/pre-approval-drawer/` (DrawerHashListener, DrawerContext, PreApprovalDrawer, RouteResetListener). Meanwhile, `components/ui/pre-approval-drawer/DrawerContext.tsx` imports from `features/pre-approval/` (contract, server, session). This creates a mutual dependency between what are supposed to be different ownership layers.
+- **Split ownership.** The feature directory owns types, constants, route helpers, parser, session factory, selection resolution, CSS, and thin client wrappers. The old UI directory owns all concrete runtime and UI: context provider, hash listener, route sync, scroll lock, drawer view, amount slider, and all their tests. Neither directory is self-contained.
+- **Duplicate public APIs.** The barrel `index.ts` re-exports from the feature directory under legacy alias names (`DRAWER_HASH`, `SLIDER_MIN`, `resolveDrawerTriggerHref`, etc.) alongside the canonical exports. Consumers can import the same capability from two different paths.
+- **Remaining barrel consumers.** 4 financing config files still import `DRAWER_HASH` from `@/components/ui/pre-approval-drawer`: `rollback-financing/config.ts`, `wrecker-financing/config.ts`, `rotator-financing/config.ts`, `used-tow-truck-financing/config.ts`.
+- **Stale documentation.** `components/ui/pre-approval-drawer/CLAUDE.md` documents deleted files (`config.ts`, `triggers.ts`), deleted attribute schemas (`data-drawer-*`), and deprecated usage patterns (`MarketingDrawerProvider`). The architecture table does not match the actual filesystem.
+- **Dead code.** `MarketingDrawerProvider` is a one-line wrapper that the layout bypasses. `DrawerProvider` has zero consumers.
+- **Test fragility.** `public-api.test.ts` asserts barrel-parity invariants (`DRAWER_HASH === preApprovalEntryHash`) that make the barrel harder to delete. Tests are split across two directories testing overlapping concerns.
+- **Net assessment.** The current state is less organized than the pre-migration state. Before, ownership was in the wrong place but self-contained. Now, the abstractions are better but the system is harder to reason about because the runtime, API, docs, and tests do not agree on where the feature lives.
+
+Conclusion:
+
+- The migration spec's target architecture (§1, lines 56–76) envisioned `features/pre-approval/drawer/runtime/` and `features/pre-approval/drawer/ui/` containing all runtime and UI files. Only `runtime/parser.ts` and `runtime/session.ts` were actually moved there. The remaining 6 runtime/UI files were never relocated.
+- Phase 6 was declared complete, but the Phase 6 gate requirement "public surface matches the intended production API with no regression" is satisfied only at the API contract level, not at the filesystem/ownership level.
+- Phases 7–10 have been added to `plans/pre-approval-drawer-phase-gates.md` to complete the structural migration.
+
+Verification matrix IDs affected:
+
+- No matrix IDs are regressed. This is an architectural finding, not a behavioral regression.
+
+Gate decision:
+
+- `NO-GO` for declaring migration complete. Phases 7–10 required.
+
+Next required action:
+
+- Begin Phase 7: eliminate the 4 remaining barrel consumers by rewriting their imports to canonical paths.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 6`
+- Batch / scope: Final Phase 6 verification-only closeout from the recorded partial cleanup checkpoint: rerun the impacted suite after the `RouteResetListener` fix, rerun removal searches, complete desktop/mobile browser validation, and decide the gate
+- Status: `PASS`
+
+Changes made:
+
+- No production code changed in this batch. Continued from commit `47b94c1` and verified the already-landed canonical-only runtime, route clamping, shared caller cleanup, and deleted deep-import/CSS shims without redoing that cleanup.
+- Updated [`plans/pre-approval-drawer-execution-log.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-execution-log.md) and [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) with the final Phase 6 evidence, exact removal-search results, browser observations, and gate decision.
+
+Verification matrix IDs covered:
+
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+- `PA-INV-21`
+- `PA-INV-23`
+- `PA-INV-24`
+- `PA-INV-26`
+
+Commands run:
+
+- `npm test -- 'features/pre-approval/__tests__/public-api.test.ts' 'features/pre-approval/__tests__/drawer-runtime.test.ts' 'components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx' 'components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx' 'components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx' 'components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx' 'components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx' 'components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx' 'components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx' 'components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx' 'components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx' 'components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx' 'app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx' 'app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx' 'components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx' 'components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx'`
+- `npm run lint`
+- `npm run build`
+- `rg -n "data-drawer-|DrawerTriggerPayload|DrawerSelectionTrigger|buildDrawerContinueHref|resolveSelectionDrawerTrigger|buildDrawerTriggerDataAttributes|parseDrawerTriggerDataAttributes|heroTruckType" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'`
+- `rg -n "@/components/ui/pre-approval-drawer/config|@/components/ui/pre-approval-drawer/triggers" components features app`
+- `rg -n "@/components/ui/pre-approval-drawer/amount-slider\\.css|components/ui/pre-approval-drawer/amount-slider\\.css|\\.\\/amount-slider\\.css" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'`
+- `curl -I http://127.0.0.1:3001/rollback-financing`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 1024`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser snapshot -i`
+- `agent-browser click @e38`
+- `agent-browser click @e14`
+- `agent-browser click @e59`
+- `agent-browser get url`
+- `agent-browser set viewport 390 844 2 && agent-browser open http://127.0.0.1:3001/rollback-financing#get-pre-approved && agent-browser wait 1000 && agent-browser snapshot -i`
+- `agent-browser click @e37 && agent-browser wait 500 && agent-browser get url`
+
+Automated verification results:
+
+- `PA-INV-09`, `PA-INV-10`, `PA-INV-11`, and `PA-INV-21`: the full post-fix impacted rerun passed `16` files and `80` tests with exit code `0`, closing the earlier stale `RouteResetListener` expectation gap.
+- The impacted rerun emitted a non-failing `happy-dom` fetch error while exercising `http://localhost:3000/rollback-financing#get-pre-approved`, but Vitest completed green with no failing assertions or files.
+- `npm run lint` passed again with the same pre-existing `23` unused-variable warnings in [`components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx) and [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx); no Phase 6 errors were introduced.
+- `PA-INV-17`: `npm run build` passed, confirming the Phase 6 canonical-only runtime surface and removed compatibility files still compile in production.
+- `PA-INV-09`, `PA-INV-23`, and `PA-INV-24`: `rg -n "data-drawer-|DrawerTriggerPayload|DrawerSelectionTrigger|buildDrawerContinueHref|resolveSelectionDrawerTrigger|buildDrawerTriggerDataAttributes|parseDrawerTriggerDataAttributes|heroTruckType" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'` returned no matches.
+- `PA-INV-24`: `rg -n "@/components/ui/pre-approval-drawer/config|@/components/ui/pre-approval-drawer/triggers" components features app` returned no matches.
+- `PA-INV-23`: `rg -n "@/components/ui/pre-approval-drawer/amount-slider\\.css|components/ui/pre-approval-drawer/amount-slider\\.css|\\.\\/amount-slider\\.css" components features app --glob '!**/__tests__/**' --glob '!**/CLAUDE.md'` returned no matches.
+
+Browser verification results:
+
+- Route: `http://127.0.0.1:3001/rollback-financing`
+- Viewport: desktop `1440x1024`; mobile `390x844 @ 2x`
+- Trigger path: desktop used the canonical hero CTA after selecting `Light-Duty Rollback`; mobile used direct hash-open via `http://127.0.0.1:3001/rollback-financing#get-pre-approved`
+- Observed behavior: the existing `3001` server was gone, so I started a new dev server on `3001`. On desktop, selecting `Light-Duty Rollback` enabled the canonical `Get Pre-Approved` CTA, clicking it opened the drawer with heading `Estimate how much financing you need.`, and `Continue to Pre-Approval` navigated to `http://127.0.0.1:3001/pre-approval?amount=100000&trucktype=rollback`. On mobile, the hash-open route loaded with the same drawer already open and `Continue to Pre-Approval` navigated to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- The Phase 6 cleanup from commit `47b94c1` remains intact and verified: no production legacy authoring/API usage, no deep imports of deleted `config.ts` / `triggers.ts`, and no legacy CSS path imports remain.
+- The full impacted post-fix suite, lint, and build are now complete from this checkpoint, eliminating the earlier evidence gap.
+- Browser validation is complete for both required passes: desktop confirms the canonical CTA still opens the drawer and carries the selected truck type into the `/pre-approval?...` URL, and mobile confirms direct hash-open still works and continues into the canonical route.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. The only interruption was that the previous `3001` dev server was no longer running, so I started a fresh local dev server before browser validation.
+
+Next required action:
+
+- Stop Phase 6 work here. The removal phase is fully verified and closed unless a new regression is reported.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 6`
 - Batch / scope: Partial Phase 6 stopping point only: remove shared production compatibility authoring, delete legacy deep-import/CSS facades, land route clamping, and stop before final browser validation / final gate
 - Status: `PARTIAL`
