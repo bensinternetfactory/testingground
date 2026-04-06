@@ -1,6 +1,8 @@
 "use client";
 
 import type { RefObject } from "react";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import { NavPressable } from "./NavPressable";
 
 export function NavHeaderActions({
@@ -8,18 +10,24 @@ export function NavHeaderActions({
   mobileOpen,
   onToggleMobile,
   primaryCtaHref,
+  primaryCtaTrigger,
   toggleButtonRef,
 }: {
   dialogId: string;
   mobileOpen: boolean;
   onToggleMobile: () => void;
   primaryCtaHref: string;
+  primaryCtaTrigger: PreApprovalTrigger;
   toggleButtonRef: RefObject<HTMLButtonElement | null>;
 }) {
+  const primaryCtaAttributes =
+    buildPreApprovalTriggerAttributes(primaryCtaTrigger);
+
   return (
     <>
       <a
         href={primaryCtaHref}
+        {...primaryCtaAttributes}
         className="hidden h-12 items-center justify-center rounded-full bg-[#111111] px-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:inline-flex xl:px-6 xl:text-base"
       >
         <span className="hidden lg:inline">Apply Now</span>

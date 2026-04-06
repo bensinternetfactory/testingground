@@ -83,6 +83,190 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 5`
+- Batch / scope: Batch 2 only: migrate the shared sticky-nav CTA helper path to the canonical pre-approval trigger contract, confirm no production footer CTA helper exists to migrate in this batch, and keep untouched callers on the compatibility path
+- Status: `PASS`
+
+Changes made:
+
+- Added the sticky-nav helper [`preApprovalCta.ts`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/preApprovalCta.ts) to build the same same-page-or-fallback href via the feature-owned server helper and to author explicit canonical `PreApprovalTrigger` origins for the desktop `Apply Now` CTA and the mobile overlay `Get Pre-Approved` CTA.
+- Updated [`NavClient.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavClient.tsx) to stop deep-importing `resolveDrawerTriggerHref()` from the legacy drawer compatibility module and instead pass Batch 2 sticky-nav trigger metadata into the nav CTA renderers.
+- Updated [`NavHeaderActions.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx) to emit canonical `data-pre-approval-*` attributes for the desktop sticky-nav CTA while keeping the existing CTA label, href behavior, and UI intact.
+- Updated [`NavMobileOverlay.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx) so the mobile sticky-nav CTA uses `RippleCtaLink`'s canonical `preApprovalTrigger` path instead of relying on the legacy compatibility-only authoring contract.
+- Added focused nav coverage in [`preApprovalCta.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx) for href/origin generation plus the rendered desktop and mobile sticky-nav CTA attributes.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to record the completed Batch 2 nav/footer helper checklist item while leaving later Phase 5 caller batches inactive.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-03`
+- `PA-INV-05`
+- `PA-INV-07`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+- `PA-INV-18`
+- `PA-INV-22`
+
+Commands run:
+
+- `npm test -- components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx features/pre-approval/__tests__/public-api.test.ts`
+- `npm run lint`
+- `npm run build`
+- `rg -n "@/components/ui/pre-approval-drawer/config|resolveDrawerTriggerHref" components app`
+- `rg -n "Get Pre-Approved|Apply Now|pre-approval|DRAWER_HASH|resolveDrawerTriggerHref" components/sections/page/footer components/sections/nav/sticky-nav-rm`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser click @e12`
+- `agent-browser click @e57`
+- `agent-browser click @e59`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser click @e10`
+- `agent-browser click @e9`
+- `agent-browser click @e15`
+
+Automated verification results:
+
+- `PA-INV-10`: [`preApprovalCta.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx) passed `4` tests covering sticky-nav href generation, fallback behavior when no pathname is available, desktop canonical attribute emission, and mobile overlay canonical attribute emission.
+- `PA-INV-09`, `PA-INV-10`, and `PA-INV-11`: the targeted rerun of [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx), [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), and [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts) passed `26` tests across `3` files, confirming the legacy compatibility schema still works, the canonical schema still works, and canonical precedence remains intact. The same existing happy-dom `localhost:3000` fetch noise appeared during the direct-hash suite, but no assertion failed.
+- `PA-INV-17`: `npm run build` passed after the sticky-nav migration, confirming the remaining legacy compatibility modules still compile while later Phase 5 batches remain untouched.
+- `PA-INV-18`: code review plus the green build confirmed the new sticky-nav helper imports only the server-safe feature surface (`@/features/pre-approval/drawer/server` and the canonical contract type) and does not pull client-only drawer runtime code into the authored helper path.
+- `PA-INV-22`: `rg -n "@/components/ui/pre-approval-drawer/config|resolveDrawerTriggerHref" components app` no longer found a production consumer in [`NavClient.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavClient.tsx); remaining references are the compatibility module itself, its tests, docs, and the barrel export, which is the expected state before later removal.
+- `npm run lint`: passed with the same pre-existing unused-variable warnings in the pre-approval drawer motion-mock tests; no new Batch 2 lint issues were introduced.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click sticky-nav `Apply Now`, confirm the drawer opens, close with the drawer close button, reopen, then Continue
+- Observed behavior: the sticky-nav CTA opened the drawer on the same page with the default title `Estimate how much financing you need.`, the close button dismissed the drawer while the URL stayed `http://127.0.0.1:3001/rollback-financing`, and Continue navigated immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+- Route: `/rollback-financing`
+- Viewport: mobile (`iPhone 14` emulator)
+- Trigger path: open the sticky-nav menu, tap the overlay CTA `Get Pre-Approved`, then Continue
+- Observed behavior: the mobile sticky-nav CTA opened the mounted drawer on the same route with the default title `Estimate how much financing you need.`, and Continue navigated immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the untouched legacy caller `Already have a truck in mind? I found a truck and need financing`, then Continue
+- Observed behavior: the untouched compatibility caller still opened the drawer on the same page with the custom title `How much is the rollback you found?`, and Continue navigated immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- Batch 2 stayed within the allowed Phase 5 scope: only the shared sticky-nav CTA helper chain changed, no footer CTA helper existed in production scope to migrate, and no route-only, hero-preset, tile-selection, shared CSS, or compatibility-removal work was mixed in.
+- The sticky-nav desktop and mobile CTA paths now author canonical production trigger metadata while preserving the same hash-entry behavior and the same `/pre-approval?amount=...` continue handoff.
+- Mixed old/new callers still coexist: the migrated sticky-nav CTAs use the canonical trigger schema, and the untouched legacy rollback CTA still opens and continues through the compatibility path on the same page.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- `PA-INV-24` remains `not verified` in this batch because the route-only consumer batch has not started yet.
+- The shared footer component has no production pre-approval CTA helper to migrate; the footer search for this batch returned nav-only matches, so no footer code change was needed.
+
+Next required action:
+
+- Stop after Batch 2. Do not start the Phase 5 route-only consumer batch, hero preset batch, tile-selection helper batch, shared CSS batch, or other marketing config batch until explicitly instructed.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 5`
+- Batch / scope: Batch 1 only: migrate the shared CTA primitive [`RippleCtaLink.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) to prefer the canonical pre-approval trigger contract while preserving legacy compatibility props
+- Status: `PASS`
+
+Changes made:
+
+- Updated [`RippleCtaLink.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) to accept `preApprovalTrigger?: PreApprovalTrigger`, emit `data-pre-approval-*` attributes via the feature-owned server helper when that prop is provided, and keep `drawer` / `drawerTitle` as compatibility-only legacy authoring paths.
+- Added focused primitive coverage in [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx) for canonical attribute emission, legacy fallback emission, and canonical-over-legacy precedence.
+- Updated the shared CTA docs in [`components/ui/ripple-cta-link/CLAUDE.md`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/CLAUDE.md) so the canonical trigger contract is the preferred authoring path for future caller batches.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) so `Phase 5` is the only active phase, the Phase 4 precondition is checked, and only the checklist items completed in this batch are marked.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-03`
+- `PA-INV-05`
+- `PA-INV-07`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+
+Commands run:
+
+- `npm test -- components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx`
+- `npm test -- components/ui/pre-approval-drawer/__tests__/triggers.test.ts components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx features/pre-approval/__tests__/public-api.test.ts`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser click @e15`
+- `agent-browser click @e57`
+- `agent-browser click @e59`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser click @e12`
+- `agent-browser eval "Array.from(document.querySelectorAll('button')).map((button) => ({text: button.textContent?.trim(), aria: button.getAttribute('aria-label')})).filter((button) => (button.text || '').includes('Continue') || (button.text || '').includes('Close') || (button.aria || '').includes('Close'))"`
+- `agent-browser eval "(() => { const dialog = document.querySelector('[role=dialog]'); const backdrop = dialog?.previousElementSibling; if (!(backdrop instanceof HTMLElement)) return 'missing-backdrop'; backdrop.click(); return 'clicked-backdrop'; })()"`
+- `agent-browser eval "(() => { const continueButton = Array.from(document.querySelectorAll('button')).find((button) => button.textContent?.includes('Continue to Pre-Approval')); if (!(continueButton instanceof HTMLElement)) return 'missing-continue'; continueButton.click(); return 'clicked-continue'; })()"`
+
+Automated verification results:
+
+- `PA-INV-09`, `PA-INV-10`, and `PA-INV-11`: [`RippleCtaLink.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx) passed `4` tests covering legacy `data-drawer-*` emission, canonical `data-pre-approval-*` emission, and precedence when both authoring paths are present.
+- Compatibility coverage remained green in [`triggers.test.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/triggers.test.ts), [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), and [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts); the targeted run passed `30` tests across `3` files. The same existing happy-dom `localhost:3000` fetch noise appeared during the direct-hash suite, but no assertion failed.
+- `PA-INV-17`: `npm run build` passed, confirming the primitive change did not break the existing compatibility facade or untouched callers.
+- `npm run lint`: passed with the same pre-existing test-only unused-variable warnings in the pre-approval drawer motion mocks; no new Phase 5 lint errors were introduced in this batch.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop (`1440x900`)
+- Trigger path: click the same-page CTA `Already have a truck in mind? I found a truck and need financing`, close with the drawer close button, reopen, then Continue
+- Observed behavior: the same-page CTA opened the drawer with the title `How much is the rollback you found?`, the close button dismissed the drawer without changing the route, and Continue navigated immediately to `http://127.0.0.1:3001/pre-approval?amount=100000`.
+
+- Route: `/`
+- Viewport: mobile (`iPhone 14` emulator)
+- Trigger path: tap the homepage hero CTA `Get Pre-Approved`
+- Observed behavior: the same-page CTA opened the mobile drawer on `http://127.0.0.1:3001/` and rendered the expected title `Estimate how much financing you need.` with the mounted amount slider.
+
+- Route: shared `RippleCtaLink` caller routes across the current marketing pages
+- Viewport: mobile physical phone
+- Trigger path: user manual validation of same-page CTA open, close, and Continue flows
+- Observed behavior: user-reported manual validation confirmed the mobile close interaction works as intended on phone hardware, all tested routes opened correctly, and Continue used the correct URL params.
+
+Evidence summary:
+
+- The shared CTA primitive now supports the canonical production trigger contract without forcing any caller rewrites; untouched `drawer` and `drawerTitle` callers remain on the compatibility path, which keeps this batch within the allowed Phase 5 scope.
+- Desktop browser validation proved that existing `RippleCtaLink` callers still open, close, and continue through the unchanged drawer/runtime path after the primitive change.
+- Mobile verification for this batch is now satisfied by combined evidence: the emulator run confirmed same-page open/render behavior, and the user’s physical-phone validation confirmed close behavior and Continue behavior with correct URL params on the affected caller routes.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- `PA-INV-24` is `not verified` in this batch because the route-only consumer batch has not started. Nav/footer helpers, route-only callers, hero presets, tile-selection helpers, shared CSS consumers, and other marketing configs remain intentionally untouched.
+
+Next required action:
+
+- Start Batch 2 only when instructed: migrate the nav/footer helper callers without touching the route-only, hero-preset, tile-selection, shared CSS, or other marketing-config batches yet.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 4`
 - Batch / scope: Convert the legacy pre-approval drawer surface into a compatibility facade over the feature-owned route and entry contracts while preserving legacy exports, deep imports, and CSS paths
 - Status: `PASS`

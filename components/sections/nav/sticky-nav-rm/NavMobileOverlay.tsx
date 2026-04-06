@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type RefObject } from "react";
 import { createPortal } from "react-dom";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { NavPressable } from "./NavPressable";
 import { NavItemVisual } from "./NavItemVisual";
@@ -213,6 +214,7 @@ export function NavMobileOverlay({
   onToggleSection,
   openSection,
   primaryCtaHref,
+  primaryCtaTrigger,
   restoreFocusRef,
   sections,
 }: {
@@ -221,6 +223,7 @@ export function NavMobileOverlay({
   onToggleSection: (value: string) => void;
   openSection: string | null;
   primaryCtaHref: string;
+  primaryCtaTrigger: PreApprovalTrigger;
   restoreFocusRef: RefObject<HTMLButtonElement | null>;
   sections: readonly NavSection[];
 }) {
@@ -291,6 +294,7 @@ export function NavMobileOverlay({
           <RippleCtaLink
             href={primaryCtaHref}
             label="Get Pre-Approved"
+            preApprovalTrigger={primaryCtaTrigger}
             className="w-full"
           />
         </div>

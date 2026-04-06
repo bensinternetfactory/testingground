@@ -4,9 +4,13 @@ import { useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
+  type PreApprovalTrigger,
+} from "@/features/pre-approval/contract";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
+import {
   buildDrawerTriggerDataAttributes,
   type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+} from "@/components/ui/pre-approval-drawer/triggers";
 import {
   PressFeedbackRipple,
   tapSpring,
@@ -44,7 +48,10 @@ export interface RippleCtaLinkProps {
   section?: string;
   cardId?: string;
   disabled?: boolean;
+  preApprovalTrigger?: PreApprovalTrigger;
+  /** @deprecated Compatibility-only legacy trigger payload. Prefer `preApprovalTrigger`. */
   drawer?: DrawerTriggerPayload;
+  /** @deprecated Compatibility-only legacy title override. Prefer `preApprovalTrigger.drawer.title`. */
   drawerTitle?: string;
 }
 
@@ -80,6 +87,7 @@ export function RippleCtaLink({
   section = "",
   cardId,
   disabled = false,
+  preApprovalTrigger,
   drawer,
   drawerTitle,
 }: RippleCtaLinkProps) {
@@ -186,9 +194,11 @@ export function RippleCtaLink({
     );
   }
 
-  const drawerAttributes = buildDrawerTriggerDataAttributes(
-    drawer ?? (drawerTitle ? { title: drawerTitle } : undefined),
-  );
+  const drawerAttributes = preApprovalTrigger
+    ? buildPreApprovalTriggerAttributes(preApprovalTrigger)
+    : buildDrawerTriggerDataAttributes(
+        drawer ?? (drawerTitle ? { title: drawerTitle } : undefined),
+      );
 
   return (
     <MotionLink

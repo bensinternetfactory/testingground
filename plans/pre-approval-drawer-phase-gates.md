@@ -17,8 +17,8 @@ Rules:
 - [ ] `Phase 1` active
 - [ ] `Phase 2` active
 - [ ] `Phase 3` active
-- [x] `Phase 4` active
-- [ ] `Phase 5` active
+- [ ] `Phase 4` active
+- [x] `Phase 5` active
 - [ ] `Phase 6` active
 
 Exactly one phase should be marked active while work is in progress.
@@ -156,25 +156,31 @@ Go / no-go gate:
 
 ## Phase 5: Migrate Callers Incrementally
 
+Batch note:
+
+- Batch-level `GO` / `NO-GO` decisions are recorded in [`plans/pre-approval-drawer-execution-log.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-execution-log.md).
+- The unchecked items below remain intentionally open until their later Phase 5 caller batches are executed.
+- Do not mark the Phase 5 go/no-go gate complete until every planned Phase 5 caller batch is verified.
+
 Preconditions:
 
-- [ ] Phase 4 gate passed.
+- [x] Phase 4 gate passed.
 
 Execution checklist:
 
-- [ ] Only one planned caller batch migrated at a time.
-- [ ] Migrated callers recorded in the execution log.
-- [ ] `RippleCtaLink` migration status recorded.
-- [ ] Nav/footer helper migration status recorded.
+- [x] Only one planned caller batch migrated at a time.
+- [x] Migrated callers recorded in the execution log.
+- [x] `RippleCtaLink` migration status recorded.
+- [x] Nav/footer helper migration status recorded.
 - [ ] Route-only consumer migration status recorded.
 - [ ] Hero preset migration status recorded.
 - [ ] Tile-selection helper migration status recorded.
 - [ ] Shared CSS consumer migration status recorded.
 - [ ] Route/page config migration status recorded.
-- [ ] Browser validation completed for each changed caller batch.
-- [ ] `npm run lint` passed after each batch.
-- [ ] `npm run build` passed after each batch.
-- [ ] Execution log updated with matrix IDs covered by the batch.
+- [x] Browser validation completed for each changed caller batch.
+- [x] `npm run lint` passed after each batch.
+- [x] `npm run build` passed after each batch.
+- [x] Execution log updated with matrix IDs covered by the batch.
 
 Go / no-go gate:
 
