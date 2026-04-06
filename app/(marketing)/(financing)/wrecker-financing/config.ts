@@ -5,9 +5,6 @@ import truck12 from "@/public/truck-12.jpg";
 import truck14 from "@/public/truck-14.jpg";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
-import {
-  DRAWER_HASH,
-} from "@/components/ui/pre-approval-drawer";
 import { wreckerHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
@@ -86,7 +83,7 @@ export const wreckerFinancingPageConfig: EquipmentFinancingPageConfig = {
         "Select a wrecker type to enable the pre-approval action.",
       cta: {
         label: "Get Pre-Approved",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         preApprovalSelectionTrigger: wreckerHeroPreApprovalSelectionTrigger,
       },
       footnoteMarkers: {

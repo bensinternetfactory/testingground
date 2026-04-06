@@ -10,9 +10,6 @@ import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
 } from "../_components/shared-config";
-import {
-  DRAWER_HASH,
-} from "@/components/ui/pre-approval-drawer";
 import { rollbackHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
@@ -58,7 +55,7 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
         "Select a rollback type to enable the pre-approval action.",
       cta: {
         label: "Get Pre-Approved",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         preApprovalSelectionTrigger: rollbackHeroPreApprovalSelectionTrigger,
       },
       footnoteMarkers: {

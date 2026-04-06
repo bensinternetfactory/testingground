@@ -6,9 +6,6 @@ import {
   buildFaqSection,
   SHARED_FINANCING_FOOTNOTES_CONFIG,
 } from "../_components/shared-config";
-import {
-  DRAWER_HASH,
-} from "@/components/ui/pre-approval-drawer";
 import { usedTowTruckHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import type { FaqItemData } from "@/components/sections/page/faq/config";
 
@@ -49,7 +46,7 @@ export const usedTowTruckFinancingPageConfig: EquipmentFinancingPageConfig = {
       selectionRequiredMessage: "Select a truck type to continue.",
       cta: {
         label: "Get Pre-Approved",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         preApprovalSelectionTrigger:
           usedTowTruckHeroPreApprovalSelectionTrigger,
       },

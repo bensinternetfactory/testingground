@@ -226,22 +226,22 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 6 gate passed (already satisfied).
-- [ ] Architectural review completed and findings recorded in execution log.
+- [x] Phase 6 gate passed (already satisfied).
+- [x] Architectural review completed and findings recorded in execution log.
 
 Execution checklist:
 
-- [ ] All financing config files (`rollback-financing/config.ts`, `wrecker-financing/config.ts`, `rotator-financing/config.ts`, `used-tow-truck-financing/config.ts`) rewritten to import `preApprovalEntryHash` from `@/features/pre-approval/drawer/server` instead of `DRAWER_HASH` from the barrel.
-- [ ] `features/pre-approval/__tests__/public-api.test.ts` barrel-parity assertions removed or rewritten to test canonical paths only.
-- [ ] `rg -n "from.*@/components/ui/pre-approval-drawer[\"';]" app/ components/sections/ features/ --glob '!**/__tests__/**'` returns zero results (barrel import search — uses the `from` clause, not `DRAWER_HASH`, because imports are multi-line). Test-only references in legacy test files are acceptable if those tests will move in Phase 9.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated.
+- [x] All financing config files (`rollback-financing/config.ts`, `wrecker-financing/config.ts`, `rotator-financing/config.ts`, `used-tow-truck-financing/config.ts`) rewritten to import `preApprovalEntryHash` from `@/features/pre-approval/drawer/server` instead of `DRAWER_HASH` from the barrel.
+- [x] `features/pre-approval/__tests__/public-api.test.ts` barrel-parity assertions removed or rewritten to test canonical paths only.
+- [x] `rg -n "from.*@/components/ui/pre-approval-drawer[\"';]" app/ components/sections/ features/ --glob '!**/__tests__/**'` returns zero results (barrel import search — uses the `from` clause, not `DRAWER_HASH`, because imports are multi-line). Test-only references in legacy test files are acceptable if those tests will move in Phase 9.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated.
 
 Go / no-go gate:
 
-- [ ] Go: the barrel has zero production consumers and can be deleted without breaking any import.
-- [ ] No-go conditions checked: no remaining production barrel imports, no build failure.
+- [x] Go: the barrel has zero production consumers and can be deleted without breaking any import.
+- [x] No-go conditions checked: no remaining production barrel imports, no build failure.
 
 ## Phase 8: Move Runtime Files into Feature Directory
 

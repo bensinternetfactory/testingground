@@ -83,6 +83,62 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 7`
+- Batch / scope: Eliminate the remaining production barrel consumers in financing configs and remove barrel-parity requirements from the feature public API test
+- Status: `PASS`
+
+Changes made:
+
+- Rewrote the four remaining financing config consumers at [`app/(marketing)/(financing)/rollback-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rollback-financing/config.ts), [`app/(marketing)/(financing)/wrecker-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/wrecker-financing/config.ts), [`app/(marketing)/(financing)/rotator-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/rotator-financing/config.ts), and [`app/(marketing)/(financing)/used-tow-truck-financing/config.ts`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/used-tow-truck-financing/config.ts) to use `preApprovalEntryHash` from `@/features/pre-approval/drawer/server` and removed their `DRAWER_HASH` barrel imports.
+- Removed the legacy barrel import and barrel-parity assertions from [`features/pre-approval/__tests__/public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts) so the feature suite no longer requires `@/components/ui/pre-approval-drawer` to exist.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) and this execution log with the Phase 7 evidence and gate result.
+
+Verification matrix IDs covered:
+
+- `PA-INV-28`
+- `PA-INV-27`
+
+Commands run:
+
+- `rg -n "from.*@/components/ui/pre-approval-drawer[\"';]" app/ components/sections/ features/ --glob '!**/__tests__/**'`
+- `npm run lint`
+- `npm run build`
+
+Automated verification results:
+
+- `PA-INV-28`: `rg -n "from.*@/components/ui/pre-approval-drawer[\"';]" app/ components/sections/ features/ --glob '!**/__tests__/**'` returned zero results, confirming there are no remaining production imports from the legacy barrel in the searched directories.
+- `PA-INV-27`: `npm run build` passed with a successful Next.js production build, including `/rollback-financing`, `/wrecker-financing`, `/rotator-financing`, and `/used-tow-truck-financing`.
+- `npm run lint` exited `0` with the same pre-existing `23` warnings in [`components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx) and [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx); no new Phase 7 lint errors were introduced.
+
+Browser verification results:
+
+- Route: not applicable
+- Viewport: not applicable
+- Trigger path: not applicable
+- Observed behavior: not applicable
+
+Evidence summary:
+
+- The only remaining production barrel consumers identified by the 2026-04-06 architectural review were the four financing configs, and all four now point directly at the canonical server-safe `preApprovalEntryHash` export.
+- The feature-owned public API test no longer imports or asserts parity with the legacy barrel, so Phase 7 no longer depends on barrel existence for test coverage.
+- The exact Phase 7 search returned zero production matches, lint completed without errors, and the production build completed successfully.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Stop here. Phase 7 is complete and recorded; do not begin Phase 8 until a separate batch starts and marks it active.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: Pre-flight documentation review
 - Batch / scope: Review and reconcile the Phase 7 through Final Review markdown docs before migration execution begins
 - Status: `PASS`

@@ -19,18 +19,6 @@ import {
   preApprovalEntryHash,
   preApprovalFallbackEntryHref,
 } from "@/features/pre-approval/drawer/server";
-import {
-  buildPreApprovalHref as buildBarrelPreApprovalHref,
-  DRAWER_DEFAULT_TITLE,
-  DRAWER_FALLBACK_HREF,
-  DRAWER_HASH,
-  PRE_APPROVAL_PATH,
-  resolveDrawerTriggerHref,
-  SLIDER_DEFAULT,
-  SLIDER_MAX,
-  SLIDER_MIN,
-  SLIDER_STEP,
-} from "@/components/ui/pre-approval-drawer";
 
 describe("pre-approval feature public modules", () => {
   it("preserves the current amount defaults and slider constraints", () => {
@@ -117,58 +105,4 @@ describe("pre-approval feature public modules", () => {
     });
   });
 
-  it("keeps the drawer barrel aliases aligned with the feature-owned route and entry contracts", () => {
-    expect(SLIDER_MIN).toBe(preApprovalMinAmount);
-    expect(SLIDER_MAX).toBe(preApprovalMaxAmount);
-    expect(SLIDER_STEP).toBe(preApprovalAmountStep);
-    expect(SLIDER_DEFAULT).toBe(preApprovalDefaultAmount);
-    expect(DRAWER_DEFAULT_TITLE).toBe(preApprovalDefaultTitle);
-    expect(PRE_APPROVAL_PATH).toBe(preApprovalPath);
-    expect(DRAWER_HASH).toBe(preApprovalEntryHash);
-    expect(DRAWER_FALLBACK_HREF).toBe(preApprovalFallbackEntryHref);
-
-    expect(resolveDrawerTriggerHref("/rollback-financing")).toBe(
-      buildPreApprovalEntryHref("/rollback-financing"),
-    );
-    expect(resolveDrawerTriggerHref(null)).toBe(
-      buildPreApprovalEntryHref(null),
-    );
-    expect(
-      buildBarrelPreApprovalHref({
-        amount: "$155,000",
-        truckType: "heavy-wrecker",
-      }),
-    ).toBe(
-      buildPreApprovalHref({
-        amount: "$155,000",
-        truckType: "heavy-wrecker",
-      }),
-    );
-  });
-
-  it("re-exports the feature-owned entry helpers through the legacy barrel", () => {
-    const trigger: PreApprovalTrigger = {
-      origin: {
-        pageId: "rollback-financing",
-        sectionId: "hero-primary",
-        ctaId: "hero-main-cta",
-        placement: "hero",
-      },
-      drawer: {
-        title: "How much financing do you need?",
-      },
-      handoff: {
-        truckType: "rollback",
-      },
-    };
-
-    expect(DRAWER_HASH).toBe(preApprovalEntryHash);
-    expect(DRAWER_FALLBACK_HREF).toBe(preApprovalFallbackEntryHref);
-    expect(buildPreApprovalEntryHref(null)).toBe(
-      buildPreApprovalEntryHref(null),
-    );
-    expect(buildPreApprovalTriggerAttributes(trigger)).toEqual(
-      buildPreApprovalTriggerAttributes(trigger),
-    );
-  });
 });

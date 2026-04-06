@@ -2,9 +2,6 @@ import truck12 from "@/public/truck-12.jpg";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import {
-  DRAWER_HASH,
-} from "@/components/ui/pre-approval-drawer";
-import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
 } from "../_components/shared-config";
@@ -78,7 +75,7 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
         "Rotators are the largest equipment purchase most operators make. See your payment structure before you commit to the unit.",
       cta: {
         label: "Get Pre-Approved",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         preApprovalTrigger: {
           origin: {
             pageId: "rotator-financing",
