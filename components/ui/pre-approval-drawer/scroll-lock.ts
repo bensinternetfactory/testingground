@@ -26,6 +26,67 @@ let savedStyles = {
 let scrollableEl: HTMLElement | null = null;
 let touchMoveHandler: ((e: TouchEvent) => void) | null = null;
 
+// ---------------------------------------------------------------------------
+// Sticky-element freeze: pin [data-freeze-on-lock] elements at their current
+// viewport positions so they don't jump when `position: fixed` on body
+// destroys the scrollable context that CSS `position: sticky` depends on.
+// ---------------------------------------------------------------------------
+
+let frozenElements: Array<{
+  el: HTMLElement;
+  savedPosition: string;
+  savedTop: string;
+  savedWidth: string;
+}> = [];
+
+/** Capture current viewport rects while elements are still properly positioned. */
+function captureFreezableElements() {
+  const elements = document.querySelectorAll<HTMLElement>(
+    "[data-freeze-on-lock]",
+  );
+  const captures: Array<{
+    el: HTMLElement;
+    rect: DOMRect;
+    savedPosition: string;
+    savedTop: string;
+    savedWidth: string;
+  }> = [];
+
+  elements.forEach((el) => {
+    captures.push({
+      el,
+      rect: el.getBoundingClientRect(),
+      savedPosition: el.style.position,
+      savedTop: el.style.top,
+      savedWidth: el.style.width,
+    });
+  });
+
+  return captures;
+}
+
+/** Pin captured elements with position:fixed at their pre-lock viewport positions. */
+function applyFreeze(
+  captures: Array<{ el: HTMLElement; rect: DOMRect; savedPosition: string; savedTop: string; savedWidth: string }>,
+) {
+  frozenElements = captures;
+  captures.forEach(({ el, rect }) => {
+    el.style.position = "fixed";
+    el.style.top = `${rect.top}px`;
+    el.style.width = `${rect.width}px`;
+  });
+}
+
+/** Restore frozen elements to their original inline styles. */
+function unfreezeElements() {
+  frozenElements.forEach(({ el, savedPosition, savedTop, savedWidth }) => {
+    el.style.position = savedPosition;
+    el.style.top = savedTop;
+    el.style.width = savedWidth;
+  });
+  frozenElements = [];
+}
+
 export function lockBodyScroll(scrollable: HTMLElement | null) {
   if (locked) {
     return;
@@ -37,6 +98,9 @@ export function lockBodyScroll(scrollable: HTMLElement | null) {
 
   const scrollbarWidth =
     window.innerWidth - document.documentElement.clientWidth;
+
+  // Capture sticky-element positions BEFORE body styles change layout
+  const captures = captureFreezableElements();
 
   savedStyles = {
     htmlOverflow: document.documentElement.style.overflow,
@@ -63,6 +127,9 @@ export function lockBodyScroll(scrollable: HTMLElement | null) {
     );
   }
 
+  // Pin sticky elements at their captured viewport positions
+  applyFreeze(captures);
+
   // Belt-and-suspenders: block touchmove on anything outside the drawer's
   // scrollable content. Framer Motion uses Pointer Events for drag, so this
   // does not interfere with sheet gestures.
@@ -85,6 +152,9 @@ export function unlockBodyScroll() {
   }
 
   locked = false;
+
+  // Restore frozen sticky elements before body styles change
+  unfreezeElements();
 
   document.documentElement.style.overflow = savedStyles.htmlOverflow;
   document.body.style.overflow = savedStyles.bodyOverflow;

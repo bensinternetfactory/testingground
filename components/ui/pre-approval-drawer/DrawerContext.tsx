@@ -12,7 +12,7 @@ import {
 } from "react";
 import { DRAWER_HASH } from "./config";
 import { PreApprovalDrawer } from "./PreApprovalDrawer";
-import { lockBodyScroll, unlockBodyScroll } from "./scroll-lock";
+import { lockBodyScroll } from "./scroll-lock";
 import {
   createDrawerSession,
   getClosedDrawerSession,
@@ -140,7 +140,10 @@ export function DrawerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const close = useCallback(() => {
-    unlockBodyScroll();
+    // Scroll unlock is deferred to AnimatePresence.onExitComplete in
+    // PreApprovalDrawer so the scrollbar doesn't reappear mid-exit-animation
+    // (which shifts the centered modal by half the scrollbar width).
+    // Safety-net: PreApprovalDrawer's unmount cleanup also calls unlock.
     setState((current) => ({ ...current, isOpen: false }));
   }, []);
 

@@ -19,6 +19,11 @@ import {
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
+import {
+  PressFeedbackRipple,
+  tapSpring,
+  usePressFeedback,
+} from "@/lib/press-feedback";
 import { useDrawer } from "./DrawerContext";
 import { AmountSlider } from "./AmountSlider";
 import { unlockBodyScroll, updateScrollableRef } from "./scroll-lock";
@@ -254,7 +259,7 @@ export function PreApprovalDrawer() {
   }
 
   return createPortal(
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={unlockBodyScroll}>
       {isOpen ? (
         <>
           <motion.div
@@ -345,12 +350,12 @@ function DesktopDrawerFrame({
         animate={prefersReducedMotion ? { opacity: 1 } : "visible"}
         exit={prefersReducedMotion ? { opacity: 0 } : "exit"}
         transition={prefersReducedMotion ? { duration: 0 } : modalSpring}
-        className="pointer-events-auto relative w-full max-w-[480px] rounded-3xl bg-white px-8 pt-8 pb-8 pr-20 shadow-2xl outline-none"
+        className="pointer-events-auto relative w-full max-w-[480px] rounded-3xl bg-white p-8 shadow-2xl outline-none"
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 flex h-11 w-11 items-center justify-center rounded-full text-[#545454] transition-colors hover:bg-[#F5F5F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+          className="absolute top-5 right-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-[#545454] transition-colors hover:bg-[#F5F5F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
           aria-label="Close"
         >
           <svg
@@ -473,6 +478,12 @@ function DrawerContent({
   title: string;
   titleId: string;
 }) {
+  const { clearRipple, handlers, ripple, shouldReduceMotion } =
+    usePressFeedback<HTMLButtonElement>({
+      keyboardKeys: ["Enter", " "],
+      onPress: () => onContinue(),
+    });
+
   return (
     <div className="flex flex-col items-center pt-2">
       <h2
@@ -486,13 +497,24 @@ function DrawerContent({
         <AmountSlider value={amount} onChange={onAmountChange} />
       </div>
 
-      <button
+      <motion.button
         type="button"
-        onClick={onContinue}
-        className="mt-8 inline-flex h-14 w-full items-center justify-center rounded-full bg-[#111111] text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
+        {...handlers}
+        whileTap={
+          shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
+        }
+        transition={tapSpring}
+        className="relative mt-8 inline-flex h-14 w-full cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#111111] text-lg font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 touch-manipulation [-webkit-tap-highlight-color:transparent]"
       >
         Continue to Pre-Approval
-      </button>
+        <PressFeedbackRipple
+          ripple={ripple}
+          scale={4}
+          initialOpacity={0.4}
+          onAnimationComplete={clearRipple}
+          className="pointer-events-none absolute h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20"
+        />
+      </motion.button>
 
       <p id={descriptionId} className="mt-4 text-center text-xs text-[#999]">
         No credit check. See your estimated payment range.
