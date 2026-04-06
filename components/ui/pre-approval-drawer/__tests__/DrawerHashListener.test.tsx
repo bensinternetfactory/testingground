@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { DrawerHashListener } from "../DrawerHashListener";
 import { DRAWER_HASH } from "../config";
@@ -15,15 +15,29 @@ function renderListener(open = vi.fn()) {
   return open;
 }
 
+function setPathname(pathname: string) {
+  history.replaceState(null, "", pathname);
+}
+
 describe("DrawerHashListener", () => {
   describe("initial mount", () => {
     it("calls open() and clears hash when mounted with drawer hash", () => {
       const replaceStateSpy = vi.spyOn(history, "replaceState");
-      window.location.hash = DRAWER_HASH;
+      setPathname(`/rollback-financing${DRAWER_HASH}`);
 
       const open = renderListener();
 
-      expect(open).toHaveBeenCalledTimes(1);
+      expect(open).toHaveBeenCalledWith({
+        schema: "hash",
+        trigger: {
+          origin: {
+            ctaId: "direct-url",
+            pageId: "rollback-financing",
+            placement: "inline",
+            sectionId: "hash-entry",
+          },
+        },
+      });
       expect(replaceStateSpy).toHaveBeenCalled();
       replaceStateSpy.mockRestore();
     });
@@ -37,6 +51,7 @@ describe("DrawerHashListener", () => {
 
   describe("hashchange event", () => {
     it("calls open() when hash changes to drawer hash", () => {
+      setPathname("/rollback-financing");
       const open = renderListener();
 
       act(() => {
@@ -44,7 +59,17 @@ describe("DrawerHashListener", () => {
         window.dispatchEvent(new HashChangeEvent("hashchange"));
       });
 
-      expect(open).toHaveBeenCalledTimes(1);
+      expect(open).toHaveBeenCalledWith({
+        schema: "hash",
+        trigger: {
+          origin: {
+            ctaId: "direct-url",
+            pageId: "rollback-financing",
+            placement: "inline",
+            sectionId: "hash-entry",
+          },
+        },
+      });
     });
 
     it("does not call open for other hashes", () => {
@@ -90,6 +115,7 @@ describe("DrawerHashListener", () => {
     });
 
     it("passes parsed data attributes to open()", () => {
+      setPathname("/rollback-financing");
       const open = renderListener();
       const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`, {
         "data-drawer-source": "hero",
@@ -101,13 +127,63 @@ describe("DrawerHashListener", () => {
         new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
       );
 
-      expect(open).toHaveBeenCalledWith(
-        expect.objectContaining({
-          source: "hero",
-          title: "Pick your truck",
-          truckType: "rotator",
-        }),
+      expect(open).toHaveBeenCalledWith({
+        compatibilitySource: "hero",
+        schema: "legacy",
+        trigger: {
+          drawer: {
+            title: "Pick your truck",
+          },
+          handoff: {
+            truckType: "rotator",
+          },
+          origin: {
+            ctaId: "legacy-cta",
+            pageId: "rollback-financing",
+            placement: "inline",
+            sectionId: "legacy-section",
+          },
+        },
+      });
+    });
+
+    it("prefers production trigger attributes when both schemas are present", () => {
+      setPathname("/rollback-financing");
+      const open = renderListener();
+      const anchor = createAnchor(`${window.location.pathname}${DRAWER_HASH}`, {
+        "data-drawer-source": "hero",
+        "data-drawer-title": "Legacy Title",
+        "data-drawer-truck-type": "rotator",
+        "data-pre-approval-version": "2",
+        "data-pre-approval-origin-page-id": "rollback-financing",
+        "data-pre-approval-origin-section-id": "hero-primary",
+        "data-pre-approval-origin-cta-id": "hero-main-cta",
+        "data-pre-approval-origin-placement": "hero",
+        "data-pre-approval-drawer-title": "Production Title",
+        "data-pre-approval-handoff-truck-type": "rollback",
+      });
+
+      anchor.dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
       );
+
+      expect(open).toHaveBeenCalledWith({
+        schema: "production",
+        trigger: {
+          drawer: {
+            title: "Production Title",
+          },
+          handoff: {
+            truckType: "rollback",
+          },
+          origin: {
+            ctaId: "hero-main-cta",
+            pageId: "rollback-financing",
+            placement: "hero",
+            sectionId: "hero-primary",
+          },
+        },
+      });
     });
 
     it("does not intercept clicks with meta key", () => {

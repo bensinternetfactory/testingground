@@ -1,21 +1,19 @@
+import { buildPreApprovalHref } from "./config";
 import {
-  buildPreApprovalHref,
-  DRAWER_DEFAULT_TITLE,
-  SLIDER_DEFAULT,
-} from "./config";
+  createClosedPreApprovalDrawerSession,
+  createPreApprovalDrawerSession,
+  type PreApprovalDrawerOpenTrigger,
+  type PreApprovalDrawerSessionState,
+} from "@/features/pre-approval/drawer/runtime/session";
+import {
+  type LegacyDrawerHeroTruckType,
+  type LegacyDrawerTriggerPayload,
+  type LegacyDrawerTriggerSource,
+} from "@/features/pre-approval/drawer/runtime/parser";
 
-export type DrawerTriggerSource = "standard" | "hero";
-export type DrawerHeroTruckType =
-  | "rollback"
-  | "wrecker"
-  | "heavy-wrecker"
-  | "rotator";
-
-export interface DrawerTriggerPayload {
-  title?: string;
-  source?: DrawerTriggerSource;
-  truckType?: DrawerHeroTruckType;
-}
+export type DrawerTriggerSource = LegacyDrawerTriggerSource;
+export type DrawerHeroTruckType = LegacyDrawerHeroTruckType;
+export type DrawerTriggerPayload = LegacyDrawerTriggerPayload;
 
 export interface DrawerSelectionTrigger
   extends Omit<DrawerTriggerPayload, "truckType"> {
@@ -23,13 +21,7 @@ export interface DrawerSelectionTrigger
   truckTypeByTileId?: Partial<Record<string, DrawerHeroTruckType>>;
 }
 
-export interface DrawerSessionState {
-  isOpen: boolean;
-  title: string;
-  amount: number;
-  source: DrawerTriggerSource;
-  heroTruckType?: DrawerHeroTruckType;
-}
+export type DrawerSessionState = PreApprovalDrawerSessionState;
 
 export interface DrawerTriggerDataAttributes {
   "data-drawer-title"?: string;
@@ -58,38 +50,26 @@ function isTriggerSource(value: string | undefined): value is DrawerTriggerSourc
 }
 
 export function createDrawerSession(
-  trigger?: DrawerTriggerPayload,
+  trigger?: PreApprovalDrawerOpenTrigger,
 ): DrawerSessionState {
-  const source = trigger?.source ?? STANDARD_DRAWER_SOURCE;
-  const heroTruckType =
-    source === HERO_DRAWER_SOURCE && trigger?.truckType
-      ? trigger.truckType
-      : undefined;
-
-  return {
-    isOpen: true,
-    title: trigger?.title ?? DRAWER_DEFAULT_TITLE,
-    amount: SLIDER_DEFAULT,
-    source,
-    heroTruckType,
-  };
+  return createPreApprovalDrawerSession(trigger);
 }
 
 export function getClosedDrawerSession(): DrawerSessionState {
-  return {
-    isOpen: false,
-    title: DRAWER_DEFAULT_TITLE,
-    amount: SLIDER_DEFAULT,
-    source: STANDARD_DRAWER_SOURCE,
-  };
+  return createClosedPreApprovalDrawerSession();
 }
 
 export function buildDrawerContinueHref(
-  session: Pick<DrawerSessionState, "amount" | "heroTruckType" | "source">,
+  session: Pick<
+    DrawerSessionState,
+    "amount" | "heroTruckType" | "source" | "truckType"
+  >,
 ): string {
   return buildPreApprovalHref({
     amount: session.amount,
-    truckType: session.source === HERO_DRAWER_SOURCE ? session.heroTruckType : undefined,
+    truckType:
+      session.truckType ??
+      (session.source === HERO_DRAWER_SOURCE ? session.heroTruckType : undefined),
   });
 }
 

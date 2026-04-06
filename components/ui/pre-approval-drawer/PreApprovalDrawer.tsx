@@ -160,8 +160,16 @@ function useDialogA11y({
 }
 
 export function PreApprovalDrawer() {
-  const { amount, close, heroTruckType, isOpen, setAmount, source, title } =
-    useDrawer();
+  const {
+    amount,
+    close,
+    heroTruckType,
+    isOpen,
+    setAmount,
+    source,
+    title,
+    truckType,
+  } = useDrawer();
   const router = useRouter();
   const prefersReducedMotion = useReducedMotion() ?? false;
   const isDesktop = useIsDesktop();
@@ -237,6 +245,7 @@ export function PreApprovalDrawer() {
       amount,
       heroTruckType,
       source,
+      truckType,
     });
 
     // Skip close() to avoid the exit animation racing the route transition.

@@ -16,9 +16,16 @@ import {
   type DrawerSessionState,
   type DrawerTriggerPayload,
 } from "./triggers";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import type { NormalizedPreApprovalTrigger } from "@/features/pre-approval/drawer/runtime/parser";
+
+type DrawerOpenTrigger =
+  | DrawerTriggerPayload
+  | NormalizedPreApprovalTrigger
+  | PreApprovalTrigger;
 
 interface DrawerActions {
-  open: (trigger?: DrawerTriggerPayload) => void;
+  open: (trigger?: DrawerOpenTrigger) => void;
   close: () => void;
   reset: () => void;
   setAmount: (amount: number) => void;
@@ -46,8 +53,10 @@ export function useDrawer() {
     isOpen: ctx.state.isOpen,
     title: ctx.state.title,
     amount: ctx.state.amount,
+    origin: ctx.state.origin,
     source: ctx.state.source,
     heroTruckType: ctx.state.heroTruckType,
+    truckType: ctx.state.truckType,
     open: ctx.actions.open,
     close: ctx.actions.close,
     reset: ctx.actions.reset,
@@ -58,7 +67,7 @@ export function useDrawer() {
 export function DrawerStateProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<DrawerSessionState>(getClosedDrawerSession);
 
-  const open = useCallback((trigger?: DrawerTriggerPayload) => {
+  const open = useCallback((trigger?: DrawerOpenTrigger) => {
     lockBodyScroll(null);
     setState(createDrawerSession(trigger));
   }, []);

@@ -3,13 +3,13 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { DRAWER_HASH } from "./config";
-import type { DrawerTriggerPayload } from "./triggers";
+import { createHashOpenPreApprovalTrigger } from "@/features/pre-approval/drawer/runtime/parser";
 
 export function RouteResetListener({
   open,
   reset,
 }: {
-  open: (trigger?: DrawerTriggerPayload) => void;
+  open: (trigger?: ReturnType<typeof createHashOpenPreApprovalTrigger>) => void;
   reset: () => void;
 }) {
   const pathname = usePathname();
@@ -25,7 +25,7 @@ export function RouteResetListener({
       // Navigated to a page with the drawer hash — open a fresh session.
       // If already open, lockBodyScroll is a no-op and createDrawerSession
       // refreshes the session state.
-      open();
+      open(createHashOpenPreApprovalTrigger(pathname));
     } else {
       // Navigated without drawer hash — close and reset to defaults.
       // AnimatePresence will run the exit animation, then onExitComplete

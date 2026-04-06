@@ -3,9 +3,10 @@
 import { useEffect, useEffectEvent } from "react";
 import { DRAWER_HASH } from "./config";
 import {
-  parseDrawerTriggerDataAttributes,
-  type DrawerTriggerPayload,
-} from "./triggers";
+  createHashOpenPreApprovalTrigger,
+  parsePreApprovalTriggerDataset,
+  type NormalizedPreApprovalTrigger,
+} from "@/features/pre-approval/drawer/runtime/parser";
 
 function clearDrawerHash() {
   const { pathname, search } = window.location;
@@ -29,10 +30,10 @@ function isDrawerTarget(anchor: HTMLAnchorElement) {
 export function DrawerHashListener({
   open,
 }: {
-  open: (trigger?: DrawerTriggerPayload) => void;
+  open: (trigger?: NormalizedPreApprovalTrigger) => void;
 }) {
   const openFromHash = useEffectEvent(() => {
-    open();
+    open(createHashOpenPreApprovalTrigger(window.location.pathname));
     clearDrawerHash();
   });
 
@@ -63,7 +64,11 @@ export function DrawerHashListener({
     }
 
     event.preventDefault();
-    open(parseDrawerTriggerDataAttributes(anchor.dataset));
+    open(
+      parsePreApprovalTriggerDataset(anchor.dataset, {
+        pathname: window.location.pathname,
+      }),
+    );
   });
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import * as React from "react";
 import {
   afterEach,
   beforeEach,
@@ -7,7 +8,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { render, screen, cleanup, act, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 // ── Mocks ─────────────────────────────────────────────────────────────
@@ -33,10 +34,11 @@ vi.mock("@/lib/press-feedback", () => ({
 let capturedOnExitComplete: (() => void) | null = null;
 
 vi.mock("framer-motion", () => {
-  const React = require("react");
-
   function createMotionComponent(tag: string) {
-    return React.forwardRef((props: Record<string, unknown>, ref: unknown) => {
+    const MotionComponent = React.forwardRef(function MockMotionComponent(
+      props: Record<string, unknown>,
+      ref: React.ForwardedRef<unknown>,
+    ) {
       const {
         variants,
         initial,
@@ -54,6 +56,9 @@ vi.mock("framer-motion", () => {
       } = props;
       return React.createElement(tag, { ...domProps, ref });
     });
+
+    MotionComponent.displayName = `motion.${tag}`;
+    return MotionComponent;
   }
 
   const motion = new Proxy(
@@ -95,8 +100,24 @@ import { PreApprovalDrawer } from "../PreApprovalDrawer";
 // ── Test Helpers ──────────────────────────────────────────────────────
 
 function OpenButton() {
-  const { open } = useDrawer();
-  return <button onClick={() => open()}>open-drawer</button>;
+  const { open, setAmount } = useDrawer();
+  return (
+    <>
+      <button onClick={() => open()}>open-drawer</button>
+      <button
+        onClick={() =>
+          open({
+            source: "hero",
+            title: "How much is the truck you found?",
+            truckType: "heavy-wrecker",
+          })
+        }
+      >
+        open-hero-drawer
+      </button>
+      <button onClick={() => setAmount(155_000)}>set-amount-155000</button>
+    </>
+  );
 }
 
 function TestHarness({ children }: { children?: React.ReactNode }) {
@@ -239,17 +260,29 @@ describe("PreApprovalDrawer", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("navigates with correct href on Continue click", async () => {
+  it("navigates with the baseline amount-only continue href", async () => {
     const user = userEvent.setup();
     render(<TestHarness />);
 
     await user.click(screen.getByText("open-drawer"));
+    await user.click(screen.getByText("set-amount-155000"));
 
     const continueBtn = screen.getByText("Continue to Pre-Approval");
     await user.click(continueBtn);
 
+    expect(mockPush).toHaveBeenCalledWith("/pre-approval?amount=155000");
+  });
+
+  it("preserves the hero trucktype in the continue href", async () => {
+    const user = userEvent.setup();
+    render(<TestHarness />);
+
+    await user.click(screen.getByText("open-hero-drawer"));
+    await user.click(screen.getByText("set-amount-155000"));
+    await user.click(screen.getByText("Continue to Pre-Approval"));
+
     expect(mockPush).toHaveBeenCalledWith(
-      expect.stringContaining("/pre-approval?amount="),
+      "/pre-approval?amount=155000&trucktype=heavy-wrecker",
     );
   });
 

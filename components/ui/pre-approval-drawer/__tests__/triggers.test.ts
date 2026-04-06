@@ -64,12 +64,20 @@ describe("pre-approval drawer helpers", () => {
   });
 
   it("creates a default session with title and amount state", () => {
-    expect(createDrawerSession()).toEqual({
-      amount: SLIDER_DEFAULT,
-      isOpen: true,
-      source: "standard",
-      title: DRAWER_DEFAULT_TITLE,
-    });
+    expect(createDrawerSession()).toEqual(
+      expect.objectContaining({
+        amount: SLIDER_DEFAULT,
+        isOpen: true,
+        origin: {
+          ctaId: "legacy-cta",
+          pageId: "unknown-page",
+          placement: "inline",
+          sectionId: "legacy-section",
+        },
+        source: "standard",
+        title: DRAWER_DEFAULT_TITLE,
+      }),
+    );
 
     expect(
       createDrawerSession({
@@ -77,13 +85,22 @@ describe("pre-approval drawer helpers", () => {
         title: "How much is the truck you found?",
         truckType: "wrecker",
       }),
-    ).toEqual({
-      amount: SLIDER_DEFAULT,
-      heroTruckType: "wrecker",
-      isOpen: true,
-      source: "hero",
-      title: "How much is the truck you found?",
-    });
+    ).toEqual(
+      expect.objectContaining({
+        amount: SLIDER_DEFAULT,
+        heroTruckType: "wrecker",
+        isOpen: true,
+        origin: {
+          ctaId: "legacy-cta",
+          pageId: "unknown-page",
+          placement: "inline",
+          sectionId: "legacy-section",
+        },
+        source: "hero",
+        title: "How much is the truck you found?",
+        truckType: "wrecker",
+      }),
+    );
   });
 
   it("round-trips drawer trigger metadata through data attributes", () => {

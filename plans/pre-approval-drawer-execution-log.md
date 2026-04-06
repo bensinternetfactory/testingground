@@ -83,6 +83,225 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 2` follow-up / baseline decision
+- Batch / scope: Close the commit-triage loop by deciding whether the drawer-critical recent history is an actual blocker
+- Status: `PASS`
+
+Changes made:
+
+- Updated [`plans/pre-approval-drawer-commit-triage.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-commit-triage.md) to bless the identified drawer-critical commits as the current baseline instead of leaving them as an open-ended blocker.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to clear the blocker section now that the baseline decision is explicit.
+
+Verification matrix IDs covered:
+
+- None newly verified in this batch
+
+Commands run:
+
+- none beyond the prior commit-triage inspection already recorded
+
+Automated verification results:
+
+- No automated verification was rerun in this batch because no production code changed.
+- The decision is based on repository state already established in the prior triage entry: the blocker-set commits are all already present in `main`, and there is no pending `origin/main` backlog to integrate first.
+
+Browser verification results:
+
+- Route: not verified
+- Viewport: not verified
+- Trigger path: not verified
+- Observed behavior: browser validation was not rerun because this batch changed only migration-planning documents.
+
+Evidence summary:
+
+- The repository does not have a separate 50-commit upstream integration task blocking the migration.
+- The drawer-critical commit set is now explicitly blessed as the current baseline.
+- Commit triage is no longer an active blocker, though the migration remains parked at `Phase 2` until the next explicit phase batch begins.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None introduced in this batch.
+
+Next required action:
+
+- Keep `Phase 2` as the active phase until the next explicit implementation batch; do not start `Phase 3` automatically.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 2` follow-up / pre-`Phase 3` triage
+- Batch / scope: Audit the recent commit history, identify the migration-sensitive baseline set, and record whether `Phase 3` is allowed to start
+- Status: `BLOCKED`
+
+Changes made:
+
+- Added the commit-triage artifact [`plans/pre-approval-drawer-commit-triage.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-commit-triage.md) to classify the recent history into `Phase 3` blockers, `Phase 5` caller-migration dependencies, and non-blocking docs/process commits.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to record the unresolved blocker explicitly instead of leaving the blocker section empty.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-02`
+- `PA-INV-03`
+- `PA-INV-04`
+- `PA-INV-05`
+- `PA-INV-06`
+- `PA-INV-07`
+- `PA-INV-08`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-17`
+- `PA-INV-18`
+- `PA-INV-21`
+- `PA-INV-25`
+
+Commands run:
+
+- `git branch --show-current`
+- `git status -sb`
+- `git rev-parse --abbrev-ref --symbolic-full-name @{upstream}`
+- `git rev-list --left-right --count HEAD...@{upstream}`
+- `git log --oneline -n 50`
+- `git log --oneline -n 50 -- components/ui/pre-approval-drawer features/pre-approval components/ui/ripple-cta-link components/sections/nav/sticky-nav-rm components/sections/heroes app`
+- `git show --stat --oneline a6d010b ce98c89 83fd815 76e19a2 c80b17d 8d1af81 f21d214 89f4445 c64ddd1 917e19b 55c3e5a 1624084 0a58157`
+- `git show --name-only --format='%h %s' a6d010b ce98c89 83fd815 76e19a2 c80b17d 8d1af81 f21d214 89f4445 c64ddd1 917e19b 55c3e5a 1624084 0a58157`
+- `rg -n "Phase 3|Blockers|commit|backlog|origin/main|Phase 2 gate passed" plans/pre-approval-drawer-phase-gates.md plans/pre-approval-drawer-execution-log.md plans/pre-approval-drawer-migration-spec.md`
+
+Automated verification results:
+
+- No matrix invariant was re-executed in this batch. This was a commit-triage and blocker-recording pass only.
+- The triage established that the practical blocker is not a remote merge queue from `origin/main`; the repository was `ahead 1` and `behind 0` at triage time.
+- The triage identified a smaller drawer-baseline blocker set of `13` commits that materially affect runtime ownership, trigger entry semantics, route sync, scroll lock, portal mounting, or shared CTA emission.
+- All matrix IDs listed above remain `not re-verified` in this batch and must continue to rely on the latest recorded passing evidence until reconciliation changes any of those baseline files.
+
+Browser verification results:
+
+- Route: not verified
+- Viewport: not verified
+- Trigger path: not verified
+- Observed behavior: browser validation was not rerun in this batch because no runtime or caller behavior was changed; this batch only recorded blocker status.
+
+Evidence summary:
+
+- `Phase 2` remains the active migration phase.
+- `Phase 3` is `NO-GO` until the blocker-set commits in [`plans/pre-approval-drawer-commit-triage.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-commit-triage.md) are explicitly accepted as the current baseline or reconciled.
+- The blocker has been made concrete and auditable instead of being discussed informally.
+
+Gate decision:
+
+- `NO-GO`
+
+Blockers / regressions:
+
+- Unresolved baseline reconciliation across the drawer-critical commit set documented in [`plans/pre-approval-drawer-commit-triage.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-commit-triage.md).
+
+Next required action:
+
+- Reconcile or explicitly bless the blocker-set commits as baseline before attempting `Phase 3`.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: `Phase 2`
+- Batch / scope: Add the compatibility parser and session normalizer, then verify dual-schema normalization and compatibility-origin behavior without forcing caller migration
+- Status: `PASS`
+
+Changes made:
+
+- Added the feature-owned parser in [`features/pre-approval/drawer/runtime/parser.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/parser.ts) to normalize legacy `data-drawer-*`, production `data-pre-approval-*`, direct-hash opens, and route-hash opens into the canonical `PreApprovalTrigger` contract with production-schema precedence.
+- Added the feature-owned session normalizer in [`features/pre-approval/drawer/runtime/session.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/session.ts) so the legacy drawer runtime can consume canonical triggers while preserving legacy `source` and hero `truckType` behavior.
+- Rewired the legacy runtime entrypoints in [`components/ui/pre-approval-drawer/DrawerHashListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerHashListener.tsx), [`components/ui/pre-approval-drawer/RouteResetListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/RouteResetListener.tsx), [`components/ui/pre-approval-drawer/DrawerContext.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerContext.tsx), [`components/ui/pre-approval-drawer/triggers.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/triggers.ts), and [`components/ui/pre-approval-drawer/PreApprovalDrawer.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/PreApprovalDrawer.tsx) to use the new canonical normalization path without changing the live drawer UI or forcing caller changes.
+- Added Phase 2 coverage in [`features/pre-approval/__tests__/drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts), [`components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), [`components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx), and [`components/ui/pre-approval-drawer/__tests__/triggers.test.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/triggers.test.ts) for legacy-only, production-only, mixed-schema precedence, hero handoff exactness, and direct/route hash compatibility origins.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) so `Phase 2` is the only active phase, the Phase 1 precondition is checked, and the Phase 2 checklist/gate outcome is recorded without advancing to `Phase 3`.
+
+Verification matrix IDs covered:
+
+- `PA-INV-01`
+- `PA-INV-02`
+- `PA-INV-03`
+- `PA-INV-04`
+- `PA-INV-09`
+- `PA-INV-10`
+- `PA-INV-11`
+- `PA-INV-21`
+
+Commands run:
+
+- `npm test -- features/pre-approval components/ui/pre-approval-drawer`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP -sTCP:LISTEN`
+- `PORT=3005 npm run dev`
+- `agent-browser open http://127.0.0.1:3005/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser snapshot -i`
+- `agent-browser click @e15`
+- `agent-browser snapshot -i`
+- `agent-browser get url`
+- `agent-browser click @e59`
+- `agent-browser get url`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3005/rollback-financing#get-pre-approved`
+- `agent-browser wait 500`
+- `agent-browser snapshot -i`
+- `agent-browser click @e37 && agent-browser get url`
+
+Automated verification results:
+
+- `PA-INV-09`: [`drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts) verifies legacy `data-drawer-*` attributes normalize into the canonical `PreApprovalTrigger` shape with compatibility defaults, and [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx) proves the live click-intercept path passes the normalized legacy payload into the runtime.
+- `PA-INV-10`: [`drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts) verifies the new production trigger attributes normalize into the canonical contract, and [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx) proves the live click-intercept path accepts the production schema.
+- `PA-INV-11`: [`drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts) and [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx) both verify that when both schemas are present, the production schema wins and the legacy attributes are ignored.
+- `PA-INV-04`: [`drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts) verifies the legacy hero `truckType` handoff still maps exactly to `/pre-approval?amount=155000&trucktype=heavy-wrecker`.
+- `PA-INV-21`: [`drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts) verifies the direct-hash compatibility-origin helper, [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx) verifies initial-load and hashchange opens use `pageId` from pathname plus `sectionId: "hash-entry"` / `ctaId: "direct-url"`, and [`RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx) verifies route-hash reopen uses the same compatibility-origin policy.
+- `PA-INV-03`: the desktop browser pass confirmed the legacy CTA path still continued to `http://127.0.0.1:3005/pre-approval?amount=100000`, and the mobile direct-hash pass confirmed the amount-only continue URL remained `http://127.0.0.1:3005/pre-approval?amount=100000`.
+- `PA-INV-01`: the desktop browser pass confirmed the same-page legacy CTA on `/rollback-financing` opened the drawer without leaving the page and normalized the route back to `/rollback-financing`.
+- `PA-INV-02`: the mobile browser pass confirmed loading `/rollback-financing#get-pre-approved` opened the drawer on first load with the default title.
+- Targeted suite result: `9` test files passed, `83` tests passed. The run emitted existing happy-dom `localhost:3000` fetch noise during the legacy drawer suite, but all assertions passed and no test failed.
+- `npm run lint`: passed with the same existing unused-variable warnings in the legacy test motion mocks; no new Phase 2 lint errors remain.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop
+- Trigger path: click the same-page legacy CTA `Already have a truck in mind? I found a truck and need financing`, then Continue
+- Observed behavior: the drawer opened on the same page, the drawer title rendered as `How much is the rollback you found?`, the current URL normalized to `/rollback-financing`, and Continue navigated to `/pre-approval?amount=100000`.
+
+- Route: `/rollback-financing#get-pre-approved`
+- Viewport: mobile (`iPhone 14`)
+- Trigger path: direct-load hash open, then Continue
+- Observed behavior: the drawer opened on first load with the default title `Estimate how much financing you need.`, the amount slider rendered, and Continue navigated to `/pre-approval?amount=100000`.
+
+Evidence summary:
+
+- Phase 1 is already recorded as `PASS`, and the runbook now marks `Phase 2` as the only active phase for this batch.
+- One canonical normalization path now handles legacy attributes, production attributes, direct-hash opens, and route-hash opens while keeping the legacy runtime surface and UI behavior intact.
+- Production-schema precedence is proven, legacy hero handoff behavior is unchanged, and non-click opens use the required compatibility-origin policy without inferring analytics IDs from label text.
+- No caller migration, runtime contract cutover, or Phase 3 event/session semantics were introduced in this batch.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None for `Phase 2`.
+
+Next required action:
+
+- Stop after `Phase 2`. Do not start `Phase 3` until explicitly instructed.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 1`
 - Batch / scope: Introduce canonical feature-owned modules under `features/pre-approval` without rewiring the live legacy drawer surface
 - Status: `PASS`

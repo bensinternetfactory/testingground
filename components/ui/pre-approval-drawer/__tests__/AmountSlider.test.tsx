@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import * as React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { AmountSlider } from "../AmountSlider";
@@ -12,8 +13,10 @@ vi.mock("framer-motion", () => ({
     {},
     {
       get: (_target: object, tag: string) => {
-        const { forwardRef, createElement } = require("react");
-        return forwardRef((props: Record<string, unknown>, ref: unknown) => {
+        const MotionComponent = React.forwardRef(function MockMotionComponent(
+          props: Record<string, unknown>,
+          ref: React.ForwardedRef<unknown>,
+        ) {
           const {
             variants,
             initial,
@@ -29,8 +32,10 @@ vi.mock("framer-motion", () => ({
             onDragEnd,
             ...domProps
           } = props;
-          return createElement(tag, { ...domProps, ref });
+          return React.createElement(tag, { ...domProps, ref });
         });
+        MotionComponent.displayName = `motion.${tag}`;
+        return MotionComponent;
       },
     },
   ),

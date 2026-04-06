@@ -14,8 +14,8 @@ Rules:
 ## Active Phase
 
 - [ ] `Phase 0` active
-- [x] `Phase 1` active
-- [ ] `Phase 2` active
+- [ ] `Phase 1` active
+- [x] `Phase 2` active
 - [ ] `Phase 3` active
 - [ ] `Phase 4` active
 - [ ] `Phase 5` active
@@ -80,26 +80,26 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 1 gate passed.
+- [x] Phase 1 gate passed.
 
 Execution checklist:
 
-- [ ] Legacy trigger schema normalization verified.
-- [ ] New trigger schema normalization verified.
-- [ ] Mixed-schema precedence verified.
-- [ ] Legacy hero `truckType` mapping verified.
-- [ ] Compatibility defaults constrained to the legacy-only path.
-- [ ] Direct-hash compatibility origin verified.
-- [ ] Route-hash compatibility origin verified.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Browser check completed for legacy CTA path if user-facing behavior changed.
-- [ ] Execution log updated with evidence for `PA-INV-09` `PA-INV-10` `PA-INV-11` `PA-INV-21` and relevant baseline invariants.
+- [x] Legacy trigger schema normalization verified.
+- [x] New trigger schema normalization verified.
+- [x] Mixed-schema precedence verified.
+- [x] Legacy hero `truckType` mapping verified.
+- [x] Compatibility defaults constrained to the legacy-only path.
+- [x] Direct-hash compatibility origin verified.
+- [x] Route-hash compatibility origin verified.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Browser check completed for legacy CTA path if user-facing behavior changed.
+- [x] Execution log updated with evidence for `PA-INV-09` `PA-INV-10` `PA-INV-11` `PA-INV-21` and relevant baseline invariants.
 
 Go / no-go gate:
 
-- [ ] Go: one canonical normalization path exists and dual-schema coexistence is proven.
-- [ ] No-go conditions checked: no legacy support removed, no caller forced to migrate, no analytics IDs inferred from label text.
+- [x] Go: one canonical normalization path exists and dual-schema coexistence is proven.
+- [x] No-go conditions checked: no legacy support removed, no caller forced to migrate, no analytics IDs inferred from label text.
 
 ## Phase 3: Wrap the Existing Runtime in the New Root Contract
 
@@ -215,4 +215,4 @@ Go / no-go gate:
 
 Record unresolved blockers here before attempting to advance a phase.
 
-- None recorded.
+- None recorded. The drawer-baseline commit set documented in [`plans/pre-approval-drawer-commit-triage.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-commit-triage.md) was accepted as the current baseline on `2026-04-06`; it is no longer treated as a separate reconciliation blocker.
