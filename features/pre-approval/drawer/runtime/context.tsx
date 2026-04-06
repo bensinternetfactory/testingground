@@ -224,9 +224,5 @@ export function DrawerStateProvider({
     [close, continueTo, open, reset, setAmount, state],
   );
 
-  return (
-    <DrawerContext value={contextValue}>
-      {children}
-    </DrawerContext>
-  );
+  return <DrawerContext value={contextValue}>{children}</DrawerContext>;
 }

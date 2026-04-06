@@ -6,16 +6,19 @@ import {
   preApprovalDefaultAmount,
   preApprovalDefaultTitle,
 } from "@/features/pre-approval/contract";
-import { DrawerStateProvider, useDrawer } from "../DrawerContext";
+import {
+  DrawerStateProvider,
+  useDrawer,
+} from "@/features/pre-approval/drawer/runtime/context";
 
 // Spy on scroll-lock to verify timing
-vi.mock("../scroll-lock", () => ({
+vi.mock("@/features/pre-approval/drawer/runtime/scroll-lock", () => ({
   lockBodyScroll: vi.fn(),
   unlockBodyScroll: vi.fn(),
   updateScrollableRef: vi.fn(),
 }));
 
-import { lockBodyScroll } from "../scroll-lock";
+import { lockBodyScroll } from "@/features/pre-approval/drawer/runtime/scroll-lock";
 
 afterEach(cleanup);
 

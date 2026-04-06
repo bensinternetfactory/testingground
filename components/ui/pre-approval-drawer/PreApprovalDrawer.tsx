@@ -25,10 +25,13 @@ import {
   usePressFeedback,
 } from "@/lib/press-feedback";
 import type { PreApprovalCloseReason } from "@/features/pre-approval/contract";
+import { useDrawer } from "@/features/pre-approval/drawer/runtime/context";
+import {
+  unlockBodyScroll,
+  updateScrollableRef,
+} from "@/features/pre-approval/drawer/runtime/scroll-lock";
 import { buildPreApprovalHref } from "@/features/pre-approval/routes";
-import { useDrawer } from "./DrawerContext";
 import { AmountSlider } from "./AmountSlider";
-import { unlockBodyScroll, updateScrollableRef } from "./scroll-lock";
 
 const PORTAL_ROOT_ID = "pre-approval-drawer-root";
 const BACKDROP_Z_INDEX = "z-[200]";

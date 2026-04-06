@@ -6,13 +6,13 @@ import {
   type ErrorInfo,
   type ReactNode,
 } from "react";
-import { DrawerHashListener } from "@/components/ui/pre-approval-drawer/DrawerHashListener";
+import { DrawerHashListener } from "@/features/pre-approval/drawer/runtime/hash-listener";
 import {
   DrawerStateProvider,
   useDrawer,
-} from "@/components/ui/pre-approval-drawer/DrawerContext";
+} from "@/features/pre-approval/drawer/runtime/context";
 import { PreApprovalDrawer } from "@/components/ui/pre-approval-drawer/PreApprovalDrawer";
-import { RouteResetListener } from "@/components/ui/pre-approval-drawer/RouteResetListener";
+import { RouteResetListener } from "@/features/pre-approval/drawer/runtime/route-sync";
 import type {
   PreApprovalCloseReason,
   PreApprovalEvent,

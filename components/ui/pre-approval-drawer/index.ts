@@ -1,5 +1,5 @@
 export { DrawerProvider } from "./DrawerProvider";
-export { useDrawer } from "./DrawerContext";
+export { useDrawer } from "@/features/pre-approval/drawer/runtime/context";
 export { MarketingDrawerProvider } from "./MarketingDrawerProvider";
 export {
   PreApprovalDrawerRoot,

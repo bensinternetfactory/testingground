@@ -64,7 +64,10 @@ export function DrawerHashListener({
     }
 
     event.preventDefault();
-    open(parsePreApprovalTriggerDataset(anchor.dataset) ?? createHashOpenPreApprovalTrigger(window.location.pathname));
+    open(
+      parsePreApprovalTriggerDataset(anchor.dataset) ??
+        createHashOpenPreApprovalTrigger(window.location.pathname),
+    );
   });
 
   useEffect(() => {

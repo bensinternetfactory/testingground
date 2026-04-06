@@ -7,9 +7,12 @@ import {
   preApprovalDefaultTitle,
   type PreApprovalEvent,
 } from "@/features/pre-approval/contract";
+import {
+  DrawerStateProvider,
+  useDrawer,
+} from "@/features/pre-approval/drawer/runtime/context";
+import { RouteResetListener } from "@/features/pre-approval/drawer/runtime/route-sync";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
-import { DrawerStateProvider, useDrawer } from "../DrawerContext";
-import { RouteResetListener } from "../RouteResetListener";
 
 // Mock next/navigation
 let mockPathname = "/";
@@ -17,7 +20,7 @@ vi.mock("next/navigation", () => ({
   usePathname: () => mockPathname,
 }));
 
-vi.mock("../scroll-lock", () => ({
+vi.mock("@/features/pre-approval/drawer/runtime/scroll-lock", () => ({
   lockBodyScroll: vi.fn(),
   unlockBodyScroll: vi.fn(),
   updateScrollableRef: vi.fn(),

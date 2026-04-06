@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render } from "@testing-library/react";
 import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
-import { DrawerHashListener } from "../DrawerHashListener";
+import { DrawerHashListener } from "@/features/pre-approval/drawer/runtime/hash-listener";
 
 afterEach(() => {
   cleanup();

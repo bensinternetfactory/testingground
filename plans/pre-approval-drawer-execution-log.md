@@ -83,6 +83,70 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 8`
+- Batch / scope: Move the four runtime modules into `features/pre-approval/drawer/runtime`, repair the directly affected import graph, and verify the temporary Phase 8 legacy-view exception
+- Status: `PASS`
+
+Changes made:
+
+- Moved the runtime modules from [`components/ui/pre-approval-drawer/DrawerContext.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerContext.tsx), [`components/ui/pre-approval-drawer/DrawerHashListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerHashListener.tsx), [`components/ui/pre-approval-drawer/RouteResetListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/RouteResetListener.tsx), and [`components/ui/pre-approval-drawer/scroll-lock.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/scroll-lock.ts) to [`features/pre-approval/drawer/runtime/context.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/context.tsx), [`features/pre-approval/drawer/runtime/hash-listener.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/hash-listener.tsx), [`features/pre-approval/drawer/runtime/route-sync.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/route-sync.tsx), and [`features/pre-approval/drawer/runtime/scroll-lock.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/scroll-lock.ts).
+- Updated [`features/pre-approval/drawer/client.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/client.tsx) to import the moved runtime modules from the new feature-owned runtime paths while intentionally leaving `PreApprovalDrawer` on the legacy UI path for Phase 9.
+- Repointed the retained legacy UI shell in [`components/ui/pre-approval-drawer/PreApprovalDrawer.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/PreApprovalDrawer.tsx), [`components/ui/pre-approval-drawer/DrawerProvider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerProvider.tsx), and [`components/ui/pre-approval-drawer/index.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/index.ts) to the moved runtime so the Phase 9-deferred UI continues compiling.
+- Updated the runtime-related mocks in [`features/pre-approval/__tests__/drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx) and [`features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx), and updated the retained legacy runtime test imports in [`components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx), [`components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx), [`components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx), [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx), and [`components/ui/pre-approval-drawer/__tests__/scroll-lock.test.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/scroll-lock.test.ts) so the Phase 8 runtime suite still resolves after the move.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) and this execution log with the Phase 8 evidence and gate result.
+
+Verification matrix IDs covered:
+
+- `PA-INV-34`
+- `PA-INV-27`
+- `PA-INV-18`
+
+Commands run:
+
+- `rg -n "@/components/ui/pre-approval-drawer" features/pre-approval --glob '!**/__tests__/**'`
+- `rg -n "drawer/runtime|components/ui/pre-approval-drawer" features/pre-approval/contract.ts features/pre-approval/routes.ts features/pre-approval/drawer/server.ts`
+- `npm test -- 'components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx' 'components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx' 'components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx' 'components/ui/pre-approval-drawer/__tests__/scroll-lock.test.ts' 'features/pre-approval/__tests__/drawer-root.test.tsx' 'features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx'`
+- `npm run lint`
+- `npm run build`
+
+Automated verification results:
+
+- `PA-INV-34`: `rg -n "@/components/ui/pre-approval-drawer" features/pre-approval --glob '!**/__tests__/**'` returned exactly one match: `features/pre-approval/drawer/client.tsx` importing `PreApprovalDrawer` from the legacy UI path. No other feature-owned non-test file imports from `@/components/ui/pre-approval-drawer`.
+- `PA-INV-18`: `rg -n "drawer/runtime|components/ui/pre-approval-drawer" features/pre-approval/contract.ts features/pre-approval/routes.ts features/pre-approval/drawer/server.ts` returned no matches, and `npm run build` passed, confirming the server-safe modules still do not import client-only runtime code.
+- Targeted runtime and drawer-root suites passed: 6 files, 48 tests, 0 failures.
+- `npm run lint` exited `0` with the same pre-existing 23 warnings in [`components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/AmountSlider.test.tsx) and [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx); no new Phase 8 lint errors were introduced.
+- `PA-INV-27`: `npm run build` passed with a successful Next.js production build after the runtime files moved under `features/pre-approval/drawer/runtime/`.
+
+Browser verification results:
+
+- Route: not applicable
+- Viewport: not applicable
+- Trigger path: not applicable
+- Observed behavior: not applicable
+
+Evidence summary:
+
+- The four runtime modules now live under `features/pre-approval/drawer/runtime/`, while the only remaining Phase 8 feature-to-legacy dependency is the intentional `PreApprovalDrawer` view import in `features/pre-approval/drawer/client.tsx`.
+- The retained legacy UI shell and retained runtime tests were updated only where the file move directly broke import paths; no Phase 9 UI relocation was performed.
+- The runtime and drawer-root suite passed after the move. Vitest emitted a `happy-dom` `fetch("http://localhost:3000/rollback-financing#get-pre-approved")` network warning during the run, but the suite completed successfully with all targeted tests passing.
+- The server-safe feature modules remain free of client-runtime imports, lint remained clean apart from the existing warnings, and the production build completed successfully.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Stop here. Phase 8 is complete and recorded; do not begin Phase 9 until a separate batch starts.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 7`
 - Batch / scope: Eliminate the remaining production barrel consumers in financing configs and remove barrel-parity requirements from the feature public API test
 - Status: `PASS`

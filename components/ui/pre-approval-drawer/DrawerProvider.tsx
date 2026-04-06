@@ -1,8 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { DrawerStateProvider, useDrawer } from "./DrawerContext";
-import { DrawerHashListener } from "./DrawerHashListener";
+import {
+  DrawerStateProvider,
+  useDrawer,
+} from "@/features/pre-approval/drawer/runtime/context";
+import { DrawerHashListener } from "@/features/pre-approval/drawer/runtime/hash-listener";
 import { PreApprovalDrawer } from "./PreApprovalDrawer";
 
 function DrawerProviderInner({ children }: { children: ReactNode }) {

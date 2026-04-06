@@ -247,27 +247,27 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 7 gate passed.
+- [x] Phase 7 gate passed.
 
 Execution checklist:
 
-- [ ] `DrawerContext.tsx` moved to `features/pre-approval/drawer/runtime/context.tsx`.
-- [ ] `DrawerHashListener.tsx` moved to `features/pre-approval/drawer/runtime/hash-listener.tsx`.
-- [ ] `RouteResetListener.tsx` moved to `features/pre-approval/drawer/runtime/route-sync.tsx`.
-- [ ] `scroll-lock.ts` moved to `features/pre-approval/drawer/runtime/scroll-lock.ts`.
-- [ ] `features/pre-approval/drawer/client.tsx` imports updated to reference the moved runtime modules while intentionally leaving the temporary `PreApprovalDrawer` import on the legacy UI path for Phase 9.
-- [ ] Moved runtime files' internal imports updated (e.g., `scroll-lock` import in context).
-- [ ] `rg -n "@/components/ui/pre-approval-drawer" features/pre-approval --glob '!**/__tests__/**'` returns exactly one allowed match: `features/pre-approval/drawer/client.tsx` importing `PreApprovalDrawer` from the legacy UI path pending Phase 9. No other feature-owned file imports from the legacy UI directory.
-- [ ] `vi.mock` paths in `features/pre-approval/__tests__/drawer-root.test.tsx` and `features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx` updated from `@/components/ui/pre-approval-drawer/*` to the new `@/features/pre-approval/drawer/runtime/*` paths. These existing feature tests mock the runtime modules being moved in this phase.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Targeted test suite passed (runtime and drawer-root tests).
-- [ ] Execution log updated.
+- [x] `DrawerContext.tsx` moved to `features/pre-approval/drawer/runtime/context.tsx`.
+- [x] `DrawerHashListener.tsx` moved to `features/pre-approval/drawer/runtime/hash-listener.tsx`.
+- [x] `RouteResetListener.tsx` moved to `features/pre-approval/drawer/runtime/route-sync.tsx`.
+- [x] `scroll-lock.ts` moved to `features/pre-approval/drawer/runtime/scroll-lock.ts`.
+- [x] `features/pre-approval/drawer/client.tsx` imports updated to reference the moved runtime modules while intentionally leaving the temporary `PreApprovalDrawer` import on the legacy UI path for Phase 9.
+- [x] Moved runtime files' internal imports updated (e.g., `scroll-lock` import in context).
+- [x] `rg -n "@/components/ui/pre-approval-drawer" features/pre-approval --glob '!**/__tests__/**'` returns exactly one allowed match: `features/pre-approval/drawer/client.tsx` importing `PreApprovalDrawer` from the legacy UI path pending Phase 9. No other feature-owned file imports from the legacy UI directory.
+- [x] `vi.mock` paths in `features/pre-approval/__tests__/drawer-root.test.tsx` and `features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx` updated from `@/components/ui/pre-approval-drawer/*` to the new `@/features/pre-approval/drawer/runtime/*` paths. These existing feature tests mock the runtime modules being moved in this phase.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Targeted test suite passed (runtime and drawer-root tests).
+- [x] Execution log updated.
 
 Go / no-go gate:
 
-- [ ] Go: all runtime files live under `features/pre-approval/drawer/runtime/` and build cleanly.
-- [ ] No-go conditions checked: no circular imports, no broken test, and no remaining feature-to-legacy UI dependency other than the temporary `PreApprovalDrawer` import explicitly deferred to Phase 9.
+- [x] Go: all runtime files live under `features/pre-approval/drawer/runtime/` and build cleanly.
+- [x] No-go conditions checked: no circular imports, no broken test, and no remaining feature-to-legacy UI dependency other than the temporary `PreApprovalDrawer` import explicitly deferred to Phase 9.
 
 ## Phase 9: Move UI Files and Tests
 

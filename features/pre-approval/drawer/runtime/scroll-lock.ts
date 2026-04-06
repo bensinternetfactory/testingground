@@ -67,7 +67,13 @@ function captureFreezableElements() {
 
 /** Pin captured elements with position:fixed at their pre-lock viewport positions. */
 function applyFreeze(
-  captures: Array<{ el: HTMLElement; rect: DOMRect; savedPosition: string; savedTop: string; savedWidth: string }>,
+  captures: Array<{
+    el: HTMLElement;
+    rect: DOMRect;
+    savedPosition: string;
+    savedTop: string;
+    savedWidth: string;
+  }>,
 ) {
   frozenElements = captures;
   captures.forEach(({ el, rect }) => {

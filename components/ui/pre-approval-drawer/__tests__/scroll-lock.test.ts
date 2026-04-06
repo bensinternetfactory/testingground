@@ -4,7 +4,7 @@ import {
   lockBodyScroll,
   unlockBodyScroll,
   updateScrollableRef,
-} from "../scroll-lock";
+} from "@/features/pre-approval/drawer/runtime/scroll-lock";
 
 // Reset module state and body styles between tests
 afterEach(() => {

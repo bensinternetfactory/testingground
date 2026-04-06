@@ -104,14 +104,17 @@ vi.mock("framer-motion", () => {
 });
 
 // Mock scroll-lock
-vi.mock("../scroll-lock", () => ({
+vi.mock("@/features/pre-approval/drawer/runtime/scroll-lock", () => ({
   lockBodyScroll: vi.fn(),
   unlockBodyScroll: vi.fn(),
   updateScrollableRef: vi.fn(),
 }));
 
-import { unlockBodyScroll } from "../scroll-lock";
-import { DrawerStateProvider, useDrawer } from "../DrawerContext";
+import {
+  DrawerStateProvider,
+  useDrawer,
+} from "@/features/pre-approval/drawer/runtime/context";
+import { unlockBodyScroll } from "@/features/pre-approval/drawer/runtime/scroll-lock";
 import { PreApprovalDrawer } from "../PreApprovalDrawer";
 import type { PreApprovalEvent } from "@/features/pre-approval/contract";
 

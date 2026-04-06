@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
-vi.mock("@/components/ui/pre-approval-drawer/DrawerHashListener", () => ({
+vi.mock("@/features/pre-approval/drawer/runtime/hash-listener", () => ({
   DrawerHashListener: () => {
     throw new Error("drawer hash listener crashed");
   },
@@ -12,11 +12,11 @@ vi.mock("@/components/ui/pre-approval-drawer/PreApprovalDrawer", () => ({
   PreApprovalDrawer: () => null,
 }));
 
-vi.mock("@/components/ui/pre-approval-drawer/RouteResetListener", () => ({
+vi.mock("@/features/pre-approval/drawer/runtime/route-sync", () => ({
   RouteResetListener: () => null,
 }));
 
-vi.mock("@/components/ui/pre-approval-drawer/scroll-lock", () => ({
+vi.mock("@/features/pre-approval/drawer/runtime/scroll-lock", () => ({
   lockBodyScroll: vi.fn(),
   unlockBodyScroll: vi.fn(),
   updateScrollableRef: vi.fn(),
