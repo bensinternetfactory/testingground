@@ -120,13 +120,19 @@ Validation snapshot:
 - The trigger and URL-building utilities are well typed and have passing tests around their current mapping logic.
 - The slider has a large thumb target, descriptive `aria-valuetext`, and clear visible value feedback.
 
-## Recommended Next Steps
+## Status: Complete — no further work recommended
 
-Quick wins (narrow, low-risk):
-- [ ] **#9** — Hoist `Intl.NumberFormat` to module scope in AmountSlider. One-line move.
-- [ ] **#4** — Make AmountSlider explicitly controlled. Remove `internalValue` since parent always provides `value`.
+All high and medium-severity correctness/lifecycle findings are resolved (#1, #2, #3, #7, plus a bug fix). The remaining 5 findings are code quality nits or architectural concerns that only matter under conditions that don't exist today. Continuing would be cleanup for cleanup's sake.
 
-Defer unless triggered:
+**Reopen if:**
+- A second modal/overlay is added → fix #5 (scroll-lock singleton)
+- Drawer consumers multiply or slider perf degrades → fix #6 (broad context)
+- Motion states expand beyond open/close → fix #10 (motion duplication)
+- Server/client import boundary issues appear → fix #8 (barrel hygiene)
+
+Remaining items (not planned):
+- [ ] **#9** — Hoist `Intl.NumberFormat` to module scope in AmountSlider. One-line move. No user impact.
+- [ ] **#4** — Make AmountSlider explicitly controlled. Remove `internalValue`. No user impact.
 - [ ] **#5** — Scroll-lock singleton. Only fix if a second overlay is added.
 - [ ] **#6** — Broad context. Only fix if perf issues appear.
 - [ ] **#8** — Barrel import hygiene. Only fix if server/client boundary issues appear.
