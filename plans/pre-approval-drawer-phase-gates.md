@@ -300,45 +300,45 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 9 gate passed.
+- [x] Phase 9 gate passed.
 
 Execution checklist:
 
-- [ ] `components/ui/pre-approval-drawer/DrawerProvider.tsx` deleted (dead code — zero consumers).
-- [ ] `components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx` deleted (dead wrapper — layout imports `PreApprovalDrawerRoot` directly).
-- [ ] `components/ui/pre-approval-drawer/index.ts` deleted.
-- [ ] `components/ui/pre-approval-drawer/CLAUDE.md` deleted.
-- [ ] `components/ui/pre-approval-drawer/` directory fully removed.
-- [ ] External `CLAUDE.md` files referencing the old barrel path updated (known: `components/sections/heroes/hero-gallery/CLAUDE.md` references `@/components/ui/pre-approval-drawer`). Run `rg "components/ui/pre-approval-drawer" --glob '**/CLAUDE.md'` to find all.
-- [ ] New `features/pre-approval/CLAUDE.md` written documenting the final architecture: module table, public API, usage snippet, server/client boundaries, test coverage.
-- [ ] `find features/pre-approval/__tests__ -maxdepth 1 -type f | sort` confirms the consolidated feature test suite exists under `features/pre-approval/__tests__/`.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] `npm test -- features/pre-approval` passed.
-- [ ] `grep -r "components/ui/pre-approval-drawer" app components features lib` returns zero results.
-- [ ] `grep -rn "from.*@/components/ui" features/pre-approval/` returns zero results (broad scope — catches any `components/ui/` dependency, not just `pre-approval-drawer`).
-- [ ] `grep -rn "export.*from" features/pre-approval/ --include='*.ts' --include='*.tsx' --exclude-dir=__tests__` returns zero re-export barrels.
-- [ ] Manual review confirms `features/pre-approval/contract.ts`, `features/pre-approval/routes.ts`, `features/pre-approval/selection.ts`, `features/pre-approval/drawer/server.ts`, and `features/pre-approval/drawer/client.tsx` are canonical modules, not alias mappings or compatibility wrappers.
-- [ ] `ls features/pre-approval/*.ts features/pre-approval/drawer/*.{ts,tsx}` matches exactly: `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, `drawer/client.tsx` (plus expected `runtime/` and `ui/` subdirectory files).
-- [ ] Execution log updated with final evidence.
+- [x] `components/ui/pre-approval-drawer/DrawerProvider.tsx` deleted (dead code — zero consumers).
+- [x] `components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx` deleted (dead wrapper — layout imports `PreApprovalDrawerRoot` directly).
+- [x] `components/ui/pre-approval-drawer/index.ts` deleted.
+- [x] `components/ui/pre-approval-drawer/CLAUDE.md` deleted.
+- [x] `components/ui/pre-approval-drawer/` directory fully removed.
+- [x] External `CLAUDE.md` files referencing the old barrel path updated (known: `components/sections/heroes/hero-gallery/CLAUDE.md` references `@/components/ui/pre-approval-drawer`). Run `rg "components/ui/pre-approval-drawer" --glob '**/CLAUDE.md'` to find all.
+- [x] New `features/pre-approval/CLAUDE.md` written documenting the final architecture: module table, public API, usage snippet, server/client boundaries, test coverage.
+- [x] `find features/pre-approval/__tests__ -maxdepth 1 -type f | sort` confirms the consolidated feature test suite exists under `features/pre-approval/__tests__/`.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] `npm test -- features/pre-approval` passed.
+- [x] `grep -r "components/ui/pre-approval-drawer" app components features lib` returns zero results.
+- [x] `grep -rn "from.*@/components/ui" features/pre-approval/` returns zero results (broad scope — catches any `components/ui/` dependency, not just `pre-approval-drawer`).
+- [x] `grep -rn "export.*from" features/pre-approval/ --include='*.ts' --include='*.tsx' --exclude-dir=__tests__` returns zero re-export barrels.
+- [x] Manual review confirms `features/pre-approval/contract.ts`, `features/pre-approval/routes.ts`, `features/pre-approval/selection.ts`, `features/pre-approval/drawer/server.ts`, and `features/pre-approval/drawer/client.tsx` are canonical modules, not alias mappings or compatibility wrappers.
+- [x] `ls features/pre-approval/*.ts features/pre-approval/drawer/*.{ts,tsx}` matches exactly: `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, `drawer/client.tsx` (plus expected `runtime/` and `ui/` subdirectory files).
+- [x] Execution log updated with final evidence.
 
 Go / no-go gate:
 
-- [ ] Go: `components/ui/pre-approval-drawer/` does not exist. Every import resolves to `@/features/pre-approval/`. Documentation matches the actual architecture.
-- [ ] No-go conditions checked: no dangling imports, no build failure, no undocumented public API.
+- [x] Go: `components/ui/pre-approval-drawer/` does not exist. Every import resolves to `@/features/pre-approval/`. Documentation matches the actual architecture.
+- [x] No-go conditions checked: no dangling imports, no build failure, no undocumented public API.
 
 ## Migration Completion Criteria
 
 When Phase 10 is complete, all of the following must be true:
 
-- [ ] `components/ui/pre-approval-drawer/` does not exist.
-- [ ] Every production import of pre-approval drawer functionality resolves to `@/features/pre-approval/`.
-- [ ] No file under `features/pre-approval/` imports from `components/ui/`.
-- [ ] There are zero re-export barrels, zero alias mappings, zero compatibility wrappers.
-- [ ] The public API is exactly: `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, `drawer/client.tsx`.
-- [ ] One `CLAUDE.md` at `features/pre-approval/` documents the actual architecture.
-- [ ] One consolidated test suite under `features/pre-approval/__tests__/` covers the feature.
-- [ ] `npm test -- features/pre-approval`, `npm run lint`, and `npm run build` pass.
+- [x] `components/ui/pre-approval-drawer/` does not exist.
+- [x] Every production import of pre-approval drawer functionality resolves to `@/features/pre-approval/`.
+- [x] No file under `features/pre-approval/` imports from `components/ui/`.
+- [x] There are zero re-export barrels, zero alias mappings, zero compatibility wrappers.
+- [x] The public API is exactly: `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, `drawer/client.tsx`.
+- [x] One `CLAUDE.md` at `features/pre-approval/` documents the actual architecture.
+- [x] One consolidated test suite under `features/pre-approval/__tests__/` covers the feature.
+- [x] `npm test -- features/pre-approval`, `npm run lint`, and `npm run build` pass.
 
 ## Blockers
 

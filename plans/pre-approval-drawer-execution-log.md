@@ -83,6 +83,86 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 10`
+- Batch / scope: Delete the final dead legacy directory, replace stale drawer docs with the feature-owned architecture doc, and record final completion evidence
+- Status: `PASS`
+
+Changes made:
+
+- Deleted the four remaining dead files under the legacy directory: [`components/ui/pre-approval-drawer/DrawerProvider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerProvider.tsx), [`components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx), [`components/ui/pre-approval-drawer/index.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/index.ts), and [`components/ui/pre-approval-drawer/CLAUDE.md`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/CLAUDE.md), then removed the empty `components/ui/pre-approval-drawer/` directory.
+- Added [`features/pre-approval/CLAUDE.md`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/CLAUDE.md) documenting the final module table, supported public API, usage pattern, server/client boundaries, and consolidated test coverage.
+- Updated [`components/sections/heroes/hero-gallery/CLAUDE.md`](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/CLAUDE.md) to reference the canonical feature-owned drawer server module instead of the deleted legacy barrel path.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) and this execution log with the Phase 10 evidence, final gate result, and migration completion criteria status.
+
+Verification matrix IDs covered:
+
+- `PA-INV-28`
+- `PA-INV-29`
+- `PA-INV-30`
+- `PA-INV-31`
+- `PA-INV-32`
+- `PA-INV-33`
+
+Commands run:
+
+- `rg -n "Phase 9|Phase 10|Migration Completion Criteria|GO|NO-GO" plans/pre-approval-drawer-phase-gates.md`
+- `grep -rn "from.*@/components/ui" features/pre-approval/`
+- `find components/ui/pre-approval-drawer -maxdepth 2 -type f | sort`
+- `rg "components/ui/pre-approval-drawer" --glob '**/CLAUDE.md'`
+- `find features/pre-approval -maxdepth 3 -type f | sort`
+- `find features/pre-approval/__tests__ -maxdepth 1 -type f | sort`
+- `rmdir components/ui/pre-approval-drawer/__tests__ components/ui/pre-approval-drawer`
+- `grep -r "components/ui/pre-approval-drawer" app components features lib`
+- `grep -rn "export.*from" features/pre-approval/ --include='*.ts' --include='*.tsx' --exclude-dir=__tests__`
+- `ls features/pre-approval/*.ts features/pre-approval/drawer/*.{ts,tsx}`
+- `npm run lint`
+- `npm test -- features/pre-approval`
+- `npm run build`
+
+Automated verification results:
+
+- Start-of-phase preconditions were satisfied: Phase 9 was already fully checked in [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md), and the required broad-scope search `grep -rn "from.*@/components/ui" features/pre-approval/` returned zero results before any source edits.
+- `PA-INV-28`: `grep -r "components/ui/pre-approval-drawer" app components features lib` returned zero results after the deletion, and `npm run build` passed, confirming no production import of the deleted legacy barrel or directory remains.
+- `PA-INV-29`: `grep -rn "from.*@/components/ui" features/pre-approval/` returned zero results both before and after the Phase 10 edits, confirming the feature-owned code no longer depends on any `components/ui/` module.
+- `PA-INV-30`: `find components/ui/pre-approval-drawer -maxdepth 2 -type f | sort` showed only the four expected dead files before deletion, `rmdir components/ui/pre-approval-drawer/__tests__ components/ui/pre-approval-drawer` succeeded, and the post-delete filesystem no longer contains the directory.
+- `PA-INV-31`: [`features/pre-approval/CLAUDE.md`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/CLAUDE.md) now exists and matches the actual filesystem layout under [`features/pre-approval/`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval), including the public API, runtime internals, and consolidated test suite.
+- `PA-INV-32`: `grep -rn "export.*from" features/pre-approval/ --include='*.ts' --include='*.tsx' --exclude-dir=__tests__` returned zero results. Manual review of [`features/pre-approval/contract.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/contract.ts), [`features/pre-approval/routes.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/routes.ts), [`features/pre-approval/selection.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/selection.ts), [`features/pre-approval/drawer/server.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/server.ts), and [`features/pre-approval/drawer/client.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/client.tsx) confirmed they contain canonical logic and contracts, not alias mappings or compatibility wrappers.
+- `PA-INV-33`: `ls features/pre-approval/*.ts features/pre-approval/drawer/*.{ts,tsx}` returned exactly `features/pre-approval/contract.ts`, `features/pre-approval/routes.ts`, `features/pre-approval/selection.ts`, `features/pre-approval/drawer/server.ts`, and `features/pre-approval/drawer/client.tsx`, with the expected `runtime/` and `ui/` subdirectories still present separately.
+- `find features/pre-approval/__tests__ -maxdepth 1 -type f | sort` showed the consolidated feature-owned suite: `AmountSlider.test.tsx`, `DrawerContext.test.tsx`, `DrawerHashListener.test.tsx`, `PreApprovalDrawerView.test.tsx`, `RouteResetListener.test.tsx`, `drawer-root-error-boundary.test.tsx`, `drawer-root.test.tsx`, `drawer-runtime.test.ts`, `public-api.test.ts`, `scroll-lock.test.ts`, and `selection.test.ts`.
+- `npm test -- features/pre-approval` passed: 11 files, 83 tests, 0 failures. Vitest emitted the same pre-existing `happy-dom` `fetch("http://localhost:3000/...")` network warning observed in Phase 9, but the suite completed successfully.
+- `npm run lint` exited `0` with the same pre-existing 23 warnings in [`features/pre-approval/__tests__/AmountSlider.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/AmountSlider.test.tsx) and [`features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx); no new lint errors were introduced.
+- `npm run build` passed with a successful Next.js production build after the legacy directory removal and documentation finalization.
+- `rg "components/ui/pre-approval-drawer" --glob '**/CLAUDE.md'` returned zero results after the doc update, confirming the stale external CLAUDE reference was removed.
+
+Browser verification results:
+
+- Route: not applicable
+- Viewport: not applicable
+- Trigger path: not applicable
+- Observed behavior: not applicable for Phase 10; this phase was limited to deletion and documentation finalization, and the governing Phase 10 checklist requires the automated verification battery rather than an additional browser pass.
+
+Evidence summary:
+
+- The legacy compatibility surface at `components/ui/pre-approval-drawer/` has been fully removed, and the repository now resolves production pre-approval drawer imports only through `@/features/pre-approval/*`.
+- The final public surface is constrained to `contract.ts`, `routes.ts`, `selection.ts`, `drawer/server.ts`, and `drawer/client.tsx`, with zero re-export barrels and zero compatibility wrappers remaining under `features/pre-approval/`.
+- The new feature-owned CLAUDE document matches the actual architecture and the consolidated test suite under `features/pre-approval/__tests__/`, satisfying the Phase 10 documentation and completion requirements.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. No dangling imports, build failures, failing feature tests, alias wrappers, or undocumented public API remain after Phase 10.
+
+Next required action:
+
+- None. Phase 10 is complete, the migration completion criteria are satisfied, and no further pre-approval drawer migration phase remains open.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 9`
 - Batch / scope: Move the remaining drawer UI files and legacy drawer tests into `features/pre-approval`, repair all affected imports and mocks, and verify the consolidated feature-owned suite plus live drawer behavior
 - Status: `PASS`
