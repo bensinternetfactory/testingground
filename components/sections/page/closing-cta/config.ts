@@ -1,7 +1,5 @@
-import {
-  DRAWER_HASH,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 interface BaseClosingCtaBenefitIcon {
   src: string;
@@ -36,11 +34,28 @@ export interface ClosingCtaConfig {
     label: string;
     shortLabel: string;
     href: string;
-    drawer?: DrawerTriggerPayload;
+    preApprovalTrigger?: PreApprovalTrigger;
   };
   contactBlock?: {
     phone: { label: string; href: string };
     supportText: string;
+  };
+}
+
+function createHomepageTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "home",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
   };
 }
 
@@ -81,7 +96,12 @@ export const CLOSING_CTA_CONFIG: ClosingCtaConfig = {
   primaryCta: {
     label: "Get Pre-Approved \u2014 It Takes 30\u00a0Seconds",
     shortLabel: "Get Pre-Approved",
-    href: DRAWER_HASH,
+    href: preApprovalEntryHash,
+    preApprovalTrigger: createHomepageTrigger(
+      "closing-cta-primary",
+      "closing-cta-primary",
+      "footer",
+    ),
   },
   contactBlock: {
     phone: { label: "(888)\u00a0555-0199", href: "tel:+18885550199" },

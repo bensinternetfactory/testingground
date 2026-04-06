@@ -34,7 +34,7 @@ export function EquipmentClosingCta({
             <RippleCtaLink
               href={config.cta.href}
               label={config.cta.label}
-              drawer={config.cta.drawer}
+              preApprovalTrigger={config.cta.preApprovalTrigger}
               size="lg"
               section="closing-cta"
               className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"

@@ -1,10 +1,11 @@
-import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 
 export interface EquipmentClosingTile {
   label: string;
   href: string;
   iconSrc: string;
   iconAlt?: string;
+  preApprovalTrigger?: PreApprovalTrigger;
 }
 
 export interface EquipmentClosingCtaConfig {
@@ -16,7 +17,7 @@ export interface EquipmentClosingCtaConfig {
   cta?: {
     href: string;
     label: string;
-    drawer?: DrawerTriggerPayload;
+    preApprovalTrigger?: PreApprovalTrigger;
   };
   contactBlock?: {
     prompt: string;

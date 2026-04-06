@@ -61,6 +61,7 @@ export function PromoPanelBlock({ section }: { section: PromoPanelSection }) {
           <RippleCtaLink
             href={section.cta.href}
             label={section.cta.label}
+            preApprovalTrigger={section.cta.preApprovalTrigger}
             size="md"
             section="calculator-promo"
           />

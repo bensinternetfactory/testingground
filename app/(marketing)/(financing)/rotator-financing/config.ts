@@ -1,8 +1,6 @@
 import truck12 from "@/public/truck-12.jpg";
-import {
-  DRAWER_HASH,
-  ROTATOR_HERO_DRAWER,
-} from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
@@ -47,6 +45,23 @@ const ROTATOR_FINANCING_OFFERS_SPLIT_CONFIG: FinancingOffersSplitConfig = {
 
 const rotatorFaqContent = buildRotatorFaqContent();
 
+function createRotatorTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "rotator-financing",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
+  };
+}
+
 export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
   slug: "rotator-financing",
@@ -60,8 +75,18 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
         "Rotators are the largest equipment purchase most operators make. See your payment structure before you commit to the unit.",
       cta: {
         label: "Get Pre-Approved",
-        href: DRAWER_HASH,
-        drawer: ROTATOR_HERO_DRAWER,
+        href: preApprovalEntryHash,
+        preApprovalTrigger: {
+          origin: {
+            pageId: "rotator-financing",
+            sectionId: "hero-primary",
+            ctaId: "hero-main-cta",
+            placement: "hero",
+          },
+          handoff: {
+            truckType: "rotator",
+          },
+        },
       },
       phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
       trustBadges: [
@@ -78,8 +103,13 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       {
         eyebrow: "Already have a rotator in mind?",
         label: "I found a truck and need financing",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the rotator you found?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createRotatorTrigger(
+          "tertiary-strip-primary",
+          "found-truck-cta",
+          "section",
+          "How much is the rotator you found?",
+        ),
       },
       {
         eyebrow: "Need to size the deal first?",
@@ -125,14 +155,24 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
       {
         eyebrow: "Buying from another operator?",
         label: "Operator-to-operator rotator financing",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the rotator you\u2019re looking at?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createRotatorTrigger(
+          "purchase-terms-tertiary-strip",
+          "operator-to-operator-cta",
+          "section",
+          "How much is the rotator you\u2019re looking at?",
+        ),
       },
       {
         eyebrow: "Looking at an older rotator?",
         label: "See if your truck year qualifies",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the rotator you\u2019re looking at?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createRotatorTrigger(
+          "purchase-terms-tertiary-strip",
+          "truck-year-qualifier-cta",
+          "section",
+          "How much is the rotator you\u2019re looking at?",
+        ),
       },
     ],
   } satisfies TertiaryStripConfig,
@@ -146,8 +186,13 @@ export const rotatorFinancingPageConfig: EquipmentFinancingPageConfig = {
     body:
       "Heavy-recovery equipment is too expensive to guess on. Start with the structure and see whether the unit fits the business.",
     cta: {
-      href: DRAWER_HASH,
+      href: preApprovalEntryHash,
       label: "Get Pre-Approved",
+      preApprovalTrigger: createRotatorTrigger(
+        "closing-cta-primary",
+        "closing-cta-primary",
+        "footer",
+      ),
     },
     contactBlock: {
       prompt: "Prefer to talk?",

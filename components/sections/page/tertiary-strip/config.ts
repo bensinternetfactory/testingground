@@ -1,10 +1,10 @@
-import type { DrawerTriggerPayload } from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 
 export interface TertiaryStripAction {
   eyebrow: string;
   label: string;
   href: string;
-  drawer?: DrawerTriggerPayload;
+  preApprovalTrigger?: PreApprovalTrigger;
 }
 
 export interface TertiaryStripConfig {

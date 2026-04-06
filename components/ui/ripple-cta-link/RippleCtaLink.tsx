@@ -3,18 +3,14 @@
 import { useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  buildDrawerTriggerDataAttributes,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import { type PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import {
   PressFeedbackRipple,
   tapSpring,
   usePressFeedback,
   type PressModality,
 } from "@/lib/press-feedback";
-
-const MotionLink = motion.create(Link);
 
 export interface RippleCtaLinkAnalyticsPayload {
   component: "RippleCtaLink";
@@ -44,8 +40,7 @@ export interface RippleCtaLinkProps {
   section?: string;
   cardId?: string;
   disabled?: boolean;
-  drawer?: DrawerTriggerPayload;
-  drawerTitle?: string;
+  preApprovalTrigger?: PreApprovalTrigger;
 }
 
 const sizeClasses = {
@@ -80,8 +75,7 @@ export function RippleCtaLink({
   section = "",
   cardId,
   disabled = false,
-  drawer,
-  drawerTitle,
+  preApprovalTrigger,
 }: RippleCtaLinkProps) {
   const fireAnalytics = useCallback(
     (modality: PressModality) => {
@@ -186,24 +180,24 @@ export function RippleCtaLink({
     );
   }
 
-  const drawerAttributes = buildDrawerTriggerDataAttributes(
-    drawer ?? (drawerTitle ? { title: drawerTitle } : undefined),
-  );
+  const drawerAttributes = preApprovalTrigger
+    ? buildPreApprovalTriggerAttributes(preApprovalTrigger)
+    : undefined;
 
   return (
-    <MotionLink
-      href={href}
-      prefetch={prefetch}
-      {...handlers}
-      whileTap={
-        shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
-      }
-      transition={tapSpring}
-      aria-label={ariaLabel}
-      {...drawerAttributes}
-      className={sharedClassName}
-    >
-      {content}
-    </MotionLink>
+    <Link href={href} prefetch={prefetch} legacyBehavior passHref>
+      <motion.a
+        {...handlers}
+        whileTap={
+          shouldReduceMotion ? undefined : { scale: 0.96, opacity: 0.75 }
+        }
+        transition={tapSpring}
+        aria-label={ariaLabel}
+        {...drawerAttributes}
+        className={sharedClassName}
+      >
+        {content}
+      </motion.a>
+    </Link>
   );
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { buildDrawerTriggerDataAttributes } from "@/components/ui/pre-approval-drawer";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import { TileSelector } from "./TileSelector";
 import type { HeroConvertConfig } from "./config";
 
@@ -42,7 +42,9 @@ export function HeroConvert({ config }: { config: HeroConvertConfig }) {
                 key={link.label}
                 href={link.href}
                 prefetch={false}
-                {...buildDrawerTriggerDataAttributes(link.drawer)}
+                {...(link.preApprovalTrigger
+                  ? buildPreApprovalTriggerAttributes(link.preApprovalTrigger)
+                  : undefined)}
                 className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
               >
                 {link.label}

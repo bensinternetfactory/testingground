@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
-import { buildDrawerTriggerDataAttributes } from "@/components/ui/pre-approval-drawer";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
 
 interface HeroGalleryImage {
@@ -76,7 +76,9 @@ function TertiaryTextLinks({
           key={link.label}
           href={link.href}
           prefetch={false}
-          {...buildDrawerTriggerDataAttributes(link.drawer)}
+          {...(link.preApprovalTrigger
+            ? buildPreApprovalTriggerAttributes(link.preApprovalTrigger)
+            : undefined)}
           className="rounded-sm text-sm text-[#111111] underline underline-offset-4 transition-colors hover:text-[#22C55E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2"
         >
           {link.label}

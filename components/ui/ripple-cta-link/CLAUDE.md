@@ -35,6 +35,9 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 | `variant` | `"filled" \| "outline" \| "outline-dark"` | `"filled"` | Visual variant — `filled` is the default dark pill, `outline` is a transparent button with border for light backgrounds, `outline-dark` is for dark backgrounds |
 | `justify` | `"center" \| "between"` | `"center"` | Content justification — `between` pushes icon to far right (useful for full-width outline buttons) |
 | `disabled` | `boolean` | `false` | Renders a non-interactive button with the same layout when the CTA should stay visually present but unavailable |
+| `preApprovalTrigger` | `PreApprovalTrigger` | — | Canonical pre-approval trigger contract. When present on an internal link, the CTA emits `data-pre-approval-*` attributes and ignores the legacy drawer props. |
+| `drawer` | `DrawerTriggerPayload` | — | Compatibility-only legacy drawer payload. Prefer `preApprovalTrigger`. |
+| `drawerTitle` | `string` | — | Compatibility-only legacy title shortcut. Prefer `preApprovalTrigger.drawer.title`. |
 
 ## Visual States
 
@@ -83,6 +86,9 @@ import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 
 - Internal URLs: uses `next/link` with optional `prefetch`
 - External URLs (`https?://`): uses native `<a>` with `target="_blank"` and `rel="noopener noreferrer"`
+- Pre-approval CTA migration:
+  - use `preApprovalTrigger` for new caller work
+  - `drawer` and `drawerTitle` remain supported only as compatibility paths during the drawer migration
 
 ## Dependencies
 

@@ -1,9 +1,9 @@
-import { MarketingDrawerProvider } from "@/components/ui/pre-approval-drawer";
+import { PreApprovalDrawerRoot } from "@/features/pre-approval/drawer/client";
 
 export default function MarketingLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <MarketingDrawerProvider>{children}</MarketingDrawerProvider>;
+  return <PreApprovalDrawerRoot>{children}</PreApprovalDrawerRoot>;
 }

@@ -22,7 +22,7 @@ export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
           <RippleCtaLink
             href={config.cta.href}
             label={config.cta.label}
-            drawer={config.cta.drawer}
+            preApprovalTrigger={config.cta.preApprovalTrigger}
             section="hero-lead-gen"
             className="h-14 w-full bg-[#101820] text-lg font-medium text-white hover:bg-[#101820]/90 focus-visible:ring-[#101820] sm:w-auto sm:self-start sm:px-10"
           >

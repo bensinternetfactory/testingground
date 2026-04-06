@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import type { HeroLeadGenConfig } from "@/components/sections/heroes/hero-lead-gen/config";
 import type { EquipmentClosingCtaConfig } from "@/components/sections/page/equipment-closing-cta/config";
 import type { FaqSectionConfig } from "@/components/sections/page/faq";
@@ -14,6 +15,7 @@ export interface SidebarCtaConfig {
   subhead: string;
   ctaLabel: string;
   ctaHref: string;
+  preApprovalTrigger?: PreApprovalTrigger;
 }
 
 export interface InlineCtaBandConfig {
@@ -21,6 +23,7 @@ export interface InlineCtaBandConfig {
   message: string;
   ctaLabel: string;
   ctaHref: string;
+  preApprovalTrigger?: PreApprovalTrigger;
   iconSrc?: string;
   iconAlt?: string;
 }
@@ -28,6 +31,7 @@ export interface InlineCtaBandConfig {
 export interface BottomLinkItem {
   label: string;
   href: string;
+  preApprovalTrigger?: PreApprovalTrigger;
 }
 
 export interface BottomLinkGroup {
@@ -142,6 +146,7 @@ export interface PromoPanelSection extends ProgramSectionBase {
   cta: {
     href: string;
     label: string;
+    preApprovalTrigger?: PreApprovalTrigger;
   };
 }
 

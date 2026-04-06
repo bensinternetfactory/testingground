@@ -1,4 +1,5 @@
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import truck1 from "@/public/truck-1.jpg";
 import truck2 from "@/public/truck-2.jpg";
 import truck3 from "@/public/truck-3.jpg";
@@ -27,7 +28,15 @@ export const HERO_CONFIG = {
   phrases: ["lower payments", "faster funding", "better experience"],
   cta: {
     label: "See my payment",
-    href: DRAWER_HASH,
+    href: preApprovalEntryHash,
+    preApprovalTrigger: {
+      origin: {
+        pageId: "hero-showcase-rm",
+        sectionId: "hero-primary",
+        ctaId: "hero-main-cta",
+        placement: "hero",
+      },
+    } satisfies PreApprovalTrigger,
     subtext: "Get pre-approved in less than 30 seconds. No credit check",
   },
   tiles: [

@@ -4,10 +4,37 @@ import {
   buildFaqSchema,
   type FaqItemData,
 } from "@/components/sections/page/faq";
-import { DRAWER_HASH } from "@/components/ui/pre-approval-drawer";
+import type {
+  PreApprovalTrigger,
+  PreApprovalTruckType,
+} from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 const strongText = (text: string) =>
   createElement("span", { className: "font-semibold text-[#111]" }, text);
+
+const fleetFinancingPageId = "fleet-financing";
+
+function createFleetTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  options?: {
+    title?: string;
+    truckType?: PreApprovalTruckType;
+  },
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: fleetFinancingPageId,
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: options?.title ? { title: options.title } : undefined,
+    handoff: options?.truckType ? { truckType: options.truckType } : undefined,
+  };
+}
 
 const fleetFinancingFaqs: FaqItemData[] = [
   {
@@ -130,7 +157,15 @@ export const fleetFinancingPageConfig: ProgramPageConfig = {
     headline: "You've Built the Operation. Now Scale the Fleet.",
     subheadline:
       "Tow truck fleet financing structured around the business you've already built. Move at the pace of the next opportunity \u2014 not the pace of savings.",
-    cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+    cta: {
+      label: "Get Pre-Approved",
+      href: preApprovalEntryHash,
+      preApprovalTrigger: createFleetTrigger(
+        "hero-primary",
+        "hero-main-cta",
+        "hero",
+      ),
+    },
     phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
     trustBadges: [
       { label: "30-Second Pre-Approval" },
@@ -144,7 +179,12 @@ export const fleetFinancingPageConfig: ProgramPageConfig = {
     headline: "Ready to grow?",
     subhead: "Pre-approval in 30 seconds. No credit impact.",
     ctaLabel: "Get Pre-Approved",
-    ctaHref: DRAWER_HASH,
+    ctaHref: preApprovalEntryHash,
+    preApprovalTrigger: createFleetTrigger(
+      "sidebar-cta",
+      "sidebar-main-cta",
+      "section",
+    ),
   },
   sections: [
     {
@@ -213,7 +253,12 @@ export const fleetFinancingPageConfig: ProgramPageConfig = {
         eyebrow: "MORE TRUCKS. FASTER.",
         message: "See what the next truck looks like on paper in 30 seconds.",
         ctaLabel: "Get Pre-Approved",
-        ctaHref: DRAWER_HASH,
+        ctaHref: preApprovalEntryHash,
+        preApprovalTrigger: createFleetTrigger(
+          "growth-inline-cta",
+          "growth-inline-cta",
+          "inline",
+        ),
         iconSrc: "/brand-assets/benefit-icons/best/best-light.svg",
         iconAlt: "",
       },
@@ -356,7 +401,12 @@ export const fleetFinancingPageConfig: ProgramPageConfig = {
         eyebrow: "MOVE AT THE SPEED OF OPPORTUNITY.",
         message: "Know your fleet financing options in 30 seconds.",
         ctaLabel: "Get Pre-Approved",
-        ctaHref: DRAWER_HASH,
+        ctaHref: preApprovalEntryHash,
+        preApprovalTrigger: createFleetTrigger(
+          "opportunity-inline-cta",
+          "opportunity-inline-cta",
+          "inline",
+        ),
         iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-light.svg",
         iconAlt: "",
       },
@@ -444,24 +494,48 @@ export const fleetFinancingPageConfig: ProgramPageConfig = {
     tiles: [
       {
         label: "Rollback",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/rollback/rollback-green.svg",
+        preApprovalTrigger: createFleetTrigger(
+          "closing-cta-tiles",
+          "closing-tile-rollback",
+          "footer",
+          { truckType: "rollback" },
+        ),
       },
       {
         label: "Wrecker",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/wrecker/wrecker-green.svg",
+        preApprovalTrigger: createFleetTrigger(
+          "closing-cta-tiles",
+          "closing-tile-wrecker",
+          "footer",
+          { truckType: "wrecker" },
+        ),
       },
       {
         label: "Heavy Wrecker",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc:
           "/brand-assets/truck-icons/heavywrecker/heavywrecker-green.svg",
+        preApprovalTrigger: createFleetTrigger(
+          "closing-cta-tiles",
+          "closing-tile-heavy-wrecker",
+          "footer",
+          { truckType: "heavy-wrecker" },
+        ),
       },
       {
         label: "Rotator",
-        href: DRAWER_HASH,
+        href: preApprovalEntryHash,
         iconSrc: "/brand-assets/truck-icons/rotator/rotator-green.svg",
+        preApprovalTrigger: createFleetTrigger(
+          "closing-cta-tiles",
+          "closing-tile-rotator",
+          "footer",
+          { truckType: "rotator" },
+        ),
       },
     ],
   },

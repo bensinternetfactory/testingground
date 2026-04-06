@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
-import {
-  DRAWER_HASH,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -16,7 +14,11 @@ export interface TrustBadgeData {
 export interface HeroLeadGenConfig {
   headline: string;
   subheadline: string;
-  cta: { label: string; href: string; drawer?: DrawerTriggerPayload };
+  cta: {
+    label: string;
+    href: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+  };
   phone?: { display: string; href: string };
   trustBadges: TrustBadgeData[];
   heroImage: string;
@@ -31,7 +33,18 @@ export const HERO_LEAD_GEN_CONFIG: HeroLeadGenConfig = {
   headline: "Get Your Tow Truck Financed. Start Earning Tomorrow.",
   subheadline:
     "Pre-approved in 30 seconds. No credit check. New\u00a0& used. $0\u00a0down available.",
-  cta: { label: "Get Pre-Approved", href: DRAWER_HASH },
+  cta: {
+    label: "Get Pre-Approved",
+    href: preApprovalEntryHash,
+    preApprovalTrigger: {
+      origin: {
+        pageId: "hero-lead-gen",
+        sectionId: "hero-primary",
+        ctaId: "hero-main-cta",
+        placement: "hero",
+      },
+    },
+  },
   phone: { display: "(888)\u00a0555-0199", href: "tel:+18885550199" },
   trustBadges: [
     { label: "30-Second Pre-Approval" },

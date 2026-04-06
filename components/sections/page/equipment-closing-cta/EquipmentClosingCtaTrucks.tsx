@@ -1,4 +1,6 @@
+import Link from "next/link";
 import Image from "next/image";
+import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
 import type { EquipmentClosingCtaConfig } from "./config";
 
 export function EquipmentClosingCtaTrucks({
@@ -34,8 +36,11 @@ export function EquipmentClosingCtaTrucks({
           <ul className="mt-10 grid w-full grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             {tiles.map((tile) => (
               <li key={tile.label}>
-                <a
+                <Link
                   href={tile.href}
+                  {...(tile.preApprovalTrigger
+                    ? buildPreApprovalTriggerAttributes(tile.preApprovalTrigger)
+                    : {})}
                   aria-label={`Get pre-approved for a ${tile.label.toLowerCase()}`}
                   className="group flex h-full w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-white/15 bg-white/5 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#22C55E] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#101820] md:p-6"
                 >
@@ -49,7 +54,7 @@ export function EquipmentClosingCtaTrucks({
                   <span className="text-sm font-medium text-white md:text-base">
                     {tile.label}
                   </span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

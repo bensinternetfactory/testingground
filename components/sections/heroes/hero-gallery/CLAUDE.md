@@ -104,4 +104,4 @@ Amount validation is handled by the destination page at `/pre-approval`. When in
 - `next/navigation` — `useRouter` in HeroInput for form submission navigation
 - `lucide-react` — `CircleDollarSign` (input icon), `ChevronRight` (tertiary link icon)
 - `@/components/ui/ripple-cta-link` — mobile CTA + tertiary action links
-- `@/components/ui/pre-approval-drawer` — `DRAWER_HASH` constant for drawer integration
+- `@/features/pre-approval/drawer/server` — `preApprovalEntryHash` for drawer-entry hash integration

@@ -34,6 +34,16 @@
 - Minimum `agent-browser` validation for user-facing work: open the changed page, wait for load completion, confirm the page renders, and verify at least one relevant DOM interaction or assertion for the changed feature.
 - Use `npm start` only when you specifically need a production-mode verification pass after the build succeeds.
 - If adding tests, place them near features as `*.test.ts` / `*.test.tsx` or in `__tests__/` and document the run command in `package.json`.
+- For the pre-approval drawer migration, do not advance phases by judgment alone. Use:
+  - `plans/pre-approval-drawer-migration-spec.md` as the governing spec
+  - `plans/pre-approval-drawer-verification-matrix.md` for requirement-to-test traceability
+  - `plans/pre-approval-drawer-phase-gates.md` for the active checklist and go/no-go gate
+  - `plans/pre-approval-drawer-execution-log.md` for dated evidence and outcomes
+- For that migration, every implementation batch must:
+  - identify the active phase before editing code
+  - complete the relevant verification steps before claiming the batch is done
+  - update the phase checklist and execution log in the same batch
+  - stop immediately if a gate is not satisfied or evidence is missing
 
 ## Commit & Pull Request Guidelines
 - Follow the repository’s commit style: concise, imperative subjects (for example `Add ...`, `Fix ...`, `Update ...`).
@@ -46,3 +56,4 @@
 
 ## Agent-Specific Notes
 - For reusable component directories, include a local `CLAUDE.md` covering usage, props/config, and server/client boundaries.
+- For the pre-approval drawer migration, agents must treat checklist and log updates as part of the implementation, not optional documentation cleanup.

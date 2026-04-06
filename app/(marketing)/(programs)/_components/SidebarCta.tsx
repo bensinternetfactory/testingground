@@ -22,6 +22,7 @@ export function SidebarCta({ config }: { config: SidebarCtaConfig }) {
         <RippleCtaLink
           href={config.ctaHref}
           label={config.ctaLabel}
+          preApprovalTrigger={config.preApprovalTrigger}
           size="sm"
           section="sidebar-cta"
           className="!w-full !bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"

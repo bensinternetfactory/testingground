@@ -1,11 +1,9 @@
 import truck1 from "@/public/truck-1.jpg";
 import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
-import {
-  DRAWER_HASH,
-  type DrawerSelectionTrigger,
-  type DrawerTriggerPayload,
-} from "@/components/ui/pre-approval-drawer";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import type { PreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -17,14 +15,24 @@ export interface SelectionTileData {
   icon?: ReactNode;
 }
 
+export interface HeroConvertCtaConfig {
+  label: string;
+  href: string;
+  preApprovalSelectionTrigger?: PreApprovalSelectionTrigger;
+}
+
 export interface HeroConvertConfig {
   headline: string;
   bodyCopy: string;
   selectionPrompt: string;
   selectionRequiredMessage: string;
   tiles: SelectionTileData[];
-  cta: { label: string; href: string; drawer?: DrawerSelectionTrigger };
-  tertiaryLinks: { label: string; href: string; drawer?: DrawerTriggerPayload }[];
+  cta: HeroConvertCtaConfig;
+  tertiaryLinks: {
+    label: string;
+    href: string;
+    preApprovalTrigger?: PreApprovalTrigger;
+  }[];
   viewAllLink?: { label: string; href: string };
   microcopy?: string;
   disclaimer?: string;
@@ -47,7 +55,24 @@ export const HERO_CONVERT_CONFIG: HeroConvertConfig = {
     { id: "heavy-wrecker", label: "Heavy Wrecker" },
     { id: "rotator", label: "Rotator" },
   ],
-  cta: { label: "Check Your Options", href: DRAWER_HASH },
+  cta: {
+    label: "Check Your Options",
+    href: preApprovalEntryHash,
+    preApprovalSelectionTrigger: {
+      origin: {
+        pageId: "hero-convert-geico",
+        sectionId: "hero-primary",
+        ctaId: "hero-main-cta",
+        placement: "hero",
+      },
+      truckTypeByTileId: {
+        rollback: "rollback",
+        wrecker: "wrecker",
+        "heavy-wrecker": "heavy-wrecker",
+        rotator: "rotator",
+      },
+    },
+  },
   tertiaryLinks: [
     { label: "Continue Your Saved Application", href: "#saved" },
     { label: "Talk to a Specialist", href: "#specialist" },

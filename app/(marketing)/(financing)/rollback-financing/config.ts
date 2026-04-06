@@ -3,15 +3,14 @@ import truck4 from "@/public/truck-4.jpg";
 import truck6 from "@/public/truck-6.jpg";
 import truck11 from "@/public/truck-11.jpg";
 import truck15 from "@/public/truck-15.jpg";
+import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
+import { preApprovalEntryHash } from "@/features/pre-approval/drawer/server";
 import type { EquipmentFinancingPageConfig } from "../_components/page-config-types";
 import {
   SHARED_FINANCING_FOOTNOTES_CONFIG,
   buildFaqSection,
 } from "../_components/shared-config";
-import {
-  DRAWER_HASH,
-  ROLLBACK_HERO_DRAWER,
-} from "@/components/ui/pre-approval-drawer";
+import { rollbackHeroPreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
 import {
   ROLLBACK_FINANCING_OFFERS_SPLIT_CONFIG,
 } from "@/components/sections/page/financing-offers-split/config";
@@ -22,6 +21,23 @@ import type {
 /* ── Page Config ─────────────────────────────────────────────────── */
 
 const rollbackFaqContent = buildRollbackFaqContent();
+
+function createRollbackTrigger(
+  sectionId: string,
+  ctaId: string,
+  placement: PreApprovalTrigger["origin"]["placement"],
+  title?: string,
+): PreApprovalTrigger {
+  return {
+    origin: {
+      pageId: "rollback-financing",
+      sectionId,
+      ctaId,
+      placement,
+    },
+    drawer: title ? { title } : undefined,
+  };
+}
 
 export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
   /* ── Page identity & metadata ──────────────────────────── */
@@ -39,8 +55,8 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
         "Select a rollback type to enable the pre-approval action.",
       cta: {
         label: "Get Pre-Approved",
-        href: DRAWER_HASH,
-        drawer: ROLLBACK_HERO_DRAWER,
+        href: preApprovalEntryHash,
+        preApprovalSelectionTrigger: rollbackHeroPreApprovalSelectionTrigger,
       },
       footnoteMarkers: {
         "30 seconds": "¹",
@@ -78,8 +94,13 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       {
         eyebrow: "Already have a truck in mind?",
         label: "I found a truck and need financing",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the rollback you found?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createRollbackTrigger(
+          "tertiary-strip-primary",
+          "found-truck-cta",
+          "section",
+          "How much is the rollback you found?",
+        ),
       },
       {
         eyebrow: "Haven't found a truck?",
@@ -130,8 +151,13 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
       {
         eyebrow: "Looking at an older rollback?",
         label: "See if your truck year qualifies",
-        href: DRAWER_HASH,
-        drawer: { title: "How much is the rollback you're looking at?" },
+        href: preApprovalEntryHash,
+        preApprovalTrigger: createRollbackTrigger(
+          "purchase-terms-tertiary-strip",
+          "truck-year-qualifier-cta",
+          "section",
+          "How much is the rollback you're looking at?",
+        ),
       },
     ],
   },
@@ -145,8 +171,13 @@ export const rollbackFinancingPageConfig: EquipmentFinancingPageConfig = {
     body:
       "You do not need corporate runaround. You need to know whether the rollback works and what the payment looks like.",
     cta: {
-      href: DRAWER_HASH,
+      href: preApprovalEntryHash,
       label: "Get Pre-Approved",
+      preApprovalTrigger: createRollbackTrigger(
+        "closing-cta-primary",
+        "closing-cta-primary",
+        "footer",
+      ),
     },
     contactBlock: {
       prompt: "Prefer to talk?",

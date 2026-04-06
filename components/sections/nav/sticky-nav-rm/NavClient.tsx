@@ -2,10 +2,10 @@
 
 import { useId, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { resolveDrawerTriggerHref } from "@/components/ui/pre-approval-drawer/config";
 import { NavHeaderActions } from "./NavHeaderActions";
 import { NavMobileOverlay } from "./NavMobileOverlay";
 import type { NavSection } from "./nav-data";
+import { buildStickyNavPreApprovalCtas } from "./preApprovalCta";
 import { useMobileNavState } from "./useMobileNavState";
 
 interface NavClientProps {
@@ -23,7 +23,8 @@ export function NavClient({ sections }: NavClientProps) {
     toggleMobile,
     toggleSection,
   } = useMobileNavState();
-  const primaryCtaHref = resolveDrawerTriggerHref(pathname);
+  const { desktopTrigger, href, mobileTrigger } =
+    buildStickyNavPreApprovalCtas(pathname);
 
   return (
     <>
@@ -31,7 +32,8 @@ export function NavClient({ sections }: NavClientProps) {
         dialogId={dialogId}
         mobileOpen={mobileOpen}
         onToggleMobile={toggleMobile}
-        primaryCtaHref={primaryCtaHref}
+        primaryCtaHref={href}
+        primaryCtaTrigger={desktopTrigger}
         toggleButtonRef={toggleButtonRef}
       />
 
@@ -42,7 +44,8 @@ export function NavClient({ sections }: NavClientProps) {
           openSection={openSection}
           onToggleSection={toggleSection}
           onClose={closeMobile}
-          primaryCtaHref={primaryCtaHref}
+          primaryCtaHref={href}
+          primaryCtaTrigger={mobileTrigger}
           restoreFocusRef={toggleButtonRef}
         />
       ) : null}
