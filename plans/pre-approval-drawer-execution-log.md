@@ -83,6 +83,112 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 3`
+- Batch / scope: Wrap the existing drawer runtime in the feature-owned root contract with session identity, event emission, close reasons, and failure isolation while preserving the live UX
+- Status: `PASS`
+
+Changes made:
+
+- Added the feature-owned runtime root in [`features/pre-approval/drawer/client.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/client.tsx) with `PreApprovalDrawerRoot`, `useOpenPreApproval()`, `usePreApprovalSession()`, internal runtime composition, and an error boundary that isolates drawer runtime failures from the page shell.
+- Extended the runtime session model in [`features/pre-approval/drawer/runtime/session.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/runtime/session.ts) to generate a fresh `sessionId` and `openedAt` for every open.
+- Updated [`components/ui/pre-approval-drawer/DrawerContext.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/DrawerContext.tsx) to own the new session lifecycle, emit `drawer_opened` / `amount_changed` / `drawer_continued` / `drawer_closed` events, isolate `onEvent` failures, and preserve the existing visible drawer state transitions.
+- Threaded explicit close reasons through the existing UI/runtime paths in [`components/ui/pre-approval-drawer/PreApprovalDrawer.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/PreApprovalDrawer.tsx) and [`components/ui/pre-approval-drawer/RouteResetListener.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/RouteResetListener.tsx) for backdrop, escape, close button, drag dismiss, route change, and programmatic closes.
+- Kept the mount location unchanged in [`app/(marketing)/layout.tsx`](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/layout.tsx) while swapping that location to the new root contract, and converted [`components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx) into a compatibility wrapper over the same root.
+- Added Phase 3 coverage in [`features/pre-approval/__tests__/drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx), [`features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx), [`components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx), and [`components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx).
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to make `Phase 3` the only active phase, mark the Phase 2 precondition satisfied, and record the Phase 3 checklist and gate outcome.
+
+Verification matrix IDs covered:
+
+- `PA-INV-12`
+- `PA-INV-13`
+- `PA-INV-14`
+- `PA-INV-15`
+- `PA-INV-16`
+- `PA-INV-25`
+- `PA-INV-01`
+- `PA-INV-02`
+- `PA-INV-03`
+- `PA-INV-05`
+- `PA-INV-07`
+
+Commands run:
+
+- `npm test -- features/pre-approval/__tests__/drawer-root.test.tsx features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx features/pre-approval/__tests__/drawer-runtime.test.ts components/ui/pre-approval-drawer/__tests__/DrawerContext.test.tsx components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP -sTCP:LISTEN`
+- `PORT=3005 npm run dev`
+- `agent-browser open http://127.0.0.1:3005/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser snapshot -i`
+- `agent-browser click @e15`
+- `agent-browser wait 500`
+- `agent-browser snapshot -i`
+- `agent-browser get url`
+- `agent-browser click @e57`
+- `agent-browser wait 500`
+- `agent-browser snapshot -i`
+- `agent-browser click @e59`
+- `agent-browser wait 500`
+- `agent-browser get url`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3005/rollback-financing#get-pre-approved`
+- `agent-browser wait 500`
+- `agent-browser snapshot -i`
+- `agent-browser get url`
+- `agent-browser click @e57`
+- `agent-browser snapshot -i`
+- `agent-browser click @e37`
+- `agent-browser wait 500`
+- `agent-browser get url`
+
+Automated verification results:
+
+- `PA-INV-12` and `PA-INV-13`: [`drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx) verifies every open emits a fresh `sessionId` and that opening while already open replaces the session instead of merging prior state.
+- `PA-INV-14`: [`drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx) verifies `close()` without an explicit reason emits `drawer_closed` with `reason: "programmatic"` and preserves the same session identity for the close event.
+- `PA-INV-15`: [`drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx) verifies a throwing `onEvent` handler is caught and logged while the session still opens and amount changes still apply.
+- `PA-INV-16`: [`drawer-root-error-boundary.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root-error-boundary.test.tsx) verifies a thrown drawer runtime error does not unmount the marketing page shell beneath the root.
+- `PA-INV-25`: [`PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx) verifies backdrop, escape, close-button, and drag-dismiss close reasons; [`RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx) verifies route-sync reset emits `reason: "route-change"`.
+- Event payload shape: [`drawer-root.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-root.test.tsx) verifies the emitted `drawer_opened`, `amount_changed`, and `drawer_closed` payloads include the documented identity and session fields.
+- Baseline invariants remained green in the same targeted run: [`PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx) still verifies the amount-only continue href and immediate scroll unlock, and [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx) plus [`RouteResetListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/RouteResetListener.test.tsx) remained green.
+- Targeted suite result: `7` test files passed, `58` tests passed. The run emitted the same existing happy-dom `localhost:3000` fetch noise from the legacy direct-hash suite, but no assertion failed.
+- `npm run lint`: passed with the same pre-existing unused-variable warnings in the test motion mocks; no new Phase 3 lint errors were introduced.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop
+- Trigger path: click the same-page legacy CTA `Already have a truck in mind? I found a truck and need financing`, verify the drawer state, close with the desktop close button, reopen, then Continue
+- Observed behavior: the drawer opened on the same page with the title `How much is the rollback you found?`, the current URL stayed `http://127.0.0.1:3005/rollback-financing`, the close button dismissed the drawer cleanly, and Continue navigated immediately to `http://127.0.0.1:3005/pre-approval?amount=100000` without an intermediate close step.
+
+- Route: `/rollback-financing#get-pre-approved`
+- Viewport: mobile (`iPhone 14`)
+- Trigger path: direct-load hash open, confirm the normalized URL, tap the mounted amount slider, then Continue
+- Observed behavior: the drawer opened on first load with the default title `Estimate how much financing you need.`, the URL normalized immediately to `http://127.0.0.1:3005/rollback-financing`, tapping the slider in the mounted mobile sheet changed the amount from `100000` to `260000` during the scroll-lock handoff window, and Continue navigated immediately to `http://127.0.0.1:3005/pre-approval?amount=260000`.
+
+Evidence summary:
+
+- The public runtime contract is now rooted at `PreApprovalDrawerRoot`, but the drawer still mounts once in the marketing layout and still renders the same modal/sheet UI in the same place.
+- Every open now receives a stable session identity, replacement opens discard prior session state, all required close paths emit explicit reasons, and the continue path remains immediate.
+- `onEvent` failures and internal runtime render failures are both isolated, and the desktop/mobile browser passes did not show a visible UX regression.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None for `Phase 3`.
+
+Next required action:
+
+- Stop after `Phase 3`. Do not start `Phase 4` until explicitly instructed.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 2` follow-up / baseline decision
 - Batch / scope: Close the commit-triage loop by deciding whether the drawer-critical recent history is an actual blocker
 - Status: `PASS`

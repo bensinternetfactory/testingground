@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { DRAWER_HASH } from "./config";
+import type { PreApprovalCloseReason } from "@/features/pre-approval/contract";
 import { createHashOpenPreApprovalTrigger } from "@/features/pre-approval/drawer/runtime/parser";
 
 export function RouteResetListener({
@@ -10,7 +11,7 @@ export function RouteResetListener({
   reset,
 }: {
   open: (trigger?: ReturnType<typeof createHashOpenPreApprovalTrigger>) => void;
-  reset: () => void;
+  reset: (reason?: PreApprovalCloseReason) => void;
 }) {
   const pathname = usePathname();
   const previousPathnameRef = useRef(pathname);
@@ -30,7 +31,7 @@ export function RouteResetListener({
       // Navigated without drawer hash — close and reset to defaults.
       // AnimatePresence will run the exit animation, then onExitComplete
       // calls unlockBodyScroll.
-      reset();
+      reset("route-change");
     }
   }, [pathname, open, reset]);
 

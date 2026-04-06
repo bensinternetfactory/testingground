@@ -51,8 +51,11 @@ function isTriggerSource(value: string | undefined): value is DrawerTriggerSourc
 
 export function createDrawerSession(
   trigger?: PreApprovalDrawerOpenTrigger,
+  options?: {
+    pathname?: string | null;
+  },
 ): DrawerSessionState {
-  return createPreApprovalDrawerSession(trigger);
+  return createPreApprovalDrawerSession(trigger, options);
 }
 
 export function getClosedDrawerSession(): DrawerSessionState {

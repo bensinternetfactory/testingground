@@ -15,8 +15,8 @@ Rules:
 
 - [ ] `Phase 0` active
 - [ ] `Phase 1` active
-- [x] `Phase 2` active
-- [ ] `Phase 3` active
+- [ ] `Phase 2` active
+- [x] `Phase 3` active
 - [ ] `Phase 4` active
 - [ ] `Phase 5` active
 - [ ] `Phase 6` active
@@ -105,38 +105,38 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 2 gate passed.
+- [x] Phase 2 gate passed.
 
 Execution checklist:
 
-- [ ] Fresh `sessionId` generation verified.
-- [ ] Replacement-open semantics verified.
-- [ ] Default close reason verified.
-- [ ] Backdrop close reason verified.
-- [ ] Escape close reason verified.
-- [ ] Close-button reason verified.
-- [ ] Drag-dismiss reason verified.
-- [ ] Route-change reason verified.
-- [ ] Event payload shape verified.
-- [ ] `onEvent` failure isolation verified.
-- [ ] Runtime error isolation verified.
-- [ ] Touch interaction checked during mount/scroll-lock handoff.
-- [ ] Continue behavior verified on desktop.
-- [ ] Continue behavior verified on mobile.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with evidence for `PA-INV-12` `PA-INV-13` `PA-INV-14` `PA-INV-15` `PA-INV-16` `PA-INV-25`.
+- [x] Fresh `sessionId` generation verified.
+- [x] Replacement-open semantics verified.
+- [x] Default close reason verified.
+- [x] Backdrop close reason verified.
+- [x] Escape close reason verified.
+- [x] Close-button reason verified.
+- [x] Drag-dismiss reason verified.
+- [x] Route-change reason verified.
+- [x] Event payload shape verified.
+- [x] `onEvent` failure isolation verified.
+- [x] Runtime error isolation verified.
+- [x] Touch interaction checked during mount/scroll-lock handoff.
+- [x] Continue behavior verified on desktop.
+- [x] Continue behavior verified on mobile.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with evidence for `PA-INV-12` `PA-INV-13` `PA-INV-14` `PA-INV-15` `PA-INV-16` `PA-INV-25`.
 
 Go / no-go gate:
 
-- [ ] Go: runtime contract changed without visible UX regression.
-- [ ] No-go conditions checked: no mount-location drift, no animated-close regression, no focus/motion regression.
+- [x] Go: runtime contract changed without visible UX regression.
+- [x] No-go conditions checked: no mount-location drift, no animated-close regression, no focus/motion regression.
 
 ## Phase 4: Convert the Compatibility Facade
 
 Preconditions:
 
-- [ ] Phase 3 gate passed.
+- [x] Phase 3 gate passed.
 
 Execution checklist:
 

@@ -8,7 +8,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { act, render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 // ── Mocks ─────────────────────────────────────────────────────────────
@@ -32,6 +32,14 @@ vi.mock("@/lib/press-feedback", () => ({
 
 // Track onExitComplete so tests can trigger it
 let capturedOnExitComplete: (() => void) | null = null;
+let capturedSheetDragEnd:
+  | ((_: unknown, info: PanInfoLike) => void)
+  | null = null;
+
+interface PanInfoLike {
+  offset: { y: number };
+  velocity: { y: number };
+}
 
 vi.mock("framer-motion", () => {
   function createMotionComponent(tag: string) {
@@ -54,6 +62,15 @@ vi.mock("framer-motion", () => {
         onDragEnd,
         ...domProps
       } = props;
+
+      if (
+        tag === "div" &&
+        domProps.role === "dialog" &&
+        typeof onDragEnd === "function"
+      ) {
+        capturedSheetDragEnd = onDragEnd as (_: unknown, info: PanInfoLike) => void;
+      }
+
       return React.createElement(tag, { ...domProps, ref });
     });
 
@@ -96,6 +113,7 @@ vi.mock("../scroll-lock", () => ({
 import { unlockBodyScroll } from "../scroll-lock";
 import { DrawerStateProvider, useDrawer } from "../DrawerContext";
 import { PreApprovalDrawer } from "../PreApprovalDrawer";
+import type { PreApprovalEvent } from "@/features/pre-approval/contract";
 
 // ── Test Helpers ──────────────────────────────────────────────────────
 
@@ -120,9 +138,15 @@ function OpenButton() {
   );
 }
 
-function TestHarness({ children }: { children?: React.ReactNode }) {
+function TestHarness({
+  children,
+  onEvent,
+}: {
+  children?: React.ReactNode;
+  onEvent?: (event: PreApprovalEvent) => void;
+}) {
   return (
-    <DrawerStateProvider>
+    <DrawerStateProvider onEvent={onEvent}>
       <OpenButton />
       <PreApprovalDrawer />
       {children}
@@ -153,6 +177,7 @@ beforeEach(() => {
   });
 
   capturedOnExitComplete = null;
+  capturedSheetDragEnd = null;
   vi.clearAllMocks();
 });
 
@@ -222,7 +247,8 @@ describe("PreApprovalDrawer", () => {
 
   it("closes on backdrop click", async () => {
     const user = userEvent.setup();
-    render(<TestHarness />);
+    const onEvent = vi.fn();
+    render(<TestHarness onEvent={onEvent} />);
 
     await user.click(screen.getByText("open-drawer"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -234,11 +260,18 @@ describe("PreApprovalDrawer", () => {
     await user.click(backdrop);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(onEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: "backdrop",
+        type: "drawer_closed",
+      }),
+    );
   });
 
   it("closes on Escape key", async () => {
     const user = userEvent.setup();
-    render(<TestHarness />);
+    const onEvent = vi.fn();
+    render(<TestHarness onEvent={onEvent} />);
 
     await user.click(screen.getByText("open-drawer"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -246,11 +279,18 @@ describe("PreApprovalDrawer", () => {
     await user.keyboard("{Escape}");
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(onEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: "escape",
+        type: "drawer_closed",
+      }),
+    );
   });
 
   it("closes on close button click (desktop)", async () => {
     const user = userEvent.setup();
-    render(<TestHarness />);
+    const onEvent = vi.fn();
+    render(<TestHarness onEvent={onEvent} />);
 
     await user.click(screen.getByText("open-drawer"));
 
@@ -258,6 +298,55 @@ describe("PreApprovalDrawer", () => {
     await user.click(closeButton);
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(onEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: "close-button",
+        type: "drawer_closed",
+      }),
+    );
+  });
+
+  it("closes on drag dismiss (mobile) and records the drag-dismiss reason", async () => {
+    const user = userEvent.setup();
+    const onEvent = vi.fn();
+
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: false,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        media: query,
+        onchange: null,
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    render(<TestHarness onEvent={onEvent} />);
+
+    await user.click(screen.getByText("open-drawer"));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(capturedSheetDragEnd).toBeTruthy();
+
+    act(() => {
+      capturedSheetDragEnd?.(
+        {},
+        {
+          offset: { y: 140 },
+          velocity: { y: 640 },
+        },
+      );
+    });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(onEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: "drag-dismiss",
+        type: "drawer_closed",
+      }),
+    );
   });
 
   it("navigates with the baseline amount-only continue href", async () => {
@@ -288,12 +377,19 @@ describe("PreApprovalDrawer", () => {
 
   it("calls unlockBodyScroll on Continue (no close animation)", async () => {
     const user = userEvent.setup();
-    render(<TestHarness />);
+    const onEvent = vi.fn();
+    render(<TestHarness onEvent={onEvent} />);
 
     await user.click(screen.getByText("open-drawer"));
     await user.click(screen.getByText("Continue to Pre-Approval"));
 
     expect(unlockBodyScroll).toHaveBeenCalled();
+    expect(onEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        href: "/pre-approval?amount=100000",
+        type: "drawer_continued",
+      }),
+    );
   });
 
   it("calls unlockBodyScroll on unmount (safety net)", () => {

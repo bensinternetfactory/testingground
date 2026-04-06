@@ -24,6 +24,7 @@ import {
   tapSpring,
   usePressFeedback,
 } from "@/lib/press-feedback";
+import type { PreApprovalCloseReason } from "@/features/pre-approval/contract";
 import { useDrawer } from "./DrawerContext";
 import { AmountSlider } from "./AmountSlider";
 import { unlockBodyScroll, updateScrollableRef } from "./scroll-lock";
@@ -92,7 +93,7 @@ function useDialogA11y({
 }: {
   dialogRef: RefObject<HTMLDivElement | null>;
   isOpen: boolean;
-  close: () => void;
+  close: (reason: PreApprovalCloseReason) => void;
 }) {
   const previousActiveElement = useRef<Element | null>(null);
 
@@ -110,7 +111,7 @@ function useDialogA11y({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.stopPropagation();
-        close();
+        close("escape");
         return;
       }
 
@@ -163,6 +164,7 @@ export function PreApprovalDrawer() {
   const {
     amount,
     close,
+    continueTo,
     heroTruckType,
     isOpen,
     setAmount,
@@ -199,9 +201,12 @@ export function PreApprovalDrawer() {
     };
   }, []);
 
-  const requestClose = useCallback(() => {
-    close();
-  }, [close]);
+  const requestClose = useCallback(
+    (reason: PreApprovalCloseReason) => {
+      close(reason);
+    },
+    [close],
+  );
 
   useDialogA11y({ dialogRef, isOpen, close: requestClose });
 
@@ -212,7 +217,7 @@ export function PreApprovalDrawer() {
       info.offset.y >= Math.min(DRAG_DISMISS_DISTANCE, sheetHeight * 0.25);
 
     if (shouldDismiss) {
-      close();
+      close("drag-dismiss");
     }
     // When not dismissed, framer-motion automatically snaps back to the
     // animate="visible" target (y: 0) using the sheet's transition spring.
@@ -248,6 +253,8 @@ export function PreApprovalDrawer() {
       truckType,
     });
 
+    continueTo(href);
+
     // Skip close() to avoid the exit animation racing the route transition.
     // Unlock scroll immediately; the unmount safety-net is a no-op fallback.
     unlockBodyScroll();
@@ -273,7 +280,7 @@ export function PreApprovalDrawer() {
             transition={
               prefersReducedMotion ? { duration: 0 } : { duration: 0.18 }
             }
-            onClick={requestClose}
+            onClick={() => requestClose("backdrop")}
             className={`fixed inset-0 ${BACKDROP_Z_INDEX} bg-black/35`}
             style={{ touchAction: "none" }}
             aria-hidden="true"
@@ -285,7 +292,7 @@ export function PreApprovalDrawer() {
               descriptionId={descriptionId}
               prefersReducedMotion={prefersReducedMotion}
               titleId={titleId}
-              onClose={requestClose}
+              onClose={() => requestClose("close-button")}
               onContinue={handleContinue}
               amount={amount}
               onAmountChange={setAmount}

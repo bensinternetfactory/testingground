@@ -4,6 +4,7 @@ import { render, cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DrawerStateProvider, useDrawer } from "../DrawerContext";
 import { RouteResetListener } from "../RouteResetListener";
+import type { PreApprovalEvent } from "@/features/pre-approval/contract";
 import {
   DRAWER_DEFAULT_TITLE,
   DRAWER_HASH,
@@ -62,9 +63,9 @@ function RouteSyncHarness() {
   );
 }
 
-function renderWithProvider() {
+function renderWithProvider(onEvent?: (event: PreApprovalEvent) => void) {
   return render(
-    <DrawerStateProvider>
+    <DrawerStateProvider onEvent={onEvent}>
       <RouteSyncHarness />
     </DrawerStateProvider>,
   );
@@ -183,5 +184,27 @@ describe("RouteResetListener", () => {
     expect(screen.getByTestId("originCtaId")).toHaveTextContent("legacy-cta");
     expect(screen.getByTestId("source")).toHaveTextContent("standard");
     expect(screen.getByTestId("heroTruckType")).toHaveTextContent("none");
+  });
+
+  it("records the route-change close reason when route sync resets an open session", async () => {
+    const user = userEvent.setup();
+    const onEvent = vi.fn();
+    const { rerender } = renderWithProvider(onEvent);
+
+    await user.click(screen.getByText("open-hero"));
+
+    mockPathname = "/rollback-financing";
+    rerender(
+      <DrawerStateProvider onEvent={onEvent}>
+        <RouteSyncHarness />
+      </DrawerStateProvider>,
+    );
+
+    expect(onEvent).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        reason: "route-change",
+        type: "drawer_closed",
+      }),
+    );
   });
 });
