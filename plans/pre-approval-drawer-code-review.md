@@ -2,6 +2,17 @@
 
 Scope: `components/ui/pre-approval-drawer`
 
+## Instructions for Claude
+
+**This file is the source of truth for drawer cleanup work.** Every time you work on this drawer:
+1. Read this file first to know what's done and what's not.
+2. When you complete a finding, strikethrough the heading, add ✅ and the commit hash.
+3. Log what you did and what you found in `plans/pre-approval-drawer-cleanup-log.md`.
+4. Update the roadmap at the bottom with commit hashes.
+5. Do this immediately after committing — not when asked.
+
+---
+
 Review lenses:
 - `vercel-composition-patterns`
 - `vercel-react-best-practices`
@@ -9,8 +20,7 @@ Review lenses:
 
 Validation snapshot:
 - `npx eslint components/ui/pre-approval-drawer` passes
-- `npm test -- components/ui/pre-approval-drawer/__tests__/triggers.test.ts` passes
-- Existing automated coverage is limited to trigger/helper utilities and does not cover rendered drawer behavior
+- `npm test -- components/ui/pre-approval-drawer` passes (69 tests)
 
 ## Findings
 
@@ -28,7 +38,7 @@ Validation snapshot:
 - Why it matters: this is the monolithic shape the composition skill warns against. It hides behavior behind one provider, makes the drawer difficult to reuse outside the marketing layout, and couples UI structure to a specific trigger mechanism.
 - Recommended improvement: split the module into a smaller state provider plus explicit trigger/listener/render pieces, or expose a compound API such as `Drawer.Provider`, `Drawer.TriggerListener`, and `Drawer.Content`.
 
-### ~~3. Medium: route changes are handled by forced remounts instead of explicit lifecycle logic~~ ✅
+### ~~3. Medium: route changes are handled by forced remounts instead of explicit lifecycle logic~~ ✅ (83fd815)
 - Lens: Composition / React
 - File: `components/ui/pre-approval-drawer/MarketingDrawerProvider.tsx:7-14`
 - What I found: `MarketingDrawerProvider` uses `key={pathname}` to remount the entire drawer provider on every pathname change.
@@ -48,6 +58,7 @@ Validation snapshot:
 - What I found: scroll locking uses module-level flags, saved styles, a mutable scrollable element ref, and a global `[data-freeze-on-lock]` query.
 - Why it matters: this is fragile if another modal, drawer, or overlay adopts the same helper. There is no reference counting, no ownership model, and no isolation between concurrent locks. The global selector also creates cross-component coupling that is not visible from the public API.
 - Recommended improvement: move scroll-lock ownership behind an overlay manager or a scoped lock API that can support nesting, cleanup guarantees, and explicit freeze targets.
+- **Assessment:** only a problem if a second overlay adopts this helper. Only one drawer exists today. Defer unless another overlay is added.
 
 ### 6. Medium: the context value is broad and couples all consumers to all session changes
 - Lens: Composition / React
@@ -55,8 +66,9 @@ Validation snapshot:
 - What I found: one context publishes the entire state object plus all actions, and `useDrawer()` returns all of it as a single bundle.
 - Why it matters: every context consumer is now subscribed to amount changes, open/close changes, title changes, and hero-truck metadata whether it needs them or not. The problem is small today, but the provider already sits high in the marketing tree and the slider changes state frequently.
 - Recommended improvement: split read/write concerns or expose narrower hooks for trigger-only consumers versus drawer-content consumers.
+- **Assessment:** consumer count is tiny and slider is the only frequent updater. Defer unless perf issues appear.
 
-### ~~7. Medium: behavioral test coverage stops at pure helper functions~~ ✅
+### ~~7. Medium: behavioral test coverage stops at pure helper functions~~ ✅ (ce98c89)
 - Lens: React / Motion
 - File: `components/ui/pre-approval-drawer/__tests__/triggers.test.ts:1-165`
 - What I found: the only tests exercise URL and trigger helpers. There are no tests for actual rendered drawer behavior.
@@ -70,6 +82,7 @@ Validation snapshot:
 - What I found: the barrel re-exports client-only modules (`DrawerProvider`, `useDrawer`) alongside server-safe constants (`DRAWER_HASH`, URL builders). Several server-side config files import from the barrel.
 - Why it matters: local barrels are not as expensive as third-party barrels, but this one blurs the server/client boundary and makes accidental import pollution more likely as the module grows.
 - Recommended improvement: keep server-safe exports in a server-safe entrypoint and expose client APIs from a separate import path.
+- **Assessment:** theoretical risk, no current bug. Defer.
 
 ### 9. Low: currency formatting work is recreated on every slider update
 - Lens: React
@@ -84,12 +97,20 @@ Validation snapshot:
 - What I found: the drawer uses transform/opacity-based motion and respects reduced motion, but the frame logic duplicates animation branching across separate desktop and mobile implementations.
 - Why it matters: this is not a bug. It becomes a maintenance problem if more motion states are added, because timing, accessibility, and exit behavior will need to stay aligned across two branches.
 - Recommended improvement: extract a shared motion config layer or common frame primitive if the interaction model expands.
+- **Assessment:** maintenance concern only, no bug. Defer unless motion states expand.
+
+## Bug fixes applied during cleanup
+
+### ~~Bug: close animation races route transition on Continue~~ ✅ (ce98c89)
+- File: `components/ui/pre-approval-drawer/PreApprovalDrawer.tsx` — `handleContinue`
+- What was wrong: `handleContinue` called `close()` before `router.push()`, triggering the exit animation while the page was already navigating. Caused jank on mobile.
+- Fix: replaced `close()` with `unlockBodyScroll()` so the drawer vanishes instantly on navigation.
 
 ## Open Questions / Assumptions
 
 - I treated this as a best-practices review, not a bug-fix request. Some findings are architectural risks rather than current user-visible defects.
-- I kept the review scoped to `components/ui/pre-approval-drawer` and only referenced adjacent files when they directly affected the drawer’s public API or lifecycle.
-- I assumed the current `framer-motion` approach is intentional and did not treat “not using Radix Dialog” as a finding by itself.
+- I kept the review scoped to `components/ui/pre-approval-drawer` and only referenced adjacent files when they directly affected the drawer's public API or lifecycle.
+- I assumed the current `framer-motion` approach is intentional and did not treat "not using Radix Dialog" as a finding by itself.
 
 ## Strengths Already Present
 
@@ -99,12 +120,28 @@ Validation snapshot:
 - The trigger and URL-building utilities are well typed and have passing tests around their current mapping logic.
 - The slider has a large thumb target, descriptive `aria-valuetext`, and clear visible value feedback.
 
-## Recommended Improvement Roadmap
+## Recommended Next Steps
 
-- [x] **1. Fix the render-phase portal creation first.** It is the clearest lifecycle violation and the easiest high-impact cleanup. *(completed: c80b17d)*
-- [x] **2. Separate drawer state from trigger orchestration.** That will make the provider easier to test, reuse, and reason about. *(completed: pending commit)*
-- [ ] **3. Normalize the slider API and scroll-lock ownership** before adding more overlay behavior.
-- [x] **4. Add behavioral tests** for open/close/focus/hash/mobile interactions before expanding the drawer feature set further. *(completed: pending commit — 61 new tests across 6 files)*
+Quick wins (narrow, low-risk):
+- [ ] **#9** — Hoist `Intl.NumberFormat` to module scope in AmountSlider. One-line move.
+- [ ] **#4** — Make AmountSlider explicitly controlled. Remove `internalValue` since parent always provides `value`.
 
-keep logs in this file
-[text](pre-approval-drawer-cleanup-log.md)
+Defer unless triggered:
+- [ ] **#5** — Scroll-lock singleton. Only fix if a second overlay is added.
+- [ ] **#6** — Broad context. Only fix if perf issues appear.
+- [ ] **#8** — Barrel import hygiene. Only fix if server/client boundary issues appear.
+- [ ] **#10** — Motion duplication. Only fix if motion states expand.
+
+## Completed
+
+| Finding | Commit | Description |
+|---------|--------|-------------|
+| #1 | c80b17d | Portal creation moved to app shell |
+| #2 | 76e19a2 | Provider split into state + hash listener + composition shell |
+| #3 | 83fd815 | key={pathname} replaced with RouteResetListener |
+| #7 | ce98c89 | 61 behavioral tests across 6 files |
+| Bug | ce98c89 | Continue animation removed — instant navigation |
+
+## Log
+
+Detailed work logs are in [pre-approval-drawer-cleanup-log.md](pre-approval-drawer-cleanup-log.md).
