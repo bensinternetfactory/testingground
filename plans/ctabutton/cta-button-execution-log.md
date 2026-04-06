@@ -329,3 +329,102 @@ Next required action:
 
 - Add targeted tests for adjacent protected surfaces.
 - Then migrate exactly one caller class or introduce the smallest necessary `features/cta/` implementation.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Phase: Phase 1
+- Batch / scope: Minimal canonical `features/cta/*` entrypoints plus Phase 1 verification closeout
+- Status: COMPLETE
+
+Changes made:
+
+- Added [contract.ts](/Users/benfranzoso/Documents/Projects/copy/features/cta/contract.ts), [lead-entry.ts](/Users/benfranzoso/Documents/Projects/copy/features/cta/lead-entry.ts), and [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) as the smallest canonical CTA feature surfaces without moving production callers onto them yet.
+- Added [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx) to import the new `@/features/cta/*` aliases directly and prove the lead-entry helpers still reuse the existing pre-approval builders.
+- Left [index.ts](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/index.ts) and [RippleCtaLink.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) in place so the existing barrel and deep-import compatibility paths continue compiling unchanged.
+- Recorded the shared press-feedback compatibility plan for this phase as “no ownership move in Phase 1”: the new CTA client surface wraps the existing wrapper runtime, and [press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) remains the shared subsystem for direct non-wrapper consumers.
+- Updated [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md) and this execution log in the same Phase 1 batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-12`
+- `CTA-INV-13`
+- `CTA-INV-14`
+- `CTA-INV-17`
+- `CTA-INV-18`
+- `CTA-INV-25`
+- `CTA-INV-26`
+
+Commands run:
+
+- `npm test -- features/cta/__tests__/public-api.test.tsx components/sections/nav/sticky-nav-rm/__tests__/NavPressable.test.tsx app/'(marketing)'/'(programs)'/_components/__tests__/ProgramNavCardLink.test.tsx features/pre-approval/__tests__/PreApprovalDrawerView.press-feedback.test.tsx components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx app/'(marketing)'/'(programs)'/_components/__tests__/preApprovalConfigRenderers.test.tsx components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`
+- `npm run lint -- features/cta/contract.ts features/cta/lead-entry.ts features/cta/client.tsx features/cta/__tests__/public-api.test.tsx components/sections/nav/sticky-nav-rm/__tests__/NavPressable.test.tsx app/'(marketing)'/'(programs)'/_components/__tests__/ProgramNavCardLink.test.tsx features/pre-approval/__tests__/PreApprovalDrawerView.press-feedback.test.tsx components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx app/'(marketing)'/'(programs)'/_components/__tests__/preApprovalConfigRenderers.test.tsx components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link' components app`
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app`
+- `rg -n 'usePressFeedback<' components app features`
+- `rg -n 'buildPreApprovalTriggerAttributes\\(' components app`
+- `rg -n --glob '!**/*.md' 'URLSearchParams|data-pre-approval-|#get-pre-approved|data-drawer-' features/cta components/ui/ripple-cta-link -g '!**/*.test.ts' -g '!**/*.test.tsx'`
+- `npm run build`
+- `PORT=3005 npm run dev`
+- `agent-browser open http://127.0.0.1:3005/rollback-financing#get-pre-approved && agent-browser wait --load networkidle && agent-browser snapshot -i`
+- `agent-browser click @e59 && agent-browser wait --load networkidle && agent-browser get url`
+- `agent-browser open http://127.0.0.1:3005/fleet-financing && agent-browser wait --load networkidle && agent-browser snapshot -i`
+- `agent-browser open http://127.0.0.1:3005/fleet-financing#get-pre-approved && agent-browser wait 500 && agent-browser snapshot -i`
+- `agent-browser set device "iPhone 14" && agent-browser open http://127.0.0.1:3005/rollback-financing && agent-browser wait --load networkidle && agent-browser snapshot -i`
+- `agent-browser click @e10 && agent-browser wait 300 && agent-browser snapshot -i`
+
+Automated verification results:
+
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed.
+- `components/sections/nav/sticky-nav-rm/__tests__/NavPressable.test.tsx`: 3 tests passed.
+- `app/(marketing)/(programs)/_components/__tests__/ProgramNavCardLink.test.tsx`: 3 tests passed.
+- `features/pre-approval/__tests__/PreApprovalDrawerView.press-feedback.test.tsx`: 5 tests passed.
+- `components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx`: 5 tests passed.
+- `app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx`: 3 tests passed.
+- `app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx`: 5 tests passed.
+- `components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx`: 2 tests passed.
+- `components/sections/heroes/hero-convert-geico/__tests__/HeroConvertTertiaryLinks.test.tsx`: 1 test passed.
+- `components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`: 2 tests passed.
+- Targeted lint on the new CTA modules and all Phase 1 proof files passed.
+- `npm run build` passed with the canonical `@/features/cta/*` modules present.
+
+Browser verification results:
+
+- Route: `http://127.0.0.1:3005/rollback-financing#get-pre-approved`
+- Viewport: desktop default
+- Trigger path: direct hash entry into the marketing rollback page, then click `Continue to Pre-Approval`
+- Observed behavior: the pre-approval drawer rendered on load with `Continue to Pre-Approval`, and clicking it navigated to `http://127.0.0.1:3005/pre-approval?amount=100000`
+
+- Route: `http://127.0.0.1:3005/fleet-financing`
+- Viewport: desktop default
+- Trigger path: load the fleet program page, verify the `ProgramNavCardLink` card row renders, then deep-link `#get-pre-approved`
+- Observed behavior: the program page rendered its four pre-approval card links (`rollback`, `wrecker`, `heavy wrecker`, `rotator`), and `http://127.0.0.1:3005/fleet-financing#get-pre-approved` opened the same pre-approval drawer with the continue button visible
+
+- Route: `http://127.0.0.1:3005/rollback-financing`
+- Viewport: `iPhone 14`
+- Trigger path: click the `Open menu` control in the mobile header
+- Observed behavior: the `NavPressable` menu trigger toggled to `Close menu` and opened the mobile overlay with the navigation links and `Get Pre-Approved` CTA visible
+
+Evidence summary:
+
+- `CTA-INV-12`: the compatibility barrel import path still has 18 production consumers, and the full build passed with those imports intact.
+- `CTA-INV-13`: the deep import path still has 2 production consumers in [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx) and [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx), and the full build passed with both in place.
+- `CTA-INV-14`: [contract.ts](/Users/benfranzoso/Documents/Projects/copy/features/cta/contract.ts), [lead-entry.ts](/Users/benfranzoso/Documents/Projects/copy/features/cta/lead-entry.ts), and [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) resolved through the `@/*` alias in tests and in the production build.
+- `CTA-INV-17`: `rg -n --glob '!**/*.md' 'URLSearchParams|data-pre-approval-|#get-pre-approved|data-drawer-' features/cta components/ui/ripple-cta-link -g '!**/*.test.ts' -g '!**/*.test.tsx'` returned no matches, and the new CTA lead-entry code reuses `buildPreApprovalEntryHref()` and `buildPreApprovalTriggerAttributes()` instead of constructing hashes, query strings, or trigger attributes manually.
+- `CTA-INV-18`: `rg -n 'usePressFeedback<' components app features` still shows only the wrapper plus the three protected non-wrapper consumers, and their targeted tests plus the full build all passed.
+- `CTA-INV-25`: targeted automated tests passed for [NavPressable.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/__tests__/NavPressable.test.tsx), [ProgramNavCardLink.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/__tests__/ProgramNavCardLink.test.tsx), and [PreApprovalDrawerView.press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/PreApprovalDrawerView.press-feedback.test.tsx); browser validation confirmed the mobile menu pressable path and the desktop drawer-continue path still behave on live routes.
+- `CTA-INV-26`: `rg -n 'buildPreApprovalTriggerAttributes\\(' components app` still resolves to the canonical builder surfaces only, targeted automated tests passed for sticky-nav, program, homepage, program-renderer, equipment-closing, and hero tertiary-link callers, and code review confirmed the remaining direct builder surfaces in [HeroShowcase.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx), [HeroConvert.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/HeroConvert.tsx), [HeroConvertFramed.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx), and [EquipmentClosingCtaTrucks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx) still call `buildPreApprovalTriggerAttributes()` directly.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Phase 1 is closed. Do not start Phase 2 in this batch.
+- If work resumes, begin a separate Phase 2 batch that converts the wrapper into a compatibility facade without deleting the legacy import paths yet.

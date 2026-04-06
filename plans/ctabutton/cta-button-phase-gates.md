@@ -58,34 +58,34 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 0 gate passed.
+- [x] Phase 0 gate passed.
 
 Execution checklist:
 
-- [ ] `features/cta/contract.ts` added or updated.
-- [ ] `features/cta/lead-entry.ts` added or updated.
-- [ ] `features/cta/client.tsx` added or updated.
-- [ ] No broad production caller cutover was required in this phase.
-- [ ] Server-safe boundary verification completed.
-- [ ] Pre-approval contract reuse verification completed.
-- [ ] Shared press-feedback compatibility plan recorded.
-- [ ] Direct `usePressFeedback` consumers outside the wrapper remain verified.
-- [ ] Direct pre-approval trigger builders outside the wrapper remain verified.
-- [ ] `@/features/cta/*` resolution verified.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with evidence for `CTA-INV-12` `CTA-INV-13` `CTA-INV-14` `CTA-INV-17` `CTA-INV-18` `CTA-INV-25` `CTA-INV-26`.
+- [x] `features/cta/contract.ts` added or updated.
+- [x] `features/cta/lead-entry.ts` added or updated.
+- [x] `features/cta/client.tsx` added or updated.
+- [x] No broad production caller cutover was required in this phase.
+- [x] Server-safe boundary verification completed.
+- [x] Pre-approval contract reuse verification completed.
+- [x] Shared press-feedback compatibility plan recorded.
+- [x] Direct `usePressFeedback` consumers outside the wrapper remain verified.
+- [x] Direct pre-approval trigger builders outside the wrapper remain verified.
+- [x] `@/features/cta/*` resolution verified.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with evidence for `CTA-INV-12` `CTA-INV-13` `CTA-INV-14` `CTA-INV-17` `CTA-INV-18` `CTA-INV-25` `CTA-INV-26`.
 
 Go / no-go gate:
 
-- [ ] Go: canonical modules compile and legacy CTA behavior is unchanged.
-- [ ] No-go conditions checked: no forced caller migration, no broken deep imports, no accidental pre-approval contract fork, no broken adjacent consumers.
+- [x] Go: canonical modules compile and legacy CTA behavior is unchanged.
+- [x] No-go conditions checked: no forced caller migration, no broken deep imports, no accidental pre-approval contract fork, no broken adjacent consumers.
 
 ## Phase 2: Convert `RippleCtaLink` into a Compatibility Facade
 
 Preconditions:
 
-- [ ] Phase 1 gate passed.
+- [x] Phase 1 gate passed.
 
 Execution checklist:
 
