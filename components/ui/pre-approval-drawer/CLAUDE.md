@@ -60,6 +60,86 @@ Hash is cleared via `history.replaceState` so back button goes to the previous p
 | `resolveSelectionDrawerTrigger` | Function | Maps hero drawer configs to trigger payloads |
 | Hero constants | Objects | `ROLLBACK_HERO_DRAWER`, `ROTATOR_HERO_DRAWER`, etc. |
 
+## Data Flow: CTA → Drawer → Pre-Approval Page
+
+This is the critical handoff path. The drawer is the entry point to the pre-approval funnel.
+
+### Step 1: CTA anchor encodes trigger metadata
+
+CTAs use `data-drawer-*` HTML attributes to pass context into the drawer:
+
+```html
+<a href="#get-pre-approved"
+   data-drawer-source="hero"
+   data-drawer-title="How much is the truck you found?"
+   data-drawer-truck-type="wrecker">
+  Get Pre-Approved
+</a>
+```
+
+| Attribute | Values | Purpose |
+|---|---|---|
+| `data-drawer-source` | `"standard"` \| `"hero"` | Where the CTA lives. Hero CTAs pass truck type through to the URL. |
+| `data-drawer-title` | Any string | Custom heading shown in the drawer (default: `"Estimate how much financing you need."`) |
+| `data-drawer-truck-type` | `"rollback"` \| `"wrecker"` \| `"heavy-wrecker"` \| `"rotator"` | Only used when `source="hero"`. Ignored for standard CTAs. |
+
+`buildDrawerTriggerDataAttributes(trigger)` encodes these. `parseDrawerTriggerDataAttributes(dataset)` decodes them from a clicked anchor's dataset.
+
+### Step 2: Drawer session state
+
+When the drawer opens, `createDrawerSession(trigger)` builds the session:
+
+```ts
+{
+  isOpen: true,
+  title: trigger?.title ?? "Estimate how much financing you need.",
+  amount: 100_000,               // SLIDER_DEFAULT — user adjusts with slider
+  source: trigger?.source ?? "standard",
+  heroTruckType: /* only set if source === "hero" && truckType provided */
+}
+```
+
+The user adjusts `amount` with the slider ($20,000–$500,000 in $5,000 steps).
+
+### Step 3: Continue button builds the handoff URL
+
+When the user taps "Continue to Pre-Approval", `buildDrawerContinueHref()` constructs the destination:
+
+```
+/pre-approval?amount=155000                     ← standard source
+/pre-approval?amount=155000&trucktype=wrecker   ← hero source
+```
+
+**URL parameters passed to `/pre-approval`:**
+
+| Param | Type | Required | Description |
+|---|---|---|---|
+| `amount` | string (digits only) | Yes | Financing amount from the slider. Normalized: non-digit chars stripped, falls back to `100000` if empty. |
+| `trucktype` | `"rollback"` \| `"wrecker"` \| `"heavy-wrecker"` \| `"rotator"` | No | Only present when the drawer was opened from a hero CTA (`source="hero"`). Standard CTAs never send this. |
+
+### Step 4: Navigation
+
+`router.push(href)` navigates to `/pre-approval` with the params. The drawer does **not** animate closed — `unlockBodyScroll()` is called directly and the route change unmounts the drawer instantly.
+
+### Hero truck type resolution
+
+Hero sections use pre-configured trigger constants that map tile selections to truck types:
+
+| Constant | Truck type resolution |
+|---|---|
+| `ROLLBACK_HERO_DRAWER` | Always `"rollback"` |
+| `ROTATOR_HERO_DRAWER` | Always `"rotator"` |
+| `WRECKER_HERO_DRAWER` | `"wrecker"` for light-duty tile, `"heavy-wrecker"` for heavy-wrecker tile |
+| `USED_TOW_TRUCK_HERO_DRAWER` | Passes through the selected tile ID directly (`rollback`, `wrecker`, `heavy-wrecker`, `rotator`) |
+
+`resolveSelectionDrawerTrigger(trigger, selectedTileId)` resolves the final truck type from these configs.
+
+### Fallback behavior
+
+Pages without a mounted drawer provider (e.g., standalone pages with a fixed nav CTA) use `resolveDrawerTriggerHref(pathname)`:
+- If `pathname` is available → returns `#get-pre-approved` (same-page hash)
+- If `pathname` is null → returns `/rollback-financing#get-pre-approved` (redirects to a page with the drawer)
+
 ## Viewport Behavior
 
 - **Mobile (<768px):** iOS-style bottom sheet with drag-to-dismiss, spring animation, and no explicit close button. Drag gesture is blocked when content is scrolled or when touching the slider.
