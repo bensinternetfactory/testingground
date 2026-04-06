@@ -239,7 +239,9 @@ export function PreApprovalDrawer() {
       source,
     });
 
-    close();
+    // Skip close() to avoid the exit animation racing the route transition.
+    // Unlock scroll immediately; the unmount safety-net is a no-op fallback.
+    unlockBodyScroll();
     startTransition(() => {
       router.push(href);
     });

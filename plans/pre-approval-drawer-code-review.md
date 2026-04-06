@@ -56,7 +56,7 @@ Validation snapshot:
 - Why it matters: every context consumer is now subscribed to amount changes, open/close changes, title changes, and hero-truck metadata whether it needs them or not. The problem is small today, but the provider already sits high in the marketing tree and the slider changes state frequently.
 - Recommended improvement: split read/write concerns or expose narrower hooks for trigger-only consumers versus drawer-content consumers.
 
-### 7. Medium: behavioral test coverage stops at pure helper functions
+### ~~7. Medium: behavioral test coverage stops at pure helper functions~~ ✅
 - Lens: React / Motion
 - File: `components/ui/pre-approval-drawer/__tests__/triggers.test.ts:1-165`
 - What I found: the only tests exercise URL and trigger helpers. There are no tests for actual rendered drawer behavior.
@@ -104,4 +104,7 @@ Validation snapshot:
 - [x] **1. Fix the render-phase portal creation first.** It is the clearest lifecycle violation and the easiest high-impact cleanup. *(completed: c80b17d)*
 - [x] **2. Separate drawer state from trigger orchestration.** That will make the provider easier to test, reuse, and reason about. *(completed: pending commit)*
 - [ ] **3. Normalize the slider API and scroll-lock ownership** before adding more overlay behavior.
-- [ ] **4. Add behavioral tests** for open/close/focus/hash/mobile interactions before expanding the drawer feature set further.
+- [x] **4. Add behavioral tests** for open/close/focus/hash/mobile interactions before expanding the drawer feature set further. *(completed: pending commit — 61 new tests across 6 files)*
+
+keep logs in this file
+[text](pre-approval-drawer-cleanup-log.md)

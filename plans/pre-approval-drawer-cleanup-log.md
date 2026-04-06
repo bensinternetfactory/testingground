@@ -45,4 +45,35 @@ Updated import paths in `index.ts` and `MarketingDrawerProvider.tsx`. No consume
 
 ## Roadmap Step 3: Normalize slider API and scroll-lock ownership (Issues #4, #5)
 
-**Status:** Next up
+**Status:** Not started
+
+---
+
+## Roadmap Step 4: Add behavioral tests (Issue #7)
+
+**Status:** Done (pending commit)
+**What changed:** Added 61 component-level behavioral tests across 6 new test files, plus test infrastructure:
+
+**Infrastructure:**
+- Installed `@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`, `happy-dom`
+- Created `vitest.setup.ts` for jest-dom matchers
+- Updated `vitest.config.ts` to include `.test.tsx` files
+
+**Test files (all under `components/ui/pre-approval-drawer/__tests__/`):**
+- `scroll-lock.test.ts` (14 tests) — lock/unlock style mutations, idempotency, touchmove prevention, scrollbar compensation, frozen element pinning
+- `AmountSlider.test.tsx` (5 tests) — currency formatting, onChange, aria attributes, max value
+- `DrawerContext.test.tsx` (8 tests) — open/close/reset/setAmount state transitions, lockBodyScroll timing, provider error boundary
+- `DrawerHashListener.test.tsx` (15 tests) — hash detection on mount, hashchange events, click interception, modifier/right-click/target-blank/download bypasses
+- `RouteResetListener.test.tsx` (3 tests) — pathname change triggers reset or open
+- `PreApprovalDrawer.test.tsx` (16 tests) — dialog a11y, portal rendering, backdrop/escape/close-button close, focus trap, focus restoration, continue navigation, scroll-lock cleanup
+
+**Verification:** All 69 drawer tests pass (8 existing + 61 new). Full suite 124/125 pass (1 pre-existing failure in unrelated `registry.test.ts`).
+
+---
+
+## Bug fix: Remove close animation on Continue navigation
+
+**Status:** Done (pending commit)
+**What changed:** In `PreApprovalDrawer.tsx`, `handleContinue` now calls `unlockBodyScroll()` directly instead of `close()`. This skips the exit animation that was racing against the route transition, causing jank on mobile. The drawer just vanishes as the route changes. The unmount safety-net effect is a no-op fallback.
+
+**File:** `components/ui/pre-approval-drawer/PreApprovalDrawer.tsx` — `handleContinue` function
