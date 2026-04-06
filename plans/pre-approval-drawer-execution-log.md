@@ -83,6 +83,95 @@ Next required action:
 
 - Date: 2026-04-06
 - Agent: Codex
+- Phase: `Phase 4`
+- Batch / scope: Convert the legacy pre-approval drawer surface into a compatibility facade over the feature-owned route and entry contracts while preserving legacy exports, deep imports, and CSS paths
+- Status: `PASS`
+
+Changes made:
+
+- Rewired the legacy config facade in [`components/ui/pre-approval-drawer/config.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/config.ts) so the legacy constant names and route/hash helpers now alias the feature-owned contract in [`features/pre-approval/contract.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/contract.ts), [`features/pre-approval/routes.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/routes.ts), and [`features/pre-approval/drawer/server.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/drawer/server.ts).
+- Updated the legacy barrel in [`components/ui/pre-approval-drawer/index.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/index.ts) to preserve existing named exports while also exposing the feature-owned `PreApprovalDrawerRoot`, client hooks, server-safe entry helpers, and canonical contract types through the compatibility surface.
+- Added explicit Phase 4 facade coverage in [`features/pre-approval/__tests__/public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts) to verify that legacy config aliases and barrel re-exports stay aligned with the feature-owned route and entry modules.
+- Updated [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md) to make `Phase 4` the only active phase, record the completed checklist items, and leave `Phase 5` inactive.
+
+Verification matrix IDs covered:
+
+- `PA-INV-17`
+- `PA-INV-22`
+- `PA-INV-23`
+- `PA-INV-02`
+- `PA-INV-03`
+- `PA-INV-05`
+
+Commands run:
+
+- `npm test -- features/pre-approval/__tests__/public-api.test.ts features/pre-approval/__tests__/drawer-runtime.test.ts components/ui/pre-approval-drawer/__tests__/triggers.test.ts components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `rg -n "@/components/ui/pre-approval-drawer/(config|triggers)" app components`
+- `rg -n "@/components/ui/pre-approval-drawer/amount-slider\.css" app components`
+- `lsof -nP -iTCP -sTCP:LISTEN`
+- `PORT=3005 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3005/`
+- `agent-browser wait --load networkidle`
+- `agent-browser snapshot -i`
+- `agent-browser fill @e39 "250000"`
+- `agent-browser click @e40`
+- `agent-browser get url`
+- `agent-browser set device "iPhone 14"`
+- `agent-browser open http://127.0.0.1:3005/rollback-financing#get-pre-approved`
+- `agent-browser wait 500`
+- `agent-browser snapshot -i`
+- `agent-browser get url`
+- `agent-browser click @e37`
+- `agent-browser wait 500`
+- `agent-browser get url`
+
+Automated verification results:
+
+- `PA-INV-17`: `npm run build` passed with no caller rewrites, confirming existing imports through the legacy drawer surface still compile after the facade rewiring.
+- `PA-INV-22`: `rg -n "@/components/ui/pre-approval-drawer/(config|triggers)" app components` found the live deep-import consumer at [`NavClient.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavClient.tsx) plus legacy test imports; `npm run build` passed with those imports untouched.
+- `PA-INV-23`: `rg -n "@/components/ui/pre-approval-drawer/amount-slider\.css" app components` found the shared CSS consumer at [`TermLengthSlider.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/term-length-slider/TermLengthSlider.tsx); `npm run build` passed with the legacy CSS path unchanged.
+- Targeted compatibility coverage passed in [`public-api.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/public-api.test.ts), proving the legacy config constants, `resolveDrawerTriggerHref()`, `buildPreApprovalHref()`, and the barrel-level production entry helpers all resolve to the intended feature-owned modules.
+- Targeted runtime/baseline coverage remained green in [`drawer-runtime.test.ts`](/Users/benfranzoso/Documents/Projects/copy/features/pre-approval/__tests__/drawer-runtime.test.ts), [`triggers.test.ts`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/triggers.test.ts), [`PreApprovalDrawer.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/PreApprovalDrawer.test.tsx), and [`DrawerHashListener.test.tsx`](/Users/benfranzoso/Documents/Projects/copy/components/ui/pre-approval-drawer/__tests__/DrawerHashListener.test.tsx); the targeted run passed `54` tests across `5` files. The same pre-existing happy-dom `localhost:3000` fetch noise appeared during the direct-hash suite, but no assertion failed.
+- `npm run lint`: passed with the same existing test-only unused-variable warnings in the motion mocks; no new Phase 4 lint errors were introduced.
+- `npm run build`: passed.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop (`1440x900`)
+- Trigger path: submit the homepage hero amount form (`HeroInput`) with `250000`
+- Observed behavior: the route-only consumer that still imports `buildPreApprovalHref` from the legacy barrel navigated to `http://127.0.0.1:3005/pre-approval?amount=250000`, confirming the compatibility facade preserved the legacy route-construction behavior.
+
+- Route: `/rollback-financing#get-pre-approved`
+- Viewport: mobile (`iPhone 14`)
+- Trigger path: direct-load hash open, verify the mounted drawer, then tap Continue
+- Observed behavior: the drawer opened on initial load with the title `Estimate how much financing you need.`, the URL normalized immediately to `http://127.0.0.1:3005/rollback-financing`, and Continue navigated immediately to `http://127.0.0.1:3005/pre-approval?amount=100000` without an intermediate close step.
+
+Evidence summary:
+
+- Phase 3 was already complete before this batch: the Phase 3 checklist and gate were fully checked in [`plans/pre-approval-drawer-phase-gates.md`](/Users/benfranzoso/Documents/Projects/copy/plans/pre-approval-drawer-phase-gates.md), and the prior `2026-04-06` Phase 3 execution-log entry recorded `PASS` with matching matrix evidence.
+- The legacy facade now points at the feature-owned route and entry contracts where the public API already matches, while the untouched deep-import modules and legacy CSS path remain in place for import stability.
+- Live consumers still relying on `config.ts` and `amount-slider.css` continued to compile unchanged, and the desktop/mobile browser passes did not show a facade-time runtime regression on the affected paths exercised in this batch.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None for `Phase 4`.
+
+Next required action:
+
+- Stop after `Phase 4`. Do not start `Phase 5` until explicitly instructed, even though the Phase 4 gate is now satisfied.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
 - Phase: `Phase 3`
 - Batch / scope: Wrap the existing drawer runtime in the feature-owned root contract with session identity, event emission, close reasons, and failure isolation while preserving the live UX
 - Status: `PASS`

@@ -16,8 +16,8 @@ Rules:
 - [ ] `Phase 0` active
 - [ ] `Phase 1` active
 - [ ] `Phase 2` active
-- [x] `Phase 3` active
-- [ ] `Phase 4` active
+- [ ] `Phase 3` active
+- [x] `Phase 4` active
 - [ ] `Phase 5` active
 - [ ] `Phase 6` active
 
@@ -140,19 +140,19 @@ Preconditions:
 
 Execution checklist:
 
-- [ ] Legacy export names still compile.
-- [ ] Legacy deep-import module paths still compile.
-- [ ] Legacy CSS import path still resolves.
-- [ ] Facade points to the intended feature-owned surface.
-- [ ] Browser validation completed for affected CTA paths.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with evidence for `PA-INV-17` `PA-INV-22` `PA-INV-23` and any affected user-facing invariants.
+- [x] Legacy export names still compile.
+- [x] Legacy deep-import module paths still compile.
+- [x] Legacy CSS import path still resolves.
+- [x] Facade points to the intended feature-owned surface.
+- [x] Browser validation completed for affected CTA paths.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with evidence for `PA-INV-17` `PA-INV-22` `PA-INV-23` and any affected user-facing invariants.
 
 Go / no-go gate:
 
-- [ ] Go: compatibility facade is in place and import stability is preserved.
-- [ ] No-go conditions checked: no forced consumer rewrites, no facade-time runtime regression.
+- [x] Go: compatibility facade is in place and import stability is preserved.
+- [x] No-go conditions checked: no forced consumer rewrites, no facade-time runtime regression.
 
 ## Phase 5: Migrate Callers Incrementally
 
