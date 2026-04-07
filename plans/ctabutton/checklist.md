@@ -4,12 +4,12 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
 
 ## Live Boundary
 
-- `RippleCtaLink` has 18 production consumers today: 16 barrel imports and 2 deep imports.
-- Deep imports still live in `components/sections/page/closing-cta/ClosingCta.tsx` and `components/sections/page/mini-roi/MiniROI.tsx`.
+- `RippleCtaLink` has 13 production consumers today: 12 barrel imports and 1 deep import.
+- Deep imports still live in `components/sections/page/mini-roi/MiniROI.tsx`.
 - Direct `usePressFeedback` consumers outside the wrapper: `components/sections/nav/sticky-nav-rm/NavPressable.tsx`, `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`.
-- Direct `buildPreApprovalTriggerAttributes()` surfaces outside the wrapper: `components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx`, `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx`, `components/sections/heroes/hero-convert-geico/HeroConvert.tsx`, `components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx`, `components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx`.
+- Direct `buildPreApprovalTriggerAttributes()` surfaces outside the wrapper: `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx`, `components/sections/heroes/hero-convert-geico/HeroConvert.tsx`, `components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx`.
 - Route-based pre-approval entry outside the wrapper: `components/sections/heroes/hero-gallery/HeroInput.tsx`.
-- Wrapper-only children overrides still live in `components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx`, `components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx`, `components/sections/heroes/hero-gallery/HeroGallery.tsx`, `components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`, `components/sections/page/closing-cta/ClosingCta.tsx`.
+- Wrapper-only children overrides still live in `components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx`, `components/sections/heroes/hero-gallery/HeroGallery.tsx`, and `components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`.
 - `cardId` is still carried by wrapper consumers in `components/sections/page/program-cards/ProgramCards.tsx`, `components/sections/page/equipment-cards/EquipmentCards.tsx`, and `components/sections/page/resource-hub/ResourceHub.tsx`.
 
 ## No-Go Blockers
@@ -22,7 +22,7 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
   Proof: `components/ui/ripple-cta-link/__tests__/RippleCtaLink.test.tsx`
 - Do not change `lib/press-feedback.tsx` ownership until the three non-wrapper consumers above still pass targeted verification.
   Proof: targeted tests for nav, program card, and drawer surfaces
-- Do not change the pre-approval composition contract until the six direct trigger surfaces and the route-based entry above are rechecked.
+- Do not change the pre-approval composition contract until the four direct trigger surfaces and the route-based entry above are rechecked.
   Proof: targeted tests or browser verification on at least one representative per class
 - Do not delete the wrapper until every deep import, children override, and `cardId` site has an explicit replacement path and evidence.
   Proof: migration log entry per site, not just `rg` output

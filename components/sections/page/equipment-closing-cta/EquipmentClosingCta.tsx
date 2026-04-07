@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import type { EquipmentClosingCtaConfig } from "./config";
 
 export function EquipmentClosingCta({
@@ -7,6 +8,14 @@ export function EquipmentClosingCta({
 }: {
   config: EquipmentClosingCtaConfig;
 }) {
+  const primaryEntry: PreApprovalEntry | null = config.cta?.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: config.cta.href,
+        trigger: config.cta.preApprovalTrigger,
+      }
+    : null;
+
   return (
     <section className="bg-[#101820] py-20 md:py-28 2xl:mx-auto 2xl:max-w-screen-2xl 2xl:overflow-hidden 2xl:border-x 2xl:border-gray-200">
       <div className="mx-auto max-w-5xl px-6 text-center">
@@ -31,14 +40,27 @@ export function EquipmentClosingCta({
 
         {config.cta ? (
           <div className="mt-12">
-            <RippleCtaLink
-              href={config.cta.href}
-              label={config.cta.label}
-              preApprovalTrigger={config.cta.preApprovalTrigger}
-              size="lg"
-              section="closing-cta"
-              className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"
-            />
+            {primaryEntry ? (
+              <LeadCta
+                copy={{ label: config.cta.label }}
+                entry={primaryEntry}
+                appearance={{
+                  size: "lg",
+                  className:
+                    "!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]",
+                }}
+              />
+            ) : (
+              <CtaLink
+                href={config.cta.href}
+                copy={{ label: config.cta.label }}
+                appearance={{
+                  size: "lg",
+                  className:
+                    "!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]",
+                }}
+              />
+            )}
           </div>
         ) : null}
 

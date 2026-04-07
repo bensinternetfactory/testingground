@@ -49,7 +49,7 @@ import { HeroGallery, HERO_GALLERY_CONFIG } from "@/components/sections/heroes/h
 
 ## Server/Client Boundary
 
-- `HeroGallery.tsx` — **server component** (layout, images, text, tertiary links). Zero hydration cost.
+- `HeroGallery.tsx` — **server component** (layout, images, text, mobile primary CTA wiring, tertiary links). Zero hydration cost.
 - `HeroInput.tsx` — **client component** (`"use client"`). Only interactive element: currency input form with `useRouter` for navigation. This is the sole client boundary in the hero.
 - `config.ts` — server-safe data. All values are serializable (no functions). The `submitHref` string bridges the server/client boundary so HeroGallery can configure navigation without passing a function prop.
 
@@ -61,7 +61,8 @@ import { HeroGallery, HERO_GALLERY_CONFIG } from "@/components/sections/heroes/h
 - **Submit button**: `bg-[#22C55E]` → hover `bg-[#1EA94E]`, `rounded-full`, `text-white`
 
 ### Mobile CTA
-- `RippleCtaLink` with `filled` variant, overridden to green (`!bg-[#22C55E]`)
+- Canonical CTA surface (`LeadCta` when `preApprovalTrigger` is present, otherwise `CtaLink`)
+- Green primary override (`!bg-[#22C55E]`)
 - Full-width, ripple feedback on tap
 
 ### Tertiary links (mobile only)
@@ -103,5 +104,6 @@ Amount validation is handled by the destination page at `/pre-approval`. When in
 - `next/image` — gallery images + hook icon in tertiary links
 - `next/navigation` — `useRouter` in HeroInput for form submission navigation
 - `lucide-react` — `CircleDollarSign` (input icon), `ChevronRight` (tertiary link icon)
-- `@/components/ui/ripple-cta-link` — mobile CTA + tertiary action links
+- `@/features/cta/client` — canonical mobile primary CTA
+- `@/components/ui/ripple-cta-link` — compatibility tertiary action links during migration
 - `@/features/pre-approval/drawer/server` — `preApprovalEntryHash` for drawer-entry hash integration

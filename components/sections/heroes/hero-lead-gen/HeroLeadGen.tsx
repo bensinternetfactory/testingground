@@ -1,9 +1,18 @@
 import Image from "next/image";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import { TrustBadge } from "./TrustBadge";
 import type { HeroLeadGenConfig } from "./config";
 
 export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
+  const primaryEntry: PreApprovalEntry | null = config.cta.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: config.cta.href,
+        trigger: config.cta.preApprovalTrigger,
+      }
+    : null;
+
   return (
     <section id="hero" className="bg-white pt-[var(--nav-height)] 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-12 md:px-8 md:py-16 lg:grid-cols-5 lg:py-20">
@@ -19,15 +28,25 @@ export function HeroLeadGen({ config }: { config: HeroLeadGenConfig }) {
           <p className="text-lg text-[#545454]">{config.subheadline}</p>
 
           {/* Primary CTA */}
-          <RippleCtaLink
-            href={config.cta.href}
-            label={config.cta.label}
-            preApprovalTrigger={config.cta.preApprovalTrigger}
-            section="hero-lead-gen"
-            className="h-14 w-full bg-[#101820] text-lg font-medium text-white hover:bg-[#101820]/90 focus-visible:ring-[#101820] sm:w-auto sm:self-start sm:px-10"
-          >
-            {config.cta.label}
-          </RippleCtaLink>
+          {primaryEntry ? (
+            <LeadCta
+              copy={{ label: config.cta.label }}
+              entry={primaryEntry}
+              appearance={{
+                className:
+                  "h-14 w-full bg-[#101820] text-lg font-medium text-white hover:bg-[#101820]/90 focus-visible:ring-[#101820] sm:w-auto sm:self-start sm:px-10",
+              }}
+            />
+          ) : (
+            <CtaLink
+              href={config.cta.href}
+              copy={{ label: config.cta.label }}
+              appearance={{
+                className:
+                  "h-14 w-full bg-[#101820] text-lg font-medium text-white hover:bg-[#101820]/90 focus-visible:ring-[#101820] sm:w-auto sm:self-start sm:px-10",
+              }}
+            />
+          )}
 
           {config.phone && (
             <p className="text-sm text-[#545454]">

@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 describe("FramedTileSelector", () => {
-  it("emits canonical trigger attributes for migrated tile-right callers", async () => {
+  it("keeps the disabled compatibility path and emits canonical trigger attributes after selection", async () => {
     const user = userEvent.setup();
 
     render(
@@ -30,7 +30,16 @@ describe("FramedTileSelector", () => {
       />,
     );
 
+    const disabledButton = screen.getByRole("button", {
+      name: "Get Pre-Approved",
+    });
+
+    expect(disabledButton).toBeDisabled();
+    expect(disabledButton).not.toHaveAttribute("data-pre-approval-version");
+
     await user.click(screen.getByRole("button", { name: "Rotator" }));
+
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     const link = screen.getByRole("link", { name: "Get Pre-Approved" });
 

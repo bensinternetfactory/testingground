@@ -45,6 +45,8 @@ describe("HeroLeadGen", () => {
       />,
     );
 
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
+
     const link = screen.getByRole("link", { name: "Get Pre-Approved" });
 
     expect(link).toHaveAttribute("data-pre-approval-version", "2");

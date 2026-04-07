@@ -1,10 +1,20 @@
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import { HeroInput } from "./HeroInput";
 import type { HeroGalleryConfig } from "./config";
 
 export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
+  const mobilePrimaryEntry: PreApprovalEntry | null = config.mobileCta.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: config.mobileCta.href,
+        trigger: config.mobileCta.preApprovalTrigger,
+      }
+    : null;
+
   return (
     <section
       id="hero"
@@ -36,13 +46,25 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
 
           {/* Mobile CTA + tertiary links — hidden on desktop */}
           <div className="mt-6 flex flex-col gap-3 md:hidden">
-            <RippleCtaLink
-              href={config.mobileCta.href}
-              label={config.mobileCta.label}
-              preApprovalTrigger={config.mobileCta.preApprovalTrigger}
-              section="hero-gallery"
-              className="w-full !bg-[#22C55E] hover:!bg-[#1EA94E]"
-            />
+            {mobilePrimaryEntry ? (
+              <LeadCta
+                copy={{ label: config.mobileCta.label }}
+                entry={mobilePrimaryEntry}
+                appearance={{
+                  className: "!bg-[#22C55E] hover:!bg-[#1EA94E]",
+                  fullWidth: true,
+                }}
+              />
+            ) : (
+              <CtaLink
+                href={config.mobileCta.href}
+                copy={{ label: config.mobileCta.label }}
+                appearance={{
+                  className: "!bg-[#22C55E] hover:!bg-[#1EA94E]",
+                  fullWidth: true,
+                }}
+              />
+            )}
 
             {/* Compact tertiary action links */}
             <ul className="contents">

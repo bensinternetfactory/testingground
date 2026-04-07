@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, type RefObject } from "react";
 import { createPortal } from "react-dom";
+import { LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { NavPressable } from "./NavPressable";
 import { NavItemVisual } from "./NavItemVisual";
 import { PhoneIcon } from "./nav-icons";
@@ -242,6 +243,11 @@ export function NavMobileOverlay({
     typeof document !== "undefined"
       ? document.querySelector<HTMLElement>("[data-sticky-nav-root]")
       : null;
+  const primaryEntry: PreApprovalEntry = {
+    kind: "pre-approval",
+    href: primaryCtaHref,
+    trigger: primaryCtaTrigger,
+  };
 
   if (!portalTarget) {
     return null;
@@ -291,11 +297,10 @@ export function NavMobileOverlay({
             <span>(888)&nbsp;555-0199</span>
           </NavPressable>
 
-          <RippleCtaLink
-            href={primaryCtaHref}
-            label="Get Pre-Approved"
-            preApprovalTrigger={primaryCtaTrigger}
-            className="w-full"
+          <LeadCta
+            copy={{ label: "Get Pre-Approved" }}
+            entry={primaryEntry}
+            appearance={{ className: "w-full" }}
           />
         </div>
       </div>

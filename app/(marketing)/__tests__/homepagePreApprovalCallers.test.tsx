@@ -65,6 +65,8 @@ describe("homepage pre-approval caller configs", () => {
   it("renders the hero gallery mobile CTA and tertiary links with canonical trigger attributes", () => {
     render(<HeroGallery config={HERO_GALLERY_CONFIG} />);
 
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
+
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", { name: "Get Pre-Approved" }),
       {
@@ -118,6 +120,8 @@ describe("homepage pre-approval caller configs", () => {
 
   it("renders the closing CTA with canonical trigger attributes", () => {
     render(<ClosingCta config={CLOSING_CTA_CONFIG} />);
+
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", { name: /Get Pre-Approved.*30/ }),

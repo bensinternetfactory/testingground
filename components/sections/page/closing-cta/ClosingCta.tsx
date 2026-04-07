@@ -1,9 +1,28 @@
 import Image from "next/image";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link/RippleCtaLink";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import type { ClosingCtaConfig } from "./config";
 
 export function ClosingCta({ config }: { config: ClosingCtaConfig }) {
   const { headline, benefits, primaryCta, contactBlock } = config;
+  const primaryEntry: PreApprovalEntry | null = primaryCta.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: primaryCta.href,
+        trigger: primaryCta.preApprovalTrigger,
+      }
+    : null;
+
+  const primaryCtaContent = (
+    <>
+      <span aria-hidden="true" className="sm:hidden">
+        {primaryCta.shortLabel}
+      </span>
+      <span aria-hidden="true" className="hidden sm:inline">
+        {primaryCta.label}
+      </span>
+    </>
+  );
 
   return (
     <section
@@ -44,21 +63,25 @@ export function ClosingCta({ config }: { config: ClosingCtaConfig }) {
 
         {/* CTA */}
         <div className="mt-16 flex flex-col items-center text-center">
-          <RippleCtaLink
-            href={primaryCta.href}
-            label={primaryCta.label}
-            preApprovalTrigger={primaryCta.preApprovalTrigger}
-            ariaLabel={primaryCta.label}
-            size="lg"
-            section="closing-cta"
-          >
-            <span aria-hidden="true" className="sm:hidden">
-              {primaryCta.shortLabel}
-            </span>
-            <span aria-hidden="true" className="hidden sm:inline">
-              {primaryCta.label}
-            </span>
-          </RippleCtaLink>
+          {primaryEntry ? (
+            <LeadCta
+              copy={{ label: primaryCta.label, ariaLabel: primaryCta.label }}
+              entry={primaryEntry}
+              appearance={{ size: "lg" }}
+              analytics={{ legacySection: "closing-cta" }}
+            >
+              {primaryCtaContent}
+            </LeadCta>
+          ) : (
+            <CtaLink
+              href={primaryCta.href}
+              copy={{ label: primaryCta.label, ariaLabel: primaryCta.label }}
+              appearance={{ size: "lg" }}
+              analytics={{ legacySection: "closing-cta" }}
+            >
+              {primaryCtaContent}
+            </CtaLink>
+          )}
 
           {contactBlock && (
             <>

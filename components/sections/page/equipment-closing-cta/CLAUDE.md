@@ -18,4 +18,11 @@ import { EquipmentClosingCta } from "@/components/sections/page/equipment-closin
 
 ## Server/Client Boundary
 
-- `EquipmentClosingCta.tsx` — server component (`RippleCtaLink` handles client interaction internally)
+- `EquipmentClosingCta.tsx` — server component that wires the primary closing CTA to canonical `LeadCta` / `CtaLink`
+- `EquipmentClosingCtaTrucks.tsx` — server component that wires each closing tile to canonical `LeadCta` / `CtaLink`
+- `config.ts` — server-safe data (can be imported anywhere)
+
+## Dependencies
+
+- `next/image` — closing icon and truck tile artwork
+- `@/features/cta/client` — canonical closing CTA surfaces

@@ -48,7 +48,7 @@ describe("NavHeaderActions", () => {
   it("emits canonical trigger attributes for the desktop sticky-nav CTA", () => {
     const config = buildStickyNavPreApprovalCtas("/rollback-financing");
 
-    render(
+    const { container } = render(
       <NavHeaderActions
         dialogId="sticky-nav-dialog"
         mobileOpen={false}
@@ -61,6 +61,7 @@ describe("NavHeaderActions", () => {
 
     const link = screen.getByRole("link", { name: /Apply Now/ });
 
+    expect(container.querySelector("a a")).toBeNull();
     expect(link).toHaveAttribute("href", "#get-pre-approved");
     expect(link).toHaveAttribute("data-pre-approval-version", "2");
     expect(link).toHaveAttribute(
@@ -146,7 +147,7 @@ describe("NavMobileOverlay", () => {
     portalTarget.setAttribute("data-sticky-nav-root", "");
     document.body.appendChild(portalTarget);
 
-    render(
+    const { container } = render(
       <NavMobileOverlay
         dialogId="sticky-nav-dialog"
         onClose={vi.fn()}
@@ -161,6 +162,7 @@ describe("NavMobileOverlay", () => {
 
     const link = screen.getByRole("link", { name: "Get Pre-Approved" });
 
+    expect(container.querySelector("a a")).toBeNull();
     expect(link).toHaveAttribute("href", "#get-pre-approved");
     expect(link).toHaveAttribute("data-pre-approval-version", "2");
     expect(link).toHaveAttribute(

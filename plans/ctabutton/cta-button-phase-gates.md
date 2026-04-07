@@ -116,20 +116,20 @@ Preconditions:
 
 Execution checklist:
 
-- [ ] Only one revenue-critical caller batch migrated at a time.
-- [ ] Migrated callers recorded in the execution log.
-- [ ] Hero CTA migration status recorded.
-- [ ] Sticky-nav CTA migration status recorded.
-- [ ] Lead-entry CTA migration status recorded.
-- [ ] Browser validation completed for each changed caller batch.
-- [ ] `npm run lint` passed after each batch.
-- [ ] `npm run build` passed after each batch.
-- [ ] Execution log updated with matrix IDs covered by each batch.
+- [x] Only one revenue-critical caller batch migrated at a time.
+- [x] Migrated callers recorded in the execution log.
+- [x] Hero CTA migration status recorded (`2026-04-06`: [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) mobile primary CTA migrated to canonical CTA surfaces while hero tertiary links remained on the compatibility wrapper; [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) primary CTA migrated to canonical CTA surfaces; [FramedTileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx) shared framed-hero primary CTA migrated to canonical CTA surfaces while [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) tertiary action cards remained on the compatibility wrapper).
+- [x] Sticky-nav CTA migration status recorded (`2026-04-06`: [NavHeaderActions.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx) desktop primary CTA migrated to canonical `LeadCta`, and [NavMobileOverlay.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx) mobile overlay primary CTA migrated to canonical `LeadCta`).
+- [x] Lead-entry CTA migration status recorded (`2026-04-06`: [EquipmentClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx) financing-page closing CTA migrated to canonical `LeadCta` / `CtaLink` surfaces, [EquipmentClosingCtaTrucks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx) program-page closing tiles migrated to canonical `LeadCta` / `CtaLink` surfaces, and the final homepage lead-entry caller [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx) now renders through canonical `LeadCta` / `CtaLink` surfaces with the existing responsive copy preserved).
+- [x] Browser validation completed for each changed caller batch.
+- [x] `npm run lint` passed after each batch.
+- [x] `npm run build` passed after each batch.
+- [x] Execution log updated with matrix IDs covered by each batch.
 
 Go / no-go gate:
 
-- [ ] Go: revenue-critical callers use canonical CTA surfaces and untouched callers still work.
-- [ ] No-go conditions checked: no broad uncontrolled migration, no wrapper deletion by assumption, no mixed redesign work.
+- [x] Go: revenue-critical callers use canonical CTA surfaces and untouched callers still work.
+- [x] No-go conditions checked: no broad uncontrolled migration, no wrapper deletion by assumption, no mixed redesign work.
 
 ## Phase 4: Migrate Remaining Callers and Retire Shared Compatibility Usage
 

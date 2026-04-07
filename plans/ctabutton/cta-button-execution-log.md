@@ -547,3 +547,691 @@ Blockers / regressions:
 Next required action:
 
 - Phase 2 is closed. Do not start Phase 3 in this batch; if migration work resumes, open a separate Phase 3 batch and limit it to one revenue-critical caller group at a time.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 3
+- Batch / scope: Migrate the homepage hero primary CTA caller in [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) to canonical CTA surfaces
+- Status: PASS
+
+Changes made:
+
+- Confirmed Phase 2 is closed and treated this work as a single Phase 3 hero batch with no other caller batch mixed into the implementation.
+- Migrated the exact caller file [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) so the mobile primary hero CTA now renders through canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces instead of `RippleCtaLink`.
+- Kept the untouched hero tertiary links in [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) on the compatibility wrapper, preserving the controlled-batch boundary for the rest of the hero inventory.
+- Added a server-safe `PreApprovalEntry` handoff in [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) so the migrated caller reuses the canonical pre-approval entry contract instead of emitting drawer attributes directly.
+- Expanded [homepagePreApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) to assert the migrated homepage hero CTA still renders without nested anchors while keeping its canonical pre-approval attributes.
+- Updated [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/CLAUDE.md) to document that the mobile primary CTA is now canonical while hero tertiary links remain compatibility-backed during the migration.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `git status --short`
+- `sed -n '1,220p' components/sections/heroes/hero-gallery/config.ts`
+- `sed -n '1,220p' app/'(marketing)'/page.tsx`
+- `sed -n '1,220p' components/sections/heroes/hero-gallery/CLAUDE.md`
+- `git diff -- components/sections/heroes/hero-gallery/HeroGallery.tsx app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx components/sections/heroes/hero-gallery/CLAUDE.md`
+- `npm test -- app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx`
+- `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-gallery/HeroGallery.tsx`
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-gallery/HeroGallery.tsx features/cta`
+- `npm test -- features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3004 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3005 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const heroHeading = document.querySelector('#hero h1')?.textContent?.trim() ?? null; const mobileCta = document.querySelector('a[data-pre-approval-origin-section-id=\"hero-mobile-primary\"]'); const mobileContainer = mobileCta?.parentElement ?? null; return { heroHeading, nestedAnchors: document.querySelectorAll('a a').length, mobileCta: mobileCta ? { href: mobileCta.getAttribute('href'), text: mobileCta.textContent?.trim(), hiddenByViewport: mobileContainer ? getComputedStyle(mobileContainer).display === 'none' : null, pageId: mobileCta.getAttribute('data-pre-approval-origin-page-id'), sectionId: mobileCta.getAttribute('data-pre-approval-origin-section-id'), ctaId: mobileCta.getAttribute('data-pre-approval-origin-cta-id') } : null }; })()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const mobileCta = document.querySelector('a[data-pre-approval-origin-section-id=\"hero-mobile-primary\"]'); if (!mobileCta) return null; mobileCta.scrollIntoView({ block: 'center' }); mobileCta.click(); return { href: mobileCta.getAttribute('href'), text: mobileCta.textContent?.trim() }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), drawerHeading: Array.from(document.querySelectorAll('h2,h3')).find((el) => el.textContent?.includes('Get Pre-Approved'))?.textContent ?? null })"`
+- `agent-browser close`
+
+Automated verification results:
+
+- `app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx`: 3 tests passed. The migrated homepage hero CTA still emits the canonical pre-approval trigger attributes, and the new assertion confirmed the rendered homepage CTA tree contains no nested anchors.
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, confirming the canonical [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces still render through the canonical CTA runtime after the caller cutover.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, re-proving commit-on-click press handling, swipe-cancel protection, duplicate-commit suppression, reduced-motion semantics, and haptics isolation for the shared CTA runtime that the migrated hero caller now uses.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-gallery/HeroGallery.tsx` returned one canonical `LeadCta` call site, one canonical `CtaLink` fallback, and the unchanged `RippleCtaLink` tertiary-link usage, proving the batch migrated only the intended hero primary caller.
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-gallery/HeroGallery.tsx features/cta` returned no matches, confirming the migrated hero caller does not manually construct pre-approval query strings or trigger attributes.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: homepage hero mobile primary CTA DOM inspection at desktop viewport
+- Observed behavior: the homepage rendered with hero heading `Fast & Easy Tow Truck Financing`; the migrated hero CTA still existed in the DOM with `href="#get-pre-approved"` and canonical `home / hero-mobile-primary / hero-mobile-primary` origin attributes; its mobile container was hidden at the desktop breakpoint, and `document.querySelectorAll('a a').length` remained `0`.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: homepage hero mobile primary CTA `Get Pre-Approved`
+- Observed behavior: tapping the real anchor with `data-pre-approval-origin-section-id="hero-mobile-primary"` kept the user on `/` and exposed the pre-approval drawer continue action (`continueVisible: true`), confirming the migrated canonical hero CTA still commits the live lead-entry path on mobile.
+
+Evidence summary:
+
+- `CTA-INV-16`: the exact query `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-gallery/HeroGallery.tsx` and code review of [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) show that only the homepage hero mobile primary CTA moved to canonical CTA surfaces, while untouched tertiary links remain on the compatibility wrapper.
+- `CTA-INV-17`: the exact query `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-gallery/HeroGallery.tsx features/cta` returned no matches, and [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) now passes a `PreApprovalEntry` object into [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) instead of emitting attributes itself.
+- `CTA-INV-04`: [homepagePreApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) and the mobile browser pass both confirmed the migrated hero CTA still emits the canonical pre-approval trigger schema for `pageId="home"` and `sectionId="hero-mobile-primary"`.
+- `CTA-INV-05`: [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) revalidated the shared press subsystem, and live mobile browser activation of the migrated hero CTA opened the drawer without navigation regression.
+- Untouched callers continue working through the compatibility layer: in this batch, the hero tertiary links in [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) were intentionally left on `RippleCtaLink`, and no sticky-nav or non-hero lead-entry caller was migrated.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 3 open and start a separate hero-only follow-up batch for the next revenue-critical hero CTA caller. Do not move to sticky-nav until the intended hero caller subset is explicitly recorded as complete.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 3
+- Batch / scope: Migrate the reusable `HeroLeadGen` primary CTA caller in [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) to canonical CTA surfaces
+- Status: PASS
+
+Changes made:
+
+- Confirmed Phase 2 remains closed and kept this work to one Phase 3 hero batch only.
+- Migrated the exact caller file [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) so its primary CTA now renders through canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces instead of `RippleCtaLink`.
+- Added a server-safe `PreApprovalEntry` handoff in [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) so the migrated caller reuses the canonical pre-approval entry contract.
+- Expanded [HeroLeadGen.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx) to assert that the migrated caller still renders with no nested anchors while preserving canonical trigger attributes.
+- Updated [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/CLAUDE.md) to document the canonical CTA ownership boundary for this hero.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `sed -n '1,220p' components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx`
+- `sed -n '1,220p' components/sections/heroes/hero-lead-gen/config.ts`
+- `sed -n '1,220p' components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx`
+- `sed -n '1,220p' components/sections/heroes/hero-lead-gen/CLAUDE.md`
+- `sed -n '1,220p' app/'(marketing)'/'(financing)'/rotator-financing/config.ts`
+- `sed -n '140,210p' app/'(marketing)'/'(programs)'/fleet-financing/config.ts`
+- `git diff -- components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx components/sections/heroes/hero-lead-gen/CLAUDE.md`
+- `npm test -- components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx`
+- `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx`
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx features/cta`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rotator-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"hero-primary\"][data-pre-approval-origin-page-id=\"rotator-financing\"]'); return { heading: document.querySelector('#hero h1')?.textContent?.trim() ?? null, nestedAnchors: document.querySelectorAll('a a').length, cta: link ? { href: link.getAttribute('href'), text: link.textContent?.trim(), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id'), truckType: link.getAttribute('data-pre-approval-handoff-truck-type') } : null }; })()"`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"hero-primary\"][data-pre-approval-origin-page-id=\"rotator-financing\"]'); if (!link) return null; link.scrollIntoView({ block: 'center' }); link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')) })"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/fleet-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"hero-primary\"][data-pre-approval-origin-page-id=\"fleet-financing\"]'); return { heading: document.querySelector('#hero h1')?.textContent?.trim() ?? null, nestedAnchors: document.querySelectorAll('a a').length, cta: link ? { href: link.getAttribute('href'), text: link.textContent?.trim(), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id') } : null }; })()"`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"hero-primary\"][data-pre-approval-origin-page-id=\"fleet-financing\"]'); if (!link) return null; link.scrollIntoView({ block: 'center' }); link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')) })"`
+- `agent-browser close`
+
+Automated verification results:
+
+- `components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx`: 1 test passed, confirming the migrated caller still emits canonical pre-approval trigger attributes and now renders without nested anchors.
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, confirming the canonical CTA surfaces still render through the canonical runtime after this caller cutover.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, re-proving the shared press subsystem used by the migrated hero CTA.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx` returned only canonical CTA surface imports and call sites, confirming the wrapper is no longer used by this caller.
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx features/cta` returned no matches, confirming the migrated hero caller does not manually construct pre-approval query strings or trigger attributes.
+
+Browser verification results:
+
+- Route: `/rotator-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: hero primary CTA `Get Pre-Approved`
+- Observed behavior: the hero rendered with heading `Rotator Financing for Heavy Recovery.`; the live CTA rendered as a single anchor with `href="#get-pre-approved"`, canonical `rotator-financing / hero-primary / hero-main-cta` origin attributes, and `data-pre-approval-handoff-truck-type="rotator"`; `document.querySelectorAll('a a').length` remained `0`; clicking the CTA kept the user on the same route and opened the pre-approval drawer with both `closeVisible: true` and `continueVisible: true`.
+
+- Route: `/fleet-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: hero primary CTA `Get Pre-Approved`
+- Observed behavior: the hero rendered with heading `You've Built the Operation. Now Scale the Fleet.`; the live CTA rendered as a single anchor with canonical `fleet-financing / hero-primary / hero-main-cta` origin attributes and no nested anchors; tapping it kept the user on `/fleet-financing` and exposed the pre-approval continue action (`continueVisible: true`).
+
+Evidence summary:
+
+- `CTA-INV-16`: the exact query `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx` and code review of [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) show that this caller now uses only canonical CTA surfaces.
+- `CTA-INV-17`: the exact query `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx features/cta` returned no matches, and [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx) now passes a `PreApprovalEntry` object into [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx).
+- `CTA-INV-04`: [HeroLeadGen.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx) plus browser checks on `/rotator-financing` and `/fleet-financing` confirmed the migrated hero CTA still emits the canonical pre-approval trigger schema.
+- `CTA-INV-05`: [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) revalidated commit-on-click semantics, and live desktop/mobile activation of the migrated hero CTA opened the drawer without navigation regression.
+- Untouched hero callers continue through their prior paths: this batch migrated only [HeroLeadGen.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx); `HeroShowcase`, `TileSelector`, `FramedTileSelector`, and hero tertiary-link surfaces were not changed in this batch.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 3 open and start the next hero-only batch for either [TileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx), [FramedTileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx), or [HeroShowcase.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx). Do not move to sticky-nav yet.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 3
+- Batch / scope: Migrate the shared framed-hero primary CTA caller in [FramedTileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx) to canonical CTA surfaces
+- Status: PASS
+
+Changes made:
+
+- Confirmed Phase 2 remains closed, kept Phase 3 active, and limited the implementation to one hero caller batch only.
+- Migrated the exact caller file [FramedTileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx) from `RippleCtaLink` to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces.
+- Preserved the compatibility behavior boundary by keeping the CTA disabled until a tile is selected, then handing the resolved pre-approval trigger to a canonical `PreApprovalEntry`.
+- Preserved the legacy analytics section identity by passing the caller `section` through the canonical analytics adapter instead of deleting that behavior during this batch.
+- Left untouched compatibility callers in place, including the outline tertiary action cards in [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx).
+- Updated [FramedTileSelector.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx), [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/CLAUDE.md), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), and this execution log in the same batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-03`
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `git branch --show-current`
+- `sed -n '1,240p' plans/ctabutton/cta-button-phase-gates.md`
+- `sed -n '1,260p' plans/ctabutton/cta-button-execution-log.md`
+- `sed -n '1,260p' plans/ctabutton/checklist.md`
+- `git status --short`
+- `ps -ef | rg 'next dev|npm run dev|agent-browser|chrome-146|playwright'`
+- `git diff -- components/sections/heroes/hero-gallery/HeroGallery.tsx components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx plans/ctabutton/cta-button-execution-log.md plans/ctabutton/cta-button-phase-gates.md app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx components/sections/heroes/hero-lead-gen/__tests__/HeroLeadGen.test.tsx`
+- `sed -n '1,240p' components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx`
+- `sed -n '1,240p' components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx`
+- `sed -n '1,260p' components/sections/heroes/hero-convert-framed/CLAUDE.md`
+- `sed -n '1,260p' features/cta/client.tsx`
+- `sed -n '1,260p' features/cta/lead-entry.ts`
+- `sed -n '1,260p' features/pre-approval/selection.ts`
+- `sed -n '1,260p' app/'(marketing)'/'(financing)'/used-tow-truck-financing/config.ts`
+- `git diff -- components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx components/sections/heroes/hero-convert-framed/CLAUDE.md`
+- `npm test -- components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx`
+- `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx`
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx features/cta`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3004 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3005 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/used-tow-truck-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const ctaButton = Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Get Pre-Approved')); return { heading: document.querySelector('#hero h1')?.textContent?.trim() ?? null, nestedAnchors: document.querySelectorAll('a a').length, disabledCta: ctaButton ? { text: ctaButton.textContent?.trim(), disabled: ctaButton.hasAttribute('disabled'), pageId: ctaButton.getAttribute('data-pre-approval-origin-page-id') } : null }; })()"`
+- `agent-browser eval "(() => { const hero = document.querySelector('#hero'); const tile = Array.from(hero?.querySelectorAll('button') ?? []).find((el) => el.textContent?.includes('Rotator')); if (!tile || !hero) return null; tile.click(); const link = Array.from(hero.querySelectorAll('a')).find((el) => el.textContent?.includes('Get Pre-Approved')); return link ? { text: link.textContent?.trim(), href: link.getAttribute('href'), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id'), truckType: link.getAttribute('data-pre-approval-handoff-truck-type'), nestedAnchors: hero.querySelectorAll('a a').length } : null; })()"`
+- `agent-browser eval "(() => { const hero = document.querySelector('#hero'); const link = Array.from(hero?.querySelectorAll('a') ?? []).find((el) => el.textContent?.includes('Get Pre-Approved')); if (!link) return null; link.click(); return { clicked: true, href: link.getAttribute('href') }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), drawerHeading: Array.from(document.querySelectorAll('h2,h3')).find((el) => el.textContent?.includes('Get Pre-Approved'))?.textContent ?? null })"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/used-tow-truck-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const hero = document.querySelector('#hero'); const ctaButton = Array.from(hero?.querySelectorAll('button') ?? []).find((el) => el.textContent?.includes('Get Pre-Approved')); return { heading: hero?.querySelector('h1')?.textContent?.trim() ?? null, disabledCta: ctaButton ? { text: ctaButton.textContent?.trim(), disabled: ctaButton.hasAttribute('disabled') } : null, nestedAnchors: hero?.querySelectorAll('a a').length ?? null }; })()"`
+- `agent-browser eval "(() => { const hero = document.querySelector('#hero'); const tile = Array.from(hero?.querySelectorAll('button') ?? []).find((el) => el.textContent?.includes('Heavy Wrecker')); if (!tile || !hero) return null; tile.click(); const link = Array.from(hero.querySelectorAll('a')).find((el) => el.textContent?.includes('Get Pre-Approved')); if (!link) return { tileClicked: true, link: null }; link.click(); return { tileClicked: true, link: { href: link.getAttribute('href'), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id'), truckType: link.getAttribute('data-pre-approval-handoff-truck-type') } }; })()"`
+- `agent-browser eval "(() => { const hero = document.querySelector('#hero'); return { buttons: Array.from(hero?.querySelectorAll('button') ?? []).map((el) => ({ text: el.textContent?.trim(), disabled: el.hasAttribute('disabled') })), anchors: Array.from(hero?.querySelectorAll('a') ?? []).map((el) => ({ text: el.textContent?.trim(), href: el.getAttribute('href'), sectionId: el.getAttribute('data-pre-approval-origin-section-id') })) }; })()"`
+- `agent-browser eval "(() => { const hero = document.querySelector('#hero'); const link = Array.from(hero?.querySelectorAll('a') ?? []).find((el) => el.textContent?.includes('Get Pre-Approved')); if (!link) return null; const attrs = { href: link.getAttribute('href'), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id'), truckType: link.getAttribute('data-pre-approval-handoff-truck-type') }; link.click(); return attrs; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), nestedAnchors: document.querySelector('#hero')?.querySelectorAll('a a').length ?? null })"`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link\";$' components app`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link/RippleCtaLink\";$' components app`
+
+Automated verification results:
+
+- `components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx`: 1 test passed, confirming the migrated caller preserves the disabled pre-selection button path, renders without nested anchors after selection, and still emits canonical pre-approval trigger attributes.
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, confirming the canonical CTA surfaces still render through the canonical runtime after this caller cutover.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, re-proving commit-on-click press handling, touch-drift cancel protection, duplicate-commit suppression, reduced-motion semantics, and haptics isolation for the shared CTA runtime used by the migrated hero caller.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx` returned only canonical CTA surface imports and call sites, confirming the wrapper is no longer used by this caller.
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx features/cta` returned no matches, confirming the migrated caller does not manually construct pre-approval query strings or trigger attributes.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the live wrapper-import boundary is now 16 production consumers total, with 14 barrel imports and 2 deep imports, and `HeroLeadGen.tsx` is no longer listed as a wrapper-only `children` override site.
+
+Browser verification results:
+
+- Route: `/used-tow-truck-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: framed hero CTA before selection, then select `Rotator`, then activate `Get Pre-Approved`
+- Observed behavior: the hero rendered with heading `Finance Any Used Tow Truck. Any Age. Any Mileage. Any Seller.`; before selection the hero CTA rendered as a disabled button with no `data-pre-approval-origin-page-id`; after selecting `Rotator`, the CTA became a single anchor with `href="#get-pre-approved"`, canonical `used-tow-truck-financing / hero-primary / hero-main-cta` origin attributes, `data-pre-approval-handoff-truck-type="rotator"`, and no nested anchors; activating it kept the user on `/used-tow-truck-financing` and opened the pre-approval drawer with both `closeVisible: true` and `continueVisible: true`.
+
+- Route: `/used-tow-truck-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: framed hero CTA before selection, then select `Heavy Wrecker`, then activate `Get Pre-Approved`
+- Observed behavior: before selection the hero CTA rendered as a disabled button and `document.querySelector('#hero')?.querySelectorAll('a a').length` remained `0`; after selecting `Heavy Wrecker`, the hero CTA rendered as a single anchor with canonical `used-tow-truck-financing / hero-primary / hero-main-cta` origin attributes and `data-pre-approval-handoff-truck-type="heavy-wrecker"`; activating it kept the user on `/used-tow-truck-financing` and exposed the drawer continue action (`continueVisible: true`) without any broad caller regression.
+
+Evidence summary:
+
+- `CTA-INV-16`: the exact query `rg -n "LeadCta|CtaLink|RippleCtaLink" components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx` plus code review of [FramedTileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx) show that this shared framed-hero caller now uses only canonical CTA surfaces.
+- `CTA-INV-17`: the exact query `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx features/cta` returned no matches, and [FramedTileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx) now passes a canonical `PreApprovalEntry` object into [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) only after a tile selection exists.
+- `CTA-INV-01` and `CTA-INV-03`: [FramedTileSelector.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/FramedTileSelector.test.tsx) plus desktop/mobile browser checks confirmed the disabled compatibility path still renders as a non-interactive button before selection and the enabled internal CTA renders as a single anchor with no nested-anchor regression.
+- `CTA-INV-04`: the targeted caller test plus desktop/mobile browser checks confirmed the migrated hero CTA still emits the canonical pre-approval trigger schema, including the resolved truck-type handoff on selection.
+- `CTA-INV-05`: [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) revalidated shared commit-on-click semantics, and live desktop/mobile activation of the migrated hero CTA opened the drawer without navigation regression.
+- Untouched callers remain on the compatibility layer where intended: [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) still owns the wrapper-backed tertiary action cards, and no sticky-nav or general lead-entry caller was migrated in this batch.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 3 open and start the next hero-only caller batch, most likely [TileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx) or [HeroShowcase.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx). Do not move to sticky-nav or lead-entry batches yet.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 3
+- Batch / scope: Migrate the sticky-nav primary CTA callers in [NavHeaderActions.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx) and [NavMobileOverlay.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx) to canonical CTA surfaces
+- Status: PASS
+
+Changes made:
+
+- Confirmed Phase 2 remains closed, kept Phase 3 active, and limited implementation to the sticky-nav caller class only.
+- Replaced the desktop sticky-nav primary CTA in [NavHeaderActions.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx) with canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx), reusing a canonical `PreApprovalEntry` instead of building trigger attributes inline.
+- Replaced the mobile overlay sticky-nav primary CTA in [NavMobileOverlay.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx) with canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx), removing the wrapper dependency from the overlay CTA.
+- Applied a follow-up visibility fix in [NavHeaderActions.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx) after mobile validation revealed the desktop `Apply Now` CTA was still visible on narrow viewports; the canonical CTA now forces `!hidden` on mobile and `md:!inline-flex` at desktop widths.
+- Expanded [preApprovalCta.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx) to assert the migrated desktop and mobile sticky-nav CTAs render without nested anchors while preserving canonical trigger metadata.
+- Updated [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/CLAUDE.md), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), and this execution log in the same batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `git status --short`
+- `ps -ef | rg 'next dev|npm run dev|agent-browser|chrome-146|playwright|npm start'`
+- `rg -n "HeroShowcase" app components | sed -n '1,220p'`
+- `rg -n "hero:\\s*\\{|kind:\\s*\\\"(lead-gen|tile-right|primary-only|framed-outline)\\\"|HeroConvertFramed|HeroLeadGen|HeroShowcase" 'app/(marketing)'`
+- `rg -n "HeroConvert\\b" app components | sed -n '1,260p'`
+- `sed -n '1,260p' components/sections/nav/sticky-nav-rm/CLAUDE.md`
+- `sed -n '1,260p' components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx`
+- `sed -n '260,420p' components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx`
+- `sed -n '1,260p' components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx`
+- `git diff -- components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx components/sections/nav/sticky-nav-rm/CLAUDE.md`
+- `npm test -- components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx`
+- `rg -n "LeadCta|CtaLink|RippleCtaLink|buildPreApprovalTriggerAttributes" components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx`
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx features/cta`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3004 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3005 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"sticky-nav-primary\"]'); return { heading: document.querySelector('#hero h1')?.textContent?.trim() ?? null, nestedAnchors: document.querySelectorAll('a a').length, cta: link ? { href: link.getAttribute('href'), text: link.textContent?.trim(), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id') } : null }; })()"`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"sticky-nav-primary\"]'); if (!link) return null; link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), drawerHeading: Array.from(document.querySelectorAll('h2,h3')).find((el) => el.textContent?.includes('Get Pre-Approved'))?.textContent ?? null })"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const button = document.querySelector('button[aria-label=\"Open menu\"]'); return { heading: document.querySelector('#hero h1')?.textContent?.trim() ?? null, menuButton: button ? { expanded: button.getAttribute('aria-expanded'), controls: button.getAttribute('aria-controls') } : null }; })()"`
+- `agent-browser eval "(() => { const button = document.querySelector('button[aria-label=\"Open menu\"]'); if (!button) return null; button.click(); return { opened: true, nestedAnchors: document.querySelectorAll('a a').length }; })()"`
+- `agent-browser wait 300`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"sticky-nav-mobile-overlay\"]'); const menu = document.querySelector('[role=\"dialog\"][aria-label=\"Navigation menu\"]'); return { menuVisible: Boolean(menu), cta: link ? { href: link.getAttribute('href'), text: link.textContent?.trim(), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id') } : null, nestedAnchors: document.querySelectorAll('a a').length }; })()"`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"sticky-nav-mobile-overlay\"]'); if (!link) return null; link.click(); return { href: link.getAttribute('href'), text: link.textContent?.trim() }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "({ href: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), menuVisible: Boolean(document.querySelector('[role=\"dialog\"][aria-label=\"Navigation menu\"]')) })"`
+- `agent-browser eval "(() => { const continueButton = Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval')); const overlay = document.querySelector('[role=\"dialog\"][aria-label=\"Navigation menu\"]'); return { continueVisibleInLayout: continueButton ? continueButton.getBoundingClientRect().width > 0 && continueButton.getBoundingClientRect().height > 0 : false, continueText: continueButton?.textContent?.trim() ?? null, overlayDisplay: overlay ? getComputedStyle(overlay).display : null, overlayZIndex: overlay ? getComputedStyle(overlay).zIndex : null }; })()"`
+- `npm test -- components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = document.querySelector('a[data-pre-approval-origin-section-id=\"sticky-nav-primary\"]'); return { desktopVisible: link ? getComputedStyle(link).display !== 'none' && link.getBoundingClientRect().width > 0 : false, text: link?.textContent?.trim() ?? null, href: link?.getAttribute('href') ?? null }; })()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const desktopLink = document.querySelector('a[data-pre-approval-origin-section-id=\"sticky-nav-primary\"]'); const menuButton = document.querySelector('button[aria-label=\"Open menu\"]'); return { desktopVisible: desktopLink ? getComputedStyle(desktopLink).display !== 'none' && desktopLink.getBoundingClientRect().width > 0 && desktopLink.getBoundingClientRect().height > 0 : false, desktopText: desktopLink?.textContent?.trim() ?? null, menuVisible: menuButton ? getComputedStyle(menuButton).display !== 'none' && menuButton.getBoundingClientRect().width > 0 : false }; })()"`
+
+Automated verification results:
+
+- `components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx`: 5 tests passed, confirming the desktop and mobile sticky-nav CTAs still emit canonical trigger attributes and now render without nested anchors.
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, confirming the canonical CTA public surfaces still render through the canonical runtime after the sticky-nav cutover.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, re-proving commit-on-click press handling, touch-drift cancel protection, duplicate-commit suppression, reduced-motion semantics, and haptics isolation for the shared CTA runtime used by the migrated sticky-nav callers.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- The follow-up sticky-nav visibility fix re-passed the same targeted test command plus `npm run lint` and `npm run build` without introducing new warnings or errors.
+- `rg -n "LeadCta|CtaLink|RippleCtaLink|buildPreApprovalTriggerAttributes" components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx` returned only `LeadCta` imports and call sites, confirming both sticky-nav primary CTA callers now use canonical CTA surfaces with no remaining wrapper or inline trigger-builder usage.
+- `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx features/cta` returned no matches, confirming the migrated sticky-nav callers do not manually construct pre-approval query strings or trigger attributes.
+- Live inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper-import boundary is now 15 production consumers total (13 barrel imports, 2 deep imports), and the direct `buildPreApprovalTriggerAttributes()` list is down to 5 production surfaces.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: sticky-nav header CTA `Apply Now`
+- Observed behavior: the live page rendered with hero heading `Need Rollback Financing?`; the sticky-nav CTA rendered as a single anchor with `href="#get-pre-approved"`, canonical `rollback-financing / sticky-nav-primary / sticky-nav-apply-now` origin attributes, and `document.querySelectorAll('a a').length === 0`; clicking it kept the user on `/rollback-financing` and exposed the pre-approval continue action (`continueVisible: true`).
+
+- Route: `/rollback-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: open sticky-nav menu, then activate overlay CTA `Get Pre-Approved`
+- Observed behavior: after the visibility fix, the desktop `Apply Now` CTA no longer rendered in the mobile nav chrome before the menu opened (`desktopVisible: false`) while the hamburger trigger remained visible (`menuVisible: true`); opening the menu still exposed a single canonical overlay CTA with `rollback-financing / sticky-nav-mobile-overlay / sticky-nav-mobile-get-pre-approved` origin attributes and no nested anchors, and activating it kept the user on `/rollback-financing`, left the overlay mounted, and exposed a visible `Continue to Pre-Approval` action (`continueVisible: true`, `continueVisibleInLayout: true`), matching the existing overlay interaction shape rather than introducing a redesign.
+
+Evidence summary:
+
+- The live-route audit that preceded this batch showed `HeroConvert` and `HeroShowcase` are not currently routed through `app/(marketing)`, while the existing routed hero callers are the already-recorded `HeroGallery`, `HeroLeadGen`, and framed hero variants. That kept the move to sticky-nav within the Phase 3 revenue-critical boundary.
+- `CTA-INV-16`: the exact query `rg -n "LeadCta|CtaLink|RippleCtaLink|buildPreApprovalTriggerAttributes" components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx` plus code review of [NavHeaderActions.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx) and [NavMobileOverlay.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx) show that the sticky-nav primary CTA callers now use canonical CTA surfaces only.
+- `CTA-INV-17`: the exact query `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'URLSearchParams|data-pre-approval-|data-drawer-' components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx features/cta` returned no matches, and both sticky-nav callers now pass canonical `PreApprovalEntry` objects into [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx).
+- `CTA-INV-01`: [preApprovalCta.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/nav/sticky-nav-rm/__tests__/preApprovalCta.test.tsx) plus browser checks confirmed the migrated sticky-nav CTAs render as single anchors with no nested-anchor regression.
+- `CTA-INV-04`: the targeted sticky-nav test and desktop/mobile browser checks confirmed the migrated sticky-nav callers still emit the canonical pre-approval trigger schema for both desktop and mobile origin IDs.
+- `CTA-INV-05`: [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) revalidated the shared press subsystem, and the live sticky-nav CTA activations opened the pre-approval flow without navigation regression.
+- The post-batch regression check confirmed the desktop sticky-nav CTA is visible at desktop width (`desktopVisible: true`) but hidden on mobile (`desktopVisible: false` on `iPhone 14`), eliminating the duplicate `Apply Now` pill reported during mobile validation.
+- Untouched lead-entry callers remain on their existing compatibility or direct-builder paths for now; this batch did not migrate any closing CTA, tertiary-strip, or program block caller.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. The mobile sticky-nav overlay remains mounted after CTA activation, but the continue action is visibly present and this behavior already existed before the canonical CTA cutover.
+
+Next required action:
+
+- Keep Phase 3 open and start one live lead-entry caller batch. The highest-signal next candidate is [EquipmentClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx), which is routed across financing pages and already has targeted pre-approval caller coverage.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 3
+- Batch / scope: Migrate the routed `equipment-closing-cta` lead-entry caller class in [EquipmentClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx) and [EquipmentClosingCtaTrucks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx) to canonical CTA surfaces
+- Status: PASS
+
+Changes made:
+
+- Confirmed Phase 2 remains closed, kept Phase 3 as the only active phase, inspected the dirty worktree before editing, and verified there was no active dev server on port `3001` before starting this batch.
+- Migrated the financing-page closing CTA in [EquipmentClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx) from the compatibility wrapper to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces, preserving the existing pill styling and lead-entry behavior.
+- Migrated the program-page closing tile grid in [EquipmentClosingCtaTrucks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx) from direct trigger-attribute construction to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces, preserving the existing card layout, hover treatment, and truck-type handoff behavior.
+- Updated [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/CLAUDE.md) to document the canonical CTA ownership boundary for both server components.
+- Updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), and this execution log in the same batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `sed -n '1,220p' plans/ctabutton/cta-button-phase-gates.md`
+- `git status --short`
+- `git diff --stat`
+- `lsof -nP -iTCP -sTCP:LISTEN`
+- `ps -ef | rg 'agent-browser|chrome|chromium|playwright|next dev|npm run dev|node .*next'`
+- `sed -n '1,260p' plans/ctabutton/cta-button-migration-spec.md`
+- `sed -n '1,260p' plans/ctabutton/cta-button-verification-matrix.md`
+- `sed -n '1,260p' plans/ctabutton/checklist.md`
+- `sed -n '1,260p' plans/ctabutton/cta-button-execution-log.md`
+- `sed -n '1,240p' components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx`
+- `sed -n '1,240p' components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx`
+- `sed -n '1,240p' components/sections/page/equipment-closing-cta/CLAUDE.md`
+- `sed -n '1,260p' components/sections/page/equipment-closing-cta/config.ts`
+- `sed -n '1,260p' components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx`
+- `sed -n '1,260p' features/cta/client.tsx`
+- `sed -n '1,260p' features/cta/lead-entry.ts`
+- `sed -n '1,260p' features/cta/contract.ts`
+- `sed -n '1,220p' features/cta/__tests__/public-api.test.tsx`
+- `sed -n '1,220p' components/sections/heroes/hero-lead-gen/CLAUDE.md`
+- `sed -n '1,220p' components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx`
+- `sed -n '1,220p' components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx`
+- `sed -n '1,260p' components/ui/ripple-cta-link/RippleCtaLink.tsx`
+- `sed -n '1,220p' app/'(marketing)'/'(financing)'/rollback-financing/config.ts`
+- `sed -n '470,560p' app/'(marketing)'/'(programs)'/deferred-payment-tow-truck-financing/config.ts`
+- `git branch --show-current`
+- `npm test -- components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const section = Array.from(document.querySelectorAll('section')).find((el) => el.textContent?.includes('Get your rollback payment in 30 seconds.')); if (!section) return { error: 'closing section missing' }; section.scrollIntoView({ block: 'center' }); const link = Array.from(section.querySelectorAll('a')).find((el) => el.textContent?.includes('Get Pre-Approved')); return link ? { href: link.getAttribute('href'), version: link.getAttribute('data-pre-approval-version'), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id'), placement: link.getAttribute('data-pre-approval-origin-placement') } : { error: 'closing CTA missing' }; })()"`
+- `agent-browser eval "(() => { const section = Array.from(document.querySelectorAll('section')).find((el) => el.textContent?.includes('Get your rollback payment in 30 seconds.')); const link = section ? Array.from(section.querySelectorAll('a')).find((el) => el.textContent?.includes('Get Pre-Approved')) : null; if (!link) return { clicked: false }; link.click(); return { clicked: true }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "(() => ({ url: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))) }))()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/deferred-payment-tow-truck-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const section = Array.from(document.querySelectorAll('section')).find((el) => el.textContent?.includes('LET THE TRUCK START EARNING.')); if (!section) return { error: 'closing section missing' }; section.scrollIntoView({ block: 'center' }); const link = Array.from(section.querySelectorAll('a')).find((el) => el.getAttribute('aria-label')?.includes('rollback')); return link ? { href: link.getAttribute('href'), version: link.getAttribute('data-pre-approval-version'), pageId: link.getAttribute('data-pre-approval-origin-page-id'), sectionId: link.getAttribute('data-pre-approval-origin-section-id'), ctaId: link.getAttribute('data-pre-approval-origin-cta-id'), placement: link.getAttribute('data-pre-approval-origin-placement'), truckType: link.getAttribute('data-pre-approval-handoff-truck-type') } : { error: 'rollback tile missing' }; })()"`
+- `agent-browser eval "(() => { const section = Array.from(document.querySelectorAll('section')).find((el) => el.textContent?.includes('LET THE TRUCK START EARNING.')); const link = section ? Array.from(section.querySelectorAll('a')).find((el) => el.getAttribute('aria-label')?.includes('rollback')) : null; if (!link) return { clicked: false }; link.click(); return { clicked: true }; })()"`
+- `agent-browser wait 500`
+- `agent-browser eval "(() => ({ url: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))) }))()"`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n 'buildPreApprovalTriggerAttributes\\(' components app`
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' components/sections/page/equipment-closing-cta`
+
+Automated verification results:
+
+- `components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx`: 2 tests passed, confirming the migrated closing CTA caller class still emits canonical trigger attributes for both the financing-page primary CTA and the program-page truck tiles.
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, confirming the canonical [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) and [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces continue rendering through the canonical CTA runtime after the caller cutover.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, re-proving commit-on-click press behavior, drift-cancel protection, duplicate-commit suppression, reduced-motion semantics, and haptics isolation for the shared runtime now used by the migrated closing CTA callers.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` now returns 14 production wrapper consumers total: 12 barrel imports and 2 deep imports.
+- `rg -n 'buildPreApprovalTriggerAttributes\\(' components app` now returns 4 direct trigger-builder surfaces outside the wrapper.
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' components/sections/page/equipment-closing-cta` returned no matches, confirming the migrated caller class now uses canonical CTA surfaces only and no longer constructs trigger attributes inline.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: closing section primary CTA `Get Pre-Approved`
+- Observed behavior: the closing CTA rendered with `href="#get-pre-approved"` and canonical `rollback-financing / closing-cta-primary / closing-cta-primary / footer` trigger attributes; activating it kept the user on `/rollback-financing` and exposed both the drawer close control and the `Continue to Pre-Approval` action.
+
+- Route: `/deferred-payment-tow-truck-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: closing section rollback tile CTA
+- Observed behavior: the rollback tile rendered with `href="#get-pre-approved"`, canonical `deferred-payment-tow-truck-financing / closing-cta-tiles / closing-tile-rollback / footer` trigger attributes, and `data-pre-approval-handoff-truck-type="rollback"`; activating it kept the user on `/deferred-payment-tow-truck-financing` and exposed the `Continue to Pre-Approval` action on mobile, matching the existing flow shape without redesign.
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' components/sections/page/equipment-closing-cta` show that [EquipmentClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx) and [EquipmentClosingCtaTrucks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx) now use only canonical CTA surfaces.
+- `CTA-INV-17`: the exact query `rg -n 'buildPreApprovalTriggerAttributes\\(' components app` dropped the direct trigger-builder inventory to 4 remaining production surfaces, and the migrated `equipment-closing-cta` caller class no longer constructs pre-approval attributes inline.
+- `CTA-INV-01`: [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx) revalidated single-anchor internal CTA rendering through the canonical runtime, which is the runtime now used by the migrated caller class.
+- `CTA-INV-04`: [preApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-closing-cta/__tests__/preApprovalCallers.test.tsx) plus desktop/mobile browser validation confirmed the migrated closing CTA callers still emit the canonical pre-approval trigger schema and truck-type handoff values.
+- `CTA-INV-05`: [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) revalidated the shared commit-on-click press subsystem, and both live route checks successfully opened the drawer flow from the migrated closing CTA surfaces.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper-import boundary is now 14 production consumers total, and the direct trigger-builder inventory is down to 4 production surfaces.
+- Untouched callers remain working on their current paths: this batch did not touch homepage [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx), tertiary strips, sidebar/program blocks, card callers, or other lead-entry surfaces outside `equipment-closing-cta`.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 3 open. The remaining lead-entry caller called out for a later Phase 3 batch is homepage [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx); do not mix that work into this completed `equipment-closing-cta` batch.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 3
+- Batch / scope: Migrate the final homepage lead-entry caller batch in [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx) to canonical CTA surfaces and close Phase 3
+- Status: PASS
+
+Changes made:
+
+- Reconfirmed before editing that Phase 2 remained closed, Phase 3 was the only active phase, the prior Phase 3 caller batches stayed untouched, the worktree already contained protected migration edits, and no dev server was listening on the non-`3000` validation ports.
+- Migrated the exact caller file [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx) off the deep `RippleCtaLink` import onto canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) / [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces, preserving the existing `lg` pill sizing, responsive short/full label split, and legacy analytics section identity.
+- Kept the migration mechanically scoped to the homepage closing section only; no tertiary strips, sidebar/program blocks, cards, mini-ROI, or any other remaining wrapper callers were touched in this batch.
+- Updated [homepagePreApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) so the homepage closing CTA coverage now also asserts the canonical single-anchor DOM shape.
+- Updated [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/CLAUDE.md), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), and this execution log in the same batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `git status --short`
+- `git branch --show-current`
+- `sed -n '1,240p' plans/ctabutton/cta-button-phase-gates.md`
+- `sed -n '1,260p' plans/ctabutton/checklist.md`
+- `ps -ef | rg 'next dev|npm run dev|npm start|agent-browser|chrome-146|playwright'`
+- `sed -n '1,260p' plans/ctabutton/cta-button-execution-log.md`
+- `git diff --stat`
+- `git diff -- components/sections/page/closing-cta/ClosingCta.tsx app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx plans/ctabutton/checklist.md plans/ctabutton/cta-button-phase-gates.md plans/ctabutton/cta-button-execution-log.md`
+- `sed -n '1,260p' components/sections/page/closing-cta/ClosingCta.tsx`
+- `sed -n '1,260p' app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx`
+- `sed -n '1,260p' plans/ctabutton/cta-button-migration-spec.md`
+- `sed -n '1,260p' plans/ctabutton/cta-button-verification-matrix.md`
+- `sed -n '1,260p' components/sections/page/equipment-closing-cta/EquipmentClosingCta.tsx`
+- `sed -n '1,320p' components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx`
+- `sed -n '1,260p' features/cta/client.tsx`
+- `sed -n '1,260p' features/cta/lead-entry.ts`
+- `sed -n '1,260p' components/sections/page/closing-cta/config.ts`
+- `rg -n "ClosingCta" app components`
+- `sed -n '1,220p' components/sections/page/closing-cta/CLAUDE.md`
+- `rg -n "RippleCtaLink|buildPreApprovalTriggerAttributes|children override|children" components/sections/page/closing-cta components/ui/ripple-cta-link features/cta`
+- `rg -n "<LeadCta|<CtaLink|shortLabel|sm:hidden|hidden sm:inline" components/sections/heroes/hero-lead-gen/HeroLeadGen.tsx components/sections/nav/sticky-nav-rm/NavHeaderActions.tsx components/sections/nav/sticky-nav-rm/NavMobileOverlay.tsx components/sections/heroes/hero-gallery/HeroGallery.tsx components/sections/heroes/hero-convert-framed/FramedTileSelector.tsx`
+- `sed -n '1,260p' components/ui/ripple-cta-link/RippleCtaLink.tsx`
+- `npm test -- app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3004 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3005 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const cta = document.querySelector('[data-pre-approval-origin-section-id=\"closing-cta-primary\"]'); if (!cta) return null; cta.scrollIntoView({ block: 'center' }); return { title: document.title, href: cta.getAttribute('href'), text: cta.textContent?.trim(), pageId: cta.getAttribute('data-pre-approval-origin-page-id'), sectionId: cta.getAttribute('data-pre-approval-origin-section-id'), ctaId: cta.getAttribute('data-pre-approval-origin-cta-id'), placement: cta.getAttribute('data-pre-approval-origin-placement') }; })()"`
+- `agent-browser snapshot -i`
+- `agent-browser click @e37`
+- `agent-browser wait 500`
+- `agent-browser eval "(() => ({ url: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), drawerTitle: Array.from(document.querySelectorAll('h2,h3')).find((el) => el.textContent?.includes('Ready to Add Revenue') || el.textContent?.includes('How much'))?.textContent ?? null }))()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const cta = document.querySelector('[data-pre-approval-origin-section-id=\"closing-cta-primary\"]'); if (!cta) return null; cta.scrollIntoView({ block: 'center' }); return { href: cta.getAttribute('href'), text: cta.textContent?.trim(), pageId: cta.getAttribute('data-pre-approval-origin-page-id'), sectionId: cta.getAttribute('data-pre-approval-origin-section-id'), ctaId: cta.getAttribute('data-pre-approval-origin-cta-id'), placement: cta.getAttribute('data-pre-approval-origin-placement') }; })()"`
+- `agent-browser snapshot -i`
+- `agent-browser click @e28`
+- `agent-browser wait 500`
+- `agent-browser eval "(() => ({ url: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))), drawerTitle: Array.from(document.querySelectorAll('h2,h3')).find((el) => el.textContent?.includes('Ready to Add Revenue') || el.textContent?.includes('How much'))?.textContent ?? null }))()"`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link/RippleCtaLink' components app`
+- `rg -n 'buildPreApprovalTriggerAttributes\\(' components app`
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' components/sections/page/closing-cta`
+
+Automated verification results:
+
+- `app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx`: 3 tests passed, including the updated homepage closing CTA assertion that the migrated caller still renders with canonical pre-approval attributes and no nested-anchor regression.
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed, revalidating single-anchor canonical CTA rendering through the same runtime now used by the migrated homepage caller.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed, re-proving commit-on-click press behavior, drift-cancel protection, duplicate-commit suppression, reduced-motion semantics, and haptics isolation for the shared runtime used by the migrated caller.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` now returns 13 production wrapper consumers total: 12 barrel imports and 1 deep import.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link/RippleCtaLink' components app` now returns only [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx), confirming the homepage closing CTA deep import is gone.
+- `rg -n 'buildPreApprovalTriggerAttributes\\(' components app` still returns the same 4 direct trigger-builder surfaces outside the wrapper.
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' components/sections/page/closing-cta` returned no matches, confirming the migrated caller uses canonical CTA surfaces only and no longer constructs trigger attributes inline.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: homepage closing section primary CTA `Get Pre-Approved — It Takes 30 Seconds`
+- Observed behavior: the closing CTA rendered with `href="#get-pre-approved"` and canonical `home / closing-cta-primary / closing-cta-primary / footer` trigger attributes; activating it kept the user on `http://127.0.0.1:3001/`, opened the drawer on the homepage, and exposed both the drawer close control and the `Continue to Pre-Approval` action.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: homepage closing section primary CTA after mobile scroll into the final CTA block
+- Observed behavior: the same CTA rendered with canonical `home / closing-cta-primary / closing-cta-primary / footer` trigger attributes on the mobile route; activating it kept the user on `http://127.0.0.1:3001/`, exposed the `Ready to Add Revenue to Your Fleet?` drawer heading and the `Continue to Pre-Approval` action, and preserved the existing mobile flow shape without redesign.
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' components/sections/page/closing-cta` show that [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx) now uses only canonical CTA surfaces.
+- `CTA-INV-17`: the exact query `rg -n 'buildPreApprovalTriggerAttributes\\(' components app` stayed at 4 remaining direct trigger-builder surfaces, and the homepage closing section no longer constructs pre-approval attributes inline.
+- `CTA-INV-01`: [homepagePreApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) plus [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx) confirm the migrated homepage caller renders as a single internal anchor without the nested-anchor regression.
+- `CTA-INV-04`: the homepage closing CTA test and both live route checks confirmed that the migrated caller still emits the canonical pre-approval trigger schema for the homepage footer origin.
+- `CTA-INV-05`: [press-feedback.test.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/__tests__/press-feedback.test.tsx) revalidated the shared commit-on-click press subsystem, and the desktop/mobile homepage interactions both opened the drawer flow from the migrated closing CTA surface.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper boundary is now 13 production consumers total, the only remaining deep import is [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx), and homepage [ClosingCta.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/closing-cta/ClosingCta.tsx) is no longer part of the wrapper-only children-override inventory.
+- This batch closes the final remaining Phase 3 homepage lead-entry caller without touching later-phase callers or deleting any wrapper surface by assumption.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Phase 3 is closed. Keep later phases unopened in this turn; if migration work resumes, start a separate Phase 4 batch from the updated inventory with no phase marked active until that work begins.

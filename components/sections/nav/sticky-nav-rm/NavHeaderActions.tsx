@@ -2,7 +2,8 @@
 
 import type { RefObject } from "react";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
-import { buildPreApprovalTriggerAttributes } from "@/features/pre-approval/drawer/server";
+import { LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import { NavPressable } from "./NavPressable";
 
 export function NavHeaderActions({
@@ -20,19 +21,22 @@ export function NavHeaderActions({
   primaryCtaTrigger: PreApprovalTrigger;
   toggleButtonRef: RefObject<HTMLButtonElement | null>;
 }) {
-  const primaryCtaAttributes =
-    buildPreApprovalTriggerAttributes(primaryCtaTrigger);
+  const primaryEntry: PreApprovalEntry = {
+    kind: "pre-approval",
+    href: primaryCtaHref,
+    trigger: primaryCtaTrigger,
+  };
 
   return (
     <>
-      <a
-        href={primaryCtaHref}
-        {...primaryCtaAttributes}
-        className="hidden h-12 items-center justify-center rounded-full bg-[#111111] px-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#111111]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 md:inline-flex xl:px-6 xl:text-base"
-      >
-        <span className="hidden lg:inline">Apply Now</span>
-        <span className="lg:hidden">Apply Now</span>
-      </a>
+      <LeadCta
+        copy={{ label: "Apply Now" }}
+        entry={primaryEntry}
+        appearance={{
+          className:
+            "!hidden h-12 items-center justify-center bg-[#111111] px-4 text-sm font-medium text-white hover:bg-[#111111]/90 focus-visible:ring-[#111111] md:!inline-flex xl:px-6 xl:text-base",
+        }}
+      />
 
       <NavPressable
         ref={toggleButtonRef}

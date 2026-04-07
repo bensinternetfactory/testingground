@@ -39,10 +39,11 @@ import { HeroLeadGen, HERO_LEAD_GEN_CONFIG } from "@/components/sections/heroes/
 
 All files are server components — no "use client" boundary is needed.
 
-- `HeroLeadGen.tsx` — server component
+- `HeroLeadGen.tsx` — server component that wires the primary CTA to canonical `LeadCta` / `CtaLink`
 - `TrustBadge.tsx` — server component
 - `config.ts` — server-safe data (can be imported anywhere)
 
 ## Dependencies
 
 - `next/image` — used for the hero image
+- `@/features/cta/client` — canonical primary CTA surfaces

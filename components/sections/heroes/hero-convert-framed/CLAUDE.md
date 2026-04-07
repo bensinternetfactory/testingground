@@ -40,11 +40,12 @@ import {
 - `HeroConvertFramedOutline.tsx` — server component
 - `HeroConvertFramedPrimaryOnly.tsx` — server component
 - `HeroConvertFramedTileRight.tsx` — server component
-- `FramedTileSelector.tsx` — client component ("use client") — handles interactive tile selection
+- `FramedTileSelector.tsx` — client component ("use client") — handles interactive tile selection and now renders its primary CTA through canonical `LeadCta` / `CtaLink` surfaces
 - `FramedSelectionTile.tsx` — rendered inside FramedTileSelector's client boundary
 
 ## Dependencies
 
 - Reuses the shared base hero fields from `hero-convert-geico/config.ts`
 - `RippleCtaLink` is only used by the outline tertiary variant
+- `FramedTileSelector.tsx` preserves the disabled pre-selection button path, then upgrades to canonical pre-approval CTA attributes once a tile is selected
 - `next/image` for primitive tile and gallery assets

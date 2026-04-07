@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import { resolvePreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { FramedSelectionTile } from "./FramedSelectionTile";
 import type { HeroConvertCtaConfig } from "../hero-convert-geico/config";
 
@@ -42,6 +43,13 @@ export function FramedTileSelector({
     cta.preApprovalSelectionTrigger,
     selectedTile,
   );
+  const selectedEntry: PreApprovalEntry | null = selectedTile && preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: cta.href,
+        trigger: preApprovalTrigger,
+      }
+    : null;
 
   return (
     <div className="flex flex-col gap-4 rounded-3xl border border-[#E9E9E9] bg-white p-5 shadow-sm sm:gap-5 sm:p-8">
@@ -90,16 +98,26 @@ export function FramedTileSelector({
         </div>
       ) : null}
 
-      <RippleCtaLink
-        href={cta.href}
-        label={cta.label}
-        preApprovalTrigger={preApprovalTrigger}
-        size="md"
-        disabled={!selectedTile}
-        section={section}
-        ariaLabel={cta.label}
-        className="mt-1 w-full justify-center sm:mt-1 sm:w-auto"
-      />
+      {selectedEntry ? (
+        <LeadCta
+          copy={{ label: cta.label, ariaLabel: cta.label }}
+          entry={selectedEntry}
+          appearance={{
+            className: "mt-1 w-full justify-center sm:mt-1 sm:w-auto",
+          }}
+          analytics={{ legacySection: section }}
+        />
+      ) : (
+        <CtaLink
+          href={cta.href}
+          copy={{ label: cta.label, ariaLabel: cta.label }}
+          appearance={{
+            className: "mt-1 w-full justify-center sm:mt-1 sm:w-auto",
+          }}
+          analytics={{ legacySection: section }}
+          disabled={!selectedTile}
+        />
+      )}
     </div>
   );
 }

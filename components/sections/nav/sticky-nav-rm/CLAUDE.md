@@ -12,8 +12,8 @@ Reusable sticky navigation extracted from the revenue-leak page. Self-contained 
 - `StickyNav.tsx` — server shell for the fixed bar, logo, and static phone link
 - `NavDesktopMenu.tsx` — client island for desktop dropdown composition
 - `NavClient.tsx` — small client island for current-path CTA resolution and mobile menu state
-- `NavHeaderActions.tsx` — desktop CTA and mobile toggle button
-- `NavMobileOverlay.tsx` — full-screen mobile dialog, focus containment, and accordion composition
+- `NavHeaderActions.tsx` — desktop CTA and mobile toggle button; the desktop primary CTA now renders through canonical `LeadCta`
+- `NavMobileOverlay.tsx` — full-screen mobile dialog, focus containment, and accordion composition; the mobile primary CTA now renders through canonical `LeadCta`
 - `useMobileNavState.ts` — mobile open/close and active section state
 - `useEscapeKey.ts` / `useScrollLock.ts` — focused side-effect hooks owned by the interactive layer
 
