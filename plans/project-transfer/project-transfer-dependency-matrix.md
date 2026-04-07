@@ -37,14 +37,14 @@
 
 | Dependency | Type | Used by | Direct? | Disposition | Rationale | Failure mode | Verification |
 |---|---|---|---|---|---|---|---|
-| `next` (16.1.6) | npm | Framework — App Router, `next/link`, `next/font/google`, `next/image` | Direct | Map to existing | Destination already has Next.js; version alignment required | RSC boundaries, metadata API, or font loading may break if versions diverge significantly | `next --version` in destination; compare App Router API surface |
+| `next` (16.1.6) | npm | Framework — App Router, `next/link`, `next/font/google`, `next/image` | Direct | Map to existing | Destination has Next.js 15; source uses only stable APIs (`next/link`, `next/image`, `next/font/google`, `next/navigation`, `next/dynamic`) — all present in 15. No Next.js 16-only APIs used. Version upgrade optional. | Build failure if 16-only API used (none found) | Phase 5 build verification |
 | `react` / `react-dom` (19.2.3) | npm | All components | Direct | Map to existing | Destination already has React | Hooks, RSC, or concurrent features may differ | `package.json` version check |
 | `framer-motion` (^12.34.0) | npm | `features/cta/client.tsx`, `lib/press-feedback.tsx`, `features/pre-approval/drawer/ui/` | Direct | Transfer unchanged or map to existing | If destination has framer-motion, align versions; if not, add | Animation breaks, CTA press feedback non-functional | Import resolution check; render test of CtaLink |
 | `web-haptics` (^0.0.6) | npm | `lib/press-feedback.tsx` | Direct | Transfer unchanged | Niche package; destination unlikely to have it | Haptic feedback silently fails (graceful degradation — error is caught) | `npm ls web-haptics` |
 | `clsx` (^2.1.1) | npm | `lib/utils.ts` | Direct | Map to existing | Common utility; destination may already have it | `cn()` breaks → all conditional classes fail | Check `package.json` |
 | `tailwind-merge` (^3.4.1) | npm | `lib/utils.ts` | Direct | Map to existing | Common with Tailwind setups | Class merging fails → visual regressions | Check `package.json` |
 | `class-variance-authority` (^0.7.1) | npm | `components/ui/Button.tsx` | Direct | Map to existing | Common with shadcn/ui setups | Button variant system breaks | Check `package.json` |
-| `radix-ui` (^1.4.3) | npm | `components/ui/navigation-menu.tsx` | Direct | Map to existing | Likely present if destination uses shadcn | Navigation menu non-functional | Check `package.json` |
+| `radix-ui` (^1.4.3) | npm | `components/ui/navigation-menu.tsx` (re-exports `@radix-ui/react-navigation-menu`) | Direct | Map to existing | Source monorepo re-exports individual packages. Only `@radix-ui/react-navigation-menu` is imported by in-scope code. Destination uses individual `@radix-ui/react-*` packages but lacks `react-navigation-menu`. Install `@radix-ui/react-navigation-menu` in destination. | Navigation menu non-functional | `npm ls @radix-ui/react-navigation-menu` after install |
 | `lucide-react` (^0.564.0) | npm | Various section components | Direct | Map to existing | Common icon library | Missing icons → render errors | Check `package.json`; icon name availability |
 | `tailwindcss` (^4) | npm | Build-time | Direct | Map to existing — version critical | Destination may use v3; v4 uses fundamentally different config model | All styling breaks if version mismatch | Check version; inspect config approach |
 | `@tailwindcss/postcss` (^4) | npm | `postcss.config.mjs` | Direct | Map to existing | Required for Tailwind v4 PostCSS pipeline | Build fails | Check `postcss.config.*` |
@@ -90,7 +90,7 @@
 | `SidebarCta` | component | ArticleSidebar | Indirect | Transfer unchanged | Sidebar call-to-action | Missing sidebar CTA | Render check via parent |
 | `ProgramBottomLinks` | component | ProgramPageShell | Indirect | Transfer unchanged | Related programs strip | Missing bottom links on program pages | Render check via parent shell |
 | `JsonLd` | component | Homepage, all page shells | Direct | Transfer unchanged | `<script type="application/ld+json">` injection | Missing structured data (SEO impact, not visual) | View page source for JSON-LD scripts |
-| Button (UI) | component | Various sections | Indirect | Transfer unchanged | Polymorphic button/anchor with CVA variants | Button rendering breaks | Visual render check |
+| Button (UI) (`components/ui/Button.tsx`) | component | **Zero imports** — dead code | Indirect | **Exclude from transfer** | Source `Button.tsx` (uppercase) has zero imports anywhere in codebase. Destination has `button.tsx` (lowercase, shadcn). macOS case-insensitive FS collision. Dead code — safe to exclude. | N/A — unused | N/A |
 | Container (UI) | component | Various sections | Indirect | Transfer unchanged | Max-width layout wrapper | Layout width unconstrained | Visual render check |
 | `navigation-menu` (UI) | component | StickyNav | Indirect | Transfer unchanged | Radix navigation menu primitive | Desktop nav non-functional | Navigation interaction test |
 | Truck icon components (`app/truckicons/`) | component | Hero tiles in financing configs | Indirect | Transfer unchanged | SVG icon components (Rollback, Wrecker, Rotator, HeavyWrecker) | Missing icons in hero tile selectors | Visual render check on financing heroes |
@@ -152,10 +152,10 @@
 
 | Dependency | Type | Used by | Direct? | Disposition | Rationale | Failure mode | Verification |
 |---|---|---|---|---|---|---|---|
-| `globals.css` brand tokens | style | All components via Tailwind | Direct | Transfer with adaptation | CSS variables (`--primary`, `--background`, etc.) must not collide with destination theme | Destination theme overwritten or source components use wrong colors | Compare variable names; namespace if needed |
+| `globals.css` brand tokens | style | All components via Tailwind | Direct | Transfer with adaptation | Same variable names in both repos (`--primary`, `--background`, etc.). Source uses TowLoans brand hex values; destination uses generic shadcn oklch values. Since destination IS the TowLoans app, source brand values should replace destination generic values globally. `--nav-height` must be added. Marquee keyframes and `.calculator-grid-bg` must be added. Source has `@import "shadcn/tailwind.css"` — destination does not; add it. | Wrong colors if values not reconciled; missing animations | Visual spot-check after globals.css merge |
 | `globals.css` animations | style | BrandMarquee, TestimonialMarquee | Direct | Transfer with adaptation | `@keyframes marquee-left`, `marquee-up` with CSS variables | Marquee animations frozen | Visual animation check |
 | `calculator-grid-bg` utility | style | Calculator page | Direct | Transfer with adaptation | Custom dot-grid background class | Calculator background plain | Visual render check |
-| Geist font (`next/font/google`) | style | Root layout | Direct | Transfer with adaptation | Font loaded in root layout; applied via CSS variables | Typography fallback to system font | Visual font check |
+| Geist font (`next/font/google`) | style | Root layout | Direct | Map to existing | Destination already loads Geist and Geist_Mono with identical CSS variable names (`--font-geist-sans`, `--font-geist-mono`). No adaptation needed. | N/A — already present | Verify font rendering |
 | `sticky-nav-rm/sticky-nav.css` | style | StickyNav | Indirect | Transfer unchanged | Custom nav CSS | Nav styling broken | Visual render check |
 | `hero-showcase-rm/hero-showcase.css` | style | HeroShowcase | Indirect | Transfer unchanged | Custom hero CSS | Hero styling broken | Visual render check |
 | `brand-marquee/brand-marquee.css` | style | BrandMarquee | Indirect | Transfer unchanged | Marquee-specific CSS | Marquee styling broken | Visual render check |
