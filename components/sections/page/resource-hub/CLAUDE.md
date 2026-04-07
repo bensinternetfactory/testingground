@@ -44,7 +44,7 @@ import { ResourceHub, RESOURCE_HUB_CONFIG } from "@/components/sections/page/res
 
 - `ResourceHub.tsx` -- server component (no `"use client"`)
 - Section is server-rendered
-- CTA interactions are provided by `RippleCtaLink` (client component)
+- CTA interactions are provided by canonical `CtaLink` while preserving the historical `resource-hub` section analytics identity and each card's legacy `cardId`
 - `config.ts` is server-safe content data
 
 ## Behavior
@@ -56,6 +56,6 @@ import { ResourceHub, RESOURCE_HUB_CONFIG } from "@/components/sections/page/res
 
 ## Dependencies
 
-- `@/components/ui/ripple-cta-link`
+- `@/features/cta/client`
 - `next/image`
 - `next/link`

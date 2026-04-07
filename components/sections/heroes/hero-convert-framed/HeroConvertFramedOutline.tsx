@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { ArrowRight } from "lucide-react";
+import { CtaLink, LeadCta } from "@/features/cta/client";
 import { FramedTileSelector, type FramedHeroTileData } from "./FramedTileSelector";
 import { HeroGallery } from "./HeroGallery";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import type { PreApprovalTrigger } from "@/features/pre-approval/contract";
 import type { HeroConvertConfig } from "../hero-convert-geico/config";
 
@@ -80,30 +80,51 @@ function TertiaryActionCard({
   action: HeroTertiaryAction;
   compact?: boolean;
 }) {
+  const content = compact ? (
+    <span className="text-left">{action.label}</span>
+  ) : (
+    <span className="flex flex-col items-start">
+      <span className="text-xs text-[#999]">{action.eyebrow}</span>
+      <span className="mt-1 text-sm font-medium text-[#111]">
+        {action.label}
+      </span>
+    </span>
+  );
+
+  const appearance = {
+    tone: "secondary" as const,
+    size: "sm" as const,
+    align: "between" as const,
+    className: compact
+      ? "w-full lg:w-auto"
+      : "w-full rounded-2xl border-gray-200 px-6 py-5",
+  };
+
+  const sharedProps = {
+    copy: { label: action.label },
+    appearance,
+    icon: <ArrowRight className="h-4 w-4" />,
+    analytics: { legacySection: "hero" },
+    prefetch: false,
+  };
+
   return (
-    <RippleCtaLink
-      href={action.href}
-      label={action.label}
-      variant="outline"
-      size="sm"
-      justify="between"
-      icon={<ArrowRight className="h-4 w-4" />}
-      preApprovalTrigger={action.preApprovalTrigger}
-      prefetch={false}
-      section="hero"
-      className={compact ? "w-full lg:w-auto" : "w-full rounded-2xl border-gray-200 px-6 py-5"}
-    >
-      {compact ? (
-        <span className="text-left">{action.label}</span>
-      ) : (
-        <span className="flex flex-col items-start">
-          <span className="text-xs text-[#999]">{action.eyebrow}</span>
-          <span className="mt-1 text-sm font-medium text-[#111]">
-            {action.label}
-          </span>
-        </span>
-      )}
-    </RippleCtaLink>
+    action.preApprovalTrigger ? (
+      <LeadCta
+        {...sharedProps}
+        entry={{
+          kind: "pre-approval",
+          href: action.href,
+          trigger: action.preApprovalTrigger,
+        }}
+      >
+        {content}
+      </LeadCta>
+    ) : (
+      <CtaLink href={action.href} {...sharedProps}>
+        {content}
+      </CtaLink>
+    )
   );
 }
 

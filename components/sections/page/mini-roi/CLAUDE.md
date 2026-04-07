@@ -64,7 +64,7 @@ Framer Motion `drag="x"` thumb on a track div.
 
 ## CTA Query Handoff
 
-- Current mode: `?rev={value}&pmt={manualPmt}&known=true`
+- Current mode: `?rev={value}&pmt={manualPmt}&known=1`
 
 ## Server / Client Boundary
 
@@ -80,4 +80,4 @@ Framer Motion `drag="x"` thumb on a track div.
 | Dependency | Type |
 |---|---|
 | `framer-motion` | `motion`, `useMotionValue`, `useReducedMotion` |
-| `RippleCtaLink` | Primary CTA button-link |
+| `CtaLink` | Primary CTA button-link with preserved `mini-roi` legacy analytics identity |

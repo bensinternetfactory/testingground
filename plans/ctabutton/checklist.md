@@ -4,13 +4,13 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
 
 ## Live Boundary
 
-- `RippleCtaLink` has 13 production consumers today: 12 barrel imports and 1 deep import.
-- Deep imports still live in `components/sections/page/mini-roi/MiniROI.tsx`.
+- `RippleCtaLink` has 0 production consumers today: 0 barrel imports and 0 deep imports.
+- No production deep imports of `RippleCtaLink` remain.
 - Direct `usePressFeedback` consumers outside the wrapper: `components/sections/nav/sticky-nav-rm/NavPressable.tsx`, `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`.
 - Direct `buildPreApprovalTriggerAttributes()` surfaces outside the wrapper: `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx`, `components/sections/heroes/hero-convert-geico/HeroConvert.tsx`, `components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx`.
 - Route-based pre-approval entry outside the wrapper: `components/sections/heroes/hero-gallery/HeroInput.tsx`.
-- Wrapper-only children overrides still live in `components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx`, `components/sections/heroes/hero-gallery/HeroGallery.tsx`, and `components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`.
-- `cardId` is still carried by wrapper consumers in `components/sections/page/program-cards/ProgramCards.tsx`, `components/sections/page/equipment-cards/EquipmentCards.tsx`, and `components/sections/page/resource-hub/ResourceHub.tsx`.
+- Compatibility-only children overrides still live in `components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx` and `components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`.
+- Legacy `cardId` analytics compatibility is still carried by canonical callers in `components/sections/page/program-cards/ProgramCards.tsx`, `components/sections/page/equipment-cards/EquipmentCards.tsx`, and `components/sections/page/resource-hub/ResourceHub.tsx`.
 
 ## No-Go Blockers
 

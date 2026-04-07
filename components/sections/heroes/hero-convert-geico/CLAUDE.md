@@ -55,7 +55,7 @@ This keeps the hero component portable across projects without coupling to speci
 ## Server/Client Boundary
 
 - `HeroConvert.tsx` — server component (no "use client")
-- `TileSelector.tsx` — client component ("use client") — handles interactive tile selection
+- `TileSelector.tsx` — client component ("use client") — handles interactive tile selection and now renders its primary CTA through canonical `LeadCta` / `CtaLink` surfaces while preserving the disabled pre-selection path
 - `SelectionTile.tsx` — rendered inside TileSelector's client boundary
 - `config.ts` — server-safe data (can be imported anywhere)
 

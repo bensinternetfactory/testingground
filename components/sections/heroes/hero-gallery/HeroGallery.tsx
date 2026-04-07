@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { CtaLink, LeadCta } from "@/features/cta/client";
 import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import { HeroInput } from "./HeroInput";
@@ -70,29 +69,61 @@ export function HeroGallery({ config }: { config: HeroGalleryConfig }) {
             <ul className="contents">
               {config.tertiaryLinks.map((link) => (
                 <li key={link.label}>
-                  <RippleCtaLink
-                    href={link.href}
-                    label={link.label}
-                    variant="outline"
-                    size="sm"
-                    justify="between"
-                    icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
-                    preApprovalTrigger={link.preApprovalTrigger}
-                    prefetch={false}
-                    section="hero-gallery"
-                    className="w-full rounded-xl px-4 py-2.5"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <Image
-                        src="/brand-assets/benefit-icons/hook/hook-dark.svg"
-                        alt=""
-                        width={20}
-                        height={20}
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm text-[#111]">{link.label}</span>
-                    </span>
-                  </RippleCtaLink>
+                  {link.preApprovalTrigger ? (
+                    <LeadCta
+                      copy={{ label: link.label }}
+                      entry={{
+                        kind: "pre-approval",
+                        href: link.href,
+                        trigger: link.preApprovalTrigger,
+                      }}
+                      appearance={{
+                        tone: "secondary",
+                        size: "sm",
+                        align: "between",
+                        className: "w-full rounded-xl px-4 py-2.5",
+                      }}
+                      icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
+                      analytics={{ legacySection: "hero-gallery" }}
+                      prefetch={false}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <Image
+                          src="/brand-assets/benefit-icons/hook/hook-dark.svg"
+                          alt=""
+                          width={20}
+                          height={20}
+                          aria-hidden="true"
+                        />
+                        <span className="text-sm text-[#111]">{link.label}</span>
+                      </span>
+                    </LeadCta>
+                  ) : (
+                    <CtaLink
+                      href={link.href}
+                      copy={{ label: link.label }}
+                      appearance={{
+                        tone: "secondary",
+                        size: "sm",
+                        align: "between",
+                        className: "w-full rounded-xl px-4 py-2.5",
+                      }}
+                      icon={<ChevronRight className="h-4 w-4 text-gray-400" />}
+                      analytics={{ legacySection: "hero-gallery" }}
+                      prefetch={false}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <Image
+                          src="/brand-assets/benefit-icons/hook/hook-dark.svg"
+                          alt=""
+                          width={20}
+                          height={20}
+                          aria-hidden="true"
+                        />
+                        <span className="text-sm text-[#111]">{link.label}</span>
+                      </span>
+                    </CtaLink>
+                  )}
                 </li>
               ))}
             </ul>

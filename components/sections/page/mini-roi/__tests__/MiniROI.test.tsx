@@ -58,6 +58,8 @@ describe("MiniROI", () => {
   it("builds the calculator CTA href with the canonical boolean query encoding", () => {
     render(<MiniROI config={MINI_ROI_CONFIG} />);
 
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
+
     const link = screen.getByRole("link", {
       name: "Build Your Full Profit Plan",
     });
@@ -66,5 +68,6 @@ describe("MiniROI", () => {
       "href",
       "/tow-truck-calculator?rev=200&pmt=1200&known=1",
     );
+    expect(link.hasAttribute("data-pre-approval-version")).toBe(false);
   });
 });

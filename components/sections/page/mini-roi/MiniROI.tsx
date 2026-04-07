@@ -9,7 +9,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { motion, useMotionValue, useReducedMotion } from "framer-motion";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link/RippleCtaLink";
+import { CtaLink } from "@/features/cta/client";
 import { PaymentField } from "./PaymentField";
 import { TowRateField } from "./TowRateField";
 import { miniRoiCalc } from "./calc";
@@ -311,12 +311,11 @@ export function MiniROI({ config }: { config: MiniROIConfig }) {
           </dl>
 
           <div className="mt-8 text-center">
-            <RippleCtaLink
+            <CtaLink
               href={ctaHref}
-              label={config.cta.label}
+              copy={{ label: config.cta.label }}
               icon={ARROW_ICON}
-              iconPosition="end"
-              section="mini-roi"
+              analytics={{ legacySection: "mini-roi" }}
             />
           </div>
         </div>

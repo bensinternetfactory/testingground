@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import type { HowItWorksConfig } from "./config";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 
 const HowItWorksAccordion = dynamic(() =>
   import("./HowItWorksAccordion").then((m) => m.HowItWorksAccordion)
@@ -44,6 +45,14 @@ function HowToSchema({ config }: { config: HowItWorksConfig }) {
 }
 
 export function HowItWorks({ config }: { config: HowItWorksConfig }) {
+  const entry: PreApprovalEntry | null = config.cta.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: config.cta.href,
+        trigger: config.cta.preApprovalTrigger,
+      }
+    : null;
+
   return (
     <section
       id="how-it-works"
@@ -79,13 +88,21 @@ export function HowItWorks({ config }: { config: HowItWorksConfig }) {
         <HowItWorksAccordion steps={config.steps} />
 
         <div className="mt-12 text-center">
-          <RippleCtaLink
-            href={config.cta.href}
-            label={config.cta.label}
-            preApprovalTrigger={config.cta.preApprovalTrigger}
-            icon={ArrowIcon}
-            section="how-it-works"
-          />
+          {entry ? (
+            <LeadCta
+              copy={{ label: config.cta.label }}
+              entry={entry}
+              icon={ArrowIcon}
+              analytics={{ legacySection: "how-it-works" }}
+            />
+          ) : (
+            <CtaLink
+              href={config.cta.href}
+              copy={{ label: config.cta.label }}
+              icon={ArrowIcon}
+              analytics={{ legacySection: "how-it-works" }}
+            />
+          )}
         </div>
       </div>
     </section>

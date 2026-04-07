@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink } from "@/features/cta/client";
 import type { ResourceHubConfig } from "./config";
 
 const ArrowIcon = (
@@ -95,15 +95,16 @@ export function ResourceHub({ config }: { config: ResourceHubConfig }) {
                 <p className="mt-2 text-sm text-[#545454]">{card.description}</p>
 
                 <div className="mt-auto pt-6">
-                  <RippleCtaLink
+                  <CtaLink
                     href={card.linkHref}
                     prefetch={false}
-                    label={card.linkText}
+                    copy={{ label: card.linkText }}
                     icon={ArrowIcon}
-                    size="sm"
-                    section="resource-hub"
-                    cardId={card.id}
-                    className="w-full justify-center"
+                    appearance={{ size: "sm", className: "w-full justify-center" }}
+                    analytics={{
+                      legacySection: "resource-hub",
+                      legacyCardId: card.id,
+                    }}
                   />
                 </div>
               </article>

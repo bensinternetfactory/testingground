@@ -1235,3 +1235,428 @@ Blockers / regressions:
 Next required action:
 
 - Phase 3 is closed. Keep later phases unopened in this turn; if migration work resumes, start a separate Phase 4 batch from the updated inventory with no phase marked active until that work begins.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 4
+- Batch / scope: Migrate the shared program-page section CTA callers in [SidebarCta.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/SidebarCta.tsx), [InlineCtaBlock.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/blocks/InlineCtaBlock.tsx), [PromoPanelBlock.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/blocks/PromoPanelBlock.tsx), and [RelatedProgramsBlock.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/blocks/RelatedProgramsBlock.tsx)
+- Status: PASS
+
+Changes made:
+
+- Confirmed before editing that Phase 3 was already closed in the execution log, then marked Phase 4 as the only active phase in [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md) without opening any later phase.
+- Migrated [SidebarCta.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/SidebarCta.tsx), [InlineCtaBlock.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/blocks/InlineCtaBlock.tsx), and [PromoPanelBlock.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/blocks/PromoPanelBlock.tsx) from the compatibility wrapper to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) / [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces while preserving authored styling, legacy section analytics identity, and the existing pre-approval triggers.
+- Migrated [RelatedProgramsBlock.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/blocks/RelatedProgramsBlock.tsx) from the compatibility wrapper to canonical [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx), preserving the outline card CTA styling and normal internal-navigation behavior.
+- Expanded [preApprovalConfigRenderers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx) so the shared renderer proof now covers the migrated normal-link path and reasserts single-anchor DOM shape on the migrated pre-approval callers.
+- Updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), and this execution log in the same batch. [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) was not touched in this batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-12`
+- `CTA-INV-13`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `npm test -- app/'(marketing)'/'(programs)'/_components/__tests__/preApprovalConfigRenderers.test.tsx`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3004 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3005 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/fleet-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser snapshot -i`
+- `agent-browser eval "(() => Array.from(document.querySelectorAll('a')).filter((el) => el.textContent?.trim() === 'Get Pre-Approved' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), section: el.getAttribute('data-pre-approval-origin-section-id'), cta: el.getAttribute('data-pre-approval-origin-cta-id') })))()"`
+- `agent-browser eval "(() => Array.from(document.querySelectorAll('a')).filter((el) => el.textContent?.trim() === 'See details' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), hasPreApproval: el.hasAttribute('data-pre-approval-version') })))()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/fleet-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser snapshot -i`
+- `agent-browser eval "(() => ({ preApproval: Array.from(document.querySelectorAll('a')).filter((el) => el.textContent?.trim() === 'Get Pre-Approved' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), section: el.getAttribute('data-pre-approval-origin-section-id') })), related: Array.from(document.querySelectorAll('a')).filter((el) => el.textContent?.trim() === 'See details' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), hasPreApproval: el.hasAttribute('data-pre-approval-version') })) }))()"`
+- `npm run lint`
+- `npm run build`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app`
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' app/'(marketing)'/'(programs)'/_components`
+
+Automated verification results:
+
+- `app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx`: 6 tests passed, including the new `RelatedProgramsBlock` proof and the single-anchor DOM assertions on the migrated shared renderer callers.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` now returns 9 production wrapper consumers total: 8 barrel imports and 1 deep import.
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app` still returns only [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx), so the deep-import boundary is unchanged and still explicitly tracked.
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' app/'(marketing)'/'(programs)'/_components` now returns only [ProgramNavCardLink.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx), confirming the migrated shared renderer files no longer depend on the wrapper or manual trigger-attribute construction.
+
+Browser verification results:
+
+- Route: `/fleet-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: shared program-page section CTA assertions for the inline/sidebar pre-approval links and related-program card links
+- Observed behavior: the route rendered the migrated shared CTA callers, the visible `Get Pre-Approved` links exposed canonical `hero-primary`, `growth-inline-cta`, `opportunity-inline-cta`, and `sidebar-cta` origin attributes with `href="#get-pre-approved"`, and the visible `See details` card links exposed normal internal hrefs with no `data-pre-approval-version` attribute.
+
+- Route: `/fleet-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: shared program-page section CTA assertions for the inline pre-approval links and related-program card links
+- Observed behavior: the mobile route rendered the migrated shared CTA callers, the visible `Get Pre-Approved` links exposed canonical `hero-primary`, `growth-inline-cta`, and `opportunity-inline-cta` origin attributes with `href="#get-pre-approved"`, and the visible `See details` card links still rendered as normal internal links with no pre-approval data attributes.
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' app/'(marketing)'/'(programs)'/_components` show that the migrated shared renderer files now use only canonical CTA surfaces; the only remaining direct trigger-builder in that directory is the already-tracked [ProgramNavCardLink.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx).
+- `CTA-INV-17`: the migrated shared renderer files no longer manually construct pre-approval trigger attributes, and the authoritative remaining direct trigger-surface inventory is unchanged from the live checklist.
+- `CTA-INV-01`: [preApprovalConfigRenderers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(programs)/_components/__tests__/preApprovalConfigRenderers.test.tsx) now asserts single-anchor DOM shape on the migrated pre-approval callers and the canonical normal-link path for related-program cards.
+- `CTA-INV-04`: the shared renderer test plus desktop/mobile route assertions confirm the migrated pre-approval callers still emit canonical trigger attributes from the authored config instead of reconstructing them inline.
+- `CTA-INV-12` and `CTA-INV-13`: `npm run build` passed, and the post-batch searches recorded the remaining wrapper and deep-import boundaries without deleting the compatibility layer.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper boundary is now 9 production consumers total, and [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx) remains the only deep import.
+- This batch did not touch [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx), so the shared-runtime ownership decision remains unchanged and no adjacent-surface re-verification was required in this batch.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 4 active and migrate one remaining caller class at a time. The next safe batch is the homepage shared section/card callers or the financing tertiary-strip/hero tertiary callers, but do not mix both scopes into the same implementation batch.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 4
+- Batch / scope: Migrate the remaining homepage non-card section callers in [HowItWorks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/how-it-works/HowItWorks.tsx) and the mobile tertiary CTA list in [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx)
+- Status: PASS
+
+Changes made:
+
+- Migrated [HowItWorks.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/how-it-works/HowItWorks.tsx) from the compatibility wrapper to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) / [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces, preserving the existing arrow-icon CTA presentation and legacy section analytics identity.
+- Migrated the remaining mobile tertiary CTA links in [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx) off the compatibility wrapper onto canonical CTA surfaces while preserving the existing custom child content, `prefetch={false}`, and canonical pre-approval trigger attributes from config.
+- Updated [homepagePreApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) so the `HowItWorks` proof also asserts the single-anchor DOM shape, and updated the local [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/how-it-works/CLAUDE.md) and [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/CLAUDE.md) notes to reflect canonical CTA ownership.
+- Updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md) and this execution log in the same batch. [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) was not touched in this batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-12`
+- `CTA-INV-13`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `npm test -- app/'(marketing)'/__tests__/homepagePreApprovalCallers.test.tsx`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const cta = document.querySelector('[data-pre-approval-origin-section-id=\"how-it-works-primary\"]'); if (!(cta instanceof HTMLAnchorElement)) return null; cta.scrollIntoView({ block: 'center' }); return { href: cta.getAttribute('href'), pageId: cta.getAttribute('data-pre-approval-origin-page-id'), sectionId: cta.getAttribute('data-pre-approval-origin-section-id'), ctaId: cta.getAttribute('data-pre-approval-origin-cta-id'), placement: cta.getAttribute('data-pre-approval-origin-placement'), text: cta.textContent?.trim() }; })()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => Array.from(document.querySelectorAll('a')).filter((el) => el.getAttribute('data-pre-approval-origin-section-id') === 'hero-tertiary-links' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), pageId: el.getAttribute('data-pre-approval-origin-page-id'), sectionId: el.getAttribute('data-pre-approval-origin-section-id'), ctaId: el.getAttribute('data-pre-approval-origin-cta-id'), placement: el.getAttribute('data-pre-approval-origin-placement'), title: el.getAttribute('data-pre-approval-drawer-title'), text: el.textContent?.trim() })))()"`
+- `npm run build`
+- `npm run lint`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app`
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/page/how-it-works components/sections/heroes/hero-gallery`
+
+Automated verification results:
+
+- `app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx`: 3 tests passed, including the updated single-anchor DOM proof for the migrated `HowItWorks` caller and the existing canonical trigger-attribute proofs for both homepage surfaces.
+- `npm run build` passed.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` now returns 7 production wrapper consumers total: 6 barrel imports and 1 deep import.
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app` still returns only [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx).
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/page/how-it-works components/sections/heroes/hero-gallery` returned no matches, confirming the migrated homepage section callers now use canonical CTA surfaces only and no longer construct trigger attributes inline.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: homepage `HowItWorks` primary CTA assertion
+- Observed behavior: the migrated CTA rendered with `href="#get-pre-approved"` and canonical `home / how-it-works-primary / how-it-works-primary / section` trigger attributes, preserving the existing `See Your Payment` presentation on the live homepage route.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: homepage hero mobile tertiary CTA list assertion
+- Observed behavior: the two migrated hero tertiary CTA links rendered with canonical `home / hero-tertiary-links / hero-tertiary-found-truck` and `home / hero-tertiary-links / hero-tertiary-buying-power` trigger attributes, preserved their authored drawer titles, and remained visible as the mobile-only tertiary list under the primary hero CTA.
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/page/how-it-works components/sections/heroes/hero-gallery` show that both migrated homepage section callers now use only canonical CTA surfaces.
+- `CTA-INV-17`: neither migrated homepage section caller constructs pre-approval trigger attributes inline; both continue to consume the authored config through canonical CTA composition.
+- `CTA-INV-01`: [homepagePreApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepagePreApprovalCallers.test.tsx) now asserts the single-anchor DOM shape for the migrated `HowItWorks` CTA, and the `HeroGallery` assertions continue to prove the mobile tertiary links render through canonical link markup on the homepage route.
+- `CTA-INV-04`: the homepage test plus desktop/mobile route assertions confirm that the migrated `HowItWorks` and `HeroGallery` callers still emit the canonical pre-approval trigger schema from config.
+- `CTA-INV-12` and `CTA-INV-13`: `npm run build` passed, and the wrapper/deep-import inventory searches were refreshed without deleting the compatibility layer.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper boundary is now 7 production consumers total, and the wrapper-only children-override inventory no longer includes homepage [HeroGallery.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-gallery/HeroGallery.tsx).
+- This batch did not touch [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx), so the shared-runtime ownership decision remains unchanged and adjacent non-wrapper press-feedback consumers did not require re-verification here.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 4 active and move to one remaining caller class only. The next isolated scopes are either the financing tertiary-strip/hero tertiary callers or the homepage card/deep-import callers.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 4
+- Batch / scope: Migrate the financing-page tertiary-strip caller class in [TertiaryActionsStrip.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx)
+- Status: PASS
+
+Changes made:
+
+- Migrated [TertiaryActionsStrip.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx) from the compatibility wrapper to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) / [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces, preserving the inverse-outline card styling, legacy section analytics identity, and the existing compatibility-only child-content layout.
+- Updated [preApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx) so both representative tertiary-strip proofs now also assert the single-anchor DOM shape after the caller cutover.
+- Updated local [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/CLAUDE.md), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), and this execution log in the same batch. [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) was not touched.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-12`
+- `CTA-INV-13`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `npm test -- components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => Array.from(document.querySelectorAll('a')).filter((el) => el.getAttribute('data-pre-approval-origin-section-id') === 'tertiary-strip-primary' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), pageId: el.getAttribute('data-pre-approval-origin-page-id'), sectionId: el.getAttribute('data-pre-approval-origin-section-id'), ctaId: el.getAttribute('data-pre-approval-origin-cta-id'), placement: el.getAttribute('data-pre-approval-origin-placement'), title: el.getAttribute('data-pre-approval-drawer-title'), text: el.textContent?.trim() })))()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/rotator-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => Array.from(document.querySelectorAll('a')).filter((el) => el.getAttribute('data-pre-approval-origin-section-id') === 'purchase-terms-tertiary-strip' && el.getBoundingClientRect().height > 0).map((el) => ({ href: el.getAttribute('href'), pageId: el.getAttribute('data-pre-approval-origin-page-id'), sectionId: el.getAttribute('data-pre-approval-origin-section-id'), ctaId: el.getAttribute('data-pre-approval-origin-cta-id'), placement: el.getAttribute('data-pre-approval-origin-placement'), title: el.getAttribute('data-pre-approval-drawer-title'), text: el.textContent?.trim() })))()"`
+- `npm run lint`
+- `npm run build`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/page/tertiary-strip`
+
+Automated verification results:
+
+- `components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx`: 2 tests passed, confirming the migrated tertiary-strip caller class still emits canonical trigger attributes for both the rollback and rotator financing surfaces and now renders without nested-anchor regressions.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` now returns 6 production wrapper consumers total: 5 barrel imports and 1 deep import.
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/page/tertiary-strip` returned no matches, confirming the migrated tertiary-strip caller now uses canonical CTA surfaces only and no longer constructs trigger attributes inline.
+
+Browser verification results:
+
+- Route: `/rollback-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: financing tertiary-strip primary CTA assertion
+- Observed behavior: the migrated tertiary-strip CTA rendered with `href="#get-pre-approved"` and canonical `rollback-financing / tertiary-strip-primary / found-truck-cta / section` trigger attributes, preserving the authored drawer title and the two-line tertiary card text content.
+
+- Route: `/rotator-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: purchase-and-terms tertiary-strip CTA assertions
+- Observed behavior: both migrated tertiary-strip CTAs rendered with canonical `rotator-financing / purchase-terms-tertiary-strip / operator-to-operator-cta` and `rotator-financing / purchase-terms-tertiary-strip / truck-year-qualifier-cta` trigger attributes, preserved the shared drawer title, and remained visible as the mobile tertiary strip cards.
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/page/tertiary-strip` show that the tertiary-strip caller class now uses canonical CTA surfaces only.
+- `CTA-INV-17`: the tertiary-strip caller no longer constructs pre-approval trigger attributes inline; it now consumes the authored config through canonical CTA composition.
+- `CTA-INV-01`: [preApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx) now asserts the single-anchor DOM shape for both representative financing tertiary-strip routes.
+- `CTA-INV-04`: the targeted test plus desktop/mobile route assertions confirm that the migrated tertiary-strip caller still emits the canonical pre-approval trigger schema.
+- `CTA-INV-12` and `CTA-INV-13`: `npm run build` passed, and the wrapper inventory search was refreshed without deleting the compatibility layer.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper boundary is now 6 production consumers total, and the compatibility-only child-content inventory still explicitly tracks [TertiaryActionsStrip.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx) for Phase 5 cleanup.
+- This batch did not touch [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx), so the shared-runtime ownership decision remains unchanged and adjacent non-wrapper consumers did not require re-verification.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 4 active and migrate one remaining caller class only. The remaining isolated scopes are the financing hero callers (`TileSelector` and `HeroConvertFramedOutline`) and the homepage card/deep-import callers.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 4
+- Batch / scope: Migrate the unrouted financing hero tertiary callers in [TileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx) and [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx)
+- Status: PASS
+
+Changes made:
+
+- Migrated [TileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx) from the compatibility wrapper to canonical [LeadCta](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) / [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) surfaces, preserving the disabled pre-selection path, legacy `rollback-hero` analytics identity, and canonical selection-driven pre-approval trigger wiring.
+- Migrated the outline-card tertiary actions in [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) from the compatibility wrapper to canonical CTA surfaces while preserving the existing custom child-content layout, secondary-outline appearance, and `hero` analytics identity.
+- Updated [TileSelector.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx) and [HeroConvertTertiaryLinks.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx) so both hero proofs now also assert the single-anchor DOM shape after the caller cutover.
+- Updated local [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/CLAUDE.md), [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/CLAUDE.md), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), and this execution log in the same batch. [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) was not touched.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-12`
+- `CTA-INV-13`
+- `CTA-INV-16`
+- `CTA-INV-17`
+
+Commands run:
+
+- `npm test -- components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `rg -n 'kind: "framed-outline"' app/'(marketing)'/'(financing)'`
+- `rg -n 'HeroConvertFramedOutline|HeroConvert|TileSelector' app/'(marketing)'`
+- `rg -n 'TileSelector' app/'(marketing)'`
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/heroes/hero-convert-geico components/sections/heroes/hero-convert-framed`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+
+Automated verification results:
+
+- `components/sections/heroes/hero-convert-geico/__tests__/TileSelector.test.tsx` and `components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx`: 3 tests passed, confirming both migrated hero callers still emit canonical trigger attributes where applicable and now render without nested-anchor regressions.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n 'kind: "framed-outline"' app/'(marketing)'/'(financing)'` returned only [page-config-types.ts](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/_components/page-config-types.ts), so there is no live financing page config currently routing the outline hero variant.
+- `rg -n 'HeroConvertFramedOutline|HeroConvert|TileSelector' app/'(marketing)'` returned only shell and type references for `HeroConvertFramedOutline` under [EquipmentFinancingPageShell.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/_components/EquipmentFinancingPageShell.tsx) and [page-config-types.ts](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/_components/page-config-types.ts); it did not show a live `TileSelector` route.
+- `rg -n 'TileSelector' app/'(marketing)'` returned no matches, confirming the geico hero selector is not routed through `app/(marketing)` today.
+- `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/heroes/hero-convert-geico components/sections/heroes/hero-convert-framed` now returns only [HeroConvert.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/HeroConvert.tsx) and [HeroConvertFramed.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx), confirming the migrated hero callers no longer depend on the wrapper or inline trigger-attribute construction.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` now returns 4 production wrapper consumers total: 3 barrel imports and 1 deep import.
+
+Browser verification results:
+
+- Route: not applicable
+- Viewport: not applicable
+- Trigger path: no live `app/(marketing)` route currently renders `TileSelector.tsx` or a `kind: "framed-outline"` hero config
+- Observed behavior: browser validation was intentionally skipped because the route-audit commands above show these callers are presently unrouted; no live page existed on the running dev server to exercise this batch without fabricating a non-production harness route
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|buildPreApprovalTriggerAttributes\\(' --glob '!**/*.md' components/sections/heroes/hero-convert-geico components/sections/heroes/hero-convert-framed` show that [TileSelector.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/TileSelector.tsx) and [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) now use canonical CTA surfaces only.
+- `CTA-INV-17`: the migrated hero callers no longer construct pre-approval trigger attributes inline; the only remaining direct trigger-builder surfaces in those directories are the already-tracked routed hero shells [HeroConvert.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-geico/HeroConvert.tsx) and [HeroConvertFramed.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx).
+- `CTA-INV-01`: the updated hero tests now assert single-anchor DOM shape for both migrated callers.
+- `CTA-INV-04`: the targeted tests confirm the migrated hero callers still emit canonical pre-approval trigger attributes when configured for the lead-entry path.
+- `CTA-INV-12` and `CTA-INV-13`: `npm run build` passed, the route audit showed the callers are currently unrouted, and the wrapper inventory was refreshed without deleting the compatibility layer.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): the wrapper boundary is now 4 production consumers total, [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx) remains the only deep import, and [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) remains explicitly tracked only for its compatibility-style children override.
+- This batch did not touch [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx), so the shared-runtime ownership decision remains unchanged and adjacent non-wrapper consumers did not require re-verification here.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Keep Phase 4 active and move to one remaining caller class only: the homepage card/deep-import callers in [ProgramCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/ProgramCards.tsx), [EquipmentCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/EquipmentCards.tsx), [ResourceHub.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/ResourceHub.tsx), and [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx).
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 4
+- Batch / scope: Migrate the remaining homepage card and deep-import callers in [ProgramCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/ProgramCards.tsx), [EquipmentCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/EquipmentCards.tsx), [ResourceHub.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/ResourceHub.tsx), and [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx)
+- Status: PASS
+
+Changes made:
+
+- Migrated [ProgramCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/ProgramCards.tsx), [EquipmentCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/EquipmentCards.tsx), and [ResourceHub.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/ResourceHub.tsx) from the compatibility wrapper to canonical [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx), preserving each section's historical analytics identity and carrying forward the legacy per-card analytics IDs through `analytics.legacyCardId`.
+- Migrated [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx) off the last remaining deep import onto canonical [CtaLink](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx), preserving the existing calculator href construction and `mini-roi` analytics identity.
+- Added [homepageCardCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepageCardCallers.test.tsx) for the homepage card sections and expanded [MiniROI.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/__tests__/MiniROI.test.tsx) so the migrated callers now assert single-anchor DOM shape, normal internal hrefs, and absence of pre-approval trigger attributes.
+- Updated local [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/CLAUDE.md), [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/CLAUDE.md), [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/CLAUDE.md), [CLAUDE.md](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/CLAUDE.md), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), and this execution log in the same batch. [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx) was not touched.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-12`
+- `CTA-INV-13`
+- `CTA-INV-16`
+
+Commands run:
+
+- `npm test -- app/'(marketing)'/__tests__/homepageCardCallers.test.tsx components/sections/page/mini-roi/__tests__/MiniROI.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app`
+- `rg -n 'RippleCtaLink|legacyCardId' --glob '!**/*.md' components/sections/page/program-cards components/sections/page/equipment-cards components/sections/page/resource-hub components/sections/page/mini-roi`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const byText = (text) => Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === text); const summarize = (text) => { const el = byText(text); if (!(el instanceof HTMLAnchorElement)) return null; return { text, href: el.getAttribute('href'), hasPreApproval: el.hasAttribute('data-pre-approval-version') }; }; return { rollback: summarize('See Rollback Financing'), zeroDown: summarize('See Zero Down'), guide: summarize('Read the Guide'), miniRoi: summarize('Build Your Full Profit Plan') }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'See Rollback Financing'); if (!(link instanceof HTMLAnchorElement)) return 'missing'; link.click(); return 'clicked'; })()"`
+- `agent-browser get url`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'Build Your Full Profit Plan'); if (!(link instanceof HTMLAnchorElement)) return null; link.scrollIntoView({ block: 'center' }); return { href: link.getAttribute('href'), hasPreApproval: link.hasAttribute('data-pre-approval-version'), text: link.textContent?.trim() }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'See Zero Down'); if (!(link instanceof HTMLAnchorElement)) return null; link.scrollIntoView({ block: 'center' }); return { href: link.getAttribute('href'), hasPreApproval: link.hasAttribute('data-pre-approval-version') }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'See Zero Down'); if (!(link instanceof HTMLAnchorElement)) return 'missing'; link.click(); return 'clicked'; })()"`
+- `agent-browser get url`
+
+Automated verification results:
+
+- `app/(marketing)/__tests__/homepageCardCallers.test.tsx` and `components/sections/page/mini-roi/__tests__/MiniROI.test.tsx`: 4 tests passed, confirming the migrated homepage card/deep-import callers render without nested-anchor regressions, preserve the expected internal hrefs, and do not emit pre-approval trigger attributes.
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` returned no matches, confirming there are no remaining production wrapper-barrel imports.
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app` returned no matches, confirming the last deep import has been removed.
+- `rg -n 'RippleCtaLink|legacyCardId' --glob '!**/*.md' components/sections/page/program-cards components/sections/page/equipment-cards components/sections/page/resource-hub components/sections/page/mini-roi` returned only the three canonical `legacyCardId` compatibility mappings in [ProgramCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/ProgramCards.tsx), [EquipmentCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/EquipmentCards.tsx), and [ResourceHub.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/ResourceHub.tsx); there are no remaining wrapper references in this caller class.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: homepage card CTA assertions plus click-through on `See Rollback Financing`
+- Observed behavior: the homepage rendered the migrated `ProgramCards`, `EquipmentCards`, `ResourceHub`, and `MiniROI` links with normal internal hrefs and no `data-pre-approval-version` attribute, and clicking `See Rollback Financing` navigated to `http://127.0.0.1:3001/rollback-financing`.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: `MiniROI` CTA href assertion plus click-through on `See Zero Down`
+- Observed behavior: the mobile homepage rendered `Build Your Full Profit Plan` with href `/tow-truck-calculator?rev=200&pmt=1200&known=1` and no pre-approval attributes, and clicking `See Zero Down` navigated to `http://127.0.0.1:3001/zero-down-tow-truck-financing`.
+
+Evidence summary:
+
+- `CTA-INV-16`: code review plus the exact query `rg -n 'RippleCtaLink|legacyCardId' --glob '!**/*.md' components/sections/page/program-cards components/sections/page/equipment-cards components/sections/page/resource-hub components/sections/page/mini-roi` show that this caller class now uses canonical CTA surfaces only while intentionally preserving the tracked legacy card analytics compatibility.
+- `CTA-INV-01`: [homepageCardCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepageCardCallers.test.tsx) and [MiniROI.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/__tests__/MiniROI.test.tsx) now assert single-anchor DOM shape for all four migrated homepage callers.
+- `CTA-INV-12` and `CTA-INV-13`: `npm run build` passed, the wrapper inventory searches returned no production imports, and the final Phase 4 caller class compiles against canonical CTA modules without deleting the wrapper.
+- Inventory regeneration updated [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md): there are now 0 production wrapper consumers, no production deep imports remain, the compatibility-only children overrides are still explicitly tracked in [TertiaryActionsStrip.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx) and [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx), and the three historical `cardId` sites are now tracked as canonical analytics-compatibility callers instead of wrapper consumers.
+- This batch did not touch [lib/press-feedback.tsx](/Users/benfranzoso/Documents/Projects/copy/lib/press-feedback.tsx), and the phase exit checks still found no broken adjacent non-wrapper press-feedback consumers.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Safe stop in Phase 4 only. Do not advance to Phase 5 yet; any next turn must start from the updated checklist/log state and explicitly review the remaining compatibility-only children overrides and wrapper-retirement evidence before opening later-phase work.

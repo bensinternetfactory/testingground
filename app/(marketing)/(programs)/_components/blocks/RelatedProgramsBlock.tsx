@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink } from "@/features/cta/client";
 import type { RelatedProgramsSection } from "../page-config-types";
 import { renderParagraphContent } from "./render-paragraph-content";
 
@@ -53,14 +53,16 @@ export function RelatedProgramsBlock({
             <p className="flex-1 text-sm leading-relaxed text-[#3A3A3A]">
               {program.body}
             </p>
-            <RippleCtaLink
+            <CtaLink
               href={program.href}
-              label={program.linkLabel}
+              copy={{ label: program.linkLabel }}
               icon={ArrowIcon}
-              variant="outline"
-              size="sm"
-              section="related-programs"
-              className="self-start"
+              appearance={{
+                tone: "secondary",
+                size: "sm",
+                className: "self-start",
+              }}
+              analytics={{ legacySection: "related-programs" }}
             />
           </li>
         ))}

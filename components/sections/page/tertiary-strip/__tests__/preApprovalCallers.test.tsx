@@ -55,6 +55,7 @@ describe("financing tertiary-strip pre-approval callers", () => {
     }
 
     render(<TertiaryActionsStrip config={rollbackFinancingPageConfig.tertiaryStrip} />);
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", {
@@ -83,6 +84,7 @@ describe("financing tertiary-strip pre-approval callers", () => {
         config={rotatorFinancingPageConfig.purchaseTermsTertiaryStrip}
       />,
     );
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", {

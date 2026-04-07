@@ -42,7 +42,7 @@ import { HowItWorks, HOW_IT_WORKS_CONFIG } from "@/components/sections/page/how-
 
 - `HowItWorks.tsx` -- server component (no `"use client"`)
 - `HowItWorksAccordion.tsx` -- **client component** (`"use client"`) for Framer Motion accordion on mobile; dynamically imported via `next/dynamic` for code-splitting into a separate chunk
-- CTA uses shared `RippleCtaLink` from `@/components/ui/ripple-cta-link` (client component)
+- CTA uses canonical `LeadCta` / `CtaLink` surfaces from `@/features/cta/client`
 - `config.ts` -- server-safe data (can be imported anywhere)
 
 Desktop grid is server-rendered. The accordion is client-only (lazy-loaded on mobile). CTA is always hydrated.
@@ -60,7 +60,7 @@ Desktop grid is server-rendered. The accordion is client-only (lazy-loaded on mo
 
 ## CTA
 
-Uses shared `RippleCtaLink` component. See `components/ui/ripple-cta-link/CLAUDE.md` for interaction details (ripple, haptics, double-tap guard, swipe guard, reduced motion behavior).
+Uses canonical `LeadCta` / `CtaLink` surfaces from `@/features/cta/client`. Pre-approval trigger attributes still come from the authored config, and the canonical CTA runtime continues to provide ripple, haptics isolation, duplicate-commit protection, swipe cancel, and reduced-motion handling.
 
 ## SEO
 
@@ -73,4 +73,4 @@ Uses shared `RippleCtaLink` component. See `components/ui/ripple-cta-link/CLAUDE
 - `framer-motion` (v12+)
 - `next/link`
 - `next/dynamic`
-- `@/components/ui/ripple-cta-link`
+- `@/features/cta/client`

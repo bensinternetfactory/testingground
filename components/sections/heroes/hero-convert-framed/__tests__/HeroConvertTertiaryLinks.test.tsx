@@ -66,7 +66,7 @@ describe("HeroConvertFramed tertiary actions", () => {
 });
 
 describe("HeroConvertFramedOutline tertiary actions", () => {
-  it("passes canonical tertiary action wiring through RippleCtaLink", () => {
+  it("renders canonical tertiary action wiring through the canonical CTA surfaces", () => {
     render(
       <HeroConvertFramedOutline
         config={{
@@ -104,6 +104,8 @@ describe("HeroConvertFramedOutline tertiary actions", () => {
         }}
       />,
     );
+
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     const canonicalLink = screen.getByRole("link", {
       name: "Estimate your buying power",

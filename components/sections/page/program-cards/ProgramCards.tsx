@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ProgramCardsConfig } from "./config";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink } from "@/features/cta/client";
 
 const ArrowIcon = (
   <svg
@@ -103,15 +103,16 @@ export function ProgramCards({ config }: { config: ProgramCardsConfig }) {
                   {card.description}
                 </p>
                 <div className="mt-auto pt-6">
-                  <RippleCtaLink
+                  <CtaLink
                     href={card.linkHref}
                     prefetch={false}
-                    label={card.linkText}
+                    copy={{ label: card.linkText }}
                     icon={ArrowIcon}
-                    size="sm"
-                    section="program-cards"
-                    cardId={card.id}
-                    className="w-full justify-center"
+                    appearance={{ size: "sm", className: "w-full justify-center" }}
+                    analytics={{
+                      legacySection: "program-cards",
+                      legacyCardId: card.id,
+                    }}
                   />
                 </div>
               </div>

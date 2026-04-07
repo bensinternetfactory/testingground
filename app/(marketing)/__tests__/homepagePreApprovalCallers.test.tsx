@@ -105,6 +105,7 @@ describe("homepage pre-approval caller configs", () => {
 
   it("renders the how-it-works CTA with canonical trigger attributes", () => {
     render(<HowItWorks config={HOW_IT_WORKS_CONFIG} />);
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", { name: "See Your Payment" }),

@@ -1,8 +1,17 @@
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import type { PromoPanelSection } from "../page-config-types";
 import { renderParagraphContent } from "./render-paragraph-content";
 
 export function PromoPanelBlock({ section }: { section: PromoPanelSection }) {
+  const entry: PreApprovalEntry | null = section.cta.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: section.cta.href,
+        trigger: section.cta.preApprovalTrigger,
+      }
+    : null;
+
   return (
     <section
       id={section.id}
@@ -58,13 +67,21 @@ export function PromoPanelBlock({ section }: { section: PromoPanelSection }) {
         ) : null}
 
         <div className="mt-7">
-          <RippleCtaLink
-            href={section.cta.href}
-            label={section.cta.label}
-            preApprovalTrigger={section.cta.preApprovalTrigger}
-            size="md"
-            section="calculator-promo"
-          />
+          {entry ? (
+            <LeadCta
+              copy={{ label: section.cta.label }}
+              entry={entry}
+              appearance={{ size: "md" }}
+              analytics={{ legacySection: "calculator-promo" }}
+            />
+          ) : (
+            <CtaLink
+              href={section.cta.href}
+              copy={{ label: section.cta.label }}
+              appearance={{ size: "md" }}
+              analytics={{ legacySection: "calculator-promo" }}
+            />
+          )}
         </div>
       </div>
     </section>

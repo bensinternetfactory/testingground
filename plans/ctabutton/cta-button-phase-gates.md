@@ -18,7 +18,7 @@ Rules:
 - [ ] `Phase 1` active
 - [ ] `Phase 2` active
 - [ ] `Phase 3` active
-- [ ] `Phase 4` active
+- [x] `Phase 4` active
 - [ ] `Phase 5` active
 - [ ] `Phase 6` active
 
@@ -135,24 +135,24 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 3 gate passed.
+- [x] Phase 3 gate passed.
 
 Execution checklist:
 
-- [ ] Remaining section CTA callers migrated in controlled batches.
-- [ ] Card CTA callers using legacy `cardId` usage migrated or compatibility-tracked.
-- [ ] Deep import callers migrated.
-- [ ] Shared `lib/press-feedback.tsx` ownership decision implemented and verified if touched.
-- [ ] New CTA work uses canonical feature modules only.
-- [ ] Browser validation completed for each changed caller batch.
-- [ ] `npm run lint` passed after each batch.
-- [ ] `npm run build` passed after each batch.
-- [ ] Execution log updated with matrix IDs covered by each batch.
+- [x] Remaining section CTA callers migrated in controlled batches.
+- [x] Card CTA callers using legacy `cardId` usage migrated or compatibility-tracked.
+- [x] Deep import callers migrated.
+- [x] Shared `lib/press-feedback.tsx` ownership decision implemented and verified if touched.
+- [x] New CTA work uses canonical feature modules only.
+- [x] Browser validation completed for each changed caller batch.
+- [x] `npm run lint` passed after each batch.
+- [x] `npm run build` passed after each batch.
+- [x] Execution log updated with matrix IDs covered by each batch.
 
 Go / no-go gate:
 
-- [ ] Go: remaining production callers are either canonicalized or explicitly tracked for final cleanup.
-- [ ] No-go conditions checked: no untracked wrapper-only prop dependence, no broken non-CTA press-feedback consumers.
+- [x] Go: remaining production callers are either canonicalized or explicitly tracked for final cleanup.
+- [x] No-go conditions checked: no untracked wrapper-only prop dependence, no broken non-CTA press-feedback consumers.
 
 ## Phase 5: Remove Wrapper-Only Semantics
 

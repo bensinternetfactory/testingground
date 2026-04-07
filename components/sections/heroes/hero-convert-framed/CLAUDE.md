@@ -46,6 +46,6 @@ import {
 ## Dependencies
 
 - Reuses the shared base hero fields from `hero-convert-geico/config.ts`
-- `RippleCtaLink` is only used by the outline tertiary variant
+- `HeroConvertFramedOutline.tsx` now renders its tertiary cards through canonical `LeadCta` / `CtaLink` surfaces while preserving the existing custom children layout
 - `FramedTileSelector.tsx` preserves the disabled pre-selection button path, then upgrades to canonical pre-approval CTA attributes once a tile is selected
 - `next/image` for primitive tile and gallery assets

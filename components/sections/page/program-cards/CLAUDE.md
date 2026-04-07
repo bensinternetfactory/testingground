@@ -32,13 +32,13 @@ import { ProgramCards, PROGRAM_CARDS_CONFIG } from "@/components/sections/page/p
 
 - `ProgramCards.tsx` -- server component (no `"use client"`)
 - Card content and layout are server-rendered
-- CTA uses shared `RippleCtaLink` from `@/components/ui/ripple-cta-link` (client component) -- only the CTA interaction is client-side
+- CTA uses canonical `CtaLink` from `@/features/cta/client` with preserved legacy section/card analytics -- only the CTA interaction is client-side
 - `config.ts` -- server-safe data (can be imported anywhere)
 
 ## CTA
 
-Card CTAs are full-width pill buttons using shared `RippleCtaLink` (`size="sm"`). See `components/ui/ripple-cta-link/CLAUDE.md` for interaction details.
+Card CTAs are full-width pill buttons using canonical `CtaLink` (`size="sm"`) while preserving the historical `program-cards` section analytics identity and each card's legacy `cardId`.
 
 ## Dependencies
 
-- `@/components/ui/ripple-cta-link`
+- `@/features/cta/client`

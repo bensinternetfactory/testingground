@@ -1,9 +1,17 @@
 import Image from "next/image";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
+import type { PreApprovalEntry } from "@/features/cta/lead-entry";
 import type { InlineCtaSection } from "../page-config-types";
 
 export function InlineCtaBlock({ section }: { section: InlineCtaSection }) {
   const { config } = section;
+  const entry: PreApprovalEntry | null = config.preApprovalTrigger
+    ? {
+        kind: "pre-approval",
+        href: config.ctaHref,
+        trigger: config.preApprovalTrigger,
+      }
+    : null;
 
   return (
     <div className="-mx-6 my-14 bg-[#101820] px-6 py-8 text-white md:py-10 lg:mx-0 lg:rounded-2xl lg:px-8">
@@ -30,14 +38,29 @@ export function InlineCtaBlock({ section }: { section: InlineCtaSection }) {
           </div>
         </div>
         <div className="shrink-0">
-          <RippleCtaLink
-            href={config.ctaHref}
-            label={config.ctaLabel}
-            preApprovalTrigger={config.preApprovalTrigger}
-            size="md"
-            section="inline-cta-band"
-            className="!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]"
-          />
+          {entry ? (
+            <LeadCta
+              copy={{ label: config.ctaLabel }}
+              entry={entry}
+              appearance={{
+                size: "md",
+                className:
+                  "!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]",
+              }}
+              analytics={{ legacySection: "inline-cta-band" }}
+            />
+          ) : (
+            <CtaLink
+              href={config.ctaHref}
+              copy={{ label: config.ctaLabel }}
+              appearance={{
+                size: "md",
+                className:
+                  "!bg-[#22C55E] !text-[#101820] hover:!bg-[#86EFAC] focus-visible:!ring-[#22C55E] focus-visible:!ring-offset-[#101820]",
+              }}
+              analytics={{ legacySection: "inline-cta-band" }}
+            />
+          )}
         </div>
       </div>
     </div>

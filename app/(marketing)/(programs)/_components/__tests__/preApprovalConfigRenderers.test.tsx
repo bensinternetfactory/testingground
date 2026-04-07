@@ -4,12 +4,14 @@ import { cleanup, render, screen } from "@testing-library/react";
 import type {
   InlineCtaSection,
   PromoPanelSection,
+  RelatedProgramsSection,
 } from "@/app/(marketing)/(programs)/_components/page-config-types";
 import { fleetFinancingPageConfig } from "@/app/(marketing)/(programs)/fleet-financing/config";
 import { HeroLeadGen } from "@/components/sections/heroes/hero-lead-gen/HeroLeadGen";
 import { SidebarCta } from "../SidebarCta";
 import { InlineCtaBlock } from "../blocks/InlineCtaBlock";
 import { PromoPanelBlock } from "../blocks/PromoPanelBlock";
+import { RelatedProgramsBlock } from "../blocks/RelatedProgramsBlock";
 import { ProgramBottomLinks } from "../ProgramBottomLinks";
 
 afterEach(() => {
@@ -95,6 +97,7 @@ describe("program page pre-approval caller renderers", () => {
 
   it("renders the fleet sidebar CTA with canonical trigger attributes from the authored config", () => {
     render(<SidebarCta config={fleetFinancingPageConfig.sidebarCta} />);
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", { name: "Get Pre-Approved" }),
@@ -110,6 +113,7 @@ describe("program page pre-approval caller renderers", () => {
 
   it("renders authored inline CTA bands with canonical trigger attributes", () => {
     render(<InlineCtaBlock section={findInlineCtaSection("growth-inline-cta")} />);
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", { name: "Get Pre-Approved" }),
@@ -146,6 +150,7 @@ describe("program page pre-approval caller renderers", () => {
     };
 
     render(<PromoPanelBlock section={section} />);
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
 
     expectCanonicalTriggerAttributes(
       screen.getByRole("link", { name: "See my payment" }),
@@ -158,6 +163,33 @@ describe("program page pre-approval caller renderers", () => {
         title: "Estimate your fleet payment",
       },
     );
+  });
+
+  it("renders related program card links through the canonical CTA surface", () => {
+    const section: RelatedProgramsSection = {
+      kind: "relatedPrograms",
+      heading: "Compare more options",
+      paragraphs: ["Explore adjacent financing paths."],
+      programs: [
+        {
+          title: "Rotator financing",
+          body: "See current rotator structures.",
+          href: "/rotator-financing",
+          linkLabel: "Explore rotator financing",
+          iconSrc: "/brand-assets/benefit-icons/terms/terms-dark.svg",
+        },
+      ],
+    };
+
+    render(<RelatedProgramsBlock section={section} />);
+
+    const link = screen.getByRole("link", {
+      name: "Explore rotator financing",
+    });
+
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
+    expect(link).toHaveAttribute("href", "/rotator-financing");
+    expect(link.hasAttribute("data-pre-approval-version")).toBe(false);
   });
 
   it("supports canonical bottom-link card wiring on the shared renderer", () => {

@@ -39,6 +39,7 @@ describe("TileSelector", () => {
 
     const link = screen.getByRole("link", { name: "Get Pre-Approved" });
 
+    expect(document.querySelectorAll("a a")).toHaveLength(0);
     expect(link).toHaveAttribute("data-pre-approval-version", "2");
     expect(link).toHaveAttribute(
       "data-pre-approval-origin-page-id",

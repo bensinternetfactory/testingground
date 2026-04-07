@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
 import type { TertiaryStripConfig } from "./config";
 
 export function TertiaryActionsStrip({
@@ -12,26 +12,55 @@ export function TertiaryActionsStrip({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           {config.actions.map((action) => (
-            <RippleCtaLink
-              key={action.label}
-              href={action.href}
-              label={action.label}
-              variant="outline-dark"
-              size="sm"
-              justify="between"
-              icon={<ArrowRight className="h-4 w-4" />}
-              preApprovalTrigger={action.preApprovalTrigger}
-              prefetch={false}
-              section="tertiary-strip"
-              className="w-full rounded-2xl border-white/15 px-6 py-5"
-            >
-              <span className="flex flex-col items-start">
-                <span className="text-xs text-white/60">{action.eyebrow}</span>
-                <span className="mt-1 text-sm font-medium text-white">
-                  {action.label}
+            action.preApprovalTrigger ? (
+              <LeadCta
+                key={action.label}
+                copy={{ label: action.label }}
+                entry={{
+                  kind: "pre-approval",
+                  href: action.href,
+                  trigger: action.preApprovalTrigger,
+                }}
+                appearance={{
+                  tone: "inverse",
+                  size: "sm",
+                  align: "between",
+                  className: "w-full rounded-2xl border-white/15 px-6 py-5",
+                }}
+                icon={<ArrowRight className="h-4 w-4" />}
+                analytics={{ legacySection: "tertiary-strip" }}
+                prefetch={false}
+              >
+                <span className="flex flex-col items-start">
+                  <span className="text-xs text-white/60">{action.eyebrow}</span>
+                  <span className="mt-1 text-sm font-medium text-white">
+                    {action.label}
+                  </span>
                 </span>
-              </span>
-            </RippleCtaLink>
+              </LeadCta>
+            ) : (
+              <CtaLink
+                key={action.label}
+                href={action.href}
+                copy={{ label: action.label }}
+                appearance={{
+                  tone: "inverse",
+                  size: "sm",
+                  align: "between",
+                  className: "w-full rounded-2xl border-white/15 px-6 py-5",
+                }}
+                icon={<ArrowRight className="h-4 w-4" />}
+                analytics={{ legacySection: "tertiary-strip" }}
+                prefetch={false}
+              >
+                <span className="flex flex-col items-start">
+                  <span className="text-xs text-white/60">{action.eyebrow}</span>
+                  <span className="mt-1 text-sm font-medium text-white">
+                    {action.label}
+                  </span>
+                </span>
+              </CtaLink>
+            )
           ))}
         </div>
       </div>

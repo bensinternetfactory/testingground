@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { CtaLink, LeadCta } from "@/features/cta/client";
 import { resolvePreApprovalSelectionTrigger } from "@/features/pre-approval/selection";
-import { RippleCtaLink } from "@/components/ui/ripple-cta-link";
 import { SelectionTile } from "./SelectionTile";
 import type { HeroConvertConfig, SelectionTileData } from "./config";
 
@@ -74,16 +74,33 @@ export function TileSelector({
       ) : null}
 
       {/* Primary CTA */}
-      <RippleCtaLink
-        href={cta.href}
-        label={cta.label}
-        preApprovalTrigger={preApprovalTrigger}
-        size="md"
-        disabled={!selectedTile}
-        section="rollback-hero"
-        ariaLabel={cta.label}
-        className="mt-3 w-full justify-center sm:mt-4 sm:w-auto"
-      />
+      {preApprovalTrigger ? (
+        <LeadCta
+          copy={{ label: cta.label, ariaLabel: cta.label }}
+          entry={{
+            kind: "pre-approval",
+            href: cta.href,
+            trigger: preApprovalTrigger,
+          }}
+          appearance={{
+            size: "md",
+            className: "mt-3 w-full justify-center sm:mt-4 sm:w-auto",
+          }}
+          analytics={{ legacySection: "rollback-hero" }}
+          disabled={!selectedTile}
+        />
+      ) : (
+        <CtaLink
+          href={cta.href}
+          copy={{ label: cta.label, ariaLabel: cta.label }}
+          appearance={{
+            size: "md",
+            className: "mt-3 w-full justify-center sm:mt-4 sm:w-auto",
+          }}
+          analytics={{ legacySection: "rollback-hero" }}
+          disabled={!selectedTile}
+        />
+      )}
     </>
   );
 }
