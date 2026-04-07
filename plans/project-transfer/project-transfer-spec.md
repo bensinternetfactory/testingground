@@ -79,7 +79,7 @@ No code will be migrated as part of this planning phase. This document and its c
 | `app/(marketing)/(financing)/_components/` | EquipmentFinancingPageShell, config types | Yes |
 | `app/(marketing)/_components/MinimalNavPage.tsx` | Minimal page shell | Yes |
 | `public/brand-assets/**` | Benefit icons, logos, manufacturer logos, source icons | Yes |
-| `public/truck-icons/**` | Truck type icon variants | Yes |
+| `public/brand-assets/truck-icons/**` | Truck type icon variants (15 SVGs across 4 truck types) | Yes |
 | `public/truck-*.jpg` | Truck photo gallery | Yes |
 
 ---
@@ -165,14 +165,15 @@ These cannot be resolved from the source repo alone. Each must be answered durin
 
 ### Tests (source-side, for inventory)
 
-31 non-node_modules test files exist across:
+36 non-node_modules test files exist across:
 - `features/pre-approval/__tests__/` (12 files)
 - `features/cta/__tests__/` (1 file)
 - `lib/__tests__/` (1 file)
 - `components/sections/heroes/**/__tests__/` (6 files)
 - `components/sections/nav/**/__tests__/` (2 files)
-- `components/sections/page/**/__tests__/` (5 files)
+- `components/sections/page/**/__tests__/` (8 files)
 - `app/(marketing)/**/__tests__/` (4 files)
+- `scripts/__tests__/` (2 files — excluded from migration scope)
 
 ---
 

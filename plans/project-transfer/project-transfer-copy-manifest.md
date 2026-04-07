@@ -101,7 +101,7 @@ These are the section components imported by in-scope pages. Copy the entire dir
 | `public/brand-assets/manufacturers/` | Yes | Yes (homepage) | Manufacturer logos for BrandMarquee | Missing marquee logos |
 | `public/brand-assets/favicon/` | Yes | Phase 5+ (adapt) | Favicon PNGs | Missing/wrong favicon |
 | `public/brand-assets/source-icons/` | Yes | Phase 6 (if referenced) | Purchase source placeholders | Missing icons |
-| `public/truck-icons/` | Yes | Yes | Truck type icon variants (hero tiles) | Missing hero tile icons |
+| `public/brand-assets/truck-icons/` | Yes | Yes | Truck type icon variants — 15 SVGs across 4 types (rollback, wrecker, rotator, heavywrecker) | Missing hero tile icons |
 | `public/truck-*.jpg` and `public/truck-*.png` | Yes | Yes (homepage) | Truck photo gallery images | Broken gallery images |
 
 ---

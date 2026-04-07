@@ -85,6 +85,8 @@
 **Known client boundaries:**
 - `app/(marketing)/error.tsx`
 - `app/(marketing)/(programs)/error.tsx`
+- `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`
+- `app/(marketing)/(programs)/_components/TableOfContents.tsx`
 - `app/(marketing)/(financing)/error.tsx`
 - `app/(marketing)/(resources)/error.tsx`
 - `app/global-error.tsx`
@@ -96,6 +98,7 @@
 - `features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`
 - `features/pre-approval/drawer/ui/AmountSlider.tsx`
 - `lib/press-feedback.tsx`
+- ~30 files in `components/sections/` (heroes, nav, page sections — all interactive UI components)
 
 ---
 
@@ -209,9 +212,9 @@
 - `app/globals.css` (brand tokens, animations, theme)
 - `components/sections/nav/sticky-nav-rm/sticky-nav.css`
 - `components/sections/heroes/hero-showcase-rm/hero-showcase.css`
-- `components/sections/page/brand-marquee/marquee.css`
-- `components/sections/page/testimonial-marquee/testimonial.css`
-- `features/pre-approval/drawer/ui/amount-slider.css`
+- `components/sections/page/brand-marquee/brand-marquee.css`
+- `components/sections/page/testimonial-marquee/testimonial-marquee.css`
+- `features/pre-approval/amount-slider.css`
 
 ---
 
@@ -267,14 +270,15 @@
 | **Phase** | 1 |
 | **Hard blocker?** | No |
 
-**Existing tests (31 files):**
-- Pre-approval: 12 test files (drawer, runtime, context, hash listener, route sync, public API, selection, scroll lock, amount slider, press feedback)
+**Existing tests (36 files, 34 in-scope):**
+- Pre-approval: 12 test files (drawer, runtime, context, hash listener, route sync, public API, selection, scroll lock, amount slider, press feedback, error boundary, drawer root)
 - CTA: 1 test file (public API)
 - Lib: 1 test file (press feedback)
-- Heroes: 6 test files (framed tile selector, tertiary links, tile selector, hero input, hero lead gen)
+- Heroes: 6 test files (framed tile selector, framed tertiary links, geico tile selector, geico tertiary links, hero input, hero lead gen)
 - Nav: 2 test files (NavPressable, preApprovalCta)
-- Page sections: 5 test files (mini-roi calc/input/math/component, truck gallery utils, equipment closing CTA, tertiary strip, term length slider)
+- Page sections: 8 test files (mini-roi calc, input-parsing, math, MiniROI component, truck gallery utils, equipment closing CTA, tertiary strip, term length slider)
 - Marketing routes: 4 test files (homepage card callers, homepage pre-approval callers, program nav card link, program pre-approval config renderers)
+- Scripts (excluded): 2 test files (financing review harness, remediation registry)
 
 **Missing test coverage:** No route-level render tests for full page output. No integration tests for page shell → config → section composition chain.
 

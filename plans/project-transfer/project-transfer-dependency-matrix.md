@@ -158,9 +158,9 @@
 | Geist font (`next/font/google`) | style | Root layout | Direct | Transfer with adaptation | Font loaded in root layout; applied via CSS variables | Typography fallback to system font | Visual font check |
 | `sticky-nav-rm/sticky-nav.css` | style | StickyNav | Indirect | Transfer unchanged | Custom nav CSS | Nav styling broken | Visual render check |
 | `hero-showcase-rm/hero-showcase.css` | style | HeroShowcase | Indirect | Transfer unchanged | Custom hero CSS | Hero styling broken | Visual render check |
-| `brand-marquee/marquee.css` | style | BrandMarquee | Indirect | Transfer unchanged | Marquee-specific CSS | Marquee styling broken | Visual render check |
-| `testimonial-marquee/testimonial.css` | style | TestimonialMarquee | Indirect | Transfer unchanged | Testimonial marquee CSS | Marquee styling broken | Visual render check |
-| `amount-slider.css` | style | AmountSlider | Indirect | Transfer unchanged | Slider track/thumb styling | Slider visually broken | Visual render check |
+| `brand-marquee/brand-marquee.css` | style | BrandMarquee | Indirect | Transfer unchanged | Marquee-specific CSS | Marquee styling broken | Visual render check |
+| `testimonial-marquee/testimonial-marquee.css` | style | TestimonialMarquee | Indirect | Transfer unchanged | Testimonial marquee CSS | Marquee styling broken | Visual render check |
+| `features/pre-approval/amount-slider.css` | style | AmountSlider | Indirect | Transfer unchanged | Slider track/thumb styling | Slider visually broken | Visual render check |
 | Reduced motion media queries | style | globals.css | Indirect | Transfer with adaptation | Accessibility: disables animations when `prefers-reduced-motion` | Animations play for users who need reduced motion | Test with reduced motion preference |
 | Dark mode variant | style | globals.css | Indirect | Transfer with adaptation | `@custom-variant dark (&:is(.dark *))` | Dark mode tokens applied incorrectly or not at all | Toggle dark mode; verify colors |
 | `2xl` section containment classes | style | All `<section>` and `<footer>` elements | Direct | Transfer unchanged | `2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x ...` convention | Sections expand past 1536px on ultra-wide screens | Resize browser to >1536px |
@@ -176,7 +176,7 @@
 | `public/brand-assets/manufacturers/**` | asset | BrandMarquee | Direct | Transfer unchanged | 16 manufacturer logos | Missing logos in marquee | Visual render check |
 | `public/brand-assets/favicon/**` | asset | Metadata/head | Direct | Transfer with adaptation | Favicon PNGs | Wrong or missing favicon | Browser tab check |
 | `public/brand-assets/source-icons/**` | asset | PurchaseSourceGrid | Direct | Transfer unchanged | 4 purchase source placeholder icons | Missing icons | Visual render check |
-| `public/truck-icons/**` | asset | Hero tile selectors, equipment cards | Direct | Transfer unchanged | ~15 truck icon variants per type | Missing icons in hero tiles | Visual render check |
+| `public/brand-assets/truck-icons/**` | asset | Hero tile selectors, equipment cards, nav | Direct | Transfer unchanged | 15 SVGs across 4 types (rollback, wrecker, rotator, heavywrecker) in dark/green/light variants | Missing icons in hero tiles | Visual render check |
 | `public/truck-*.jpg` | asset | TruckGallery, hero sections | Direct | Transfer unchanged | 15 truck photos (JPG) | Missing gallery images | Visual render check |
 | `public/*.svg` (root-level) | asset | Various | Direct | Transfer only if referenced | 5 SVGs at public root | Broken images if referenced | Trace references |
 
