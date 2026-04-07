@@ -871,3 +871,170 @@ Independent verification confirmed all 13 DC items. Four factual inaccuracies in
 
 **Next required action:**
 - Execute Phase 4: Transfer design and adaptation map, incorporating the corrections and additions from this verification entry
+
+---
+
+### Entry 7 — Phase 4: Transfer Design and Adaptation Map
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude |
+| **Phase** | Phase 4 — Transfer Design and Adaptation Map |
+| **Batch / Scope** | Full Phase 4: adaptation plans, mapping strategies, Phase 5/6 scope, post-copy reconciliation, verification plans |
+| **Status** | PASS |
+
+**What was completed:**
+- 7 "Transfer with adaptation" items defined with specific adaptation steps (A1–A7)
+- 12 "Map to existing" items defined with destination equivalents and mapping strategies (M1–M12)
+- Phase 5 scope defined: 40+ source directories/files, 16 integration steps, homepage collision resolution plan
+- Phase 6 batches defined: 4 batches (6a–6d) with file lists, dependency chains, and verification plans
+- Post-copy reconciliation sequence: 20 ordered steps (R1–R20) with destination-specific details
+- Verification plan for every phase and batch: specific checks, methods, and pass criteria
+- 1 discrepancy correction: homepage CLAUDE.md references HeroLeadGen but code uses HeroGallery (code is authoritative)
+- Phase 4 gate evaluated: GO
+- Active phase marker advanced to Phase 5
+
+**What remains:**
+- None — Phase 4 complete
+
+**Changes made:**
+- Created `project-transfer-adaptation-map.md` — comprehensive 8-section adaptation map
+- Updated `project-transfer-phase-gates.md`: Phase 4 checklist all checked, gate marked GO, active phase → Phase 5
+- Updated `project-transfer-execution-log.md`: this entry
+
+**Files created or updated:**
+- `plans/project-transfer/project-transfer-adaptation-map.md` (NEW — 8 sections)
+- `plans/project-transfer/project-transfer-phase-gates.md` (Phase 4 checklist, gate, active phase)
+- `plans/project-transfer/project-transfer-execution-log.md` (this entry)
+
+**Commands run:**
+```
+Read: source app/(marketing)/page.tsx — confirmed HeroGallery (not HeroLeadGen) is homepage hero
+Read: source app/globals.css, app/layout.tsx, app/(marketing)/layout.tsx — precise adaptation targets
+Read: destination app/layout.tsx, app/globals.css, next.config.ts, app/(public)/page.tsx — precise merge targets
+Read: source and destination lib/utils.ts — confirmed byte-identical (do NOT transfer)
+Read: source components/ui/navigation-menu.tsx — confirmed @radix-ui/react-navigation-menu import
+Grep: @/components/layout/ imports in destination — only used by app/(public)/page.tsx (dead code after homepage replacement)
+ls: destination app/(public)/_components/, components/layout/ — mapped homepage collision impact
+```
+
+**Automated verification results:**
+- Build: N/A — Phase 4 is design only
+- Lint: N/A
+- Tests: N/A
+- TypeScript: N/A
+
+**Browser verification results:**
+- N/A — Phase 4 is design only
+
+**Evidence references:**
+- A1 (PreApprovalDrawerRoot): Source `app/(marketing)/layout.tsx` lines 1–9, source `app/layout.tsx` line 35, destination `app/layout.tsx` lines 30–37
+- A2 (globals.css): Source globals.css full file (181 lines), destination globals.css full file (140 lines) — line-by-line comparison
+- A7 (favicon): Destination metadata.icons at `app/layout.tsx` line 20
+- M7 (radix): Source `navigation-menu.tsx` line 4 imports `@radix-ui/react-navigation-menu`; destination lacks this package
+- M11 (cn): Source and destination `lib/utils.ts` are byte-identical (6 lines each)
+- Phase 5 scope: Copy manifest "Required for smallest viable unit" column cross-referenced with homepage `page.tsx` imports (lines 1–34)
+- Homepage collision: Destination `app/(public)/page.tsx` serves `/`; `components/layout/` only imported there (5 imports, all become dead code)
+- Discrepancy: `app/(marketing)/CLAUDE.md` says HeroLeadGen; `app/(marketing)/page.tsx` line 2 imports HeroGallery
+
+**Inventories captured:**
+- 7 adaptation items with step-by-step instructions (A1–A7)
+- 12 mapping items with disposition and action (M1–M12)
+- Phase 5 file manifest: ~40 directories/files across features, lib, components, sections, heroes, route files, public assets
+- Phase 5 exclusion list: 17 items with reasons
+- Phase 5 integration steps: 12 ordered steps
+- Phase 6 batch plan: 4 batches with file lists and dependency analysis
+- Post-copy reconciliation: 20 ordered items (R1–R20)
+- Verification matrices: 4 phases/batches × 6–13 checks each
+
+**Decisions made:**
+- `lib/utils.ts` is NOT transferred — destination has byte-identical file; all `@/lib/utils` imports resolve without copy
+- `globals.css` strategy: source file is authoritative (brand alignment), with destination-only `@layer utilities` and `@supports` blocks appended
+- Homepage collision: delete `app/(public)/page.tsx`; keep rest of `(public)` route group; destination `components/layout/*` become dead code (cleanup post-merge)
+- Root layout metadata: update title to "TowLoans", description to match source, favicon to brand-assets path
+- `@radix-ui/react-navigation-menu` installed individually (consistent with destination's individual-package pattern); monorepo `radix-ui` NOT installed
+- Phase 5 includes `MinimalNavPage.tsx` even though it's primarily used by Phase 6a pages — it's a single file with no additional dependencies
+- `equipment-closing-cta/` section deferred from Phase 5 to Phase 6b (not used by homepage)
+- `app/(marketing)/CLAUDE.md` HeroLeadGen reference is incorrect; code uses HeroGallery — code is authoritative
+- `app/global-error.tsx` kept as destination version (not transferred) per Entry 6 decision
+- Source `body { font-family: Arial, Helvetica, sans-serif }` in `@layer base` is carried over via globals.css merge — it's a fallback stack behind the Geist CSS variable font
+
+**Unresolved questions:**
+- None — all design decisions recorded
+
+**Evidence summary:**
+All Phase 4 deliverables produced. The adaptation map (`project-transfer-adaptation-map.md`) defines 7 "Transfer with adaptation" items with concrete step-by-step adaptation instructions, 12 "Map to existing" items with destination equivalents, the complete Phase 5 file scope (~40 items with inclusion/exclusion rationale), 4 Phase 6 batches with file lists and dependency chains, 20 post-copy reconciliation steps with destination-specific details, and verification plans for every phase/batch. Key design decisions: globals.css is replaced (brand alignment), lib/utils.ts is NOT transferred (byte-identical), homepage collision resolved by deleting destination placeholder, and root layout is adapted (portal div, metadata, favicon). One documentation discrepancy corrected (homepage hero component name).
+
+**Gate decision:** GO
+
+**Blockers / regressions:**
+- None
+
+**What must not begin yet:**
+- N/A — Phase 4 complete, Phase 5 may now begin
+
+**Next required action:**
+- Execute Phase 5: Smallest viable migration unit — copy files per adaptation map §3, execute integration steps §3c, verify per §6 Phase 5 verification plan
+
+---
+
+### Entry 8 — Phase 4 post-entry verification (independent audit)
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude (verification of Entry 7 via Codex audit) |
+| **Phase** | Phase 4 — Transfer Design and Adaptation Map |
+| **Batch / Scope** | Independent verification of adaptation map, Phase 5/6 scope, reconciliation sequence |
+| **Status** | PASS |
+
+**What was completed:**
+- Independent Codex audit of all Phase 4 deliverables (10 verification checks)
+- 3 errors corrected, 4 documentation improvements applied
+- Gate assessment reconfirmed: GO after corrections
+
+**Corrections applied:**
+
+1. **A7 favicon path (FAIL):** Adaptation map referenced non-existent `favicon-32x32.png`. Actual files are `towloans-favicon.png` and `towloans-favicon-no-bg.png`. Corrected A7, R16, and integration step 4 to use `towloans-favicon.png`.
+
+2. **Batch 6c incomplete dependencies (FAIL):** `PurchaseAndTermsSection.tsx` unconditionally imports `PurchaseSourceGrid` (line 1) and `TermLengthSlider` (line 2). These were listed as conditional but are mandatory for any batch that includes `purchase-and-terms/`. Moved both from conditional to required in Batch 6c. Also documented that `hero-lead-gen/` is required by `EquipmentFinancingPageShell.tsx` (line 14, for `rotator-financing`'s `kind: "lead-gen"`) and is already present from Batch 6b — added explicit dependency note.
+
+3. **Phase 2 gate wording (FAIL):** Gate checkbox said "Baseline build/lint/test pass" but Entry 4 documents lint FAIL (7 errors) and test FAIL (13 failures), both pre-existing. The accepted risk block was already present but the checkbox text was misleading. Amended to: "Baseline build/lint/test recorded (build PASS; lint and test have pre-existing failures documented as regression baseline)".
+
+**Documentation improvements:**
+
+4. **R9/R16 overlap (WARN):** R9 mentioned favicon update; R16 also handles favicon. Clarified R9 to state "Favicon handled separately in R16."
+
+5. **components.json wording (WARN):** Exclusion list claimed "Identical config" but files are functionally equivalent, not byte-identical. Corrected to "Functionally equivalent config."
+
+6. **`public/brand-assets/source-icons/` disposition (WARN):** Verified that no financing config `iconSrc` values reference `source-icons/` — all point to `benefit-icons/` (already in Phase 5). Marked as "likely not needed" with evidence.
+
+7. **Line count precision (WARN):** Entry 7 claimed 181/140 lines for globals.css files; actual counts are 181/140 including trailing newlines. Minor — left as-is.
+
+**Files created or updated:**
+- `plans/project-transfer/project-transfer-adaptation-map.md` (A7, Batch 6c, R9, R16, exclusion list corrections)
+- `plans/project-transfer/project-transfer-phase-gates.md` (Phase 2 gate wording)
+- `plans/project-transfer/project-transfer-execution-log.md` (this entry)
+
+**Decisions made:**
+- Batch 6c now has explicit dependency on Batch 6b (for HeroLeadGen)
+- `purchase-source-grid/` and `term-length-slider/` are mandatory for Batch 6c, not conditional
+- `public/brand-assets/source-icons/` is likely not needed (no code references it)
+
+**Unresolved questions:**
+- None
+
+**Evidence summary:**
+Codex audit reported 3 PASS, 3 FAIL, 4 WARN across 10 verification checks. All 3 FAILs verified against actual source code and corrected: favicon path, Batch 6c dependency chain, Phase 2 gate wording. All 4 WARNs addressed with documentation improvements. Phase 5 scope completeness (Check 4), exclusion safety (Check 5), factual spot-checks (Check 9), and missed items scan (Check 10) all PASS. No structural blockers found.
+
+**Gate decision:** GO confirmed — no change from Entry 7
+
+**Blockers / regressions:**
+- None
+
+**What must not begin yet:**
+- N/A — Phase 4 remains complete
+
+**Next required action:**
+- Execute Phase 5: Smallest viable migration unit

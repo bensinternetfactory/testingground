@@ -12,7 +12,7 @@
 
 ## Active Phase
 
-**Phase 4 — Transfer Design and Adaptation Map**
+**Phase 5 — Smallest Viable Migration Unit**
 
 ---
 
@@ -116,7 +116,7 @@ Analyze the destination repo. Answer all unknowns U1–U12 from the spec. Create
 
 ### Go / No-Go Gate
 - [x] Migration branch exists and is clean
-- [x] Baseline build/lint/test pass
+- [x] Baseline build/lint/test recorded (build PASS; lint and test have pre-existing failures documented as regression baseline — see accepted risk below)
 - [x] All unknowns U1–U12 have concrete answers (or are flagged `Unverified` with verification method)
 - [x] Destination checklist DC-01 through DC-03 pass
 
@@ -185,29 +185,29 @@ Define exactly what changes during copy and what changes after. Produce the adap
 
 ### Execution Checklist
 
-- [ ] For each "Transfer with adaptation" item in dependency matrix: define the specific adaptation
-- [ ] For each "Map to existing" item: identify the destination equivalent and mapping strategy
-- [ ] Define the smallest viable migration unit (Phase 5 scope)
-- [ ] Define the incremental expansion batches (Phase 6 scope)
-- [ ] Document the post-copy reconciliation sequence from copy manifest with destination-specific details
-- [ ] Define the verification plan for each batch (what to check, how to check)
-- [ ] Record all decisions in execution log
+- [x] For each "Transfer with adaptation" item in dependency matrix: define the specific adaptation
+- [x] For each "Map to existing" item: identify the destination equivalent and mapping strategy
+- [x] Define the smallest viable migration unit (Phase 5 scope)
+- [x] Define the incremental expansion batches (Phase 6 scope)
+- [x] Document the post-copy reconciliation sequence from copy manifest with destination-specific details
+- [x] Define the verification plan for each batch (what to check, how to check)
+- [x] Record all decisions in execution log
 
 ### Required Evidence/Artifacts
-- Adaptation map (specific changes per dependency)
-- Phase 5 scope definition (which files, which routes)
-- Phase 6 batch plan
-- Post-copy reconciliation sequence with destination specifics
-- Execution log entry
+- Adaptation map (specific changes per dependency) — `project-transfer-adaptation-map.md`
+- Phase 5 scope definition (which files, which routes) — adaptation map §3
+- Phase 6 batch plan — adaptation map §4
+- Post-copy reconciliation sequence with destination specifics — adaptation map §5
+- Execution log entry — Entry 7
 
 ### Go / No-Go Gate
-- [ ] Every "Transfer with adaptation" item has a concrete adaptation plan
-- [ ] Phase 5 scope is defined and agreed upon
-- [ ] Phase 6 batches are defined
-- [ ] Post-copy reconciliation sequence is complete
+- [x] Every "Transfer with adaptation" item has a concrete adaptation plan
+- [x] Phase 5 scope is defined and agreed upon
+- [x] Phase 6 batches are defined
+- [x] Post-copy reconciliation sequence is complete
 
-**Decision:** `_________` (GO / NO-GO)
-**Recorded in execution log:** `_________` (date)
+**Decision:** `GO`
+**Recorded in execution log:** `2026-04-07` (Entry 7)
 
 ---
 
