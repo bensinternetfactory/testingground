@@ -1038,3 +1038,137 @@ Codex audit reported 3 PASS, 3 FAIL, 4 WARN across 10 verification checks. All 3
 
 **Next required action:**
 - Execute Phase 5: Smallest viable migration unit
+
+---
+
+### Entry 9 — Phase 5: Smallest Viable Migration Unit
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude |
+| **Phase** | Phase 5 — Smallest Viable Migration Unit |
+| **Batch / Scope** | Full Phase 5 execution: file copy, reconciliation, adaptation, build verification, browser verification |
+| **Status** | PASS |
+
+**What was completed:**
+- [x] Copy files from copy manifest "Required for smallest viable unit" column
+- [x] Execute post-copy reconciliation steps from copy manifest
+- [x] Resolve import path issues
+- [x] Install missing npm packages
+- [x] Run `tsc --noEmit` — fix type errors
+- [x] Run destination lint — fix lint errors
+- [x] Run `next build` — fix build errors
+- [x] Start dev server — verify homepage renders
+- [x] Browser verification: homepage loads, navigation works, CTA clicks work
+- [x] Browser verification: pre-approval drawer opens via hash entry (`#get-pre-approved`)
+- [x] Browser verification: pre-approval drawer opens via LeadCta click
+- [x] Browser verification: drawer amount slider functions, continue button navigates
+- [x] Browser verification: no console errors
+- [x] Run destination test suite — confirm no regressions
+- [x] Record all results in execution log
+
+**What remains:**
+- None — Phase 5 complete
+
+**Changes made:**
+
+1. **Files copied to destination** (preserving source-relative paths):
+   - `features/cta/` (entire directory)
+   - `features/pre-approval/` (entire directory)
+   - `lib/press-feedback.tsx` (NOT `lib/utils.ts` — destination has identical file)
+   - `components/shared/JsonLd.tsx`
+   - `components/ui/navigation-menu.tsx`, `components/ui/Container.tsx`
+   - `components/sections/nav/sticky-nav-rm/` (entire)
+   - `components/sections/page/footer/` (entire)
+   - `components/sections/page/equipment-cards/`, `program-cards/`, `brand-marquee/`, `how-it-works/`, `testimonial-marquee/`, `mini-roi/`, `truck-gallery/`, `resource-hub/`, `faq/`, `closing-cta/` (all entire)
+   - `components/sections/heroes/hero-gallery/` (entire)
+   - `app/truckicons/` (entire)
+   - `app/(marketing)/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`
+   - `app/(marketing)/_components/MinimalNavPage.tsx`
+   - `public/brand-assets/benefit-icons/`, `logo/`, `manufacturers/`, `truck-icons/`, `favicon/`
+   - `public/truck-*.jpg` (15 files), `public/truck-1.png` (1 file)
+
+2. **Post-copy reconciliation:**
+   - R1: Added `<div id="pre-approval-drawer-root" />` to destination `app/layout.tsx` inside `<body>` after `<ConvexClientProvider>`
+   - R4: Replaced destination `globals.css` with source brand tokens + animations + calculator grid bg + reduced motion; appended destination-only `@layer utilities` (.h-dvh, .pb-safe) and `@supports` blocks
+   - R6: Installed `web-haptics`, `@radix-ui/react-navigation-menu`, `shadcn` (dev)
+   - R7: Added `experimental: { optimizePackageImports: ["lucide-react"] }` to `next.config.ts`
+   - R9: Updated root layout metadata: title → "TowLoans", description updated
+   - R15: Deleted `app/(public)/page.tsx` (homepage collision)
+   - R16: Updated favicon to `/brand-assets/favicon/towloans-favicon.png`
+
+3. **Adaptations applied:**
+   - A1: `PreApprovalDrawerRoot` provider mounts via transferred `app/(marketing)/layout.tsx` — no code change needed
+   - A2: globals.css fully merged (source authoritative, destination utilities preserved)
+   - **React 19.1 compatibility fix:** Replaced `useEffectEvent` (React 19.2+ only) with `useRef` + `useCallback` pattern in `features/pre-approval/drawer/runtime/hash-listener.tsx`. Destination has React 19.1.1; source used React 19.2.3's `useEffectEvent`. Functionally equivalent — ref holds latest `open` callback.
+
+**Files created or updated:**
+- Created: 31 directories/files copied from source (see list above)
+- Modified: `app/layout.tsx` (portal div, metadata, favicon)
+- Modified: `app/globals.css` (full replacement with source + destination utilities)
+- Modified: `next.config.ts` (optimizePackageImports)
+- Modified: `features/pre-approval/drawer/runtime/hash-listener.tsx` (useEffectEvent → useRef+useCallback)
+- Deleted: `app/(public)/page.tsx` (homepage collision)
+- Modified: `package.json` / `package-lock.json` (new dependencies)
+
+**Commands run:**
+```
+npm install web-haptics @radix-ui/react-navigation-menu → success
+npm install --save-dev shadcn → success (resolves @import "shadcn/tailwind.css")
+npx tsc --noEmit → pre-existing errors only; one migration-introduced error (useEffectEvent) fixed
+npm run lint → pre-existing errors only; zero new errors from migration
+npm run build → PASS — compiled successfully, 19 routes, homepage at / (27.3 kB)
+npm test → 15 suites: 8 passed, 7 failed; 423 tests: 410 passed, 13 failed (exact baseline match)
+```
+
+**Automated verification results:**
+- Build: PASS — `next build` compiled successfully, homepage route `/` appears at 27.3 kB first load JS
+- Lint: PASS (no new errors) — all errors are pre-existing in destination dashboard/public code
+- Tests: PASS (no regressions) — 7/15 suites fail, 13/423 tests fail (identical to Phase 2 baseline)
+- TypeScript: one migration-introduced error (useEffectEvent) fixed; remaining errors all pre-existing
+
+**Browser verification results:**
+- `http://localhost:3005/`: Homepage renders with all 12 sections visible + footer (17 links)
+- Sticky nav: TowLoans logo, Financing/Programs/Resources dropdowns, phone (888) 555-0199, Apply Now CTA — all functional
+- `http://localhost:3005/#get-pre-approved`: Drawer opens via hash entry — portal renders into `#pre-approval-drawer-root`, shows amount slider ($20K–$500K+), "Continue to Pre-Approval" button
+- LeadCta click: "Get Pre-Approved" button in hero has correct `data-pre-approval-*` attributes; click opens drawer in portal
+- Amount slider: Dragging/setting value updates display ($100K → $250K confirmed visually)
+- Continue button: Closes drawer, navigation attempted to `/pre-approval` route
+- Console errors: **ZERO** — no errors on fresh page load, after drawer interactions, or after navigation
+
+**Evidence references:**
+- Phase 5 checklist items all checked in `project-transfer-phase-gates.md`
+- Adaptation map items A1, A2, A7 executed per specification
+- Copy manifest "Required for smallest viable unit" column fully transferred
+- Reconciliation sequence R1–R16 executed (R2, R3, R5, R8, R11, R12, R13 required no action)
+- React compatibility fix documented (useEffectEvent → useRef+useCallback)
+
+**Inventories captured:**
+- Build route list: 19 routes including homepage at `/`
+- Section audit: 12 sections confirmed via DOM query with headings and heights
+- Footer: 17 links confirmed
+- Console: zero errors across all interactions
+
+**Decisions made:**
+- React `useEffectEvent` replaced with ref pattern rather than upgrading React to 19.2 — avoids risking destination stability
+- `shadcn` package installed as devDependency to resolve `@import "shadcn/tailwind.css"` in globals.css
+- `lib/utils.ts` NOT copied — destination has byte-identical file (confirmed in Phase 4)
+- `components/ui/Button.tsx` NOT copied — dead code with macOS case collision (confirmed in Phase 4)
+
+**Unresolved questions:**
+- None
+
+**Evidence summary:**
+Phase 5 smallest viable migration unit executed successfully. All files from the copy manifest's "Required for smallest viable unit" column were transferred. Post-copy reconciliation included portal div addition, globals.css brand token merge, package installation, next.config merge, homepage collision removal, and metadata/favicon updates. One adaptation was required beyond the plan: `useEffectEvent` (React 19.2+) was replaced with `useRef` + `useCallback` for React 19.1 compatibility. Build passes cleanly with 19 routes. Test suite shows exact baseline match (7/15 failing suites, 13/423 failing tests — zero regressions). Browser verification confirms homepage renders with all 12 sections, sticky nav functions, pre-approval drawer opens via both hash entry and LeadCta click, amount slider works, continue button navigates, and zero console errors.
+
+**Gate decision:** GO
+
+**Blockers / regressions:**
+- None
+
+**What must not begin yet:**
+- N/A — Phase 5 complete, Phase 6 may now begin
+
+**Next required action:**
+- Execute Phase 6: Incremental expansion (Batch 6a first — About page + resource pages)

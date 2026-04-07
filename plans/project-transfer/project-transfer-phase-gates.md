@@ -12,7 +12,7 @@
 
 ## Active Phase
 
-**Phase 5 — Smallest Viable Migration Unit**
+**Phase 6 — Incremental Expansion**
 
 ---
 
@@ -222,21 +222,21 @@ Transfer the minimum code needed to prove integration works. Recommended: homepa
 
 ### Execution Checklist
 
-- [ ] Copy files from copy manifest "Required for smallest viable unit" column
-- [ ] Execute post-copy reconciliation steps from copy manifest
-- [ ] Resolve import path issues
-- [ ] Install missing npm packages
-- [ ] Run `tsc --noEmit` — fix type errors
-- [ ] Run destination lint — fix lint errors
-- [ ] Run `next build` — fix build errors
-- [ ] Start dev server — verify homepage renders
-- [ ] Browser verification: homepage loads, navigation works, CTA clicks work
-- [ ] Browser verification: pre-approval drawer opens via hash entry (`#get-pre-approved`)
-- [ ] Browser verification: pre-approval drawer opens via LeadCta click
-- [ ] Browser verification: drawer amount slider functions, continue button navigates
-- [ ] Browser verification: no console errors
-- [ ] Run destination test suite — confirm no regressions
-- [ ] Record all results in execution log
+- [x] Copy files from copy manifest "Required for smallest viable unit" column
+- [x] Execute post-copy reconciliation steps from copy manifest
+- [x] Resolve import path issues
+- [x] Install missing npm packages
+- [x] Run `tsc --noEmit` — fix type errors
+- [x] Run destination lint — fix lint errors
+- [x] Run `next build` — fix build errors
+- [x] Start dev server — verify homepage renders
+- [x] Browser verification: homepage loads, navigation works, CTA clicks work
+- [x] Browser verification: pre-approval drawer opens via hash entry (`#get-pre-approved`)
+- [x] Browser verification: pre-approval drawer opens via LeadCta click
+- [x] Browser verification: drawer amount slider functions, continue button navigates
+- [x] Browser verification: no console errors
+- [x] Run destination test suite — confirm no regressions
+- [x] Record all results in execution log
 
 ### Required Evidence/Artifacts
 - TypeScript compilation result
@@ -247,16 +247,16 @@ Transfer the minimum code needed to prove integration works. Recommended: homepa
 - Execution log entry
 
 ### Go / No-Go Gate
-- [ ] Homepage renders correctly in browser
-- [ ] Navigation is functional
-- [ ] At least one CTA click works
-- [ ] Pre-approval drawer opens and functions
-- [ ] Build passes
-- [ ] No existing test regressions
-- [ ] No console errors
+- [x] Homepage renders correctly in browser
+- [x] Navigation is functional
+- [x] At least one CTA click works
+- [x] Pre-approval drawer opens and functions
+- [x] Build passes
+- [x] No existing test regressions
+- [x] No console errors
 
-**Decision:** `_________` (GO / NO-GO)
-**Recorded in execution log:** `_________` (date)
+**Decision:** `GO`
+**Recorded in execution log:** `2026-04-07` (Entry 9)
 
 ---
 
