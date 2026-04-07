@@ -37,12 +37,12 @@ stays serializable and page components do not need to rewrite card data.
 
 - `EquipmentCards.tsx` -- server component (no `"use client"`)
 - Card content and layout are server-rendered
-- CTA uses canonical `CtaLink` from `@/features/cta/client` with preserved legacy section/card analytics -- only the CTA interaction is client-side
+- CTA uses canonical `CtaLink` from `@/features/cta/client`; only the CTA interaction is client-side
 - `config.ts` -- server-safe data (can be imported anywhere)
 
 ## CTA
 
-Card CTAs are full-width pill buttons using canonical `CtaLink` (`size="sm"`) while preserving the historical `equipment-cards` section analytics identity and each card's legacy `cardId`.
+Card CTAs are full-width pill buttons using canonical `CtaLink` (`size="sm"`) while preserving the historical `equipment-cards` section analytics identity without carrying wrapper-era `cardId` compatibility.
 
 ## Dependencies
 

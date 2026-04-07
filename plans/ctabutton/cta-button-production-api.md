@@ -458,6 +458,8 @@ This separation is mandatory.
 
 The interaction contract defines the semantics of press, cancel, and commit independently of animation.
 
+System invariant: all canonical CTA surfaces — `CtaLink`, `LeadCta`, `CtaButton`, and any compatibility-backed CTA still in service — are subject to this interaction contract, the touch-first behavioral contract, the pressed-state visual contract, and the haptics contract. No CTA variant is exempt.
+
 Rules:
 
 - Press feedback starts immediately on touch-down or mouse-down.

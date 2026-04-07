@@ -44,7 +44,7 @@ import { ResourceHub, RESOURCE_HUB_CONFIG } from "@/components/sections/page/res
 
 - `ResourceHub.tsx` -- server component (no `"use client"`)
 - Section is server-rendered
-- CTA interactions are provided by canonical `CtaLink` while preserving the historical `resource-hub` section analytics identity and each card's legacy `cardId`
+- CTA interactions are provided by canonical `CtaLink` while preserving the historical `resource-hub` section analytics identity without carrying wrapper-era `cardId` compatibility
 - `config.ts` is server-safe content data
 
 ## Behavior

@@ -35,6 +35,7 @@ import { TertiaryActionsStrip } from "@/components/sections/page/tertiary-strip"
 
 - Dark background (`bg-[#101820]`) matching the brand marquee
 - Uses canonical `LeadCta` / `CtaLink` surfaces with the inverse tone (white text, `border-white/15` cards)
+- Eyebrow and label are passed through canonical `copy.eyebrow` / `copy.label` instead of custom CTA children overrides
 - Eyebrow text: `text-white/60`
 - Label text: `text-white`
 

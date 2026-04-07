@@ -18,12 +18,23 @@ Rules:
 - [ ] `Phase 1` active
 - [ ] `Phase 2` active
 - [ ] `Phase 3` active
-- [x] `Phase 4` active
+- [ ] `Phase 4` active
 - [ ] `Phase 5` active
 - [ ] `Phase 6` active
 
 Exactly one phase should be marked active while work is in progress.
 When no phase work is in progress, every checkbox in this section should be unchecked.
+
+## System Interaction Invariants
+
+These invariants apply to every phase from Phase 2 onward. No phase may pass if any are violated.
+
+- All canonical CTA surfaces (`CtaLink`, `LeadCta`, `CtaButton`, and any compatibility-backed CTA still in service) must use the existing `usePressFeedback` + motion pressed-state pattern from `lib/press-feedback.tsx`, the same system already active on the drawer continue button in `PreApprovalDrawerView.tsx:486`.
+- No CTA surface may be accepted based only on DOM `.click()` proof for touch-first behavior. Tier 1 (automated `touchstart`/`pointerdown` tests) and Tier 2 (agent-browser at mobile viewport) are required before any phase gate closes. Tier 3 (real device tap by human) is required before the CTA class is marked accepted.
+- Every CTA class changed in a phase must have Tier 1 + Tier 2 evidence before the phase gate closes. Entries with only Tier 1 + Tier 2 are `code-verified, pending device acceptance`.
+- Haptics adapter lifecycle must be verified for every CTA class — commit-phase trigger via `web-haptics`, cancel suppression, and `try/catch` failure isolation matching `lib/press-feedback.tsx:118`.
+- Browser validation entries must declare interaction source per `CTA-INV-33`.
+- See `CTA-INV-28` through `CTA-INV-33` in the verification matrix for the full requirement definitions and evidence standards.
 
 ## Phase 0: Freeze Current CTA Behavior
 
@@ -158,33 +169,33 @@ Go / no-go gate:
 
 Preconditions:
 
-- [ ] Phase 4 gate passed.
-- [ ] Search confirms no new production work is landing on the compatibility wrapper.
+- [x] Phase 4 gate passed.
+- [x] Search confirms no new production work is landing on the compatibility wrapper.
 
 Execution checklist:
 
-- [ ] Wrapper-only prop names removed from production callers.
-- [ ] Legacy analytics payload dependence removed or intentionally isolated with a dated follow-up.
-- [ ] Compatibility-only `children` patterns removed from production callers where not explicitly justified.
-- [ ] Search confirms no remaining production imports of the wrapper barrel.
-- [ ] Search confirms no remaining production deep imports of `RippleCtaLink`.
-- [ ] Closure evidence exists for every deep import, `children` override, and `cardId` site from `plans/ctabutton/checklist.md`.
-- [ ] Final user-facing regression checks passed for affected routes.
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with search results and final evidence for the phase.
+- [x] Wrapper-only prop names removed from production callers.
+- [x] Legacy analytics payload dependence removed or intentionally isolated with a dated follow-up.
+- [x] Compatibility-only `children` patterns removed from production callers where not explicitly justified.
+- [x] Search confirms no remaining production imports of the wrapper barrel.
+- [x] Search confirms no remaining production deep imports of `RippleCtaLink`.
+- [x] Closure evidence exists for every deep import, `children` override, and `cardId` site from `plans/ctabutton/checklist.md`.
+- [x] Final user-facing regression checks passed for affected routes.
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with search results and final evidence for the phase.
 
 Go / no-go gate:
 
-- [ ] Go: wrapper-only semantics are gone from production usage and the legacy directory is ready for deletion.
-- [ ] No-go conditions checked: no remaining production wrapper imports, no remaining wrapper-only prop dependence, no evidence gaps, no missing closure table entries.
+- [x] Go: wrapper-only semantics are gone from production usage and the legacy directory is ready for deletion.
+- [x] No-go conditions checked: no remaining production wrapper imports, no remaining wrapper-only prop dependence, no evidence gaps, no missing closure table entries.
 
 ## Phase 6: Delete the Legacy Wrapper and Finalize the Public API
 
 Preconditions:
 
-- [ ] Phase 5 gate passed.
-- [ ] Search confirms no remaining production consumers of `components/ui/ripple-cta-link`.
+- [x] Phase 5 gate passed.
+- [x] Search confirms no remaining production consumers of `components/ui/ripple-cta-link`.
 
 Execution checklist:
 
@@ -192,11 +203,14 @@ Execution checklist:
 - [ ] Final CTA public API inventory reviewed against the production API document.
 - [ ] CTA feature documentation updated to match the final filesystem.
 - [ ] Final search-based removal checks passed.
+- [ ] Touch-first verification complete for every canonical CTA class: Tier 1 + Tier 2 evidence exists and Tier 3 (real device tap) entries recorded in execution log (`CTA-INV-28` `CTA-INV-29` `CTA-INV-30`).
+- [ ] Haptics lifecycle verified for every canonical CTA class: commit trigger, cancel suppression, failure isolation (`CTA-INV-31` `CTA-INV-32`).
+- [ ] Every browser validation entry in the execution log declares interaction source (`CTA-INV-33`).
 - [ ] `npm run lint` passed.
 - [ ] `npm run build` passed.
 - [ ] Execution log updated with final evidence and removal search results.
 
 Go / no-go gate:
 
-- [ ] Go: the public CTA surface is fully feature-owned and no legacy wrapper remains.
-- [ ] No-go conditions checked: no residual production imports, no stale docs, no final build regression.
+- [ ] Go: the public CTA surface is fully feature-owned, touch-first on all surfaces, and no legacy wrapper remains.
+- [ ] No-go conditions checked: no residual production imports, no stale docs, no final build regression, no CTA class missing Tier 3 touch evidence, no CTA class missing haptics lifecycle proof.

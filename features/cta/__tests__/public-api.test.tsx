@@ -113,7 +113,7 @@ describe("CTA public API", () => {
       <>
         <CtaLink
           href="/contact"
-          copy={{ label: "Talk to lending" }}
+          copy={{ eyebrow: "Questions about terms?", label: "Talk to lending" }}
           appearance={{ tone: "primary" }}
         />
         <CtaLink
@@ -129,11 +129,14 @@ describe("CTA public API", () => {
       </>,
     );
 
-    const internalLink = screen.getByRole("link", { name: "Talk to lending" });
+    const internalLink = screen.getByRole("link", {
+      name: "Questions about terms? Talk to lending",
+    });
     const externalLink = screen.getByRole("link", { name: "Visit partner site" });
     const leadLink = screen.getByRole("link", { name: "Apply now" });
 
     expect(internalLink).toHaveAttribute("href", "/contact");
+    expect(internalLink).toHaveTextContent("Questions about terms?");
     expect(container.querySelector("a a")).toBeNull();
     expect(externalLink).toHaveAttribute("href", "https://example.com");
     expect(externalLink).toHaveAttribute("target", "_blank");

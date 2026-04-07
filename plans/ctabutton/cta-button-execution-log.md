@@ -1660,3 +1660,134 @@ Blockers / regressions:
 Next required action:
 
 - Safe stop in Phase 4 only. Do not advance to Phase 5 yet; any next turn must start from the updated checklist/log state and explicitly review the remaining compatibility-only children overrides and wrapper-retirement evidence before opening later-phase work.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Codex
+- Branch: `cta-button-migration`
+- Phase: Phase 5
+- Batch / scope: Remove remaining wrapper-only production semantics, close the checklist boundary, and record final closure evidence
+- Status: PASS
+
+Changes made:
+
+- Added canonical `copy.eyebrow` support in [contract.ts](/Users/benfranzoso/Documents/Projects/copy/features/cta/contract.ts) and [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx) so stacked CTA copy no longer requires arbitrary compatibility-style children overrides for the remaining production callers.
+- Removed the checklist-tracked production `children` overrides from [TertiaryActionsStrip.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx) and [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) by moving those callers to explicit `copy.eyebrow` / `copy.label` usage.
+- Removed the remaining production `legacyCardId` compatibility mappings from [ProgramCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/ProgramCards.tsx), [EquipmentCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/EquipmentCards.tsx), and [ResourceHub.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/ResourceHub.tsx).
+- Updated [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx), [checklist.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/checklist.md), [cta-button-phase-gates.md](/Users/benfranzoso/Documents/Projects/copy/plans/ctabutton/cta-button-phase-gates.md), this execution log, and the affected local `CLAUDE.md` files in the same batch.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-01`
+- `CTA-INV-04`
+- `CTA-INV-05`
+- `CTA-INV-16`
+- `CTA-INV-20`
+- `CTA-INV-21`
+- `CTA-INV-22`
+- `CTA-INV-27`
+
+Commands run:
+
+- `git status --short --branch`
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app`
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app`
+- `rg -n 'legacyCardId' components app --glob '!**/*.md'`
+- `rg -n '</(CtaLink|LeadCta)>' components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`
+- `rg -n '</(CtaLink|LeadCta)>' components/sections/heroes/hero-gallery/HeroGallery.tsx components/sections/page/closing-cta/ClosingCta.tsx components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx`
+- `rg -n 'onAnalyticsEvent=' components app features --glob '!**/*.md'`
+- `rg -n 'kind:\\s*"framed-outline"' 'app/(marketing)/(financing)'`
+- `npm test -- features/cta/__tests__/public-api.test.tsx components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx app/'(marketing)'/__tests__/homepageCardCallers.test.tsx components/sections/page/mini-roi/__tests__/MiniROI.test.tsx`
+- `npm run lint`
+- `npm run build`
+- `lsof -nP -iTCP:3001 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3002 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3003 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3004 -sTCP:LISTEN`
+- `lsof -nP -iTCP:3005 -sTCP:LISTEN`
+- `PORT=3001 npm run dev`
+- `agent-browser set viewport 1440 900`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const find = (text) => Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === text); const read = (text) => { const el = find(text); if (!(el instanceof HTMLAnchorElement)) return null; return { text, href: el.getAttribute('href'), preApproval: el.hasAttribute('data-pre-approval-version') }; }; return { rollback: read('See Rollback Financing'), zeroDown: read('See Zero Down'), guide: read('Read the Guide'), miniRoi: read('Build Your Full Profit Plan') }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'See Rollback Financing'); if (!(link instanceof HTMLAnchorElement)) return 'missing'; link.click(); return 'clicked'; })()"`
+- `agent-browser get url`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.includes('I found a truck and need financing')); if (!(link instanceof HTMLAnchorElement)) return null; link.scrollIntoView({ block: 'center' }); return { text: link.textContent?.replace(/\\s+/g, ' ').trim(), href: link.getAttribute('href'), version: link.getAttribute('data-pre-approval-version'), pageId: link.getAttribute('data-pre-approval-origin-page-id') }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.includes('I found a truck and need financing')); if (!(link instanceof HTMLAnchorElement)) return 'missing'; link.click(); return 'clicked'; })()"`
+- `agent-browser wait 400`
+- `agent-browser eval "(() => ({ url: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))) }))()"`
+- `agent-browser set device 'iPhone 14'`
+- `agent-browser open http://127.0.0.1:3001/`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'Build Your Full Profit Plan'); if (!(link instanceof HTMLAnchorElement)) return null; link.scrollIntoView({ block: 'center' }); return { href: link.getAttribute('href'), preApproval: link.hasAttribute('data-pre-approval-version'), text: link.textContent?.trim() }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.trim() === 'Build Your Full Profit Plan'); if (!(link instanceof HTMLAnchorElement)) return 'missing'; link.click(); return 'clicked'; })()"`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const values = Array.from(document.querySelectorAll('input')).map((el) => ({ aria: el.getAttribute('aria-label'), value: el.value })); return { url: window.location.href, values }; })()"`
+- `agent-browser open http://127.0.0.1:3001/rollback-financing`
+- `agent-browser wait --load networkidle`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.includes('I found a truck and need financing')); if (!(link instanceof HTMLAnchorElement)) return null; link.scrollIntoView({ block: 'center' }); return { text: link.textContent?.replace(/\\s+/g, ' ').trim(), href: link.getAttribute('href'), version: link.getAttribute('data-pre-approval-version') }; })()"`
+- `agent-browser eval "(() => { const link = Array.from(document.querySelectorAll('a')).find((el) => el.textContent?.includes('I found a truck and need financing')); if (!(link instanceof HTMLAnchorElement)) return 'missing'; link.click(); return 'clicked'; })()"`
+- `agent-browser wait 400`
+- `agent-browser eval "(() => ({ url: window.location.href, closeVisible: Boolean(document.querySelector('[aria-label=\"Close\"]')), continueVisible: Boolean(Array.from(document.querySelectorAll('button')).find((el) => el.textContent?.includes('Continue to Pre-Approval'))) }))()"`
+
+Automated verification results:
+
+- `npm test -- ...` passed: [public-api.test.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/__tests__/public-api.test.tsx) (2), [preApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx) (2), [HeroConvertTertiaryLinks.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx) (2), [homepageCardCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/__tests__/homepageCardCallers.test.tsx) (3), and [MiniROI.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/__tests__/MiniROI.test.tsx) (1).
+- `npm run lint` passed with the same 23 pre-existing warnings in `features/pre-approval/__tests__/AmountSlider.test.tsx` and `features/pre-approval/__tests__/PreApprovalDrawerView.test.tsx`; no lint errors occurred.
+- `npm run build` passed and generated the full static route set successfully.
+- `rg -n --glob '!**/*.md' '^import .*RippleCtaLink.*@/components/ui/ripple-cta-link' components app` returned no matches.
+- `rg -n --glob '!**/*.md' '@/components/ui/ripple-cta-link/RippleCtaLink' components app` returned no matches.
+- `rg -n 'legacyCardId' components app --glob '!**/*.md'` returned only [RippleCtaLink.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx), confirming there are no production `legacyCardId` callers left.
+- `rg -n '</(CtaLink|LeadCta)>' components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx` returned no matches, confirming both checklist-tracked compatibility-only children override sites are closed.
+- `rg -n '</(CtaLink|LeadCta)>' components/sections/heroes/hero-gallery/HeroGallery.tsx components/sections/page/closing-cta/ClosingCta.tsx components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx` returned only those three files, which remain explicitly justified render-slot callers rather than wrapper-compatibility carryovers.
+- `rg -n 'onAnalyticsEvent=' components app features --glob '!**/*.md'` returned only [RippleCtaLink.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) and wrapper tests, isolating the legacy analytics payload path to the compatibility boundary.
+- `rg -n 'kind:\\s*"framed-outline"' 'app/(marketing)/(financing)'` returned only [page-config-types.ts](/Users/benfranzoso/Documents/Projects/copy/app/(marketing)/(financing)/_components/page-config-types.ts), confirming there is no current routed financing page using `HeroConvertFramedOutline`.
+
+Browser verification results:
+
+- Route: `/`
+- Viewport: desktop `1440x900`
+- Trigger path: homepage card/ROI CTA attribute assertions plus click-through on `See Rollback Financing`
+- Observed behavior: the homepage rendered `See Rollback Financing`, `See Zero Down`, `Read the Guide`, and `Build Your Full Profit Plan` with normal internal hrefs and no `data-pre-approval-version` attribute; clicking `See Rollback Financing` navigated to `http://127.0.0.1:3001/rollback-financing`.
+
+- Route: `/rollback-financing`
+- Viewport: desktop `1440x900`
+- Trigger path: tertiary-strip `I found a truck and need financing`
+- Observed behavior: the tertiary-strip CTA rendered the stacked eyebrow+label copy as `Already have a truck in mind?I found a truck and need financing`, preserved canonical `data-pre-approval-*` attributes, and click opened the pre-approval drawer with `Continue to Pre-Approval` visible on the same route.
+
+- Route: `/`
+- Viewport: mobile `iPhone 14`
+- Trigger path: `MiniROI` CTA `Build Your Full Profit Plan`
+- Observed behavior: the CTA rendered with href `/tow-truck-calculator?rev=200&pmt=1200&known=1` and no pre-approval attributes; tapping it navigated to the calculator route with `known=1`, and the loaded form state still reflected the default homepage ROI values (`pmt=1200`, `rev=200`).
+
+- Route: `/rollback-financing`
+- Viewport: mobile `iPhone 14`
+- Trigger path: tertiary-strip `I found a truck and need financing`
+- Observed behavior: the mobile tertiary-strip CTA still rendered the stacked eyebrow+label copy and tapping it opened the pre-approval drawer with `Continue to Pre-Approval` visible on the same route.
+
+Evidence summary:
+
+- Phase 4 closure was re-confirmed before editing: the preceding Phase 4 entry already ended in `GO`, the active checklist boundary already showed zero production wrapper consumers, and the exact import searches above still returned no wrapper barrel or deep-import matches. Phase 5 was therefore the only valid active phase for this batch.
+- Closure table:
+  - Deep import: [MiniROI.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/MiniROI.tsx) was removed in the final Phase 4 caller batch; the Phase 5 deep-import search returned no matches, and [MiniROI.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/mini-roi/__tests__/MiniROI.test.tsx) plus homepage browser validation confirm the canonical caller still behaves correctly.
+  - Children override: [TertiaryActionsStrip.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx) now uses canonical `copy.eyebrow` / `copy.label`; the tracked-children search returned no matches, [preApprovalCallers.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/tertiary-strip/__tests__/preApprovalCallers.test.tsx) passed, and desktop/mobile `/rollback-financing` browser checks passed.
+  - Children override: [HeroConvertFramedOutline.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx) now uses canonical `copy.eyebrow` / `copy.label`; the tracked-children search returned no matches and [HeroConvertTertiaryLinks.test.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/heroes/hero-convert-framed/__tests__/HeroConvertTertiaryLinks.test.tsx) passed. No live financing page currently sets `kind: "framed-outline"`, so there was no routed browser surface to recheck.
+  - `cardId` site: [ProgramCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/program-cards/ProgramCards.tsx) no longer passes `legacyCardId`; homepage tests and browser validation still pass.
+  - `cardId` site: [EquipmentCards.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/equipment-cards/EquipmentCards.tsx) no longer passes `legacyCardId`; homepage tests and browser validation still pass.
+  - `cardId` site: [ResourceHub.tsx](/Users/benfranzoso/Documents/Projects/copy/components/sections/page/resource-hub/ResourceHub.tsx) no longer passes `legacyCardId`; homepage tests and browser validation still pass.
+- Dated follow-up (`2026-04-06`): legacy analytics payload support (`onAnalyticsEvent`, `buildLegacyAnalyticsPayload`, and `legacySection` wiring) remains isolated to [RippleCtaLink.tsx](/Users/benfranzoso/Documents/Projects/copy/components/ui/ripple-cta-link/RippleCtaLink.tsx) and wrapper tests. Remove that compatibility path in the Phase 6 wrapper-deletion batch rather than broadening Phase 5 into a public API redesign.
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None.
+
+Next required action:
+
+- Safe stop after Phase 5. Do not start Phase 6 unless the next batch is explicitly scoped to deleting `components/ui/ripple-cta-link/` and finalizing the public CTA API.

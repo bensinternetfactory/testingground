@@ -22,7 +22,7 @@ This is a systems migration, not a visual redesign.
 ## What We Need To Do Next
 
 1. Keep `plans/ctabutton/checklist.md` as the live migration boundary and regenerate it when the inventory changes.
-2. Freeze current CTA behavior as the baseline using code-backed tests, including external navigation, disabled rendering, pre-approval trigger emission, click-commit press behavior, cancel behavior, and reduced-motion behavior.
+2. Freeze current CTA behavior as the baseline using code-backed tests, including external navigation, disabled rendering, pre-approval trigger emission, touch-first press lifecycle per the production API (immediate pressed-state on touch-down, cancel on drift/scroll, exactly-once commit, haptics adapter integration via the existing `usePressFeedback` + `web-haptics` system in `lib/press-feedback.tsx`), and reduced-motion behavior.
 3. Add adjacent-surface verification for direct `usePressFeedback` consumers and direct pre-approval trigger builders before changing shared ownership.
 4. Introduce the smallest useful `features/cta/` implementation only when the first migrated caller needs it.
 5. Migrate one caller class at a time and re-run targeted verification after each batch.
@@ -105,25 +105,32 @@ The CTA migration must compose with the existing pre-approval production API rat
 
 ### 4. Press semantics are a subsystem, not styling
 
-Current press behavior is partly shared through `lib/press-feedback.tsx` and partly duplicated in feature-specific callers.
+Current press behavior is partly shared through `lib/press-feedback.tsx` and partly duplicated in feature-specific callers. The drawer continue button (`PreApprovalDrawerView.tsx:486`) already demonstrates the correct touch-first pattern: `usePressFeedback` + `<motion.button>` with `whileTap` for immediate pressed-state feedback, haptics via `web-haptics`, and swipe cancel via `SWIPE_THRESHOLD`.
 
 Decision:
 
-- press, cancel, commit, duplicate-commit prevention, reduced-motion behavior, and haptics isolation are first-class migration concerns
+- touch-first interaction, press, cancel, commit, duplicate-commit prevention, reduced-motion behavior, and haptics isolation are first-class migration concerns
+- all canonical CTA surfaces must reuse the existing `usePressFeedback` + motion pressed-state pattern — do not build a new interaction system
 - rendering and analytics must not own business commit semantics
 - any relocation of `lib/press-feedback.tsx` must preserve current shared consumers until they are intentionally migrated
+- haptics must flow through the existing `web-haptics` adapter in `usePressFeedback`, not ad hoc per-caller wiring
 
-### 5. Preserve current visuals while changing ownership underneath
+### 5. Preserve current visuals while promoting touch-first interaction
 
 The migration baseline is the current rendered CTA behavior:
 
 - dark and outline pill visuals
-- click-commit press feedback with ripple or haptics firing from click handling, not touch-down alone
+- click-commit press feedback with ripple or haptics firing from click handling
 - disabled-as-button rendering
 - internal versus external navigation behavior
 - pre-approval attribute emission on internal lead-entry CTAs
 
-The migration does not authorize redesign work mixed into the same batches.
+The migration target adds the touch-first behavioral contract defined in the production API. This is not a redesign — it is a behavioral promotion:
+
+- all CTA surfaces must show immediate pressed-state feedback on touch-down and mouse-down, using the same `usePressFeedback` + `whileTap` motion pattern already working on the drawer continue button
+- the current internal `<Link>` path in `features/cta/client.tsx:250` lacks `whileTap` — this must be resolved so all CTA surfaces have uniform pressed-state feedback
+- haptics must flow through the existing `web-haptics` integration, not new per-caller wiring
+- the migration does not authorize visual redesign work mixed into the same batches
 
 ## Current State vs Target
 
@@ -142,6 +149,8 @@ Missing or incomplete:
 - compatibility adapter for legacy analytics payloads
 - removal of `next/link` `legacyBehavior` and `passHref`
 - final search-based removal plan for `RippleCtaLink`
+- touch-first interaction lifecycle where pressed state begins on touch-down for all CTA surfaces (the `usePressFeedback` system exists and is active on the drawer continue button, but the canonical CTA internal `<Link>` path lacks the `whileTap` motion integration)
+- uniform haptics integration across all CTA surfaces through the existing `web-haptics` adapter in `usePressFeedback` (currently wired but not verified to three-tier evidence standard)
 
 Migration-sensitive consumers that must be preserved or explicitly migrated:
 

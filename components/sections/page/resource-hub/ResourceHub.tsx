@@ -103,7 +103,6 @@ export function ResourceHub({ config }: { config: ResourceHubConfig }) {
                     appearance={{ size: "sm", className: "w-full justify-center" }}
                     analytics={{
                       legacySection: "resource-hub",
-                      legacyCardId: card.id,
                     }}
                   />
                 </div>

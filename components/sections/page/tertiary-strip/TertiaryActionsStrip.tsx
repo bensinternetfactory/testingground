@@ -15,7 +15,7 @@ export function TertiaryActionsStrip({
             action.preApprovalTrigger ? (
               <LeadCta
                 key={action.label}
-                copy={{ label: action.label }}
+                copy={{ eyebrow: action.eyebrow, label: action.label }}
                 entry={{
                   kind: "pre-approval",
                   href: action.href,
@@ -30,19 +30,12 @@ export function TertiaryActionsStrip({
                 icon={<ArrowRight className="h-4 w-4" />}
                 analytics={{ legacySection: "tertiary-strip" }}
                 prefetch={false}
-              >
-                <span className="flex flex-col items-start">
-                  <span className="text-xs text-white/60">{action.eyebrow}</span>
-                  <span className="mt-1 text-sm font-medium text-white">
-                    {action.label}
-                  </span>
-                </span>
-              </LeadCta>
+              />
             ) : (
               <CtaLink
                 key={action.label}
                 href={action.href}
-                copy={{ label: action.label }}
+                copy={{ eyebrow: action.eyebrow, label: action.label }}
                 appearance={{
                   tone: "inverse",
                   size: "sm",
@@ -52,14 +45,7 @@ export function TertiaryActionsStrip({
                 icon={<ArrowRight className="h-4 w-4" />}
                 analytics={{ legacySection: "tertiary-strip" }}
                 prefetch={false}
-              >
-                <span className="flex flex-col items-start">
-                  <span className="text-xs text-white/60">{action.eyebrow}</span>
-                  <span className="mt-1 text-sm font-medium text-white">
-                    {action.label}
-                  </span>
-                </span>
-              </CtaLink>
+              />
             )
           ))}
         </div>

@@ -27,6 +27,12 @@ Universal rules for every phase:
 - if any required check fails, browser evidence is missing, or any inventory question is unresolved, stop with `NO-GO`
 - for user-facing phases, run browser validation against a non-`3000` `npm run dev` server, keep the same server running while validating desktop and mobile, and record route, viewport, trigger path, and observed result in the execution log
 - record exact commands, matrix IDs, and search queries in the execution log; do not mark a box complete without matching evidence
+- all CTA surfaces must reuse the existing `usePressFeedback` + motion pressed-state pattern from `lib/press-feedback.tsx`, the same system already active on the drawer continue button (`PreApprovalDrawerView.tsx:486`); do not build a new interaction system
+- for touch-first verification, Tier 1 (automated `touchstart`/`pointerdown` tests) and Tier 2 (agent-browser at mobile viewport) are required before any phase gate closes; Tier 3 (real device tap by human) is required before the CTA class is marked accepted
+- browser validation entries must declare interaction source: "real tap" (Tier 3), "real click" (Tier 2), or "programmatic DOM click" (Tier 1) — only "real tap" is eligible for touch-first acceptance per `CTA-INV-29` and `CTA-INV-33`
+- DOM `.click()` is valid for commit-plumbing proof (`CTA-INV-08`, `CTA-INV-10`, `CTA-INV-11`) but not for touch-first acceptance (`CTA-INV-28`, `CTA-INV-29`)
+- haptics must flow through the existing `web-haptics` integration in `usePressFeedback`, not ad hoc per-caller wiring
+- see the System Interaction Invariants section in `plans/ctabutton/cta-button-phase-gates.md` for the full set of invariants that apply from Phase 2 onward
 
 ## Final Overview Prompt
 
@@ -235,8 +241,48 @@ Run the final verification battery:
 - targeted removal searches for barrel imports and deep imports
 - filesystem checks proving the legacy directory is gone
 - manual review of the final public CTA modules against the production API document
+- touch-first verification audit: confirm Tier 1 + Tier 2 evidence exists for every canonical CTA class (`CTA-INV-28` `CTA-INV-30`), Tier 3 real-device entries exist (`CTA-INV-29`), and every browser entry declares interaction source (`CTA-INV-33`)
+- haptics lifecycle audit: confirm commit trigger, cancel suppression, and failure isolation evidence exists for every CTA class (`CTA-INV-31` `CTA-INV-32`)
 
-Record dated evidence with matrix IDs `CTA-INV-21` `CTA-INV-22` `CTA-INV-23` `CTA-INV-24` and final removal-search results in the execution log. Update the Phase 6 checklist in plans/ctabutton/cta-button-phase-gates.md in the same batch. Declare `GO` only if the public CTA surface is fully feature-owned, the legacy directory is gone, the docs match the code, and all final checks pass. If any residual import, stale doc, or build failure remains, stop and report `NO-GO`.
+Record dated evidence with matrix IDs `CTA-INV-21` `CTA-INV-22` `CTA-INV-23` `CTA-INV-24` `CTA-INV-28` `CTA-INV-29` `CTA-INV-30` `CTA-INV-31` `CTA-INV-32` `CTA-INV-33` and final removal-search results in the execution log. Update the Phase 6 checklist in plans/ctabutton/cta-button-phase-gates.md in the same batch. Declare `GO` only if the public CTA surface is fully feature-owned, touch-first on all surfaces, the legacy directory is gone, the docs match the code, and all final checks pass. If any residual import, stale doc, build failure, missing Tier 3 touch evidence, or missing haptics lifecycle proof remains, stop and report `NO-GO`.
+```
+
+## Touch-First Verification Prompt
+
+```text
+Act as the touch-first verification agent for the CTA button migration. Your job is to audit existing evidence quality and identify gaps against the three-tier evidence model. Do not execute migration phase work. Read:
+- plans/ctabutton/cta-button-production-api.md
+- plans/ctabutton/cta-button-verification-matrix.md
+- plans/ctabutton/cta-button-phase-gates.md
+- plans/ctabutton/cta-button-execution-log.md
+- plans/ctabutton/checklist.md
+- lib/press-feedback.tsx
+- features/cta/client.tsx
+- features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx
+
+Step 1 — Audit existing evidence:
+- Review every browser validation entry in the execution log.
+- For each entry, determine whether it declared an interaction source ("real tap", "real click", or "programmatic DOM click").
+- Downgrade any entry that used DOM `.click()` or synthetic `MouseEvent("click")` as touch proof to Tier 1 only.
+- Report which CTA classes have Tier 1, Tier 2, and Tier 3 evidence and which have gaps.
+
+Step 2 — Verify implementation coverage:
+- Confirm that every canonical CTA surface (`CtaLink`, `LeadCta`, `CtaButton`) uses `usePressFeedback` from `lib/press-feedback.tsx`.
+- Confirm that every CTA surface has a motion element with `whileTap` for immediate pressed-state feedback, matching the pattern on the drawer continue button (`PreApprovalDrawerView.tsx:486`).
+- Identify any CTA path that uses a plain `<Link>` or `<a>` without `whileTap` — these are gaps.
+- Confirm haptics flow through the existing `web-haptics` integration in `usePressFeedback`, not ad hoc wiring.
+
+Step 3 — Run Tier 1 + Tier 2 for gaps:
+- For any CTA class missing Tier 1 evidence, write or identify automated tests that fire real `touchstart`/`pointerdown` events and assert pressed-state, cancel, commit, and haptics adapter behavior.
+- For any CTA class missing Tier 2 evidence, run agent-browser at mobile viewport confirming the CTA renders, shows pressed feedback, and commits.
+
+Step 4 — Report Tier 3 gaps:
+- List every CTA class that still needs real device tap verification by a human.
+- For each, specify the route, viewport, and what the human should observe and record.
+
+Output a summary table:
+| CTA class | Tier 1 | Tier 2 | Tier 3 | Gaps |
+with status: ✓ (evidence exists), ○ (pending), ✗ (missing/downgraded).
 ```
 
 ## Final Merge-Back Prompt
@@ -259,6 +305,10 @@ Before merging, verify all of the following:
 - the execution log contains dated evidence for every completed phase with matrix IDs, commands, browser notes where required, and search results where required
 - the execution log has no open `NO-GO` blocker that would invalidate final completion
 - required browser evidence exists for every user-facing phase that demanded it
+- every canonical CTA class (`CtaLink`, `LeadCta`, `CtaButton`) has Tier 1 + Tier 2 + Tier 3 evidence for touch-first behavior (`CTA-INV-28` `CTA-INV-29` `CTA-INV-30`)
+- haptics lifecycle is verified for every CTA class (`CTA-INV-31` `CTA-INV-32`)
+- every browser validation entry in the execution log declares interaction source (`CTA-INV-33`)
+- no CTA class is marked accepted based solely on DOM `.click()` proof for touch behavior
 - `npm run lint` passes
 - `npm run build` passes
 - search confirms no remaining production imports of `@/components/ui/ripple-cta-link`

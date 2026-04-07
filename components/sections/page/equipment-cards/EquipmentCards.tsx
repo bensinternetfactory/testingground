@@ -95,7 +95,6 @@ export function EquipmentCards({ config }: { config: EquipmentCardsConfig }) {
                     appearance={{ size: "sm", className: "w-full justify-center" }}
                     analytics={{
                       legacySection: "equipment-cards",
-                      legacyCardId: card.id,
                     }}
                   />
                 </div>

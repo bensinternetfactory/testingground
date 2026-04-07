@@ -9,8 +9,10 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
 - Direct `usePressFeedback` consumers outside the wrapper: `components/sections/nav/sticky-nav-rm/NavPressable.tsx`, `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `features/pre-approval/drawer/ui/PreApprovalDrawerView.tsx`.
 - Direct `buildPreApprovalTriggerAttributes()` surfaces outside the wrapper: `app/(marketing)/(programs)/_components/ProgramNavCardLink.tsx`, `components/sections/heroes/hero-showcase-rm/HeroShowcase.tsx`, `components/sections/heroes/hero-convert-geico/HeroConvert.tsx`, `components/sections/heroes/hero-convert-framed/HeroConvertFramed.tsx`.
 - Route-based pre-approval entry outside the wrapper: `components/sections/heroes/hero-gallery/HeroInput.tsx`.
-- Compatibility-only children overrides still live in `components/sections/page/tertiary-strip/TertiaryActionsStrip.tsx` and `components/sections/heroes/hero-convert-framed/HeroConvertFramedOutline.tsx`.
-- Legacy `cardId` analytics compatibility is still carried by canonical callers in `components/sections/page/program-cards/ProgramCards.tsx`, `components/sections/page/equipment-cards/EquipmentCards.tsx`, and `components/sections/page/resource-hub/ResourceHub.tsx`.
+- No checklist-tracked compatibility-only children overrides remain.
+- Remaining production `children` render-slot callers are explicitly justified non-wrapper layouts in `components/sections/heroes/hero-gallery/HeroGallery.tsx`, `components/sections/page/closing-cta/ClosingCta.tsx`, and `components/sections/page/equipment-closing-cta/EquipmentClosingCtaTrucks.tsx`.
+- No production `legacyCardId` usage remains.
+- Legacy analytics payload support is isolated to `components/ui/ripple-cta-link/RippleCtaLink.tsx` and wrapper tests as of `2026-04-06`; remove it in Phase 6 with wrapper deletion.
 
 ## No-Go Blockers
 
@@ -28,6 +30,12 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
   Proof: migration log entry per site, not just `rg` output
 - Do not lock a new canonical CTA API before code exists for it.
   Proof: the first migrated caller compiles against the real implementation, not only against plan docs
+- No CTA surface may be marked as migrated until real mobile tap proof (Tier 3) exists for that CTA class. DOM `.click()` is commit-plumbing proof only, not touch-first acceptance. The touch implementation must reuse the existing `usePressFeedback` + motion pressed-state pattern from `lib/press-feedback.tsx`, the same system already active on the drawer continue button (`PreApprovalDrawerView.tsx:486`).
+  Proof: execution-log entry with interaction source = "real tap" per affected CTA class (`CTA-INV-29`)
+- Haptics adapter lifecycle must be verified for commit trigger, cancel suppression, and failure isolation before any CTA class is considered complete. Haptics must use the existing `web-haptics` integration in `usePressFeedback`, not ad hoc per-caller wiring.
+  Proof: automated test with `web-haptics` mock showing call sequence per interaction outcome (`CTA-INV-31` `CTA-INV-32`)
+- Every browser validation entry in the execution log must declare its interaction source: "real tap" (Tier 3), "real click" (Tier 2), or "programmatic DOM click" (Tier 1). Entries lacking this declaration are not valid evidence.
+  Proof: execution-log audit (`CTA-INV-33`)
 
 ## Execution Order
 
@@ -43,3 +51,5 @@ This file replaces the current review loop with a single code-anchored `NO-GO` c
 - Direct press-feedback consumers: `rg -n 'usePressFeedback<' components app features`
 - Direct trigger surfaces: `rg -n 'buildPreApprovalTriggerAttributes\\(' components app`
 - Route-based pre-approval entry: `rg -n --glob '!**/*.test.ts' --glob '!**/*.test.tsx' 'buildPreApprovalHref\\(' components app`
+- Legacy cardId inventory: `rg -n 'legacyCardId' components app --glob '!**/*.md'`
+- Canonical CTA child-content inventory: `rg -n '</(CtaLink|LeadCta)>' components app --glob '!**/*.md'`

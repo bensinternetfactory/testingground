@@ -15,6 +15,7 @@ export interface CtaOrigin {
 
 export interface CtaCopy {
   label: string;
+  eyebrow?: string;
   ariaLabel?: string;
 }
 

@@ -80,28 +80,19 @@ function TertiaryActionCard({
   action: HeroTertiaryAction;
   compact?: boolean;
 }) {
-  const content = compact ? (
-    <span className="text-left">{action.label}</span>
-  ) : (
-    <span className="flex flex-col items-start">
-      <span className="text-xs text-[#999]">{action.eyebrow}</span>
-      <span className="mt-1 text-sm font-medium text-[#111]">
-        {action.label}
-      </span>
-    </span>
-  );
-
   const appearance = {
     tone: "secondary" as const,
     size: "sm" as const,
     align: "between" as const,
     className: compact
-      ? "w-full lg:w-auto"
+      ? "w-full text-left lg:w-auto"
       : "w-full rounded-2xl border-gray-200 px-6 py-5",
   };
 
   const sharedProps = {
-    copy: { label: action.label },
+    copy: compact
+      ? { label: action.label }
+      : { eyebrow: action.eyebrow, label: action.label },
     appearance,
     icon: <ArrowRight className="h-4 w-4" />,
     analytics: { legacySection: "hero" },
@@ -117,13 +108,9 @@ function TertiaryActionCard({
           href: action.href,
           trigger: action.preApprovalTrigger,
         }}
-      >
-        {content}
-      </LeadCta>
+      />
     ) : (
-      <CtaLink href={action.href} {...sharedProps}>
-        {content}
-      </CtaLink>
+      <CtaLink href={action.href} {...sharedProps} />
     )
   );
 }

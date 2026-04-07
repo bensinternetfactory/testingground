@@ -44,6 +44,12 @@ No phase is complete until each applicable requirement below has evidence record
 | `CTA-INV-25` | Direct `usePressFeedback` consumers outside the wrapper still behave correctly after shared-runtime changes | targeted automated tests and browser validation for representative user-facing paths | test names, routes checked, affected consumers |
 | `CTA-INV-26` | Direct pre-approval trigger-attribute builders outside the wrapper still emit the canonical schema after CTA composition changes | targeted automated tests and code review | test names, files reviewed, affected surfaces |
 | `CTA-INV-27` | Wrapper deletion is blocked until every deep import, `children` override, and `cardId` site has explicit closure evidence | execution-log closure table and targeted search | closure table entry, search query, remaining sites |
+| `CTA-INV-28` | Every canonical CTA surface (`CtaLink`, `LeadCta`, `CtaButton`) shows immediate visible pressed-state feedback on touch-down and mouse-down using the existing `usePressFeedback` + motion pattern from the drawer continue button (`PreApprovalDrawerView.tsx:486`); at least one non-opacity signal required per the production API | Tier 1: automated test firing real `pointerdown`/`touchstart` asserting pressed-state class or `whileTap` activation; Tier 2: agent-browser at mobile viewport confirming visual feedback | test name/file, route, viewport, observed pressed-state signal, tier level |
+| `CTA-INV-29` | Real mobile tap on every CTA class commits correctly — DOM `.click()` is valid only for commit-plumbing proof, not for touch-first acceptance | Tier 3: real device tap by human for every affected CTA class; Tier 1 + Tier 2 are prerequisites but insufficient alone | route, CTA class, viewport, interaction source (must be "real tap"), device/browser, observed commit result |
+| `CTA-INV-30` | Touch cancel on drift or scroll verified with real `touchstart` → `touchmove` beyond retention distance (`SWIPE_THRESHOLD` in `lib/press-feedback.tsx`), not synthetic `MouseEvent("click")` | Tier 1: automated test with touch event sequence; Tier 2: agent-browser pointer sequence at mobile viewport | test name/file, retention threshold used, observed cancel behavior, route for browser check |
+| `CTA-INV-31` | Haptics adapter fires at commit phase for every canonical CTA surface via the existing `web-haptics` integration in `usePressFeedback`; cancel path does not trigger haptics | Tier 1: automated test with `web-haptics` mock verifying `trigger()` call on commit and absence on cancel | test name/file, adapter call log for commit and cancel paths |
+| `CTA-INV-32` | Haptics adapter throw, unavailability, or missing browser support does not block pressed state, commit, navigation, analytics, or pre-approval entry on any CTA surface — matching the existing `try/catch` isolation in `lib/press-feedback.tsx:118` | Tier 1: automated test with throwing adapter | test name/file, failure mode covered, observed CTA behavior under failure |
+| `CTA-INV-33` | Every execution-log browser validation entry declares its interaction source: "real tap" (Tier 3), "real click" (Tier 2), or "programmatic DOM click" (Tier 1); only "real tap" is eligible for touch-first acceptance per `CTA-INV-29` | execution-log review | entry ID, declared source, acceptance eligibility |
 
 ## Phase Applicability
 
@@ -55,7 +61,9 @@ No phase is complete until each applicable requirement below has evidence record
 | `Phase 3` | applicable caller-path checks from `CTA-INV-02` through `CTA-INV-19` for each migrated revenue-critical batch, plus `CTA-INV-16` |
 | `Phase 4` | applicable caller-path checks from `CTA-INV-02` through `CTA-INV-26` for remaining caller batches |
 | `Phase 5` | `CTA-INV-16` `CTA-INV-20` `CTA-INV-21` `CTA-INV-22` `CTA-INV-27` plus baseline user-facing invariants for final affected paths |
-| `Phase 6` | `CTA-INV-21` `CTA-INV-22` `CTA-INV-23` `CTA-INV-24` plus final build and search validation |
+| `Phase 6` | `CTA-INV-21` `CTA-INV-22` `CTA-INV-23` `CTA-INV-24` `CTA-INV-28` `CTA-INV-29` `CTA-INV-30` `CTA-INV-31` `CTA-INV-32` `CTA-INV-33` plus final build and search validation |
+
+Note: `CTA-INV-28` through `CTA-INV-33` are system interaction invariants that apply to every phase from Phase 2 onward. They are listed explicitly under Phase 6 as the final acceptance gate, but any phase that changes a CTA surface must also provide evidence for the applicable IDs from this range.
 
 ## Standard Verification Commands
 
@@ -64,9 +72,28 @@ No phase is complete until each applicable requirement below has evidence record
 - targeted test command for the affected CTA feature area
 - browser validation on a non-`3000` dev server for user-facing phases
 
+## Evidence Tiers
+
+Touch-first verification uses a three-tier evidence model. Each tier has different fidelity and different proof value.
+
+| Tier | Method | What it proves | What it does not prove |
+| --- | --- | --- | --- |
+| Tier 1 | Automated tests firing real `TouchEvent`/`PointerEvent` sequences | Code paths are wired: pressed state, cancel, commit, haptics adapter calls, failure isolation | Real finger-on-glass works; visual feedback is perceptible; scroll-vs-tap disambiguation in a real mobile browser |
+| Tier 2 | Agent-browser at mobile viewport size | DOM wiring works at mobile size; element is tappable; commit completes | Real touch hardware; real scroll disambiguation; haptics hardware |
+| Tier 3 | Real device tap by human | Everything: finger on glass, scroll disambiguation, haptics vibration, visual feedback perception | Nothing — this is the gold standard |
+
+Gate rule:
+
+- Tier 1 + Tier 2 are required and automatable. No phase passes without them for every changed CTA class.
+- Tier 3 is required but manual. The execution log must contain a human-verified entry with device, browser, and observed behavior before the CTA class is marked accepted.
+- Entries that only have Tier 1 + Tier 2 evidence are marked `code-verified, pending device acceptance` — they are not sufficient for final touch-first acceptance.
+- Existing execution-log entries that claimed mobile proof via programmatic DOM `.click()` are retroactively downgraded to Tier 1 evidence only.
+
 ## Evidence Rules
 
 - Every execution-log entry must cite the matrix IDs it covered.
 - If a requirement was not exercised, record it as `not verified` and do not mark the phase complete.
 - Browser validation notes must include route, viewport class, trigger path, and observed result.
 - Search-based verification must include the exact query used and whether matches remain.
+- Every browser validation entry must declare its interaction source per `CTA-INV-33`: "real tap" (Tier 3), "real click" (Tier 2), or "programmatic DOM click" (Tier 1).
+- DOM `.click()` is valid for commit-plumbing proof (`CTA-INV-08`, `CTA-INV-10`, `CTA-INV-11`) but is not valid for touch-first acceptance (`CTA-INV-28`, `CTA-INV-29`).

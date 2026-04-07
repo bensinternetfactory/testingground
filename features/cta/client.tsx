@@ -57,6 +57,12 @@ const toneClasses = {
   },
 } as const;
 
+const eyebrowClasses = {
+  primary: "text-xs text-white/70",
+  secondary: "text-xs text-[#999999]",
+  inverse: "text-xs text-white/60",
+} as const;
+
 export interface RippleCtaLinkAnalyticsPayload {
   component: "RippleCtaLink";
   section: string;
@@ -179,10 +185,19 @@ export function CtaLink({
     </span>
   ) : null;
 
+  const copyContent = copy.eyebrow ? (
+    <span className="flex flex-col items-start">
+      <span className={eyebrowClasses[tone]}>{copy.eyebrow}</span>
+      <span className="mt-1 text-sm font-medium leading-5">{copy.label}</span>
+    </span>
+  ) : (
+    copy.label
+  );
+
   const content = (
     <>
       {iconPosition === "start" ? iconElement : null}
-      {children ?? copy.label}
+      {children ?? copyContent}
       {iconPosition === "end" ? iconElement : null}
       <PressFeedbackRipple
         ripple={ripple}

@@ -111,7 +111,6 @@ export function ProgramCards({ config }: { config: ProgramCardsConfig }) {
                     appearance={{ size: "sm", className: "w-full justify-center" }}
                     analytics={{
                       legacySection: "program-cards",
-                      legacyCardId: card.id,
                     }}
                   />
                 </div>
