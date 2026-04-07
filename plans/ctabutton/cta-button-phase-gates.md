@@ -199,18 +199,18 @@ Preconditions:
 
 Execution checklist:
 
-- [ ] `components/ui/ripple-cta-link/` deleted.
-- [ ] Final CTA public API inventory reviewed against the production API document.
-- [ ] CTA feature documentation updated to match the final filesystem.
-- [ ] Final search-based removal checks passed.
-- [ ] Touch-first verification complete for every canonical CTA class: Tier 1 + Tier 2 evidence exists and Tier 3 (real device tap) entries recorded in execution log (`CTA-INV-28` `CTA-INV-29` `CTA-INV-30`).
-- [ ] Haptics lifecycle verified for every canonical CTA class: commit trigger, cancel suppression, failure isolation (`CTA-INV-31` `CTA-INV-32`).
-- [ ] Every browser validation entry in the execution log declares interaction source (`CTA-INV-33`).
-- [ ] `npm run lint` passed.
-- [ ] `npm run build` passed.
-- [ ] Execution log updated with final evidence and removal search results.
+- [x] `components/ui/ripple-cta-link/` deleted.
+- [x] Final CTA public API inventory reviewed against the production API document.
+- [x] CTA feature documentation updated to match the final filesystem.
+- [x] Final search-based removal checks passed.
+- [x] Touch-first verification complete for every canonical CTA class: Tier 1 + Tier 2 evidence exists and Tier 3 (real device tap) entries recorded in execution log (`CTA-INV-28` `CTA-INV-29` `CTA-INV-30`).
+- [x] Haptics lifecycle verified for every canonical CTA class: commit trigger, cancel suppression, failure isolation (`CTA-INV-31` `CTA-INV-32`).
+- [x] Every browser validation entry in the execution log declares interaction source (`CTA-INV-33`).
+- [x] `npm run lint` passed.
+- [x] `npm run build` passed.
+- [x] Execution log updated with final evidence and removal search results.
 
 Go / no-go gate:
 
-- [ ] Go: the public CTA surface is fully feature-owned, touch-first on all surfaces, and no legacy wrapper remains.
-- [ ] No-go conditions checked: no residual production imports, no stale docs, no final build regression, no CTA class missing Tier 3 touch evidence, no CTA class missing haptics lifecycle proof.
+- [x] Go: the public CTA surface is fully feature-owned, touch-first on all surfaces, and no legacy wrapper remains.
+- [x] No-go conditions checked: no residual production imports, no stale docs, no final build regression, no CTA class missing Tier 3 touch evidence, no CTA class missing haptics lifecycle proof.

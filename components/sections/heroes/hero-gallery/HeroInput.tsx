@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { CircleDollarSign } from "lucide-react";
 import { buildPreApprovalHref } from "@/features/pre-approval/routes";
 
@@ -74,12 +75,14 @@ export function HeroInput({
         aria-label={placeholder}
       />
 
-      <button
+      <motion.button
         type="submit"
+        whileTap={{ scale: 0.96, opacity: 0.75 }}
+        transition={{ type: "spring", stiffness: 600, damping: 30 }}
         className="mr-1.5 shrink-0 cursor-pointer rounded-full bg-[#22C55E] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1EA94E] focus-visible:outline-none"
       >
         {ctaLabel}
-      </button>
+      </motion.button>
     </form>
   );
 }

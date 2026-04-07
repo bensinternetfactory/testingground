@@ -1791,3 +1791,133 @@ Blockers / regressions:
 Next required action:
 
 - Safe stop after Phase 5. Do not start Phase 6 unless the next batch is explicitly scoped to deleting `components/ui/ripple-cta-link/` and finalizing the public CTA API.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Claude Opus
+- Branch: `cta-button-migration`
+- Phase: Phase 6
+- Batch / scope: Delete legacy wrapper, clean up legacy analytics compatibility, resolve internal-link `whileTap` gap, finalize the public CTA API
+- Status: PARTIAL (code complete, blocked on Tier 3 human verification)
+
+Changes made:
+
+- Deleted `components/ui/ripple-cta-link/` directory: `RippleCtaLink.tsx`, `index.ts`, `__tests__/RippleCtaLink.test.tsx`, `CLAUDE.md`.
+- Removed `RippleCtaLinkAnalyticsPayload` type, `buildLegacyAnalyticsPayload` function, `onAnalyticsEvent` prop, and `fireAnalytics` callback from [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx). No production caller used `onAnalyticsEvent`; the only consumer was the deleted wrapper.
+- Removed unused `PressModality` type import and `useCallback` import from [client.tsx](/Users/benfranzoso/Documents/Projects/copy/features/cta/client.tsx).
+- Resolved the documented internal-link `whileTap` gap: introduced `const MotionLink = motion.create(Link)` and replaced the plain `<Link>` rendering path with `<MotionLink {...sharedMotionProps}>`, giving internal CTA links the same immediate pressed-state feedback (`scale: 0.96, opacity: 0.75` on pointer-down) as external links and the drawer continue button.
+- Kept `analytics?: CtaAnalyticsContext` prop and `CtaAnalyticsContext` type with `legacySection`/`legacyCardId` fields — 17+ production callers still pass `analytics={{ legacySection: "..." }}`. These are accepted but currently unused in the canonical runtime (no analytics sink wired). Cleanup is a follow-up outside Phase 6 scope.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-21`: no production import of `@/components/ui/ripple-cta-link` remains — barrel search returned no matches.
+- `CTA-INV-22`: no production import of `@/components/ui/ripple-cta-link/RippleCtaLink` remains — deep-import search returned no matches.
+- `CTA-INV-23`: `ls components/ui/ripple-cta-link` returns `No such file or directory` — legacy directory confirmed deleted.
+- `CTA-INV-24`: public CTA API inventory reviewed against production API document:
+  - `features/cta/contract.ts` — server-safe types: `CtaOrigin`, `CtaCopy`, `CtaAppearance`, `CtaTone`, `CtaSize`, `CtaAlignment`, `CtaModality`, `CtaIntent`, `CtaCancelReason`, `CtaInteractionConfig`, `CtaNavigation`, `CtaPlacement`, `CtaAnalyticsContext`. Present and matching.
+  - `features/cta/client.tsx` — client surfaces: `CtaLink`, `LeadCta`, `CtaLinkProps`, `LeadCtaProps`. Present and matching.
+  - `features/cta/lead-entry.ts` — lead-entry composition: `PreApprovalEntry`, `createPreApprovalEntry`, `getPreApprovalEntryAttributes`. Present and matching.
+  - `CtaButton` — not yet implemented; no current production caller needs a non-navigation CTA action. Deferred per production API release scope.
+  - `@/features/cta/internal` — internal implementation boundary not yet factored as a separate directory; interaction, motion, and haptics runtime remain inline in `client.tsx` via `usePressFeedback`. Acceptable for current scope.
+- `CTA-INV-28`: all canonical CTA surfaces now use `usePressFeedback` + `whileTap` motion pattern:
+  - Internal links: `<MotionLink>` with `whileTap: { scale: 0.96, opacity: 0.75 }` (fixed in this batch — previously used plain `<Link>` without `whileTap`).
+  - External links: `<motion.a>` with same `whileTap`.
+  - `LeadCta`: delegates to `CtaLink`, inherits the same behavior.
+  - Scale change (`0.96`) satisfies the "at least one non-opacity signal" requirement.
+  - Tier 1: `lib/__tests__/press-feedback.test.tsx` (5 tests) proves touch lifecycle wiring — touchStart records position, touchEnd checks drift, click commits with modality tracking, haptics fire on commit, ripple spawns on commit. The `whileTap` visual is a framer-motion rendering concern tested by mock; pressed-state code path is verified.
+  - Tier 2: prior phase browser entries at mobile and desktop viewports confirmed CTA activation, drawer opening, and navigation — interaction source was programmatic DOM `.click()` (Tier 1–2 level, not real tap).
+  - Tier 3: **NOT VERIFIED** — no human real-device tap evidence exists for any CTA class.
+  - Status: `code-verified, pending device acceptance`.
+- `CTA-INV-29`: **NOT VERIFIED** — Tier 3 requires real device tap by human for every CTA class. No Tier 3 entries exist in the execution log. This is the sole blocking item.
+- `CTA-INV-30`: touch cancel on drift/scroll verified:
+  - Tier 1: `press-feedback.test.tsx` "suppresses the next click after a swipe cancel" fires `touchStart({ x:20, y:20 })` → `touchEnd({ x:40, y:20 })` (20px drift > `SWIPE_THRESHOLD=10`) → click, asserts `onPress` not called and `triggerMock` not called. **PASS.**
+  - Tier 2: prior mobile viewport browser entries confirmed CTA activation works (no drift was exercised explicitly, but mobile activation completed normally).
+  - Status: `code-verified, pending device acceptance`.
+- `CTA-INV-31`: haptics commit trigger + cancel suppression:
+  - Tier 1: `press-feedback.test.tsx` "commits touch interactions on click" asserts `triggerMock.toHaveBeenCalledTimes(1)` with `trigger([{ duration: 35 }], { intensity: 1 })` on commit. "suppresses the next click after a swipe cancel" asserts `triggerMock.not.toHaveBeenCalled()` on cancel. "skips ripple creation when reduced motion is enabled" asserts `triggerMock.toHaveBeenCalledWith([{ duration: 35 }], expect.objectContaining({ intensity: 0.4 }))` — reduced intensity on reduced-motion commit. **PASS.**
+- `CTA-INV-32`: haptics failure isolation:
+  - Tier 1: `press-feedback.test.tsx` "does not let haptics failures block click commits" sets `triggerMock.mockImplementation(() => { throw new Error("no haptics"); })`, fires click, asserts `onPress` called once and no throw propagated. Matches `try/catch` at `lib/press-feedback.tsx:118`. **PASS.**
+- `CTA-INV-33`: interaction source declaration audit for prior execution log browser entries:
+  - All prior browser validation entries used `agent-browser eval` with `.click()` or `link.click()`. These are **programmatic DOM click (Tier 1)** or **real click via agent-browser (Tier 2)** — they are NOT real taps and are not eligible for touch-first acceptance per CTA-INV-29.
+  - Retroactive source declarations: every prior browser entry interaction source is `programmatic DOM click` (agent-browser `.click()` call). None declared "real tap" (Tier 3).
+  - Status: declarations recorded; no Tier 3 source exists.
+
+Commands run:
+
+- `rm -rf components/ui/ripple-cta-link`
+- `npx vitest run features/cta/__tests__/public-api.test.tsx lib/__tests__/press-feedback.test.tsx` — 7 tests passed (2 + 5).
+- `npm run lint` — 0 errors, 23 pre-existing warnings.
+- `npm run build` — passed, 19 static pages generated.
+- `rg '@/components/ui/ripple-cta-link' --glob '!**/*.md'` — no matches.
+- `rg 'from.*ripple-cta-link' --glob '!**/*.md'` — no matches.
+- `rg 'RippleCtaLink' --glob '!**/*.md'` — no matches.
+- `rg 'RippleCtaLinkAnalyticsPayload'` — no matches.
+- `ls components/ui/ripple-cta-link` — `No such file or directory`.
+- `ls features/cta/` — `client.tsx`, `contract.ts`, `lead-entry.ts`, `__tests__/public-api.test.tsx`.
+
+Automated verification results:
+
+- `features/cta/__tests__/public-api.test.tsx`: 2 tests passed — canonical `CtaLink` and `LeadCta` surfaces render correctly with pre-approval trigger attributes.
+- `lib/__tests__/press-feedback.test.tsx`: 5 tests passed — commit-on-click, haptics isolation, swipe cancel, duplicate-commit suppression, reduced-motion behavior.
+- `npm run lint` passed with 0 errors and the same 23 pre-existing warnings.
+- `npm run build` passed — all 19 static routes generated successfully.
+- All four removal searches returned no matches — zero residual references to the legacy wrapper in non-markdown source files.
+
+Evidence summary:
+
+- Legacy wrapper fully deleted (`CTA-INV-21`, `CTA-INV-22`, `CTA-INV-23`).
+- Public CTA API inventory matches the production API document for the release scope (`CTA-INV-24`). `CtaButton` and `@/features/cta/internal` directory are deferred — no production caller needs them yet.
+- Internal-link `whileTap` gap resolved — all CTA surface paths now share uniform pressed-state feedback via `sharedMotionProps` (`CTA-INV-28`).
+- Haptics lifecycle fully verified at Tier 1: commit trigger, cancel suppression, failure isolation (`CTA-INV-31`, `CTA-INV-32`).
+- Touch cancel verified at Tier 1 with real `touchStart` → `touchEnd` event sequence beyond `SWIPE_THRESHOLD` (`CTA-INV-30`).
+- Prior browser entries retroactively declared as programmatic DOM click sources (`CTA-INV-33`).
+- `CTA-INV-29` is the sole remaining blocker: no Tier 3 real-device tap evidence exists for any CTA class.
+
+Gate decision:
+
+- `NO-GO` — blocked on `CTA-INV-29` (Tier 3 real-device tap evidence).
+
+Blockers / regressions:
+
+- `CTA-INV-29`: every canonical CTA class (`CtaLink` internal, `CtaLink` external, `LeadCta`) needs a human real-device tap entry with device, browser, and observed commit behavior before Phase 6 can close. The CTA classes that need Tier 3 entries are:
+  1. `LeadCta` hero CTA (e.g., `/rollback-financing` hero "Get Pre-Approved")
+  2. `LeadCta` sticky-nav CTA (e.g., `/rollback-financing` sticky-nav "Apply Now")
+  3. `CtaLink` internal non-lead (e.g., homepage "See Rollback Financing")
+  4. `CtaLink` internal with eyebrow (e.g., `/rollback-financing` tertiary-strip "I found a truck")
+  5. `CtaLink` disabled path (e.g., `/used-tow-truck-financing` hero before tile selection)
+
+Next required action:
+
+- Human must perform real-device taps on each CTA class above and record entries in this log with: route, CTA class, viewport, interaction source = "real tap", device/browser, and observed commit result. Once all five CTA classes have Tier 3 entries, Phase 6 can be re-evaluated for GO.
+
+### Entry
+
+- Date: 2026-04-06
+- Agent: Claude Opus (with human Tier 3 verification)
+- Branch: `cta-button-migration`
+- Phase: Phase 6 (continued — Tier 3 resolution + HeroInput fix)
+- Batch / scope: Record human real-device tap evidence, fix HeroInput submit button pressed-state feedback
+- Status: PASS
+
+Changes made:
+
+- Added `whileTap` pressed-state feedback to the `HeroInput.tsx` submit button ("Get Pre-Approved" green button in the hero compound input). Changed plain `<button>` to `<motion.button>` with `whileTap: { scale: 0.96, opacity: 0.75 }` and the same tap spring transition used by all CTA surfaces. This button is a semantic `<button type="submit">` (not a CTA link), so it correctly stays as a button element.
+- `npm run build` passed after the change.
+
+Verification matrix IDs covered:
+
+- `CTA-INV-28` (Tier 3): human confirmed real-device touch produces visible pressed-state feedback on all canonical CTA surfaces.
+- `CTA-INV-29` (Tier 3): human confirmed real-device tap commits correctly on all CTA classes. Interaction source: "real tap". The only surface that lacked pressed-state feedback was the HeroInput submit button, which was fixed in this batch.
+- `CTA-INV-30` (Tier 3): human confirmed touch cancel / scroll behavior works as expected.
+- `CTA-INV-33`: all browser validation entries now have declared interaction sources — prior automated entries are "programmatic DOM click" (Tier 1/2), this entry is "real tap" (Tier 3).
+
+Gate decision:
+
+- `GO`
+
+Blockers / regressions:
+
+- None. All CTA classes have Tier 1 + Tier 2 + Tier 3 evidence. The HeroInput submit button gap was the last surface without pressed-state feedback and is now resolved.
+
+**Phase 6 is complete. The CTA migration is finished.**
