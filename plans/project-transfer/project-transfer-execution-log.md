@@ -1172,3 +1172,244 @@ Phase 5 smallest viable migration unit executed successfully. All files from the
 
 **Next required action:**
 - Execute Phase 6: Incremental expansion (Batch 6a first — About page + resource pages)
+
+---
+
+### Entry 10 — Phase 6 Batch 6a: About + Resource Pages + Calculator
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude |
+| **Phase** | Phase 6 — Incremental Expansion |
+| **Batch / Scope** | Batch 6a: About page, calculator page, 4 resource pages, calculator component |
+| **Status** | PASS |
+
+**What was completed:**
+- Copied about page (`app/(marketing)/about/page.tsx`)
+- Copied resources layout/loading/error (`app/(marketing)/(resources)/layout.tsx`, `loading.tsx`, `error.tsx`)
+- Copied calculator page (`app/(marketing)/(resources)/tow-truck-calculator/page.tsx`)
+- Copied 4 resource article pages (`resources/how-much-does-a-tow-truck-cost`, `section-179-tow-truck`, `tow-truck-lease-vs-loan`, `tow-truck-financing-companies`)
+- Copied calculator component (`components/sections/calculator/Calculator.tsx`, `calculator-data.ts`)
+- Ran tsc, lint, build, browser verification, and tests
+
+**What remains:**
+- Batch 6b: Program pages
+- Batch 6c: Financing pages
+- Batch 6d: Conditional cleanup (if needed)
+
+**Changes made:**
+- Added 10 files to destination (6 route files, 3 layout/loading/error, 2 calculator component files — note: one initial copy to wrong path was corrected)
+
+**Files created or updated:**
+- `app/(marketing)/about/page.tsx`
+- `app/(marketing)/(resources)/layout.tsx`
+- `app/(marketing)/(resources)/loading.tsx`
+- `app/(marketing)/(resources)/error.tsx`
+- `app/(marketing)/(resources)/tow-truck-calculator/page.tsx`
+- `app/(marketing)/(resources)/resources/how-much-does-a-tow-truck-cost/page.tsx`
+- `app/(marketing)/(resources)/resources/section-179-tow-truck/page.tsx`
+- `app/(marketing)/(resources)/resources/tow-truck-lease-vs-loan/page.tsx`
+- `app/(marketing)/(resources)/resources/tow-truck-financing-companies/page.tsx`
+- `components/sections/calculator/Calculator.tsx`
+- `components/sections/calculator/calculator-data.ts`
+
+**Commands run:**
+```
+tsc --noEmit → zero new errors (pre-existing only in tests/auth)
+npm run lint → no new errors (pre-existing baseline only)
+npm run build → PASS, 6 new routes: /about, /tow-truck-calculator, 4x /resources/*
+npm test → 7/15 suites fail, 13/423 tests fail (exact baseline match, zero regressions)
+```
+
+**Browser verification:**
+| Page | HTTP | Renders | Nav | Footer | Console errors |
+|---|---|---|---|---|---|
+| `/about` | 200 | ✓ (h1 "About TowLoans") | ✓ | ✓ | 0 |
+| `/tow-truck-calculator` | 200 | ✓ (calculator + disclaimer) | ✓ | ✓ | 0 |
+| `/resources/how-much-does-a-tow-truck-cost` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/resources/section-179-tow-truck` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/resources/tow-truck-lease-vs-loan` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/resources/tow-truck-financing-companies` | 200 | ✓ | ✓ | ✓ | 0 |
+
+**Batch 6a gate:** PASS — all 6 pages render, build passes, no test regressions, zero console errors.
+
+**Next required action:**
+- Execute Batch 6b: Program pages
+
+---
+
+### Entry 11 — Phase 6 Batch 6b: Program Pages
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude |
+| **Phase** | Phase 6 — Incremental Expansion |
+| **Batch / Scope** | Batch 6b: 4 program pages, ProgramPageShell + 11 section blocks, hero-lead-gen, equipment-closing-cta |
+| **Status** | PASS |
+
+**What was completed:**
+- Copied programs layout/loading/error
+- Copied `_components/` directory (ProgramPageShell, BlogLayout, ArticleSidebar, SidebarCta, TableOfContents, ProgramBottomLinks, ProgramNavCardLink, ProgramSectionRenderer, derive-toc, types, page-config-types)
+- Copied 11 section block files (ComparisonTable, ContentSection, Divider, FeatureGrid, InlineCta, Intro, PromoPanel, PullQuote, QualificationPaths, RelatedPrograms, render-paragraph-content)
+- Copied 4 program pages with configs (fleet-financing, deferred-payment-tow-truck-financing, zero-down-tow-truck-financing, private-party-tow-truck-financing)
+- Copied hero-lead-gen component (HeroLeadGen, TrustBadge, config, index)
+- Copied equipment-closing-cta component (EquipmentClosingCta, EquipmentClosingCtaTrucks, config, index)
+- Ran tsc, lint, build, browser verification, and tests
+
+**What remains:**
+- Batch 6c: Financing pages
+- Batch 6d: Conditional cleanup (if needed)
+
+**Files created or updated:**
+- `app/(marketing)/(programs)/layout.tsx`, `loading.tsx`, `error.tsx`
+- `app/(marketing)/(programs)/_components/` (11 files)
+- `app/(marketing)/(programs)/_components/blocks/` (11 files)
+- `app/(marketing)/(programs)/fleet-financing/page.tsx`, `config.ts`
+- `app/(marketing)/(programs)/deferred-payment-tow-truck-financing/page.tsx`, `config.ts`
+- `app/(marketing)/(programs)/zero-down-tow-truck-financing/page.tsx`, `config.ts`
+- `app/(marketing)/(programs)/private-party-tow-truck-financing/page.tsx`, `config.ts`
+- `components/sections/heroes/hero-lead-gen/` (4 files)
+- `components/sections/page/equipment-closing-cta/` (4 files)
+
+**Commands run:**
+```
+tsc --noEmit → zero new errors
+npm run build → PASS, 4 new routes: /fleet-financing, /deferred-payment-tow-truck-financing, /zero-down-tow-truck-financing, /private-party-tow-truck-financing
+npm test → 7/15 suites fail, 13/423 tests fail (exact baseline, zero regressions)
+```
+
+**Browser verification:**
+| Page | HTTP | Renders | Nav | Footer | Console errors |
+|---|---|---|---|---|---|
+| `/fleet-financing` | 200 | ✓ (hero + sections + sidebar) | ✓ | ✓ | 0 |
+| `/deferred-payment-tow-truck-financing` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/zero-down-tow-truck-financing` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/private-party-tow-truck-financing` | 200 | ✓ | ✓ | ✓ | 0 |
+
+**Note:** Initial page load after file copy showed CSS HMR polling 404s (`layout.css?v=...`) — a Next.js dev server hot reload artifact. Dev server restart cleared the issue. Not an application error.
+
+**Batch 6b gate:** PASS — all 4 program pages render, build passes, no test regressions, zero console errors.
+
+**Next required action:**
+- Execute Batch 6c: Financing pages
+
+---
+
+### Entry 12 — Phase 6 Batch 6c: Financing Pages
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude |
+| **Phase** | Phase 6 — Incremental Expansion |
+| **Batch / Scope** | Batch 6c: 4 financing pages, EquipmentFinancingPageShell + configs, hero-convert-framed, hero-convert-geico, 8 section components |
+| **Status** | PASS |
+
+**What was completed:**
+- Copied financing layout/loading/error
+- Copied `_components/` (EquipmentFinancingPageShell, page-config-types, shared-config)
+- Copied 4 financing pages with configs (rollback, rotator, wrecker, used-tow-truck)
+- Copied hero-convert-framed (8 files: HeroConvertFramed + 3 variants, FramedSelectionTile, FramedTileSelector, HeroGallery, index)
+- Copied hero-convert-geico (5 files: HeroConvert, SelectionTile, TileSelector, config, index)
+- Copied 8 financing section components (financing-offers-split, purchase-and-terms, tertiary-strip, content-image-split, financing-footnotes, related-links-strip, purchase-source-grid, term-length-slider)
+- Ran tsc, build, browser verification, and tests
+
+**What remains:**
+- Batch 6d: Conditional cleanup + final gate evaluation
+
+**Files created or updated:**
+- `app/(marketing)/(financing)/layout.tsx`, `loading.tsx`, `error.tsx`
+- `app/(marketing)/(financing)/_components/` (3 files)
+- `app/(marketing)/(financing)/rollback-financing/page.tsx`, `config.ts`
+- `app/(marketing)/(financing)/rotator-financing/page.tsx`, `config.ts`
+- `app/(marketing)/(financing)/wrecker-financing/page.tsx`, `config.ts`
+- `app/(marketing)/(financing)/used-tow-truck-financing/page.tsx`, `config.ts`
+- `components/sections/heroes/hero-convert-framed/` (8 files)
+- `components/sections/heroes/hero-convert-geico/` (5 files)
+- `components/sections/page/financing-offers-split/` (4 files each for 8 section dirs)
+
+**Commands run:**
+```
+tsc --noEmit → zero new errors
+npm run build → PASS, 4 new routes: /rollback-financing, /rotator-financing, /wrecker-financing, /used-tow-truck-financing
+npm test → 7/15 suites fail, 13/423 tests fail (exact baseline, zero regressions)
+```
+
+**Browser verification:**
+| Page | HTTP | Renders | Nav | Footer | Console errors |
+|---|---|---|---|---|---|
+| `/rollback-financing` | 200 | ✓ (hero + sections + footnotes + related links) | ✓ | ✓ | 0 |
+| `/rotator-financing` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/wrecker-financing` | 200 | ✓ | ✓ | ✓ | 0 |
+| `/used-tow-truck-financing` | 200 | ✓ | ✓ | ✓ | 0 |
+
+**Batch 6c gate:** PASS — all 4 financing pages render, build passes, no test regressions, zero console errors.
+
+**Next required action:**
+- Execute Batch 6d: Conditional cleanup + Phase 6 gate evaluation
+
+---
+
+### Entry 13 — Phase 6 Batch 6d + Phase 6 Gate Decision
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-04-07 |
+| **Agent** | claude |
+| **Phase** | Phase 6 — Incremental Expansion |
+| **Batch / Scope** | Batch 6d: Conditional sections check + full sweep + Phase 6 gate evaluation |
+| **Status** | PASS |
+
+**What was completed:**
+- Checked all conditional sections from adaptation map §4:
+  - `hero-showcase-rm` — grep confirms zero imports by in-scope pages → not needed
+  - `proof-block` — grep confirms zero imports by financing configs → not needed
+  - `equipment-deals` — grep confirms zero imports → not needed
+  - `public/brand-assets/source-icons/` — grep confirms zero references → not needed
+  - `towloansdark.svg` — referenced only by destination-owned pages (verify, pre-approval), not migrated code → already present in destination
+- Full sweep: all 15 marketing URLs return HTTP 200
+- Final `tsc --noEmit` — zero errors in production code (only pre-existing test file errors)
+- Homepage re-verified in browser — renders with zero console errors
+- Phase 6 gate evaluated: GO
+
+**What remains:**
+- None for Phase 6. Phase 7 (Pre-Merge Validation) may now begin.
+
+**Changes made:**
+- No files copied in Batch 6d (all conditional sections confirmed not needed)
+- Updated Phase 6 checklist in `project-transfer-phase-gates.md` (all items checked, batch summary table added)
+- Updated active phase marker to Phase 7
+
+**Files created or updated:**
+- `project-transfer-phase-gates.md` (Phase 6 checklist + gate decision + active phase marker)
+- `project-transfer-execution-log.md` (this entry)
+
+**Commands run:**
+```
+grep -r "hero-showcase" → no matches in in-scope code
+grep -r "ProofBlock|proof-block" → no matches
+grep -r "EquipmentDeals|equipment-deals" → no matches
+grep -r "source-icons" → no matches
+grep -r "towloansdark" → matches only in destination-owned verify/ and pre-approval/ pages
+curl all 15 marketing URLs → all HTTP 200
+tsc --noEmit → zero new errors (pre-existing test-only errors)
+npm test → 7/15 suites, 13/423 tests (exact baseline)
+```
+
+**Phase 6 gate evaluation:**
+
+| Criterion | Result |
+|---|---|
+| All pages in all batches render correctly | ✓ 15/15 pages HTTP 200, browser-verified |
+| Build passes | ✓ All routes in `next build` output |
+| No test regressions | ✓ 7/15 suites, 13/423 tests — exact baseline across all batches |
+| No console errors on any transferred page | ✓ Zero console errors on every page |
+
+**Gate decision:** GO
+
+**Phase 6 complete. All 14 remaining routes transferred in 3 batches (6a: 6 pages, 6b: 4 pages, 6c: 4 pages). Batch 6d confirmed no conditional sections needed. Total marketing surface: 15 pages all rendering correctly.**
+
+**Next required action:**
+- Execute Phase 7: Pre-Merge Validation

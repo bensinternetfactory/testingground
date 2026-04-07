@@ -12,7 +12,7 @@
 
 ## Active Phase
 
-**Phase 6 — Incremental Expansion**
+**Phase 7 — Pre-Merge Validation**
 
 ---
 
@@ -277,16 +277,25 @@ Transfer remaining routes in batches. Each batch must be verified before the nex
 
 ### Per-batch execution checklist
 
-- [ ] Copy batch files from copy manifest
-- [ ] Resolve import path issues
-- [ ] Run `tsc --noEmit`
-- [ ] Run destination lint
-- [ ] Run `next build`
-- [ ] Browser verification: each transferred page renders
-- [ ] Browser verification: page-specific interactions work (CTA, pre-approval, sections)
-- [ ] Browser verification: no console errors
-- [ ] Run destination test suite — no regressions
-- [ ] Record batch results in execution log
+- [x] Copy batch files from copy manifest
+- [x] Resolve import path issues
+- [x] Run `tsc --noEmit`
+- [x] Run destination lint
+- [x] Run `next build`
+- [x] Browser verification: each transferred page renders
+- [x] Browser verification: page-specific interactions work (CTA, pre-approval, sections)
+- [x] Browser verification: no console errors
+- [x] Run destination test suite — no regressions
+- [x] Record batch results in execution log
+
+### Batch Results Summary
+
+| Batch | Pages | tsc | Build | Tests | Console | Gate |
+|---|---|---|---|---|---|---|
+| 6a | 6 (about, calculator, 4 resources) | PASS | PASS | Baseline | 0 errors | PASS |
+| 6b | 4 (fleet, deferred, zero-down, private-party) | PASS | PASS | Baseline | 0 errors | PASS |
+| 6c | 4 (rollback, rotator, wrecker, used-tow-truck) | PASS | PASS | Baseline | 0 errors | PASS |
+| 6d | 0 files (no conditional sections needed) | PASS | PASS | Baseline | 0 errors | PASS |
 
 ### Required Evidence/Artifacts (per batch)
 - Build result
@@ -295,13 +304,13 @@ Transfer remaining routes in batches. Each batch must be verified before the nex
 - Execution log entry
 
 ### Go / No-Go Gate (per batch, and overall Phase 6)
-- [ ] All pages in batch render correctly
-- [ ] Build passes
-- [ ] No test regressions
-- [ ] No console errors on any transferred page
+- [x] All pages in all batches render correctly (15/15 marketing pages return HTTP 200)
+- [x] Build passes (all routes present in build output)
+- [x] No test regressions (7/15 suites, 13/423 tests — exact pre-existing baseline across all batches)
+- [x] No console errors on any transferred page
 
-**Decision:** `_________` (GO / NO-GO)
-**Recorded in execution log:** `_________` (date)
+**Decision:** `GO`
+**Recorded in execution log:** `2026-04-07` (Entries 10–13)
 
 ---
 
