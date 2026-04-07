@@ -532,7 +532,7 @@ describe("prompt generation", () => {
     const prompt = createPrompt(step);
 
     expect(prompt).toContain("components/sections/heroes/hero-convert-framed/CLAUDE.md");
-    expect(prompt).toContain("components/ui/ripple-cta-link/CLAUDE.md");
+    expect(prompt).toContain("features/cta/CLAUDE.md");
   });
 
   it("includes output rules and hard stop", () => {

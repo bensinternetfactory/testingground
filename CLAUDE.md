@@ -47,15 +47,18 @@ This is a Next.js 16 landing page using the App Router architecture with React 1
 ## Conventions
 
 - **Internal links must use `next/link`** — never use a raw `<a>` tag for internal routes. `Link` enables client-side navigation and prefetching. Only use `<a>` for external URLs.
-- **Reusable CTA rule (`RippleCtaLink`)** — use `RippleCtaLink` for **primary internal CTA button-links** (high-intent conversion actions visually presented as buttons).
+- **Reusable CTA rule (`CtaLink` / `LeadCta`)** — use `CtaLink` for **primary internal CTA button-links** (high-intent conversion actions visually presented as buttons). Use `LeadCta` when the CTA is a pre-approval lead-entry point.
   - Use standard `Link`/`<a>` for inline text links in paragraph content, including FAQ answer links.
   - Keep semantic form actions as `<button type="submit">` (do not replace with CTA link components).
-  - Keep specialized third-party/native controls when `RippleCtaLink` would break semantics or behavior.
-  - External destinations should use native `<a>` patterns unless intentionally using `RippleCtaLink`'s external-anchor behavior.
+  - Keep specialized third-party/native controls when `CtaLink` would break semantics or behavior.
+  - External destinations should use native `<a>` patterns unless intentionally using `CtaLink`'s external-anchor behavior.
 
 ```tsx
 // Do: primary internal button-style CTA
-<RippleCtaLink href="/rollback-financing" label="See Rollback Financing" />
+<CtaLink href="/rollback-financing" copy={{ label: "See Rollback Financing" }} />
+
+// Do: pre-approval lead-entry CTA
+<LeadCta entry={preApprovalEntry} copy={{ label: "Get Pre-Approved" }} />
 
 // Don't: inline FAQ/body copy link
 <Link href="/tow-truck-calculator">tow truck calculator</Link>

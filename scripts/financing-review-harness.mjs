@@ -77,7 +77,7 @@ const STEP_META = new Map([
     skills: ALL_AUDIT_SKILLS,
     claudeMdHints: [
       "components/sections/heroes/hero-convert-framed/CLAUDE.md",
-      "components/ui/ripple-cta-link/CLAUDE.md",
+      "features/cta/CLAUDE.md",
     ],
   }],
   ["Step 3c", {
@@ -147,7 +147,7 @@ const STEP_META = new Map([
     skills: ALL_AUDIT_SKILLS,
     claudeMdHints: [
       "components/sections/page/equipment-closing-cta/CLAUDE.md",
-      "components/ui/ripple-cta-link/CLAUDE.md",
+      "features/cta/CLAUDE.md",
     ],
   }],
   ["Step 7", {
