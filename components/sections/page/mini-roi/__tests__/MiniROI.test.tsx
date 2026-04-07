@@ -34,7 +34,14 @@ vi.mock("framer-motion", () => {
   return {
     motion: new Proxy(
       {},
-      { get: (_target: object, tag: string) => createMotionComponent(tag) },
+      {
+        get: (_target: object, prop: string) => {
+          if (prop === "create") {
+            return () => createMotionComponent("a");
+          }
+          return createMotionComponent(prop);
+        },
+      },
     ),
     useMotionValue: (initialValue: number) => {
       let value = initialValue;
