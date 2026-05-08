@@ -14,11 +14,18 @@ export type CarouselSlide = {
   bg?: string;
 };
 
+export type TruckIconKind =
+  | "rollback"
+  | "wrecker"
+  | "heavy-wrecker"
+  | "rotator"
+  | "dtu"
+  | "lowboy";
+
 export type EquipmentChoice = {
   label: string;
   href: string;
-  imageSrc: string;
-  imageAlt: string;
+  iconKind: TruckIconKind;
 };
 
 export type Program = {

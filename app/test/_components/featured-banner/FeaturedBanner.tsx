@@ -6,7 +6,7 @@ import { FEATURED_BANNER } from "../../_lib/content";
 export function FeaturedBanner() {
   return (
     <SectionShell outerClassName="bg-white" innerClassName="py-6 md:py-10">
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] items-stretch overflow-hidden rounded-xl bg-[var(--t-blue-ink)] text-white">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] items-stretch overflow-hidden rounded-xl bg-[var(--t-blue)] text-white">
         <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-[#ffd84d] mb-3">
             {FEATURED_BANNER.eyebrow}

@@ -12,9 +12,9 @@ export const PHONE_DISPLAY = "(888) 555-0199";
 export const PHONE_TEL = "tel:+18885550199";
 
 export const PROMO_STRIP = {
-  copy: "Get pre-qualified for tow truck financing in 30 seconds. No hard credit pull.",
-  ctaLabel: "Apply Now",
-  ctaHref: "/pre-approval",
+  copy: "Know your truck payment in less than 30 seconds before applying. No credit check required.",
+  ctaLabel: "Find out now",
+  ctaHref: "/tow-truck-calculator",
 } as const;
 
 export const HEADER_NAV: NavItem[] = [
@@ -23,12 +23,6 @@ export const HEADER_NAV: NavItem[] = [
   { label: "How It Works", href: "/how-it-works" },
   { label: "Resources", href: "/resources" },
   { label: "Apply Now", href: "/pre-approval" },
-];
-
-export const QUICK_ACTIONS: NavItem[] = [
-  { label: "Track my application", href: "/pre-approval" },
-  { label: "Talk to a financing specialist", href: PHONE_TEL },
-  { label: "Calculate my payment", href: "/payment-calculator" },
 ];
 
 export const CAROUSEL_SLIDES: CarouselSlide[] = [
@@ -75,12 +69,12 @@ export const CAROUSEL_SLIDES: CarouselSlide[] = [
 ];
 
 export const EQUIPMENT_CHOICES: EquipmentChoice[] = [
-  { label: "Rollback", href: "/rollback-financing", imageSrc: "/truck-1.jpg", imageAlt: "Rollback flatbed tow truck" },
-  { label: "Wrecker", href: "/wrecker-financing", imageSrc: "/truck-2.jpg", imageAlt: "Light-duty wrecker tow truck" },
-  { label: "Heavy Wrecker", href: "/heavy-wrecker-financing", imageSrc: "/truck-4.jpg", imageAlt: "Heavy-duty wrecker" },
-  { label: "Rotator", href: "/rotator-financing", imageSrc: "/truck-5.jpg", imageAlt: "Rotator recovery truck" },
-  { label: "DTU", href: "/dtu-financing", imageSrc: "/truck-6.jpg", imageAlt: "Detachable towing unit" },
-  { label: "Lowboy", href: "/lowboy-financing", imageSrc: "/truck-8.jpg", imageAlt: "Lowboy trailer rig" },
+  { label: "Rollback", href: "/rollback-financing", iconKind: "rollback" },
+  { label: "Wrecker", href: "/wrecker-financing", iconKind: "wrecker" },
+  { label: "Heavy Wrecker", href: "/heavy-wrecker-financing", iconKind: "heavy-wrecker" },
+  { label: "Rotator", href: "/rotator-financing", iconKind: "rotator" },
+  { label: "DTU", href: "/dtu-financing", iconKind: "dtu" },
+  { label: "Lowboy", href: "/lowboy-financing", iconKind: "lowboy" },
 ];
 
 export const FEATURED_BANNER = {

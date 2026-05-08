@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone } from "lucide-react";
 import { SectionShell } from "../primitives/SectionShell";
 import { CtaButton } from "../primitives/CtaButton";
@@ -10,9 +11,14 @@ export function Footer() {
     <SectionShell as="footer" outerClassName="bg-white border-t border-[var(--t-divider)]" innerClassName="pt-12 md:pt-16 pb-8">
       <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_3fr] gap-8 lg:gap-12 pb-10 border-b border-[var(--t-divider)]">
         <div>
-          <Link href="/test" className="inline-flex font-extrabold text-xl tracking-tight text-[var(--t-ink)]">
-            <span className="text-[var(--t-blue)]">Tow</span>
-            <span>Loans</span>
+          <Link href="/test" aria-label="TowLoans home" className="inline-flex items-center">
+            <Image
+              src="/brand-assets/logo/towloans-dark-logo.svg"
+              alt="TowLoans"
+              width={272}
+              height={40}
+              className="h-10 w-auto"
+            />
           </Link>
           <p className="mt-3 text-[14px] text-[var(--t-text-muted)] max-w-sm">
             Tow truck and recovery equipment financing for operators of every size.

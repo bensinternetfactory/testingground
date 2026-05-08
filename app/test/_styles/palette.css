@@ -1,9 +1,10 @@
 [data-theme="test"] {
   color-scheme: light;
 
-  --t-blue:        #0058a3;
-  --t-blue-hover:  #00467f;
-  --t-blue-ink:    #003a6b;
+  /* --t-blue* hold the primary action color. Values are now green; the names are kept stable so the 30+ call sites don't need to change. */
+  --t-blue:        #1bc249;
+  --t-blue-hover:  #17a53e;
+  --t-blue-ink:    #15803D;
 
   --t-yellow:      #ffd84d;
   --t-yellow-ink:  #1a1a1a;
@@ -11,6 +12,7 @@
   --t-bg:          #ffffff;
   --t-bg-soft:     #fafafa;
   --t-bg-tint:     #f5f7f9;
+  --t-panel:       hsl(0, 0%, 93%);
 
   --t-divider:     #e7e7e7;
   --t-card-border: #e1e1e1;
@@ -22,7 +24,7 @@
   --t-text-faint:  #8a8a8a;
 
   --t-success:     #1f7a3a;
-  --t-focus:       #0058a3;
+  --t-focus:       #1bc249;
 
   background: var(--t-bg);
   color: var(--t-text);

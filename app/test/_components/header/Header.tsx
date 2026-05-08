@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone } from "lucide-react";
 import { HEADER_NAV, PHONE_DISPLAY, PHONE_TEL } from "../../_lib/content";
 import { CtaButton } from "../primitives/CtaButton";
@@ -11,9 +12,15 @@ export function Header() {
     <header className="sticky top-0 z-40 bg-white border-b border-[var(--t-divider)]">
       <div className="2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x 2xl:border-gray-200 2xl:overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
-          <Link href="/test" className="flex items-center font-extrabold text-lg tracking-tight text-[var(--t-ink)]">
-            <span className="text-[var(--t-blue)]">Tow</span>
-            <span>Loans</span>
+          <Link href="/test" aria-label="TowLoans home" className="flex items-center">
+            <Image
+              src="/brand-assets/logo/towloans-dark-logo.svg"
+              alt="TowLoans"
+              width={245}
+              height={36}
+              priority
+              className="h-9 w-auto"
+            />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">

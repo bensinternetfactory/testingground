@@ -31,10 +31,10 @@ export default function TestHomepage() {
         Skip to main content
       </a>
 
-      <PromoStrip />
       <Header />
 
       <main id="main">
+        <PromoStrip />
         <PromoCarousel slides={CAROUSEL_SLIDES} intervalMs={7000} />
         <QuickActions />
         <EquipmentChooser />
