@@ -130,13 +130,9 @@ export const PROGRAM_CHOICES: ProgramChoice[] = [
 ];
 
 export const FEATURED_BANNER = {
-  eyebrow: "New operators welcome",
-  headline: "Starting a tow business? We finance day-one buyers.",
-  body: "No business history required. Pre-qualify with personal credit and get matched to startup-friendly lenders.",
-  ctaLabel: "Start your application",
-  ctaHref: "/startup-financing",
-  imageSrc: "/truck-10.jpg",
-  imageAlt: "Owner-operator standing next to a new tow truck",
+  brand: "Tow Loans",
+  headline: "Make no payments up to 180 days",
+  subhead: "Your truck earns before you pay",
 };
 
 export const PROGRAMS: Program[] = [
