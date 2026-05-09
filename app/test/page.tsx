@@ -5,6 +5,7 @@ import { PromoCarousel } from "./_components/promo-carousel/PromoCarousel";
 import { QuickActions } from "./_components/quick-actions/QuickActions";
 import { EquipmentChooser } from "./_components/equipment-chooser/EquipmentChooser";
 import { FeaturedBanner } from "./_components/featured-banner/FeaturedBanner";
+import { ProgramChooser } from "./_components/program-chooser/ProgramChooser";
 import { ProgramsRow } from "./_components/programs-row/ProgramsRow";
 import { Spotlight } from "./_components/spotlight/Spotlight";
 import { WhyTowLoans } from "./_components/why-towloans/WhyTowLoans";
@@ -39,6 +40,7 @@ export default function TestHomepage() {
         <QuickActions />
         <EquipmentChooser />
         <FeaturedBanner />
+        <ProgramChooser />
         <ProgramsRow />
         <Spotlight />
         <WhyTowLoans />

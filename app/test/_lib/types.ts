@@ -18,12 +18,23 @@ export type TruckIconKind =
   | "rollback"
   | "wrecker"
   | "heavy-wrecker"
-  | "rotator";
+  | "rotator"
+  | "dtu"
+  | "trailer";
 
 export type EquipmentChoice = {
   label: string;
   href: string;
   iconKind: TruckIconKind;
+};
+
+export type ProgramChoice = {
+  label: string;
+  href: string;
+  iconSrc: string;
+  iconAlt: string;
+  iconWidth: number;
+  iconHeight: number;
 };
 
 export type Program = {

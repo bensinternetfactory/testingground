@@ -5,6 +5,7 @@ import type {
   NavItem,
   Program,
   ProgramCard,
+  ProgramChoice,
   ProofItem,
 } from "./types";
 
@@ -73,6 +74,59 @@ export const EQUIPMENT_CHOICES: EquipmentChoice[] = [
   { label: "Wrecker", href: "/wrecker-financing", iconKind: "wrecker" },
   { label: "Heavy Wrecker", href: "/heavy-wrecker-financing", iconKind: "heavy-wrecker" },
   { label: "Rotator", href: "/rotator-financing", iconKind: "rotator" },
+  { label: "DTU", href: "/dtu-financing", iconKind: "dtu" },
+  { label: "Trailer", href: "/trailer-financing", iconKind: "trailer" },
+];
+
+export const PROGRAM_CHOICES: ProgramChoice[] = [
+  {
+    label: "Zero Down",
+    href: "/zero-down-tow-truck-financing",
+    iconSrc: "/brand-assets/benefit-icons/zero-down/no-money-down-dark.svg",
+    iconAlt: "No money down",
+    iconWidth: 85,
+    iconHeight: 74,
+  },
+  {
+    label: "Deferred Payments",
+    href: "/deferred-payment-tow-truck-financing",
+    iconSrc: "/brand-assets/benefit-icons/deferment/deferment-180-dark.svg",
+    iconAlt: "Deferred payments",
+    iconWidth: 89,
+    iconHeight: 74,
+  },
+  {
+    label: "Fleet Upgrade",
+    href: "/fleet-financing",
+    iconSrc: "/brand-assets/benefit-icons/terms/terms-pencil.svg",
+    iconAlt: "Fleet upgrade",
+    iconWidth: 71,
+    iconHeight: 81,
+  },
+  {
+    label: "Private Party",
+    href: "/private-party-tow-truck-financing",
+    iconSrc: "/brand-assets/benefit-icons/hook/hook-dark.svg",
+    iconAlt: "Private party purchase",
+    iconWidth: 59,
+    iconHeight: 103,
+  },
+  {
+    label: "Fast",
+    href: "/pre-approval",
+    iconSrc: "/brand-assets/benefit-icons/fast/fast-funding-watch-dark.svg",
+    iconAlt: "Fast funding",
+    iconWidth: 100,
+    iconHeight: 85,
+  },
+  {
+    label: "Used",
+    href: "/used-tow-truck-financing",
+    iconSrc: "/brand-assets/benefit-icons/miles/odometer-dark.svg",
+    iconAlt: "Used equipment",
+    iconWidth: 91,
+    iconHeight: 91,
+  },
 ];
 
 export const FEATURED_BANNER = {
