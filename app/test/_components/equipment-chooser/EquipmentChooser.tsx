@@ -45,9 +45,12 @@ export function EquipmentChooser() {
         What do you need financing on?
       </h2>
 
-      <ul className="grid grid-cols-2 gap-4 md:grid-cols-6 md:gap-6">
+      <ul className="flex gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none -mx-4 px-4 scroll-pl-4 md:mx-0 md:px-0 md:scroll-pl-0 md:grid md:grid-cols-6 md:gap-6 md:overflow-visible md:snap-none">
         {EQUIPMENT_CHOICES.map((c) => (
-          <li key={c.href}>
+          <li
+            key={c.href}
+            className="shrink-0 snap-start basis-[40%] min-w-[136px] md:basis-auto md:min-w-0 md:shrink"
+          >
             <Link
               href={c.href}
               className="group flex flex-col items-center gap-3 outline-none"
