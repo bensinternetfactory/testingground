@@ -18,9 +18,7 @@ export type TruckIconKind =
   | "rollback"
   | "wrecker"
   | "heavy-wrecker"
-  | "rotator"
-  | "dtu"
-  | "lowboy";
+  | "rotator";
 
 export type EquipmentChoice = {
   label: string;

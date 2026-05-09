@@ -73,8 +73,6 @@ export const EQUIPMENT_CHOICES: EquipmentChoice[] = [
   { label: "Wrecker", href: "/wrecker-financing", iconKind: "wrecker" },
   { label: "Heavy Wrecker", href: "/heavy-wrecker-financing", iconKind: "heavy-wrecker" },
   { label: "Rotator", href: "/rotator-financing", iconKind: "rotator" },
-  { label: "DTU", href: "/dtu-financing", iconKind: "dtu" },
-  { label: "Lowboy", href: "/lowboy-financing", iconKind: "lowboy" },
 ];
 
 export const FEATURED_BANNER = {
