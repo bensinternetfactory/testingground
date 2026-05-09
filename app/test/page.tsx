@@ -6,6 +6,7 @@ import { QuickActions } from "./_components/quick-actions/QuickActions";
 import { EquipmentChooser } from "./_components/equipment-chooser/EquipmentChooser";
 import { FeaturedBanner } from "./_components/featured-banner/FeaturedBanner";
 import { ProgramChooser } from "./_components/program-chooser/ProgramChooser";
+import { VideoFeature } from "./_components/video-feature/VideoFeature";
 import { ProgramsRow } from "./_components/programs-row/ProgramsRow";
 import { Spotlight } from "./_components/spotlight/Spotlight";
 import { WhyTowLoans } from "./_components/why-towloans/WhyTowLoans";
@@ -41,6 +42,7 @@ export default function TestHomepage() {
         <EquipmentChooser />
         <FeaturedBanner />
         <ProgramChooser />
+        <VideoFeature />
         <ProgramsRow />
         <Spotlight />
         <WhyTowLoans />
