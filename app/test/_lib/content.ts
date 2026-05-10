@@ -136,12 +136,13 @@ export const FEATURED_BANNER = {
 };
 
 export const PROGRAMS: Program[] = [
-  { label: "Startup", description: "First-time owner-operators", href: "/startup-financing" },
-  { label: "Bad Credit", description: "Approvals from 580+", href: "/bad-credit" },
-  { label: "No-Doc", description: "Skip the tax returns", href: "/no-doc-financing" },
-  { label: "Refinancing", description: "Lower your payment", href: "/refinancing" },
-  { label: "Used Equipment", description: "Up to 15 years old", href: "/used-equipment-financing" },
-  { label: "Owner-Operator", description: "Built for solo drivers", href: "/owner-operator-financing" },
+  { label: "Startup tow truck financing", href: "/startup-financing" },
+  { label: "Bad credit tow truck financing", href: "/bad-credit" },
+  { label: "I have an approval and I want you to beat it", href: "/beat-my-approval" },
+  { label: "Used tow truck financing", href: "/used-tow-truck-financing" },
+  { label: "I want to buy a tow truck from someone on Facebook Marketplace", href: "/private-party-tow-truck-financing" },
+  { label: "I want zero down on a tow truck", href: "/zero-down-tow-truck-financing" },
+  { label: "I want to add another truck to my fleet", href: "/fleet-financing" },
 ];
 
 export const SPOTLIGHT = {

@@ -39,7 +39,6 @@ export type ProgramChoice = {
 
 export type Program = {
   label: string;
-  description: string;
   href: string;
 };
 
